@@ -1,0 +1,34 @@
+---
+name: kubernetes-api
+
+templates:
+  bin/kubernetes_api_ctl.erb: bin/kubernetes_api_ctl
+  config/tokens.csv.erb: config/tokens.csv
+  config/authorization_policy.jsonl.erb: config/authorization_policy.jsonl
+  config/kubernetes.pem.erb: config/kubernetes.pem
+  config/kubernetes-key.pem.erb: config/kubernetes-key.pem
+
+packages:
+- pid_utils
+- kubernetes
+
+properties:
+  admin-username:
+    description: The admin username for the Kubernetes cluster
+  admin-password:
+    description: The password for the admin account
+  kubelet-password:
+    description: The password for the kubelet user
+  tls.kubernetes:
+    description: "Certificate and private key for the Kubernetes master"
+    type: certificate
+
+consumes:
+- name: etcd
+  type: etcd
+- name: kubernetes-api
+  type: kubernetes-api
+
+provides:
+- name: kubernetes-api
+  type: kubernetes-api

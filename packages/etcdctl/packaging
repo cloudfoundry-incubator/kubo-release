@@ -1,0 +1,16 @@
+set -e
+
+main() {
+  copy_binary
+  make_executable
+}
+
+copy_binary() {
+  cp -a etcdctl "${BOSH_INSTALL_TARGET:?}"
+}
+
+make_executable() {
+  chmod +x "${BOSH_INSTALL_TARGET:?}/etcdctl"
+}
+
+main

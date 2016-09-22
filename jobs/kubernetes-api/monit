@@ -1,0 +1,5 @@
+check process kubernetes-api
+  with pidfile /var/vcap/sys/run/kubernetes/kubernetes-api.pid
+  start program "/var/vcap/jobs/kubernetes-api/bin/kubernetes_api_ctl start"
+  stop program "/var/vcap/jobs/kubernetes-api/bin/kubernetes_api_ctl stop"
+  group vcap

@@ -1,0 +1,18 @@
+<%=
+
+policy = {
+  "apiVersion" => "abac.authorization.kubernetes.io/v1beta1",
+  "kind"       => "Policy",
+  "spec"       => {
+    "user"            => p('admin-username'),
+    "namespace"       => "*",
+    "resource"        => "*",
+    "apiGroup"        => "*",
+    "nonResourcePath" => "*"
+  }
+}
+policy.to_json
+
+%>
+{"apiVersion": "abac.authorization.kubernetes.io/v1beta1", "kind": "Policy", "spec": {"user":"kubelet", "namespace": "*", "resource": "*", "apiGroup": "*", "nonResourcePath": "*"}}
+{"apiVersion": "abac.authorization.kubernetes.io/v1beta1", "kind": "Policy", "spec": {"group":"system:serviceaccounts", "namespace": "*", "resource": "*", "apiGroup": "*", "nonResourcePath": "*"}}

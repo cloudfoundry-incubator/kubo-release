@@ -1,0 +1,76 @@
+#!/bin/bash -ex
+
+NAME="${0##*/}"
+
+export PATH=/var/vcap/packages/kubernetes/bin/:$PATH
+
+RUN_DIR=/var/vcap/sys/run/kubernetes
+PIDFILE=$RUN_DIR/kubernetes-scheduler.pid
+LOG_DIR=/var/vcap/sys/log/kubernetes-scheduler
+
+# shellcheck disable=SC1091
+. /var/vcap/packages/pid_utils/pid_utils.sh
+
+setup_directories() {
+  mkdir -p "$RUN_DIR" "$LOG_DIR"
+  chown -R vcap:vcap "$RUN_DIR" "$LOG_DIR"
+}
+
+send_process_stdout_to_logfile() {
+  exec 1>> "$LOG_DIR/$NAME.stdout.log"
+}
+
+send_process_stderr_to_logfile() {
+  exec 2>> "$LOG_DIR/$NAME.stderr.log"
+}
+
+start_kubernetes_scheduler() {
+  exec chpst -u vcap:vcap  \
+    kube-scheduler \
+      --leader-elect=true \
+      --master=http://localhost:8080 \
+      --v=2 \
+    1>> $LOG_DIR/kubernetes_scheduler.stdout.log \
+    2>> $LOG_DIR/kubernetes_scheduler.stderr.log
+}
+
+stop_kubernetes_scheduler() {
+  kill_and_wait "$PIDFILE"
+}
+
+pid() {
+  head -1 "$PIDFILE"
+}
+
+stop_associated_logging_processes() {
+  # shellcheck disable=SC2046
+  pkill -g $(get_group_pid)
+}
+
+get_group_pid() {
+  ps -ho pgrp "$(pid)"
+}
+
+case $1 in
+
+  start)
+    setup_directories
+    send_process_stdout_to_logfile
+    send_process_stderr_to_logfile
+
+    pid_guard "$PIDFILE" "Kubernetes Scheduler"
+
+    echo $$ > $PIDFILE
+    start_kubernetes_scheduler
+    ;;
+
+  stop)
+    stop_associated_logging_processes
+    stop_kubernetes_scheduler
+    ;;
+
+  *)
+    echo "Usage: $0 {start|stop}"
+    ;;
+
+esac

@@ -1,0 +1,16 @@
+set -e
+
+main() {
+  copy_binary
+  make_executable
+}
+
+copy_binary() {
+  cp -a flanneld "${BOSH_INSTALL_TARGET:?}/flanneld"
+}
+
+make_executable() {
+  chmod +x "${BOSH_INSTALL_TARGET:?}/flanneld"
+}
+
+main

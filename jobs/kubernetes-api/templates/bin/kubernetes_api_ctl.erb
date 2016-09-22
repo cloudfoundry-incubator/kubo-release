@@ -1,0 +1,100 @@
+#!/bin/bash -ex
+
+NAME="${0##*/}"
+
+export PATH=/var/vcap/packages/kubernetes/bin/:$PATH
+
+RUN_DIR=/var/vcap/sys/run/kubernetes
+PIDFILE=$RUN_DIR/kubernetes-api.pid
+LOG_DIR=/var/vcap/sys/log/kubernetes-api
+
+# shellcheck disable=SC1091
+. /var/vcap/packages/pid_utils/pid_utils.sh
+
+setup_directories() {
+  mkdir -p "$RUN_DIR" "$LOG_DIR"
+  chown -R vcap:vcap "$RUN_DIR" "$LOG_DIR"
+}
+
+send_process_stdout_to_logfile() {
+  exec 1>> "$LOG_DIR/$NAME.stdout.log"
+}
+
+send_process_stderr_to_logfile() {
+  exec 2>> "$LOG_DIR/$NAME.stderr.log"
+}
+
+start_kubernetes_api_server() {
+<%
+  etcd_endpoints = link("etcd").instances.map do |instance|
+    "http://#{instance.address}:4001"
+  end.join(',')
+  api_server_count = link("kubernetes-api").instances.size
+%>
+
+  exec chpst -u vcap:vcap  \
+    kube-apiserver \
+      --admission-control=NamespaceLifecycle,NamespaceExists,ServiceAccount,LimitRanger,ResourceQuota \
+      --allow-privileged=true \
+      --apiserver-count=<%= api_server_count %> \
+      --authorization-mode=ABAC \
+      --authorization-policy-file=/var/vcap/jobs/kubernetes-api/config/authorization_policy.jsonl \
+      --bind-address=0.0.0.0 \
+      --cert-dir=/var/vcap/sys/run/kubernetes/ \
+      --enable-swagger-ui=true \
+      --etcd-servers=<%= etcd_endpoints %> \
+      --insecure-bind-address=127.0.0.1 \
+      --kubelet-https=true \
+      --secure-port=8443 \
+      --service-account-key-file=/var/vcap/jobs/kubernetes-api/config/kubernetes-key.pem \
+      --service-account-lookup \
+      --service-cluster-ip-range=10.100.200.0/24 \
+      --service-node-port-range=30000-32767 \
+      --tls-cert-file=/var/vcap/jobs/kubernetes-api/config/kubernetes.pem \
+      --tls-private-key-file=/var/vcap/jobs/kubernetes-api/config/kubernetes-key.pem \
+      --token-auth-file=/var/vcap/jobs/kubernetes-api/config/tokens.csv \
+      --v=2 \
+    1>> $LOG_DIR/kubernetes_api.stdout.log \
+    2>> $LOG_DIR/kubernetes_api.stderr.log
+}
+
+stop_kubernetes_api_server() {
+  kill_and_wait "$PIDFILE"
+}
+
+pid() {
+  head -1 "$PIDFILE"
+}
+
+stop_associated_logging_processes() {
+  # shellcheck disable=SC2046
+  pkill -g $(get_group_pid)
+}
+
+get_group_pid() {
+  ps -ho pgrp "$(pid)"
+}
+
+case $1 in
+
+  start)
+    setup_directories
+    send_process_stdout_to_logfile
+    send_process_stderr_to_logfile
+
+    pid_guard "$PIDFILE" "Kubernetes API Server"
+
+    echo $$ > $PIDFILE
+    start_kubernetes_api_server
+    ;;
+
+  stop)
+    stop_associated_logging_processes
+    stop_kubernetes_api_server
+    ;;
+
+  *)
+    echo "Usage: $0 {start|stop}"
+    ;;
+
+esac

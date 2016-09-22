@@ -1,0 +1,5 @@
+---
+name: kubernetes
+
+files:
+- kubernetes-1.4.6/*

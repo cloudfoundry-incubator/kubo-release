@@ -1,0 +1,5 @@
+check process kubernetes-proxy
+  with pidfile /var/vcap/sys/run/kubernetes/kubernetes_proxy.pid
+  start program "/var/vcap/jobs/kubernetes-proxy/bin/kubernetes_proxy_ctl start"
+  stop program "/var/vcap/jobs/kubernetes-proxy/bin/kubernetes_proxy_ctl stop"
+  group vcap

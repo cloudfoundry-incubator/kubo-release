@@ -1,0 +1,16 @@
+---
+name: flanneld
+
+templates:
+  bin/flanneld_ctl.erb: bin/flanneld_ctl
+
+packages:
+- pid_utils
+- etcdctl
+- flanneld
+
+properties: {}
+
+consumes:
+- name: etcd
+  type: etcd

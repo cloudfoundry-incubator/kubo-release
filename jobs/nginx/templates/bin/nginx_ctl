@@ -1,0 +1,117 @@
+#!/bin/bash -ex
+
+NAME="${0##*/}"
+
+export PATH=/var/vcap/packages/nginx/sbin/:$PATH
+
+RUN_DIR=/var/vcap/sys/run/nginx
+PIDFILE=$RUN_DIR/nginx.pid
+LOG_DIR=/var/vcap/sys/log/nginx
+CONFIG_FILE=/var/vcap/jobs/nginx/config/nginx.conf
+
+# shellcheck disable=SC1091
+. /var/vcap/packages/pid_utils/pid_utils.sh
+
+setup_directories() {
+  mkdir -p "$RUN_DIR" "$LOG_DIR"
+  chown -R vcap:vcap "$RUN_DIR" "$LOG_DIR"
+}
+
+send_process_stdout_to_logfile() {
+  exec 1>> "$LOG_DIR/$NAME.stdout.log"
+}
+
+send_process_stderr_to_logfile() {
+  exec 2>> "$LOG_DIR/$NAME.stderr.log"
+}
+
+start_nginx() {
+  nginx -g "pid $PIDFILE;" -c $CONFIG_FILE \
+    1>> $LOG_DIR/nginx.stdout.log \
+    2>> $LOG_DIR/nginx.stderr.log
+}
+
+stop_nginx() {
+  kill_and_wait "$PIDFILE"
+}
+
+pid() {
+  head -1 "$PIDFILE"
+}
+
+stop_associated_logging_processes() {
+  # shellcheck disable=SC2046
+  pkill -g $(get_group_pid)
+}
+
+get_group_pid() {
+  ps -ho pgrp "$(pid)"
+}
+
+case $1 in
+
+  start)
+    setup_directories
+    send_process_stdout_to_logfile
+    send_process_stderr_to_logfile
+
+    pid_guard "$PIDFILE" "Nginx"
+
+    echo $$ > $PIDFILE
+    start_nginx
+    ;;
+
+  stop)
+    stop_associated_logging_processes
+    stop_nginx
+    ;;
+
+  *)
+    echo "Usage: $0 {start|stop}"
+    ;;
+
+esac
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+JOB_NAME=nginx
+BASE_DIR=/var/vcap
+SYS_DIR=$BASE_DIR/sys
+RUN_DIR=$SYS_DIR/run/$JOB_NAME
+LOG_DIR=$SYS_DIR/log/$JOB_NAME
+JOB_DIR=$BASE_DIR/jobs/$JOB_NAME
+CONFIG_DIR=$JOB_DIR/etc
+CONFIG_FILE=$CONFIG_DIR/nginx.conf
+PERSISTENT=$BASE_DIR/store
+PIDFILE=$RUN_DIR/$JOB_NAME.pid
+
+mkdir -p $RUN_DIR $LOG_DIR $CONFIG_DIR
+
+case $1 in
+  start)
+    $BASE_DIR/packages/nginx/sbin/$JOB_NAME -g "pid $PIDFILE;" -c $CONFIG_FILE
+    ;;
+
+  stop)
+    kill $(cat $PIDFILE)
+    ;;
+
+  *)
+    echo "Usage: ctl {start|stop}"
+    ;;
+esac

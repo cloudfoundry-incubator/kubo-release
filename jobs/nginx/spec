@@ -1,0 +1,17 @@
+---
+name: nginx
+
+templates:
+  bin/nginx_ctl: bin/nginx_ctl
+  config/nginx.conf.erb: config/nginx.conf
+
+packages:
+- nginx
+
+consumes:
+- name: kubernetes-api
+  type: kubernetes-api
+- name: kubernetes-workers
+  type: kubernetes-workers
+
+properties: {}

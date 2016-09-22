@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+spec_dir="/var/vcap/jobs/kubernetes-system-specs/config/"
+kubectl="/var/vcap/packages/kubernetes/bin/kubectl --kubeconfig=/var/vcap/jobs/kubeconfig/config/kubeconfig"
+
+apply_spec() {
+  local spec="$1"
+  ${kubectl} apply -f ${spec_dir}/${spec} || echo "${spec} was already deployed"
+}
+
+deploy_specs() {
+  apply_spec "kubedns.yml"
+  apply_spec "influxdb.yml"
+  apply_spec "heapster.yml"
+  apply_spec "kubernetes-dashboard.yml"
+}
+
+main() {
+  deploy_specs
+}
+
+main

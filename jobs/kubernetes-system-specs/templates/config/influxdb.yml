@@ -1,0 +1,49 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: monitoring-influxdb
+  namespace: kube-system
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        task: monitoring
+        k8s-app: influxdb
+    spec:
+      volumes:
+      - name: influxdb-storage
+        emptyDir: {}
+      containers:
+      - name: influxdb
+        image: kubernetes/heapster_influxdb:v0.6
+        volumeMounts:
+        - mountPath: /data
+          name: influxdb-storage
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    task: monitoring
+    # For use as a Cluster add-on (https://github.com/kubernetes/kubernetes/tree/master/cluster/addons)
+    # If you are NOT using this as an addon, you should comment out this line.
+    kubernetes.io/cluster-service: 'true'
+    kubernetes.io/name: monitoring-influxdb
+  name: monitoring-influxdb
+  namespace: kube-system
+spec:
+  type: NodePort
+  ports:
+  - name: http
+    port: 80
+    targetPort: 8083
+    nodePort: 31002
+  - name: api
+    port: 8086
+    targetPort: 8086
+    nodePort: 31003
+  selector:
+    k8s-app: influxdb

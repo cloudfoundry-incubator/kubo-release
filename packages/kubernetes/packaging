@@ -1,0 +1,23 @@
+set -e
+
+KUBERNETES_VERSION="1.4.6"
+
+main() {
+  create_target_dir
+  copy_depedencies_to_bosh
+  make_binaries_executable
+}
+
+create_target_dir() {
+  mkdir -p "${BOSH_INSTALL_TARGET:?}/bin"
+}
+
+copy_depedencies_to_bosh() {
+  cp -a kubernetes-${KUBERNETES_VERSION}/* "${BOSH_INSTALL_TARGET:?}/bin"
+}
+
+make_binaries_executable() {
+  chmod +x "${BOSH_INSTALL_TARGET:?}/bin/"*
+}
+
+main

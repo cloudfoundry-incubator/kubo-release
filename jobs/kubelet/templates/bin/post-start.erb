@@ -1,0 +1,18 @@
+#!/bin/bash -e
+
+[ -z "$DEBUG" ] || set -x
+
+kubectl="/var/vcap/packages/kubernetes/bin/kubectl --kubeconfig=/var/vcap/jobs/kubeconfig/config/kubeconfig"
+node_name=<%= spec.address %>
+
+${kubectl} uncordon ${node_name}
+
+TIMEOUT=120
+
+if timeout "$TIMEOUT" /var/vcap/jobs/kubelet/bin/ensure_kubelet_up_and_running
+then
+  echo "kubelet post-start checks succeeded"
+else
+  echo "kubelet failed post-start checks after $TIMEOUT seconds"
+  exit 1
+fi

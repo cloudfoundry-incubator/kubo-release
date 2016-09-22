@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+
+kubernetes_version=$1
+staging_dir=staging/kubernetes-${kubernetes_version}
+
+main() {
+  binaries=(
+    "kube-apiserver"
+    "kube-controller-manager"
+    "kube-proxy"
+    "kube-scheduler"
+    "kubectl"
+    "kubelet"
+  )
+
+  pushd $(dirname $0)/..
+
+    for binary in ${binaries[@]}; do
+      download ${binary}
+      add_blob ${binary}
+    done
+
+  popd
+}
+
+download() {
+  local binary_name
+  binary_name=$1
+
+  aria2c --continue --dir=${staging_dir} "https://storage.googleapis.com/kubernetes-release/release/v${kubernetes_version}/bin/linux/amd64/${binary_name}"
+}
+
+add_blob() {
+  local binary_name
+  binary_name=$1
+
+  bosh add blob "${staging_dir}/${binary_name}" "kubernetes-${kubernetes_version}"
+}
+
+main
