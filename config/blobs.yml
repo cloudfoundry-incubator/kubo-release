@@ -11,3 +11,7 @@ kubernetes_1.3.6/kubernetes-1.3.6.tgz:
   object_id: fbebf6c3-8a94-4b3b-aeb0-a2b39ead78da
   sha: 5754fcd2cdb3fe6f56ec60e1c4976768e542433f
   size: 92290733
+docker_1.11.0/docker-1.11.0.tgz:
+  object_id: bfccca12-b85c-4d2a-9e4c-41800319091d
+  sha: 242b6a3e6def6719f5002a4d3d5b35e587036c4e
+  size: 20520756
