@@ -1,0 +1,4 @@
+config/private.yml
+/.blobs
+/staging
+/blobs

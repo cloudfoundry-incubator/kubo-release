@@ -1,0 +1,13 @@
+---
+etcdctl_v3.0.7/etcdctl:
+  object_id: a3695e1f-670b-4151-bd4e-c3ba904972c1
+  sha: 11f0462cc86bf85332399a2fa584d5bb46d0cb2a
+  size: 18427584
+flanneld_v0.6.1/flanneld-amd64:
+  object_id: 62f2eda5-ab06-45cb-9678-f8d3dbf1ce54
+  sha: 63076521f1ba5605fa5f97016072a4538d66740f
+  size: 21599816
+kubernetes_1.3.6/kubernetes-1.3.6.tgz:
+  object_id: fbebf6c3-8a94-4b3b-aeb0-a2b39ead78da
+  sha: 5754fcd2cdb3fe6f56ec60e1c4976768e542433f
+  size: 92290733
