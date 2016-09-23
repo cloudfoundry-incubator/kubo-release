@@ -1,0 +1,11 @@
+---
+name: kubernetes-api
+
+templates:
+  bin/kubernetes_api_ctl: bin/kubernetes_api_ctl
+
+packages:
+- pid_utils
+- kubernetes
+
+properties: {}
