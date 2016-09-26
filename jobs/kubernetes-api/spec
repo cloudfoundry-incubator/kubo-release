@@ -9,3 +9,7 @@ packages:
 - kubernetes
 
 properties: {}
+
+provides:
+- name: etcd
+  type: etcd
