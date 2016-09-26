@@ -1,0 +1,15 @@
+---
+name: kubelet
+
+templates:
+  bin/kubelet_ctl.erb: bin/kubelet_ctl
+
+packages:
+- pid_utils
+- kubernetes
+
+properties: {}
+
+consumes:
+- name: kubernetes-api
+  type: kubernetes-api

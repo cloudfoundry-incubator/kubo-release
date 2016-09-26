@@ -13,3 +13,5 @@ properties: {}
 provides:
 - name: etcd
   type: etcd
+- name: kubernetes-api
+  type: kubernetes-api

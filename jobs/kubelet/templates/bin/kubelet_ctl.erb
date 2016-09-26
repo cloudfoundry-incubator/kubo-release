@@ -1,0 +1,90 @@
+#!/bin/bash -ex
+
+NAME="${0##*/}"
+
+export PATH=/var/vcap/packages/kubernetes/bin/:$PATH
+
+RUN_DIR=/var/vcap/sys/run/kubernetes
+PIDFILE=$RUN_DIR/kubelet.pid
+LOG_DIR=/var/vcap/sys/log/kubernetes
+
+# shellcheck disable=SC1091
+. /var/vcap/packages/pid_utils/pid_utils.sh
+
+setup_directories() {
+  mkdir -p "$RUN_DIR" "$LOG_DIR"
+  chown -R vcap:vcap "$RUN_DIR" "$LOG_DIR"
+}
+
+send_process_stdout_to_logfile() {
+  exec 1>> "$LOG_DIR/$NAME.stdout.log"
+}
+
+send_process_stderr_to_logfile() {
+  exec 2>> "$LOG_DIR/$NAME.stderr.log"
+}
+
+start_kubelet() {
+  <%
+    api_endpoints = link("kubernetes-api").instances.map do |instance|
+      "http://#{instance.address}:8080/"
+    end.join(',')
+  %>
+
+  kubelet \
+    --api-servers=<%= api_endpoints %> \
+    --cert-dir=/var/vcap/sys/run/kubernetes/ \
+    --cloud-provider= \
+    --cluster-dns=10.32.0.10 \
+    --cluster-domain=cluster.local \
+    --configure-cbr0=true \
+    --container-runtime=docker \
+    --docker-endpoint=unix:///var/vcap/sys/run/docker/docker.sock \
+    --kubeconfig=/var/lib/kubelet/kubeconfig \
+    --reconcile-cidr=true \
+    --serialize-image-pulls=false \
+    --v=2 \
+  1>> $LOG_DIR/kubelet.stdout.log \
+  2>> $LOG_DIR/kubelet.stderr.log
+}
+
+stop_kubelet() {
+  kill_and_wait "$PIDFILE"
+}
+
+pid() {
+  head -1 "$PIDFILE"
+}
+
+stop_associated_logging_processes() {
+  # shellcheck disable=SC2046
+  pkill -g $(get_group_pid)
+}
+
+get_group_pid() {
+  ps -ho pgrp "$(pid)"
+}
+
+case $1 in
+
+  start)
+    setup_directories
+    send_process_stdout_to_logfile
+    send_process_stderr_to_logfile
+
+    pid_guard "$PIDFILE" "Kubelet"
+
+    echo $$ > $PIDFILE
+    start_kubelet
+    ;;
+
+  stop)
+    stop_associated_logging_processes
+    stop_kubelet
+    ;;
+
+  *)
+    echo "Usage: $0 {start|stop}"
+    ;;
+
+esac
