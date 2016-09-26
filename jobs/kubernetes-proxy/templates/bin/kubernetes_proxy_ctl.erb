@@ -5,7 +5,7 @@ NAME="${0##*/}"
 export PATH=/var/vcap/packages/kubernetes/bin/:$PATH
 
 RUN_DIR=/var/vcap/sys/run/kubernetes
-PIDFILE=$RUN_DIR/kubelet.pid
+PIDFILE=$RUN_DIR/kubernetes_proxy.pid
 LOG_DIR=/var/vcap/sys/log/kubernetes
 
 # shellcheck disable=SC1091
@@ -24,31 +24,23 @@ send_process_stderr_to_logfile() {
   exec 2>> "$LOG_DIR/$NAME.stderr.log"
 }
 
-start_kubelet() {
+start_kubernetes_proxy() {
   <%
     api_endpoints = link("kubernetes-api").instances.map do |instance|
       "http://#{instance.address}:8080/"
     end.join(',')
   %>
 
-  kubelet \
-    --api-servers=<%= api_endpoints %> \
-    --cert-dir=/var/vcap/sys/run/kubernetes/ \
-    --cloud-provider= \
-    --cluster-dns=10.32.0.10 \
-    --cluster-domain=cluster.local \
-    --configure-cbr0=true \
-    --container-runtime=docker \
-    --docker-endpoint=unix:///var/vcap/sys/run/docker/docker.sock \
+  kube-proxy \
+    --master=<%= api_endpoints %> \
     --kubeconfig=/var/vcap/jobs/kubelet/config/kubeconfig \
-    --reconcile-cidr=true \
-    --serialize-image-pulls=false \
+    --proxy-mode=iptables \
     --v=2 \
-  1>> $LOG_DIR/kubelet.stdout.log \
-  2>> $LOG_DIR/kubelet.stderr.log
+  1>> $LOG_DIR/kubernetes_proxy.stdout.log \
+  2>> $LOG_DIR/kubernetes_proxy.stderr.log
 }
 
-stop_kubelet() {
+stop_kubernetes_proxy() {
   kill_and_wait "$PIDFILE"
 }
 
@@ -72,15 +64,15 @@ case $1 in
     send_process_stdout_to_logfile
     send_process_stderr_to_logfile
 
-    pid_guard "$PIDFILE" "Kubelet"
+    pid_guard "$PIDFILE" "Kubernetes Proxy"
 
     echo $$ > $PIDFILE
-    start_kubelet
+    start_kubernetes_proxy
     ;;
 
   stop)
     stop_associated_logging_processes
-    stop_kubelet
+    stop_kubernetes_proxy
     ;;
 
   *)

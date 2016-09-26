@@ -1,9 +1,8 @@
 ---
-name: kubelet
+name: kubernetes-proxy
 
 templates:
-  bin/kubelet_ctl.erb: bin/kubelet_ctl
-  config/kubeconfig.erb: config/kubeconfig
+  bin/kubernetes_proxy_ctl.erb: bin/kubernetes_proxy_ctl
 
 packages:
 - pid_utils
