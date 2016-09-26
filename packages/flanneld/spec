@@ -4,4 +4,4 @@ name: flanneld
 dependencies:
 
 files:
-- flanneld-amd64
+- flanneld

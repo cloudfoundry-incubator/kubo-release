@@ -1,0 +1,5 @@
+check process flanneld
+  with pidfile /var/vcap/sys/run/flanneld/flanneld.pid
+  start program "/var/vcap/jobs/flanneld/bin/flanneld_ctl start"
+  stop program "/var/vcap/jobs/flanneld/bin/flanneld_ctl stop"
+  group vcap
