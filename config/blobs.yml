@@ -7,7 +7,31 @@ etcdctl:
   object_id: 2e531464-4bcf-4901-9014-27c49f46c788
   sha: 11f0462cc86bf85332399a2fa584d5bb46d0cb2a
   size: 18427584
-flanneld-amd64:
-  object_id: 4c9bbabb-8a6b-43e6-b48b-731561895e86
+flanneld:
+  object_id: fc781e01-c844-4d67-bb5b-5b72c050c2e6
   sha: 63076521f1ba5605fa5f97016072a4538d66740f
   size: 21599816
+kubernetes-1.3.6/kube-apiserver:
+  object_id: 9655200b-23dc-4c0b-9c6e-02434a25361b
+  sha: 76845560173793980b1fdfe7f71d336499d59c1a
+  size: 109655520
+kubernetes-1.3.6/kube-controller-manager:
+  object_id: 64205024-c512-4d31-b03f-52de31418af9
+  sha: a1d421f459d1e99936a0274ec3cf0dcb08ed6450
+  size: 99598512
+kubernetes-1.3.6/kube-proxy:
+  object_id: 6fcaf8a7-bc5a-460e-9650-00e42f8f1d87
+  sha: 9393e50d3420b8f921cbf0ea4c5231e0c7f0bce5
+  size: 50708696
+kubernetes-1.3.6/kube-scheduler:
+  object_id: 25edf99b-61ba-4098-91cf-320a1d50b136
+  sha: c5dc0870bcda3092f6cd9cac0974695d4a222b7e
+  size: 58973288
+kubernetes-1.3.6/kubectl:
+  object_id: 44152957-d498-479a-ab7f-e8afc51bb611
+  sha: 305843f124319fd8cff2a4133a66df0bad76a374
+  size: 56521832
+kubernetes-1.3.6/kubelet:
+  object_id: bbf4ed2d-cdae-4f9e-a49a-c43d7b0b9304
+  sha: 1ba78f5ec8cc672d6232429bb74ef11bd53e3e5b
+  size: 107716304
