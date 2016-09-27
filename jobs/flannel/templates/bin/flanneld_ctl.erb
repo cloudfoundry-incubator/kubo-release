@@ -34,9 +34,8 @@ start_flanneld() {
   mkdir -p /dev/net
   mknod /dev/net/tun c 10 200 || true
 
-  /var/vcap/packages/etcdctl/etcdctl --endpoints <%= etcd_endpoints %> set /coreos.com/network/config '{"Network":"10.200.0.0/16"}'/Vo
-  exec /var/vcap/packages/flanneld/flanneld \
-      -etcd-endpoints="<%= etcd_endpoints %>" \
+  /var/vcap/packages/etcdctl/etcdctl --endpoints <%= etcd_endpoints %> set /coreos.com/network/config '{"Network":"10.200.0.0/16"}'
+  flanneld -etcd-endpoints="<%= etcd_endpoints %>" \
     1>> $LOG_DIR/flanneld.stdout.log \
     2>> $LOG_DIR/flanneld.stderr.log
 }
