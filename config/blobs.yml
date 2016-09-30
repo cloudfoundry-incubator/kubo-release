@@ -1,8 +1,4 @@
 ---
-docker-1.11.0.tgz:
-  object_id: b027ef6a-4e38-43dd-a50c-834495d8828f
-  sha: 242b6a3e6def6719f5002a4d3d5b35e587036c4e
-  size: 20520756
 etcdctl:
   object_id: fef58f04-bcb1-47e2-bc79-232fabf22288
   sha: 11f0462cc86bf85332399a2fa584d5bb46d0cb2a
@@ -11,27 +7,27 @@ flanneld:
   object_id: a59ab752-92e3-46b1-97a5-88e774c4ea7f
   sha: 63076521f1ba5605fa5f97016072a4538d66740f
   size: 21599816
-kubernetes-1.3.6/kube-apiserver:
-  object_id: c58921c2-4173-4263-acfd-6b963606c967
-  sha: 76845560173793980b1fdfe7f71d336499d59c1a
-  size: 109655520
-kubernetes-1.3.6/kube-controller-manager:
-  object_id: 363e3a51-b008-42a7-86d3-4c4eba964bd6
-  sha: a1d421f459d1e99936a0274ec3cf0dcb08ed6450
-  size: 99598512
-kubernetes-1.3.6/kube-proxy:
-  object_id: 9ecb32d4-b320-4db1-85a5-0ee4502e19fd
-  sha: 9393e50d3420b8f921cbf0ea4c5231e0c7f0bce5
-  size: 50708696
-kubernetes-1.3.6/kube-scheduler:
-  object_id: 2215f6a7-5698-40ee-98f6-fc582520019c
-  sha: c5dc0870bcda3092f6cd9cac0974695d4a222b7e
-  size: 58973288
-kubernetes-1.3.6/kubectl:
-  object_id: e31774b3-5c6f-49bb-93e4-184a83346c99
-  sha: 305843f124319fd8cff2a4133a66df0bad76a374
-  size: 56521832
-kubernetes-1.3.6/kubelet:
-  object_id: 2a2d586e-e6cd-4a11-9fb2-452c37784173
-  sha: 1ba78f5ec8cc672d6232429bb74ef11bd53e3e5b
-  size: 107716304
+kubernetes-1.4.0/kube-apiserver:
+  object_id: 75dcec46-d8ba-43e8-abae-eb392636814d
+  sha: cd80e9ae1c4c9013b58880c4a12f40dd1d31970b
+  size: 151141688
+kubernetes-1.4.0/kube-controller-manager:
+  object_id: a38f0d86-d69f-4aa6-966f-de9b30e65e57
+  sha: 7840afd4d1a4941895b5177dfcb307a246ca09fb
+  size: 141041768
+kubernetes-1.4.0/kube-proxy:
+  object_id: 90b02c2a-cdf2-40d8-a547-9e64e9f8d789
+  sha: 4837de4e8ec12057915ad784c879a8fa2b00b5bd
+  size: 72859720
+kubernetes-1.4.0/kube-scheduler:
+  object_id: 7d84f0a7-38b3-471b-b237-0c19e735becf
+  sha: d499412f6dd8b7bafeb03ffa5a7cd6c71dd14b6a
+  size: 80682768
+kubernetes-1.4.0/kubectl:
+  object_id: f8d173e4-7c84-4e51-aea0-eb53016993ed
+  sha: 0b0aef7df796a897c84f17fcc77ad7eb9b68220d
+  size: 83312488
+kubernetes-1.4.0/kubelet:
+  object_id: 591810d7-5f92-4aeb-97e9-f1fda6198134
+  sha: b0418c796db823051ba7b1acb2ac414052e64f89
+  size: 128710504
