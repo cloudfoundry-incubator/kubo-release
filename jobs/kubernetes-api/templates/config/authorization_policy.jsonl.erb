@@ -1,0 +1,9 @@
+<%=
+
+p("users").map do |user|
+  "{\"apiVersion\": \"abac.authorization.kubernetes.io/v1beta1\", \"kind\": \"Policy\", \"spec\": " +
+  "{\"user\":\"%s\", \"namespace\": \"*\", \"resource\": \"*\", \"apiGroup\": \"*\"}}" % [user['username']]
+end.join("\n")
+
+%>
+{"apiVersion": "abac.authorization.kubernetes.io/v1beta1", "kind": "Policy", "spec": {"group":"system:serviceaccounts", "namespace": "*", "resource": "*", "apiGroup": "*", "nonResourcePath": "*"}}

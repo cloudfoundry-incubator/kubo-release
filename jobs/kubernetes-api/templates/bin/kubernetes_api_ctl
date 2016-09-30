@@ -27,17 +27,21 @@ send_process_stderr_to_logfile() {
 start_kubernetes_api_server() {
   exec chpst -u vcap:vcap  \
     kube-apiserver \
+      --admission-control=NamespaceLifecycle,LimitRanger,SecurityContextDeny,ServiceAccount,ResourceQuota \
       --allow-privileged=false \
       --apiserver-count=1 \
+      --authorization-mode=ABAC \
+      --authorization-policy-file=/var/vcap/jobs/kubernetes-api/config/authorization_policy.jsonl \
       --bind-address=0.0.0.0 \
       --cert-dir=/var/vcap/sys/run/kubernetes/ \
       --enable-swagger-ui=true \
       --etcd-servers=http://localhost:4001 \
       --insecure-bind-address=0.0.0.0 \
       --kubelet-https=false \
-      --secure-port=0 \
+      --secure-port=8443 \
       --service-cluster-ip-range=10.32.0.0/24 \
       --service-node-port-range=30000-32767 \
+      --token-auth-file=/var/vcap/jobs/kubernetes-api/config/tokens.csv \
       --v=2 \
     1>> $LOG_DIR/kubernetes_api.stdout.log \
     2>> $LOG_DIR/kubernetes_api.stderr.log

@@ -1,0 +1,7 @@
+<%=
+
+p("users").map do |user|
+  "%s,%s,%s" % [user['password'], user['username'], user['username']]
+end.join("\n")
+
+%>
