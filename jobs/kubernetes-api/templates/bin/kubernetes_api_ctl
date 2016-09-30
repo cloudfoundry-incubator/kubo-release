@@ -36,7 +36,7 @@ start_kubernetes_api_server() {
       --cert-dir=/var/vcap/sys/run/kubernetes/ \
       --enable-swagger-ui=true \
       --etcd-servers=http://localhost:4001 \
-      --insecure-bind-address=0.0.0.0 \
+      --insecure-bind-address=127.0.0.1 \
       --kubelet-https=false \
       --secure-port=8443 \
       --service-cluster-ip-range=10.32.0.0/24 \
