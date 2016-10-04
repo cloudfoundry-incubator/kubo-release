@@ -27,7 +27,7 @@ send_process_stderr_to_logfile() {
 start_kubelet() {
   <%
     api_endpoints = link("kubernetes-api").instances.map do |instance|
-      "https://#{instance.address}:8443/"
+      "http://#{instance.address}:8080/"
     end.join(',')
   %>
 
