@@ -25,16 +25,23 @@ send_process_stderr_to_logfile() {
 }
 
 start_kubernetes_api_server() {
+<%
+  etcd_endpoints = link("etcd").instances.map do |instance|
+    "http://#{instance.address}:4001"
+  end.join(',')
+  api_server_count = link("kubernetes-api").instances.size
+%>
+
   exec chpst -u vcap:vcap  \
     kube-apiserver \
       --allow-privileged=false \
-      --apiserver-count=1 \
+      --apiserver-count=<%= api_server_count %> \
       --authorization-mode=ABAC \
       --authorization-policy-file=/var/vcap/jobs/kubernetes-api/config/authorization_policy.jsonl \
       --bind-address=0.0.0.0 \
       --cert-dir=/var/vcap/sys/run/kubernetes/ \
       --enable-swagger-ui=true \
-      --etcd-servers=http://localhost:4001 \
+      --etcd-servers=<%= etcd_endpoints %> \
       --insecure-bind-address=0.0.0.0 \
       --kubelet-https=false \
       --secure-port=0 \

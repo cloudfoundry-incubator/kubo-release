@@ -2,7 +2,7 @@
 name: kubernetes-api
 
 templates:
-  bin/kubernetes_api_ctl: bin/kubernetes_api_ctl
+  bin/kubernetes_api_ctl.erb: bin/kubernetes_api_ctl
   config/tokens.csv.erb: config/tokens.csv
   config/authorization_policy.jsonl.erb: config/authorization_policy.jsonl
 
@@ -15,8 +15,12 @@ properties:
     description: List of user credentials
     example: [{username: a, password: b}, ...]
 
-provides:
+consumes:
 - name: etcd
   type: etcd
+- name: kubernetes-api
+  type: kubernetes-api
+
+provides:
 - name: kubernetes-api
   type: kubernetes-api
