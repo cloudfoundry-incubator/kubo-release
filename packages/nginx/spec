@@ -1,0 +1,5 @@
+---
+name: nginx
+files:
+- nginx/pcre-8.39.tar.gz
+- nginx/nginx-release-1.11.4.tar.gz

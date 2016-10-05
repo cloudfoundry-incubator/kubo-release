@@ -1,0 +1,19 @@
+set -e -x
+
+echo "Extracting pcre..."
+tar xzvf nginx/pcre-8.39.tar.gz
+
+echo "Extracting nginx..."
+tar xzvf nginx/nginx-release-1.11.4.tar.gz
+
+echo "Building nginx..."
+
+pushd nginx-release-1.11.4
+  ./auto/configure \
+    --with-debug \
+    --prefix=${BOSH_INSTALL_TARGET} \
+    --with-pcre=../pcre-8.39
+
+  make
+  make install
+popd
