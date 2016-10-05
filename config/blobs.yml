@@ -31,3 +31,11 @@ kubernetes-1.4.0/kubelet:
   object_id: 591810d7-5f92-4aeb-97e9-f1fda6198134
   sha: b0418c796db823051ba7b1acb2ac414052e64f89
   size: 128710504
+nginx/nginx-release-1.11.4.tar.gz:
+  object_id: eba69853-8891-4919-ae54-7f24eebda278
+  sha: deecc5583de7f250c6f30e8028589d3b09a58a83
+  size: 987038
+nginx/pcre-8.39.tar.gz:
+  object_id: 37aa43ff-1bc6-4d01-8c06-6e7f21417464
+  sha: b3aec1f643d9701841e2f9d57ac121a7ff448fc8
+  size: 2062258
