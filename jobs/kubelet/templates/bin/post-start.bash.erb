@@ -1,0 +1,5 @@
+#!/bin/bash -e
+
+[ -z "$DEBUG" ] || set -x
+
+/var/vcap/packages/kubernetes/bin/kubectl --server=<%= "http://#{link('kubernetes-api-balanced').instances.first.address}:8080" %> uncordon $(hostname)
