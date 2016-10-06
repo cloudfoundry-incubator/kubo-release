@@ -33,6 +33,7 @@ start_flanneld() {
 
   mkdir -p /dev/net
   mknod /dev/net/tun c 10 200 || true
+  echo 1 > /proc/sys/net/ipv4/ip_forward
 
   /var/vcap/packages/etcdctl/etcdctl --endpoints <%= etcd_endpoints %> set /coreos.com/network/config '{"Network":"10.200.0.0/16"}'
   flanneld -etcd-endpoints="<%= etcd_endpoints %>" \
