@@ -1,0 +1,10 @@
+#!/bin/bash -e
+
+[ -z "$DEBUG" ] || set -x
+
+kubectl="/var/vcap/packages/kubernetes/bin/kubectl --server=<%= "http://#{link('kubernetes-api-balanced').instances.first.address}:8080" %>"
+
+# Wait for kubelet to become Ready before we move on to the next node.
+until ${kubectl} get nodes $(hostname) | grep -e ' Ready '; do
+  sleep 2
+done

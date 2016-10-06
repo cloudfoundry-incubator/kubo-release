@@ -33,7 +33,7 @@ start_kubernetes_proxy() {
 
   kube-proxy \
     --master=<%= api_endpoints %> \
-    --kubeconfig=/var/vcap/jobs/kubelet/config/kubeconfig \
+    --kubeconfig=/var/vcap/jobs/kubeconfig/config/kubeconfig \
     --proxy-mode=iptables \
     --v=2 \
   1>> $LOG_DIR/kubernetes_proxy.stdout.log \

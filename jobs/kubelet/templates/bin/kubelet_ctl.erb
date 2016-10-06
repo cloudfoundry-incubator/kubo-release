@@ -40,7 +40,7 @@ start_kubelet() {
     --configure-cbr0=true \
     --container-runtime=docker \
     --docker-endpoint=unix:///var/vcap/sys/run/docker/docker.sock \
-    --kubeconfig=/var/vcap/jobs/kubelet/config/kubeconfig \
+    --kubeconfig=/var/vcap/jobs/kubeconfig/config/kubeconfig \
     --reconcile-cidr=true \
     --serialize-image-pulls=false \
     --v=2 \

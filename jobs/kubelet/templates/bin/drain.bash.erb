@@ -63,7 +63,7 @@ check_if_pidfile_exists() {
 }
 
 drain_kubelet() {
-  kubectl --server=<%= "http://#{link('kubernetes-api-balanced').instances.first.address}:8080" %> drain $(hostname)
+  kubectl --server=<%= "http://#{link('kubernetes-api-balanced').instances.first.address}:8080" %> drain $(hostname) --grace-period 10 --force --delete-local-data
 }
 
 kill_node() {

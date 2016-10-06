@@ -2,4 +2,16 @@
 
 [ -z "$DEBUG" ] || set -x
 
-/var/vcap/packages/kubernetes/bin/kubectl --server=<%= "http://#{link('kubernetes-api-balanced').instances.first.address}:8080" %> uncordon $(hostname)
+kubectl="/var/vcap/packages/kubernetes/bin/kubectl --server=<%= "http://#{link('kubernetes-api-balanced').instances.first.address}:8080" %>"
+
+${kubectl} uncordon $(hostname)
+
+TIMEOUT=300
+
+if timeout "$TIMEOUT" /var/vcap/jobs/kubelet/bin/ensure_kubelet_up_and_running
+then
+  echo "kubelet post-start checks succeeded"
+else
+  echo "kubelet failed post-start checks after $TIMEOUT seconds"
+  exit 1
+fi

@@ -1,0 +1,13 @@
+---
+name: kubeconfig
+
+templates:
+  config/kubeconfig.erb: config/kubeconfig
+
+packages: []
+
+properties: {}
+
+consumes:
+- name: kubernetes-api-balanced
+  type: kubernetes-api-balanced
