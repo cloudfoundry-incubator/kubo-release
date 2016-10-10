@@ -12,7 +12,8 @@ pushd nginx-release-1.11.4
   ./auto/configure \
     --with-debug \
     --prefix=${BOSH_INSTALL_TARGET} \
-    --with-pcre=../pcre-8.39
+    --with-pcre=../pcre-8.39 \
+    --with-stream
 
   make
   make install

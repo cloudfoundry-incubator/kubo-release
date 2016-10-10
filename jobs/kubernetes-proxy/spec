@@ -8,8 +8,7 @@ packages:
 - pid_utils
 - kubernetes
 
-properties: {}
-
-consumes:
-- name: kubernetes-api-balanced
-  type: kubernetes-api-balanced
+properties:
+  kubernetes-api-url:
+    description: The full URL for the load balancer in front of the masters
+    example: https://api.lite.helmsman.cf-app.com:8443

@@ -5,6 +5,8 @@ templates:
   bin/kubernetes_api_ctl.erb: bin/kubernetes_api_ctl
   config/tokens.csv.erb: config/tokens.csv
   config/authorization_policy.jsonl.erb: config/authorization_policy.jsonl
+  config/kubernetes.pem.erb: config/kubernetes.pem
+  config/kubernetes-key.pem.erb: config/kubernetes-key.pem
 
 packages:
 - pid_utils
@@ -14,6 +16,12 @@ properties:
   users:
     description: List of user credentials
     example: [{username: a, password: b}, ...]
+  certs.kubernetes-ca.cert:
+    description: The certificate authority
+  certs.kubernetes.cert:
+    description: The master certificate
+  certs.kubernetes.key:
+    description: The master certificate's private key
 
 consumes:
 - name: etcd

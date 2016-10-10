@@ -2,11 +2,11 @@
 
 [ -z "$DEBUG" ] || set -x
 
-kubectl="/var/vcap/packages/kubernetes/bin/kubectl --server=<%= "http://#{link('kubernetes-api-balanced').instances.first.address}:8080" %>"
+kubectl="/var/vcap/packages/kubernetes/bin/kubectl --kubeconfig=/var/vcap/jobs/kubeconfig/config/kubeconfig"
 
 ${kubectl} uncordon $(hostname)
 
-TIMEOUT=300
+TIMEOUT=120
 
 if timeout "$TIMEOUT" /var/vcap/jobs/kubelet/bin/ensure_kubelet_up_and_running
 then

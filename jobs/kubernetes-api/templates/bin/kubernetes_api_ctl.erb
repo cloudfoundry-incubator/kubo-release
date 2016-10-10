@@ -42,11 +42,13 @@ start_kubernetes_api_server() {
       --cert-dir=/var/vcap/sys/run/kubernetes/ \
       --enable-swagger-ui=true \
       --etcd-servers=<%= etcd_endpoints %> \
-      --insecure-bind-address=0.0.0.0 \
-      --kubelet-https=false \
-      --secure-port=0 \
+      --insecure-bind-address=127.0.0.1 \
+      --kubelet-https=true \
+      --secure-port=8443 \
       --service-cluster-ip-range=10.32.0.0/24 \
       --service-node-port-range=30000-32767 \
+      --tls-cert-file=/var/vcap/jobs/kubernetes-api/config/kubernetes.pem \
+      --tls-private-key-file=/var/vcap/jobs/kubernetes-api/config/kubernetes-key.pem \
       --token-auth-file=/var/vcap/jobs/kubernetes-api/config/tokens.csv \
       --v=2 \
     1>> $LOG_DIR/kubernetes_api.stdout.log \

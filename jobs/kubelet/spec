@@ -2,17 +2,25 @@
 name: kubelet
 
 templates:
-  bin/drain.bash.erb: bin/drain
+  bin/drain: bin/drain
   bin/kubelet_ctl.erb: bin/kubelet_ctl
-  bin/post-start.bash.erb: bin/post-start
-  bin/ensure_kubelet_up_and_running.bash.erb: bin/ensure_kubelet_up_and_running
+  bin/post-start: bin/post-start
+  bin/ensure_kubelet_up_and_running: bin/ensure_kubelet_up_and_running
+  config/kubelet.pem.erb: config/kubelet.pem
+  config/kubelet-key.pem.erb: config/kubelet-key.pem
 
 packages:
 - pid_utils
 - kubernetes
 
-properties: {}
+properties:
+  certs.kubernetes-ca.cert:
+    description: The Kubernetes certificate authority
+  certs.kubelet.cert:
+    description: The kubelet certificate
+  certs.kubelet.key:
+    description: The kubelet certificate's private key
+  kubernetes-api-url:
+    description: The full URL for the load balancer in front of the masters
+    example: https://api.lite.helmsman.cf-app.com:8443
 
-consumes:
-- name: kubernetes-api-balanced
-  type: kubernetes-api-balanced

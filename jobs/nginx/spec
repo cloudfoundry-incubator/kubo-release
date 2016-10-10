@@ -11,8 +11,4 @@ consumes:
 - name: kubernetes-api
   type: kubernetes-api
 
-provides:
-- name: kubernetes-api-balanced
-  type: kubernetes-api-balanced
-
 properties: {}
