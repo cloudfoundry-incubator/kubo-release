@@ -1,8 +1,18 @@
 <%=
 
 p("users").map do |user|
-  "{\"apiVersion\": \"abac.authorization.kubernetes.io/v1beta1\", \"kind\": \"Policy\", \"spec\": " +
-  "{\"user\":\"%s\", \"namespace\": \"*\", \"resource\": \"*\", \"apiGroup\": \"*\"}}" % [user['username']]
+  policy = {
+    "apiVersion" => "abac.authorization.kubernetes.io/v1beta1",
+    "kind"       => "Policy",
+    "spec"       => {
+      "user"            => user['username'],
+      "namespace"       => "*",
+      "resource"        => "*",
+      "apiGroup"        => "*",
+      "nonResourcePath" => "*"
+    }
+  }
+  policy.to_json
 end.join("\n")
 
 %>
