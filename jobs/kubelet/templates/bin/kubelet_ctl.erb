@@ -7,13 +7,14 @@ export PATH=/var/vcap/packages/kubernetes/bin/:/var/vcap/packages/docker/sbin/:$
 RUN_DIR=/var/vcap/sys/run/kubernetes
 PIDFILE=$RUN_DIR/kubelet.pid
 LOG_DIR=/var/vcap/sys/log/kubernetes
+DATA_DIR=/var/vcap/store/kubernetes
 
 # shellcheck disable=SC1091
 . /var/vcap/packages/pid_utils/pid_utils.sh
 
 setup_directories() {
-  mkdir -p "$RUN_DIR" "$LOG_DIR"
-  chown -R vcap:vcap "$RUN_DIR" "$LOG_DIR"
+  mkdir -p "$RUN_DIR" "$LOG_DIR" "$DATA_DIR"
+  chown -R vcap:vcap "$RUN_DIR" "$LOG_DIR" "$DATA_DIR"
 }
 
 send_process_stdout_to_logfile() {
