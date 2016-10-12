@@ -34,7 +34,7 @@ start_kubernetes_api_server() {
 
   exec chpst -u vcap:vcap  \
     kube-apiserver \
-      --allow-privileged=false \
+      --allow-privileged=true \
       --apiserver-count=<%= api_server_count %> \
       --authorization-mode=ABAC \
       --authorization-policy-file=/var/vcap/jobs/kubernetes-api/config/authorization_policy.jsonl \
@@ -45,7 +45,7 @@ start_kubernetes_api_server() {
       --insecure-bind-address=127.0.0.1 \
       --kubelet-https=true \
       --secure-port=8443 \
-      --service-cluster-ip-range=10.32.0.0/24 \
+      --service-cluster-ip-range=10.100.200.0/24 \
       --service-node-port-range=30000-32767 \
       --tls-cert-file=/var/vcap/jobs/kubernetes-api/config/kubernetes.pem \
       --tls-private-key-file=/var/vcap/jobs/kubernetes-api/config/kubernetes-key.pem \

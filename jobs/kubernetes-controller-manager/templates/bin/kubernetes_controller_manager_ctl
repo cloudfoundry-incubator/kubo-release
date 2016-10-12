@@ -32,7 +32,7 @@ start_kubernetes_controller_manager() {
       --cluster-name=kubernetes \
       --leader-elect=true \
       --master=http://localhost:8080 \
-      --service-cluster-ip-range=10.32.0.0/24 \
+      --service-cluster-ip-range=10.100.200.0/24 \
       --v=2 \
     1>> $LOG_DIR/kubernetes_controller_manager.stdout.log \
     2>> $LOG_DIR/kubernetes_controller_manager.stderr.log
