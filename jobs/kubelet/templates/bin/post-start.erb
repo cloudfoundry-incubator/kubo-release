@@ -3,8 +3,9 @@
 [ -z "$DEBUG" ] || set -x
 
 kubectl="/var/vcap/packages/kubernetes/bin/kubectl --kubeconfig=/var/vcap/jobs/kubeconfig/config/kubeconfig"
+node_name=<%= spec.address %>
 
-${kubectl} uncordon $(hostname)
+${kubectl} uncordon ${node_name}
 
 TIMEOUT=120
 
