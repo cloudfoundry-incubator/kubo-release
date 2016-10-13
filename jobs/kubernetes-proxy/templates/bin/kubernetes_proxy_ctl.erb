@@ -28,6 +28,7 @@ start_kubernetes_proxy() {
 
 
   kube-proxy \
+    --hostname-override=<%= spec.address %> \
     --master=<%= p("kubernetes-api-url") %> \
     --kubeconfig=/var/vcap/jobs/kubeconfig/config/kubeconfig \
     --proxy-mode=iptables \

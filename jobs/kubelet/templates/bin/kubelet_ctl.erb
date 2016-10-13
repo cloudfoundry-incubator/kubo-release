@@ -64,13 +64,10 @@ get_group_pid() {
   ps -ho pgrp "$(pid)"
 }
 
+
 case $1 in
 
   start)
-
-    add-apt-repository -y ppa:gluster/glusterfs-3.8
-    apt-get update
-    apt-get install -y glusterfs-client
 
     setup_directories
     send_process_stdout_to_logfile

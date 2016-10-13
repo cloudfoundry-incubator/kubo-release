@@ -1,0 +1,18 @@
+#!/bin/bash -e
+
+install_gluster() {
+  add-apt-repository -y ppa:gluster/glusterfs-3.8
+  apt-get update
+  apt-get install -y glusterfs-client
+}
+
+shutdown_rpcbind_if_its_running() {
+  /etc/init.d/rpcbind stop || echo Already stopped.
+}
+
+main() {
+  install_gluster
+  shutdown_rpcbind_if_its_running
+}
+
+main
