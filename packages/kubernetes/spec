@@ -2,4 +2,4 @@
 name: kubernetes
 
 files:
-- kubernetes-1.4.0/*
+- kubernetes-1.4.1/*
