@@ -6,7 +6,7 @@ export PATH=/var/vcap/packages/kubernetes/bin/:$PATH
 
 RUN_DIR=/var/vcap/sys/run/kubernetes
 PIDFILE=$RUN_DIR/kubernetes-api.pid
-LOG_DIR=/var/vcap/sys/log/kubernetes
+LOG_DIR=/var/vcap/sys/log/kubernetes-api
 
 # shellcheck disable=SC1091
 . /var/vcap/packages/pid_utils/pid_utils.sh
