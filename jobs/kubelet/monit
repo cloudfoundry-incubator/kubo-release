@@ -3,3 +3,4 @@ check process kubelet
   start program "/var/vcap/jobs/kubelet/bin/kubelet_ctl start"
   stop program "/var/vcap/jobs/kubelet/bin/kubelet_ctl stop"
   group vcap
+  depends on docker
