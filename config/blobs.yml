@@ -7,30 +7,6 @@ flanneld:
   object_id: a59ab752-92e3-46b1-97a5-88e774c4ea7f
   sha: 63076521f1ba5605fa5f97016072a4538d66740f
   size: 21599816
-kubernetes-1.4.0/kube-apiserver:
-  object_id: 75dcec46-d8ba-43e8-abae-eb392636814d
-  sha: cd80e9ae1c4c9013b58880c4a12f40dd1d31970b
-  size: 151141688
-kubernetes-1.4.0/kube-controller-manager:
-  object_id: a38f0d86-d69f-4aa6-966f-de9b30e65e57
-  sha: 7840afd4d1a4941895b5177dfcb307a246ca09fb
-  size: 141041768
-kubernetes-1.4.0/kube-proxy:
-  object_id: 90b02c2a-cdf2-40d8-a547-9e64e9f8d789
-  sha: 4837de4e8ec12057915ad784c879a8fa2b00b5bd
-  size: 72859720
-kubernetes-1.4.0/kube-scheduler:
-  object_id: 7d84f0a7-38b3-471b-b237-0c19e735becf
-  sha: d499412f6dd8b7bafeb03ffa5a7cd6c71dd14b6a
-  size: 80682768
-kubernetes-1.4.0/kubectl:
-  object_id: f8d173e4-7c84-4e51-aea0-eb53016993ed
-  sha: 0b0aef7df796a897c84f17fcc77ad7eb9b68220d
-  size: 83312488
-kubernetes-1.4.0/kubelet:
-  object_id: 591810d7-5f92-4aeb-97e9-f1fda6198134
-  sha: b0418c796db823051ba7b1acb2ac414052e64f89
-  size: 128710504
 nginx/nginx-release-1.11.4.tar.gz:
   object_id: eba69853-8891-4919-ae54-7f24eebda278
   sha: deecc5583de7f250c6f30e8028589d3b09a58a83
