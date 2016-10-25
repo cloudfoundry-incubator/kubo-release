@@ -1,5 +1,5 @@
 /config/dev.yml
-config/private.yml
+/config/private.yml
 /.blobs
 /staging
 /blobs
@@ -9,3 +9,4 @@ config/private.yml
 /.dev_builds
 /.final_builds/jobs/**/*.tgz
 /.final_builds/packages/**/*.tgz
+/pkg

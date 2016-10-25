@@ -1,0 +1,8 @@
+---
+name: credhub_cli
+
+dependencies:
+  - go
+
+files:
+  - github.com/**/*

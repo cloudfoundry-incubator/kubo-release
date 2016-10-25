@@ -1,0 +1,3 @@
+[submodule "src/github.com/pivotal-cf/credhub-cli"]
+	path = src/github.com/pivotal-cf/credhub-cli
+	url = git@github.com:pivotal-cf/credhub-cli.git

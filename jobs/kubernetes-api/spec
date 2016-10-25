@@ -11,6 +11,7 @@ templates:
 packages:
 - pid_utils
 - kubernetes
+- credhub_cli
 
 properties:
   users:
