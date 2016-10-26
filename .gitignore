@@ -4,9 +4,10 @@
 /staging
 /blobs
 /bin
+/pkg
 /releases/*.tgz
 /dev_releases
 /.dev_builds
 /.final_builds/jobs/**/*.tgz
 /.final_builds/packages/**/*.tgz
-/pkg
+/.cache
