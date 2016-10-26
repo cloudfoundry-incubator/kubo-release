@@ -1,0 +1,14 @@
+#!/bin/bash -ex
+
+mkdir -p ${BOSH_INSTALL_TARGET}/src
+cp -a . ${BOSH_INSTALL_TARGET}/src
+
+export GOPATH=$BOSH_INSTALL_TARGET
+export GOROOT=$(readlink -nf /var/vcap/packages/go)
+export PATH=$GOROOT/bin:$PATH
+
+cd ${BOSH_INSTALL_TARGET}/src/github.com/pivotal-cf/credhub-cli
+make build
+mv build/credhub ${BOSH_INSTALL_TARGET}/
+
+rm -rf ${BOSH_INSTALL_TARGET}/src ${BOSH_INSTALL_TARGET}/pkg
