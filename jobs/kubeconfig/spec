@@ -9,8 +9,13 @@ templates:
 packages: []
 
 properties:
-  certs.kubernetes-ca.cert:
-    description: The certificate authority
+  tls.kubernetes:
+    description: "Certificate and private key for the Kubernetes master"
+    type: certificate
+    parameters:
+      ca: Main
+      key_length: 4096
+      duration: 365
   kubernetes-api-url:
     description: The full URL for the load balancer in front of the masters
     example: https://api.lite.helmsman.cf-app.com:8443

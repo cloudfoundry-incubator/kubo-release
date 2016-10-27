@@ -17,12 +17,13 @@ properties:
   users:
     description: List of user credentials
     example: [{username: a, password: b}, ...]
-  certs.kubernetes-ca.cert:
-    description: The certificate authority
-  certs.kubernetes.cert:
-    description: The master certificate
-  certs.kubernetes.key:
-    description: The master certificate's private key
+  tls.kubernetes:
+    description: "Certificate and private key for the Kubernetes master"
+    type: certificate
+    parameters:
+      ca: Main
+      key_length: 4096
+      duration: 365
 
 consumes:
 - name: etcd
