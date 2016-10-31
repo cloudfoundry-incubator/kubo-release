@@ -17,7 +17,10 @@ packages:
 properties:
   tls.kubelet:
     description: "Certificate and private key for the Kubernetes worker"
-    type: password
+    type: certificate
+    parameters:
+      key_length: 4096
+      duration: 365
   kubernetes-api-url:
     description: The full URL for the load balancer in front of the masters
     example: https://api.lite.helmsman.cf-app.com:8443

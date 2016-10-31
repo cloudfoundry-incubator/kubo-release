@@ -20,10 +20,6 @@ properties:
   tls.kubernetes:
     description: "Certificate and private key for the Kubernetes master"
     type: certificate
-    parameters:
-      ca: Main
-      key_length: 4096
-      duration: 365
 
 consumes:
 - name: etcd
