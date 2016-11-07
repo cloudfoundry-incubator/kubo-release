@@ -1,0 +1,5 @@
+#!/bin/bash
+
+# There's no code in this release, so no tests as yet
+
+exit 0
