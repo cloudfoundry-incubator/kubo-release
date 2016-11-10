@@ -2,7 +2,7 @@
 name: syslog-forwarding-setup
 
 templates:
-  bin/pre-start.bash.erb: bin/pre-start
+  bin/post-start.bash.erb: bin/post-start
   config/syslog_forwarder.conf.erb: config/syslog_forwarder.conf
 
 properties:
