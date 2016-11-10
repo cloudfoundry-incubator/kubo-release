@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+set -e
+
+SYSLOG_FILE_NAME=$1
+CONFIG_DIR=$2
+
+if [[ -z $CONFIG_DIR ]]
+then
+  echo "Usage: enable_syslog_config [config_file_name] [config dir]"
+  exit 1
+fi
+
+cp "$CONFIG_DIR/$SYSLOG_FILE_NAME" "/etc/rsyslog.d/$SYSLOG_FILE_NAME"

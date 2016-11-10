@@ -3,9 +3,17 @@ name: kubernetes-controller-manager
 
 templates:
   bin/kubernetes_controller_manager_ctl: bin/kubernetes_controller_manager_ctl
+  bin/pre-start: bin/pre-start
+  config/syslog_forwarder.conf.erb: config/syslog_forwarder.conf
+  config/kubernetes_controller_manager_syslog.conf: config/kubernetes_controller_manager_syslog.conf
 
 packages:
 - pid_utils
 - kubernetes
+- syslog_aggregator
 
-properties: {}
+properties:
+  syslog_aggregator.address:
+    description: "Syslog drain hostname"
+  syslog_aggregator.port:
+    description: "Syslog drain port"

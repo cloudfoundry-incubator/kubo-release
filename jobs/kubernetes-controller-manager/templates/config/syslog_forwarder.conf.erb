@@ -1,0 +1,30 @@
+<% if_p("syslog_aggregator.address", "syslog_aggregator.port") do %>
+
+  <%
+    networks = spec.networks.marshal_dump.values
+    network = networks.find do |network_spec|
+      network_spec.default
+    end
+
+    network ||= networks.first
+    job_ip = network.ip
+  %>
+
+  $MaxMessageSize 8k # default is 2k
+  $WorkDirectory /var/spool/rsyslog
+
+  template(name="CfLogTemplate" type="list") {
+  constant(value="<")
+  property(name="pri")
+  constant(value=">")
+  property(name="timestamp" dateFormat="rfc3339")
+  constant(value=" <%= job_ip %> ")
+  property(name="programname")
+  constant(value=" [deployment=<%= spec.deployment %> job=<%= name %> index=<%= spec.index.to_i %>] ")
+  property(name="msg")
+  }
+
+  # http://www.rsyslog.com/doc/v7-stable/configuration/actions.html: @ = UDP, @@ = TCP
+  *.* @@<%= p("syslog_aggregator.address") %>:<%= p("syslog_aggregator.port") %>;CfLogTemplate
+
+<% end %>

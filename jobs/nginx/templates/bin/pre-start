@@ -1,0 +1,22 @@
+#!/bin/bash -e
+
+JOB_NAME=nginx
+CONF_DIR="/var/vcap/jobs/${JOB_NAME}/config"
+
+setup_syslog() {
+  (
+    flock 9
+    # syslog forwarding
+    /var/vcap/packages/syslog_aggregator/enable_syslog_config "${JOB_NAME}_syslog.conf" "${CONF_DIR}"
+    /var/vcap/packages/syslog_aggregator/setup_syslog_forwarder "${CONF_DIR}"
+
+    # restart rsyslog to use the latest configuration
+    /usr/sbin/service rsyslog restart
+  ) 9>/var/lock/rsyslog_restart
+}
+
+main() {
+  setup_syslog
+}
+
+main
