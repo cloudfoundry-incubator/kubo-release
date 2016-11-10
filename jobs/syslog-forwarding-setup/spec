@@ -1,0 +1,13 @@
+---
+name: syslog-forwarding-setup
+
+templates:
+  bin/pre-start.bash.erb: bin/pre-start
+  config/syslog_forwarder.conf.erb: config/syslog_forwarder.conf
+
+properties:
+  jobs-to-forward:
+    description: "List of jobs to forward logs for"
+  syslog-endpoint:
+    description: "Syslog drain endpoint"
+    example: "drain-host:port"

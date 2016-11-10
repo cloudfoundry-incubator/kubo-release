@@ -9,13 +9,10 @@ templates:
   bin/ensure_kubelet_up_and_running.erb: bin/ensure_kubelet_up_and_running
   config/kubelet.pem.erb: config/kubelet.pem
   config/kubelet-key.pem.erb: config/kubelet-key.pem
-  config/syslog_forwarder.conf.erb: config/syslog_forwarder.conf
-  config/kubelet_syslog.conf: config/kubelet_syslog.conf
 
 packages:
 - pid_utils
 - kubernetes
-- syslog_aggregator
 
 properties:
   tls.kubelet:
@@ -27,7 +24,3 @@ properties:
   kubernetes-api-url:
     description: The full URL for the load balancer in front of the masters
     example: https://api.lite.helmsman.cf-app.com:8443
-  syslog_aggregator.address:
-    description: "Syslog drain hostname"
-  syslog_aggregator.port:
-    description: "Syslog drain port"

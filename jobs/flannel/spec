@@ -3,21 +3,13 @@ name: flanneld
 
 templates:
   bin/flanneld_ctl.erb: bin/flanneld_ctl
-  bin/pre-start: bin/pre-start
-  config/syslog_forwarder.conf.erb: config/syslog_forwarder.conf
-  config/flanneld_syslog.conf: config/flanneld_syslog.conf
 
 packages:
 - pid_utils
 - etcdctl
 - flanneld
-- syslog_aggregator
 
-properties:
-  syslog_aggregator.address:
-    description: "Syslog drain hostname"
-  syslog_aggregator.port:
-    description: "Syslog drain port"
+properties: {}
 
 consumes:
 - name: etcd

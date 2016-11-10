@@ -12,22 +12,9 @@ shutdown_rpcbind_if_its_running() {
   /etc/init.d/rpcbind stop || echo Already stopped.
 }
 
-setup_syslog() {
-  (
-    flock 9
-    # syslog forwarding
-    /var/vcap/packages/syslog_aggregator/enable_syslog_config kubelet_syslog.conf $CONF_DIR
-    /var/vcap/packages/syslog_aggregator/setup_syslog_forwarder $CONF_DIR
-
-    # restart rsyslog to use the latest configuration
-    /usr/sbin/service rsyslog restart
-  ) 9>/var/lock/rsyslog_restart
-}
-
 main() {
   install_gluster
   shutdown_rpcbind_if_its_running
-  setup_syslog
 }
 
 main

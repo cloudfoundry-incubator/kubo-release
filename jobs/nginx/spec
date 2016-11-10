@@ -3,21 +3,13 @@ name: nginx
 
 templates:
   bin/nginx_ctl: bin/nginx_ctl
-  bin/pre-start: bin/pre-start
   config/nginx.conf.erb: config/nginx.conf
-  config/syslog_forwarder.conf.erb: config/syslog_forwarder.conf
-  config/nginx_syslog.conf: config/nginx_syslog.conf
 
 packages:
 - nginx
-- syslog_aggregator
 
 consumes:
 - name: kubernetes-api
   type: kubernetes-api
 
-properties:
-  syslog_aggregator.address:
-    description: "Syslog drain hostname"
-  syslog_aggregator.port:
-    description: "Syslog drain port"
+properties: {}

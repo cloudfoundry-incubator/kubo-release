@@ -1,4 +1,0 @@
----
-name: syslog_aggregator
-files:
-- syslog_aggregator/**/*

@@ -3,18 +3,14 @@ name: kubernetes-api
 
 templates:
   bin/kubernetes_api_ctl.erb: bin/kubernetes_api_ctl
-  bin/pre-start: bin/pre-start
   config/tokens.csv.erb: config/tokens.csv
   config/authorization_policy.jsonl.erb: config/authorization_policy.jsonl
   config/kubernetes.pem.erb: config/kubernetes.pem
   config/kubernetes-key.pem.erb: config/kubernetes-key.pem
-  config/syslog_forwarder.conf.erb: config/syslog_forwarder.conf
-  config/kubernetes_api_syslog.conf: config/kubernetes_api_syslog.conf
 
 packages:
 - pid_utils
 - kubernetes
-- syslog_aggregator
 
 properties:
   users:
@@ -23,10 +19,6 @@ properties:
   tls.kubernetes:
     description: "Certificate and private key for the Kubernetes master"
     type: certificate
-  syslog_aggregator.address:
-    description: "Syslog drain hostname"
-  syslog_aggregator.port:
-    description: "Syslog drain port"
 
 consumes:
 - name: etcd
