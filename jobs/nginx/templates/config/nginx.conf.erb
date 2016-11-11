@@ -18,3 +18,20 @@ stream {
         proxy_pass api_server;
     }
 }
+
+http {
+    upstream kubernetes-dashboard {
+<%=
+  link("kubernetes-workers").instances.map do |instance|
+    "        server #{instance.address}:31000;"
+  end.join("\n")
+%>
+    }
+    server {
+        listen 80;
+
+        location / {
+            proxy_pass http://kubernetes-dashboard;
+        }
+    }
+}
