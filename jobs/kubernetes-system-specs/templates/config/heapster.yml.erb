@@ -1,0 +1,43 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: heapster
+  namespace: kube-system
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        task: monitoring
+        k8s-app: heapster
+        version: v6
+    spec:
+      containers:
+      - name: heapster
+        image: kubernetes/heapster:canary
+        imagePullPolicy: Always
+        command:
+        - /heapster
+        - --source=kubernetes:<%= p("kubernetes-api-url") %>?useServiceAccount=true
+        - --sink=influxdb:http://monitoring-influxdb:8086
+        - --vmodule=*=5
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    task: monitoring
+    # For use as a Cluster add-on (https://github.com/kubernetes/kubernetes/tree/master/cluster/addons)
+    # If you are NOT using this as an addon, you should comment out this line.
+    kubernetes.io/cluster-service: 'true'
+    kubernetes.io/name: Heapster
+  name: heapster
+  namespace: kube-system
+spec:
+  ports:
+  - port: 80
+    targetPort: 8082
+  selector:
+    k8s-app: heapster

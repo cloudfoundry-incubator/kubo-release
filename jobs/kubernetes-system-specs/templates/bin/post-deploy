@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+spec_dir="/var/vcap/jobs/kubernetes-system-specs/config/"
+kubectl="/var/vcap/packages/kubernetes/bin/kubectl --kubeconfig=/var/vcap/jobs/kubeconfig/config/kubeconfig"
+
+deploy_specs() {
+  ${kubectl} apply -f ${spec_dir}/kubedns.yml
+  ${kubectl} apply -f ${spec_dir}/influxdb.yml
+  ${kubectl} apply -f ${spec_dir}/heapster.yml
+  ${kubectl} apply -f ${spec_dir}/kubernetes-dashboard.yml
+}
+
+main() {
+  deploy_specs
+}
+
+main
