@@ -32,8 +32,8 @@ start_kubernetes_controller_manager() {
       --cluster-name=kubernetes \
       --leader-elect=true \
       --master=http://localhost:8080 \
-      --service-account-private-key-file=/var/vcap/jobs/kubernetes-api/config/kubernetes-key.pem \
       --root-ca-file=/var/vcap/jobs/kubeconfig/config/ca.pem \
+      --service-account-private-key-file=/var/vcap/jobs/kubernetes-api/config/kubernetes-key.pem \
       --service-cluster-ip-range=10.100.200.0/24 \
       --v=2 \
     1>> $LOG_DIR/kubernetes_controller_manager.stdout.log \
