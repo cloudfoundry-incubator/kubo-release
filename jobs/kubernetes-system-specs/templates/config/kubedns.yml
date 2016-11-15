@@ -80,7 +80,7 @@ spec:
         # command = "/kube-dns"
         - --domain=cluster.local
         - --dns-port=10053
-        - --kubecfg-file=/kubeconfig
+        - --kubecfg-file=/var/vcap/jobs/kubeconfig/config/kubeconfig
         ports:
         - containerPort: 10053
           name: dns-local
@@ -89,10 +89,8 @@ spec:
           name: dns-tcp-local
           protocol: TCP
         volumeMounts:
-        - name: kubeconfig
-          mountPath: /kubeconfig
-        - name: kubernetes-ca
-          mountPath: /var/vcap/jobs/kubeconfig/config/ca.pem
+        - name: config
+          mountPath: /var/vcap/jobs/kubeconfig/config/
       - name: dnsmasq
         image: gcr.io/google_containers/kube-dnsmasq-amd64:1.3
         args:
@@ -126,9 +124,7 @@ spec:
           protocol: TCP
       dnsPolicy: Default  # Don't use cluster DNS.
       volumes:
-      - name: kubeconfig
+      - name: config
         hostPath:
-          path: "/var/vcap/jobs/kubeconfig/config/kubeconfig"
-      - name: kubernetes-ca
-        hostPath:
-          path: "/var/vcap/jobs/kubeconfig/config/ca.pem"
+          path: "/var/vcap/jobs/kubeconfig/config/"
+

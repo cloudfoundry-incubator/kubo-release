@@ -23,11 +23,11 @@ spec:
         - containerPort: 9090
           protocol: TCP
         args:
-        - --kubeconfig=/kubeconfig
+        - --kubeconfig=/var/vcap/jobs/kubeconfig/config/kubeconfig
         - --heapster-host=http://heapster.kube-system.svc.cluster.local:80
         env:
         - name: KUBECONFIG
-          value: /kubeconfig
+          value: /var/vcap/jobs/kubeconfig/config/kubeconfig
         livenessProbe:
           httpGet:
             path: /
@@ -35,17 +35,12 @@ spec:
           initialDelaySeconds: 30
           timeoutSeconds: 30
         volumeMounts:
-        - name: kubeconfig
-          mountPath: /kubeconfig
-        - name: kubernetes-ca
-          mountPath: /var/vcap/jobs/kubeconfig/config/ca.pem
+        - name: config
+          mountPath: /var/vcap/jobs/kubeconfig/config/
       volumes:
-      - name: kubeconfig
+      - name: config
         hostPath:
-          path: "/var/vcap/jobs/kubeconfig/config/kubeconfig"
-      - name: kubernetes-ca
-        hostPath:
-          path: "/var/vcap/jobs/kubeconfig/config/ca.pem"
+          path: "/var/vcap/jobs/kubeconfig/config/"
 ---
 kind: Service
 apiVersion: v1
