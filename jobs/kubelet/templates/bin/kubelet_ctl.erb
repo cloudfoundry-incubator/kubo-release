@@ -8,6 +8,7 @@ RUN_DIR=/var/vcap/sys/run/kubernetes
 PIDFILE=$RUN_DIR/kubelet.pid
 LOG_DIR=/var/vcap/sys/log/kubelet
 DATA_DIR=/var/vcap/store/kubernetes
+DOCKER_SOCKET=unix:///var/vcap/sys/run/docker/docker.sock
 
 # shellcheck disable=SC1091
 . /var/vcap/packages/pid_utils/pid_utils.sh
@@ -34,7 +35,8 @@ start_kubelet() {
     --cluster-domain=cluster.local \
     --configure-cbr0=true \
     --container-runtime=docker \
-    --docker-endpoint=unix:///var/vcap/sys/run/docker/docker.sock \
+    --docker="${DOCKER_SOCKET}" \
+    --docker-endpoint="${DOCKER_SOCKET}" \
     --hostname-override="<%= spec.address %>" \
     --kubeconfig=/var/vcap/jobs/kubeconfig/config/kubeconfig \
     --non-masquerade-cidr 10.200.0.0/16 \
