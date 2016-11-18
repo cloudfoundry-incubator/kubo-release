@@ -13,9 +13,10 @@ packages:
 - kubernetes
 
 properties:
-  users:
-    description: List of user credentials
-    example: [{username: a, password: b}, ...]
+  admin-username:
+    description: The admin username for the Kubernetes cluster
+  admin-password:
+    description: The password for the admin account
   tls.kubernetes:
     description: "Certificate and private key for the Kubernetes master"
     type: certificate

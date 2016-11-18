@@ -1,8 +1,6 @@
 <%=
 
-p("users").map do |user|
-  "%s,%s,%s" % [user['password'], user['username'], user['username']]
-end.join("\n")
+"%s,%s,%s" % [p("admin-password"), p("admin-username"), p("admin-username")]
 
 %>
 49efb58254c4d7a291378a0a71c82c26,kubelet,kubelet

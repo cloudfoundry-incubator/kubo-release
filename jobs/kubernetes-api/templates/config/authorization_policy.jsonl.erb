@@ -1,19 +1,17 @@
 <%=
 
-p("users").map do |user|
-  policy = {
-    "apiVersion" => "abac.authorization.kubernetes.io/v1beta1",
-    "kind"       => "Policy",
-    "spec"       => {
-      "user"            => user['username'],
-      "namespace"       => "*",
-      "resource"        => "*",
-      "apiGroup"        => "*",
-      "nonResourcePath" => "*"
-    }
+policy = {
+  "apiVersion" => "abac.authorization.kubernetes.io/v1beta1",
+  "kind"       => "Policy",
+  "spec"       => {
+    "user"            => p('admin-username'),
+    "namespace"       => "*",
+    "resource"        => "*",
+    "apiGroup"        => "*",
+    "nonResourcePath" => "*"
   }
-  policy.to_json
-end.join("\n")
+}
+policy.to_json
 
 %>
 {"apiVersion": "abac.authorization.kubernetes.io/v1beta1", "kind": "Policy", "spec": {"user":"kubelet", "namespace": "*", "resource": "*", "apiGroup": "*", "nonResourcePath": "*"}}
