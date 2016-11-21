@@ -19,7 +19,6 @@ properties:
     description: The password for the admin account
   kubelet-password:
     description: The password for the kubelet user
-    type: password
   tls.kubernetes:
     description: "Certificate and private key for the Kubernetes master"
     type: certificate
