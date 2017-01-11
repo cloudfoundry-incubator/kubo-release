@@ -39,3 +39,38 @@ kubernetes-1.4.6/kubelet:
   object_id: 24502712-4730-4070-8771-269d0fc6c53b
   sha: 7d70e090951486cae52d9a82b7aaf5056f84f8ed
   size: 129126768
+container-images/gcr.io_google_containers_exechealthz-amd64:1.1.tgz:
+  object_id: b39e1ecd-b012-4348-835d-14fbd020568f
+  sha: !binary |-
+    OTRkMzIzOGY5NTBkYzUzMDllODE3YTI5Y2U5ZjRlNDU5OTY2Y2U5NQ==
+  size: 2870256
+container-images/gcr.io_google_containers_kubernetes-dashboard-amd64:v1.4.2.tgz:
+  object_id: 2eef72fa-01e1-4816-bbfe-f6dc24635954
+  sha: !binary |-
+    NDBkNDdjZTMxYTZlZDg2ZDc5NmExYThmMDE2ZWYwNTVjNzk2ZWM0Mg==
+  size: 24933158
+container-images/gcr.io_google_containers_pause.tgz:
+  object_id: 0c3de7dd-5c1a-472e-9204-15e775c062b3
+  sha: !binary |-
+    N2I4MjczMDI1OGQxNDM2MDJiODVlZmE3ZWMyZGE1YmM3NTRmM2E5Mw==
+  size: 71680
+container-images/gcr.io_google_containers_kube-dnsmasq-amd64:1.3.tgz:
+  object_id: b1341111-022c-4a71-bb11-934354b8e533
+  sha: !binary |-
+    N2Q4MzI3MTI0NWNhMjkyNjgzYjMyODQxYjdjZmIyN2EzYTI1OTE5Mw==
+  size: 2476131
+container-images/kubernetes_heapster_influxdb:v0.6.tgz:
+  object_id: 627ab349-6b25-4298-9bbc-b8edf70c82ff
+  sha: !binary |-
+    Y2MzM2FmMjU4MGVlYWQzNzViYjFlYmY1ZDJjYWNmNmRjNzE0NzdhOA==
+  size: 105081408
+container-images/gcr.io_google_containers_kubedns-amd64:1.7.tgz:
+  object_id: bd1f4cf9-9b44-4fba-b605-fa05f9c7b11e
+  sha: !binary |-
+    OWNlMGJhNzNkZTg5ZTYxNWM3NjEyODE0YTBmMDYxMDFmNTU2MjVkNQ==
+  size: 11894000
+container-images/gcr.io_google_containers_heapster:v1.1.0.tgz:
+  object_id: 8216bdf1-d497-4124-9f41-242dfce5af85
+  sha: !binary |-
+    OWNiNTI0Zjc2MGU2ZmZiOTk2NjRmM2IzYzFmMzE3ZDhkOTdkYmMwZA==
+  size: 32207159
