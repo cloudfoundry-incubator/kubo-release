@@ -1,11 +1,10 @@
 #!/bin/bash -e
 
 CONF_DIR=/var/vcap/jobs/kubelet/config
+PKG_DIR=/var/vcap/packages/kubernetes
 
 install_gluster() {
-  add-apt-repository -y ppa:gluster/glusterfs-3.8
-  apt-get update
-  apt-get install -y glusterfs-client
+  sudo dpkg -i ${PKG_DIR}/glusterfs-client/*.deb
 }
 
 shutdown_rpcbind_if_its_running() {
