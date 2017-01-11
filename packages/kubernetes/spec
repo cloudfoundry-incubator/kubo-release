@@ -2,4 +2,5 @@
 name: kubernetes
 
 files:
+- container-images/*
 - kubernetes-1.4.6/*
