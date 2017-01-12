@@ -70,10 +70,10 @@ container-images/gcr.io_google_containers_kubedns-amd64:1.7.tgz:
     OWNlMGJhNzNkZTg5ZTYxNWM3NjEyODE0YTBmMDYxMDFmNTU2MjVkNQ==
   size: 11894000
 container-images/gcr.io_google_containers_heapster:v1.1.0.tgz:
-  object_id: 8216bdf1-d497-4124-9f41-242dfce5af85
+  object_id: b6c60d0d-e4ff-408b-a42f-ce2a0b005df3
   sha: !binary |-
-    OWNiNTI0Zjc2MGU2ZmZiOTk2NjRmM2IzYzFmMzE3ZDhkOTdkYmMwZA==
-  size: 32207159
+    NzBjN2I5MGJmNzlkOTcxNGE5NzRhYTBiNDIyOTQxYjU2ODI2NDQyNA==
+  size: 32207205
 glusterfs-client/libdevmapper-event1.02.1_2%3a1.02.77-6ubuntu2_amd64.deb:
   object_id: 8fae861b-e5c6-4e38-997e-48402d762ad8
   sha: !binary |-
@@ -149,3 +149,8 @@ glusterfs-client/python2.7_2.7.6-8ubuntu0.3_amd64.deb:
   sha: !binary |-
     Yjg2OTg5ZWJhNTc3ZjJmOTk4YTgwMmY2NTNkMmU4ZWVhZmRlY2Y3NQ==
   size: 196592
+container-images/gcr.io_google_containers_pause-amd64:3.0.tgz:
+  object_id: a6459b64-32ce-4e99-a944-4c696fa9fd52
+  sha: !binary |-
+    NTFkOTRjOWQ5NzEwNjAyNDQ1NGYyMGJmNDQzMTMyMDU4ZTNkOTMzNA==
+  size: 313309
