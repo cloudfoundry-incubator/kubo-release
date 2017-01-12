@@ -15,7 +15,7 @@ spec:
       containers:
       - name: heapster
         image: gcr.io/google_containers/heapster:v1.1.0
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         command:
         - /heapster
         - --source=kubernetes:<%= p("kubernetes-api-url") %>?useServiceAccount=true
