@@ -6,7 +6,7 @@ import (
 )
 
 type Pooler interface {
-	Start(route.Source, route.Announcer) chan<- struct{}
+	Start(route.Source, route.Sink) chan<- struct{}
 	Running() bool
 }
 
@@ -19,7 +19,7 @@ func ByTime(duration time.Duration) Pooler {
 	return &time_based{duration: duration, running: false}
 }
 
-func (t *time_based) tick(src route.Source, sink route.Announcer) {
+func (t *time_based) tick(src route.Source, sink route.Sink) {
 	routes, err := src.TCP()
 	if err != nil {
 		panic(err)
@@ -30,7 +30,7 @@ func (t *time_based) tick(src route.Source, sink route.Announcer) {
 	}
 }
 
-func (tb *time_based) Start(src route.Source, sink route.Announcer) chan<- struct{} {
+func (tb *time_based) Start(src route.Source, sink route.Sink) chan<- struct{} {
 	done := make(chan struct{})
 	go func() {
 		tb.running = true

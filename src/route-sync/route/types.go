@@ -16,6 +16,6 @@ type Source interface {
 	TCP() ([]*TCP, error)
 }
 
-type Announcer interface {
+type Sink interface {
 	TCP(routes []*TCP) error
 }

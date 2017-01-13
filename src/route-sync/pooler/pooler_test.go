@@ -18,7 +18,7 @@ var _ = Describe("Time-based Pooler", func() {
 
 		running := func() bool { return pool.Running() }
 
-		done := pool.Start(&mocks.Source{}, &mocks.Announcer{})
+		done := pool.Start(&mocks.Source{}, &mocks.Sink{})
 		Eventually(running).Should(BeTrue())
 		done <- struct{}{}
 		Eventually(running).Should(BeFalse())
@@ -32,13 +32,13 @@ var _ = Describe("Time-based Pooler", func() {
 			Backend: []route.Endpoint{route.Endpoint{IP: net.ParseIP("10.10.0.10"), Port: 9090}}}
 
 		src.TCP_value = []*route.TCP{tcp_route}
-		announcer := &mocks.Announcer{}
+		sink := &mocks.Sink{}
 
-		done := pool.Start(src, announcer)
+		done := pool.Start(src, sink)
 
 		Eventually(func() bool { return src.TCP_count > 0 }).Should(BeTrue())
-		Eventually(func() bool { return announcer.TCP_count > 0 }).Should(BeTrue())
-		Expect(announcer.TCP_values[0][0]).To(Equal(tcp_route))
+		Eventually(func() bool { return sink.TCP_count > 0 }).Should(BeTrue())
+		Expect(sink.TCP_values[0][0]).To(Equal(tcp_route))
 
 		done <- struct{}{}
 	})
