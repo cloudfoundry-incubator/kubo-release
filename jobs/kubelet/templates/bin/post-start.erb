@@ -5,6 +5,24 @@
 kubectl="/var/vcap/packages/kubernetes/bin/kubectl --kubeconfig=/var/vcap/jobs/kubeconfig/config/kubeconfig"
 node_name=<%= spec.address %>
 
+DOCKER_SOCKET=unix:///var/vcap/sys/run/docker/docker.sock
+CONTAINER_IMAGE_DIR=/var/vcap/packages/kubernetes/container-images
+
+load_container() {
+    path=$1
+
+    echo "loading cached container: ${path}"
+    sudo /var/vcap/jobs/kubelet/packages/docker/bin/docker -H ${DOCKER_SOCKET} load < ${path}
+}
+
+load_cached_containers() {
+    for img in ${CONTAINER_IMAGE_DIR}/*.tgz; do
+        load_container ${img}
+    done
+}
+
+load_cached_containers
+
 ${kubectl} uncordon ${node_name}
 
 TIMEOUT=120

@@ -17,6 +17,7 @@ spec:
       containers:
       - name: influxdb
         image: kubernetes/heapster_influxdb:v0.6
+        imagePullPolicy: IfNotPresent
         volumeMounts:
         - mountPath: /data
           name: influxdb-storage
