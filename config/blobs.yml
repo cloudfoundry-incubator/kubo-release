@@ -1,156 +1,109 @@
----
+container-images/gcr.io_google_containers_exechealthz-amd64:1.1.tgz:
+  size: 2870256
+  sha: 94d3238f950dc5309e817a29ce9f4e459966ce95
+container-images/gcr.io_google_containers_heapster:v1.1.0.tgz:
+  size: 32207205
+  sha: 70c7b90bf79d9714a974aa0b422941b568264424
+container-images/gcr.io_google_containers_kube-dnsmasq-amd64:1.3.tgz:
+  size: 2476131
+  sha: 7d83271245ca292683b32841b7cfb27a3a259193
+container-images/gcr.io_google_containers_kubedns-amd64:1.7.tgz:
+  size: 11894000
+  sha: 9ce0ba73de89e615c7612814a0f06101f55625d5
+container-images/gcr.io_google_containers_kubernetes-dashboard-amd64:v1.4.2.tgz:
+  size: 24933158
+  sha: 40d47ce31a6ed86d796a1a8f016ef055c796ec42
+container-images/gcr.io_google_containers_pause-amd64:3.0.tgz:
+  size: 313309
+  sha: 51d94c9d97106024454f20bf443132058e3d9334
+container-images/gcr.io_google_containers_pause.tgz:
+  size: 71680
+  sha: 7b82730258d143602b85efa7ec2da5bc754f3a93
+container-images/kubernetes_heapster_influxdb:v0.6.tgz:
+  size: 105081408
+  sha: cc33af2580eead375bb1ebf5d2cacf6dc71477a8
 etcdctl:
+  size: 18427584
   object_id: fef58f04-bcb1-47e2-bc79-232fabf22288
   sha: 11f0462cc86bf85332399a2fa584d5bb46d0cb2a
-  size: 18427584
 flanneld:
+  size: 21599816
   object_id: a59ab752-92e3-46b1-97a5-88e774c4ea7f
   sha: 63076521f1ba5605fa5f97016072a4538d66740f
-  size: 21599816
-nginx/nginx-release-1.11.4.tar.gz:
-  object_id: eba69853-8891-4919-ae54-7f24eebda278
-  sha: deecc5583de7f250c6f30e8028589d3b09a58a83
-  size: 987038
-nginx/pcre-8.39.tar.gz:
-  object_id: 37aa43ff-1bc6-4d01-8c06-6e7f21417464
-  sha: b3aec1f643d9701841e2f9d57ac121a7ff448fc8
-  size: 2062258
+glusterfs-client/attr_1%3a2.4.47-1ubuntu1_amd64.deb:
+  size: 29346
+  sha: effe5bf80d830d64ce27675b67b4e21c264197e8
+glusterfs-client/fuse_2.9.2-4ubuntu4.14.04.1_amd64.deb:
+  size: 25106
+  sha: d7dde526bc751b118fe296fd8e3d6a7e71251c3c
+glusterfs-client/glusterfs-client_3.8.8-ubuntu1~trusty1_amd64.deb:
+  size: 19482
+  sha: fdaa5cce3c312e79de29007035a83f2beb165fac
+glusterfs-client/glusterfs-common_3.8.8-ubuntu1~trusty1_amd64.deb:
+  size: 2890072
+  sha: 98f73f56f40722b9090c630551d281a8bec9a70e
+glusterfs-client/libaio1_0.3.109-4_amd64.deb:
+  size: 6364
+  sha: 6ba128949ea62436fd917115d325cf3f2fa83e10
+glusterfs-client/libdevmapper-event1.02.1_2%3a1.02.77-6ubuntu2_amd64.deb:
+  size: 10812
+  sha: 2873ddde9dfa3897918fb48a470fdf6ba511e182
+glusterfs-client/libibverbs1_1.1.7-1ubuntu1.1_amd64.deb:
+  size: 23608
+  sha: 80c29a02fa10b669c21a67af480e12067691bb95
+glusterfs-client/liblvm2app2.2_2.02.98-6ubuntu2_amd64.deb:
+  size: 243236
+  sha: 0c81bd2c10a3f2e9f59550a616cef8366ba33812
+glusterfs-client/libpython2.7-minimal_2.7.6-8ubuntu0.3_amd64.deb:
+  size: 306648
+  sha: 268fb6f9fffdab4ad34d018e0f39ade3ca83e61e
+glusterfs-client/libpython2.7-stdlib_2.7.6-8ubuntu0.3_amd64.deb:
+  size: 1873274
+  sha: 194436a60fb7e3256e5617cc84f5f03cc0c0f0ae
+glusterfs-client/libpython2.7_2.7.6-8ubuntu0.3_amd64.deb:
+  size: 1039462
+  sha: b74ef212062c7ce6a5f80576b59d914d6a5792cb
+glusterfs-client/librdmacm1_1.0.16-1_amd64.deb:
+  size: 36818
+  sha: dd192678b7dbe686b7327ea7c0da2456c3a14d1e
+glusterfs-client/liburcu1_0.7.12-0ubuntu2_amd64.deb:
+  size: 34852
+  sha: 2ac3e285032f428b9f67c3993054ed463fb4e6ab
+glusterfs-client/python2.7-minimal_2.7.6-8ubuntu0.3_amd64.deb:
+  size: 1186768
+  sha: fd4838f1f925eee66ef8a763a5995679c17a8dd3
+glusterfs-client/python2.7_2.7.6-8ubuntu0.3_amd64.deb:
+  size: 196592
+  sha: b86989eba577f2f998a802f653d2e8eeafdecf75
 kubernetes-1.4.6/kube-apiserver:
+  size: 151001624
   object_id: af61eda6-3aed-4e19-9037-1e030ab52cce
   sha: a2ec0fed640ee900723e0cc5b1b0f84253323b2f
-  size: 151001624
 kubernetes-1.4.6/kube-controller-manager:
+  size: 141028448
   object_id: 695f1e9a-b278-464c-8b67-3499cda869ee
   sha: 4e91fd7aab69c5664e0d5d47f7edea532d5b03d5
-  size: 141028448
 kubernetes-1.4.6/kube-proxy:
+  size: 72367392
   object_id: 35b66051-4ee6-49a7-a195-2794d2833f59
   sha: 809555cb727b2ecca0e5df2244409be37df47406
-  size: 72367392
 kubernetes-1.4.6/kube-scheduler:
+  size: 80201536
   object_id: 0cf0e8a2-85b7-4180-a2f2-d42f4ad410dd
   sha: 2ae36797e45fe9fdfcbbc67fc7a73e193938e94b
-  size: 80201536
 kubernetes-1.4.6/kubectl:
+  size: 79537832
   object_id: 6826bdf1-79a6-417f-b91a-4998a29fad2c
   sha: 9adcd120fdb7ad6e64c061e56a05fefc12e9618b
-  size: 79537832
 kubernetes-1.4.6/kubelet:
+  size: 129126768
   object_id: 24502712-4730-4070-8771-269d0fc6c53b
   sha: 7d70e090951486cae52d9a82b7aaf5056f84f8ed
-  size: 129126768
-container-images/gcr.io_google_containers_exechealthz-amd64:1.1.tgz:
-  object_id: b39e1ecd-b012-4348-835d-14fbd020568f
-  sha: !binary |-
-    OTRkMzIzOGY5NTBkYzUzMDllODE3YTI5Y2U5ZjRlNDU5OTY2Y2U5NQ==
-  size: 2870256
-container-images/gcr.io_google_containers_kubernetes-dashboard-amd64:v1.4.2.tgz:
-  object_id: 2eef72fa-01e1-4816-bbfe-f6dc24635954
-  sha: !binary |-
-    NDBkNDdjZTMxYTZlZDg2ZDc5NmExYThmMDE2ZWYwNTVjNzk2ZWM0Mg==
-  size: 24933158
-container-images/gcr.io_google_containers_pause.tgz:
-  object_id: 0c3de7dd-5c1a-472e-9204-15e775c062b3
-  sha: !binary |-
-    N2I4MjczMDI1OGQxNDM2MDJiODVlZmE3ZWMyZGE1YmM3NTRmM2E5Mw==
-  size: 71680
-container-images/gcr.io_google_containers_kube-dnsmasq-amd64:1.3.tgz:
-  object_id: b1341111-022c-4a71-bb11-934354b8e533
-  sha: !binary |-
-    N2Q4MzI3MTI0NWNhMjkyNjgzYjMyODQxYjdjZmIyN2EzYTI1OTE5Mw==
-  size: 2476131
-container-images/kubernetes_heapster_influxdb:v0.6.tgz:
-  object_id: 627ab349-6b25-4298-9bbc-b8edf70c82ff
-  sha: !binary |-
-    Y2MzM2FmMjU4MGVlYWQzNzViYjFlYmY1ZDJjYWNmNmRjNzE0NzdhOA==
-  size: 105081408
-container-images/gcr.io_google_containers_kubedns-amd64:1.7.tgz:
-  object_id: bd1f4cf9-9b44-4fba-b605-fa05f9c7b11e
-  sha: !binary |-
-    OWNlMGJhNzNkZTg5ZTYxNWM3NjEyODE0YTBmMDYxMDFmNTU2MjVkNQ==
-  size: 11894000
-container-images/gcr.io_google_containers_heapster:v1.1.0.tgz:
-  object_id: b6c60d0d-e4ff-408b-a42f-ce2a0b005df3
-  sha: !binary |-
-    NzBjN2I5MGJmNzlkOTcxNGE5NzRhYTBiNDIyOTQxYjU2ODI2NDQyNA==
-  size: 32207205
-glusterfs-client/libdevmapper-event1.02.1_2%3a1.02.77-6ubuntu2_amd64.deb:
-  object_id: 8fae861b-e5c6-4e38-997e-48402d762ad8
-  sha: !binary |-
-    Mjg3M2RkZGU5ZGZhMzg5NzkxOGZiNDhhNDcwZmRmNmJhNTExZTE4Mg==
-  size: 10812
-glusterfs-client/liburcu1_0.7.12-0ubuntu2_amd64.deb:
-  object_id: ac468d07-e643-4f3a-8825-4c28bf71f598
-  sha: !binary |-
-    MmFjM2UyODUwMzJmNDI4YjlmNjdjMzk5MzA1NGVkNDYzZmI0ZTZhYg==
-  size: 34852
-glusterfs-client/librdmacm1_1.0.16-1_amd64.deb:
-  object_id: 274a3881-3fbe-4c34-850b-7088048a6ca2
-  sha: !binary |-
-    ZGQxOTI2NzhiN2RiZTY4NmI3MzI3ZWE3YzBkYTI0NTZjM2ExNGQxZQ==
-  size: 36818
-glusterfs-client/liblvm2app2.2_2.02.98-6ubuntu2_amd64.deb:
-  object_id: 62f91bdf-8e46-4935-a083-fd9cf03bdc56
-  sha: !binary |-
-    MGM4MWJkMmMxMGEzZjJlOWY1OTU1MGE2MTZjZWY4MzY2YmEzMzgxMg==
-  size: 243236
-glusterfs-client/attr_1%3a2.4.47-1ubuntu1_amd64.deb:
-  object_id: 634d3afe-106d-43ce-a22b-08b1c7dcf9e5
-  sha: !binary |-
-    ZWZmZTViZjgwZDgzMGQ2NGNlMjc2NzViNjdiNGUyMWMyNjQxOTdlOA==
-  size: 29346
-glusterfs-client/glusterfs-common_3.8.8-ubuntu1~trusty1_amd64.deb:
-  object_id: 51991042-b4df-4c6e-a906-3e45128f328e
-  sha: !binary |-
-    OThmNzNmNTZmNDA3MjJiOTA5MGM2MzA1NTFkMjgxYThiZWM5YTcwZQ==
-  size: 2890072
-glusterfs-client/libaio1_0.3.109-4_amd64.deb:
-  object_id: 3bcbe97e-8094-43b6-8e26-61d6e5918893
-  sha: !binary |-
-    NmJhMTI4OTQ5ZWE2MjQzNmZkOTE3MTE1ZDMyNWNmM2YyZmE4M2UxMA==
-  size: 6364
-glusterfs-client/glusterfs-client_3.8.8-ubuntu1~trusty1_amd64.deb:
-  object_id: 4d0b0dc4-b4e7-47a7-b8b4-dfa8963d51d4
-  sha: !binary |-
-    ZmRhYTVjY2UzYzMxMmU3OWRlMjkwMDcwMzVhODNmMmJlYjE2NWZhYw==
-  size: 19482
-glusterfs-client/libibverbs1_1.1.7-1ubuntu1.1_amd64.deb:
-  object_id: 9ca0212e-e9ef-4a60-9147-5d916664b39d
-  sha: !binary |-
-    ODBjMjlhMDJmYTEwYjY2OWMyMWE2N2FmNDgwZTEyMDY3NjkxYmI5NQ==
-  size: 23608
-glusterfs-client/fuse_2.9.2-4ubuntu4.14.04.1_amd64.deb:
-  object_id: beaaf062-1fd6-473c-8887-57e1074c553b
-  sha: !binary |-
-    ZDdkZGU1MjZiYzc1MWIxMThmZTI5NmZkOGUzZDZhN2U3MTI1MWMzYw==
-  size: 25106
-glusterfs-client/libpython2.7-stdlib_2.7.6-8ubuntu0.3_amd64.deb:
-  object_id: 1eb7555d-5e82-4513-a198-5aaf50530eb6
-  sha: !binary |-
-    MTk0NDM2YTYwZmI3ZTMyNTZlNTYxN2NjODRmNWYwM2NjMGMwZjBhZQ==
-  size: 1873274
-glusterfs-client/libpython2.7_2.7.6-8ubuntu0.3_amd64.deb:
-  object_id: 9dc43b0b-25f7-49c4-a65c-22e44b0fad35
-  sha: !binary |-
-    Yjc0ZWYyMTIwNjJjN2NlNmE1ZjgwNTc2YjU5ZDkxNGQ2YTU3OTJjYg==
-  size: 1039462
-glusterfs-client/python2.7-minimal_2.7.6-8ubuntu0.3_amd64.deb:
-  object_id: e1cafd8a-ffb3-4301-a0a7-4065fa18398e
-  sha: !binary |-
-    ZmQ0ODM4ZjFmOTI1ZWVlNjZlZjhhNzYzYTU5OTU2NzljMTdhOGRkMw==
-  size: 1186768
-glusterfs-client/libpython2.7-minimal_2.7.6-8ubuntu0.3_amd64.deb:
-  object_id: 45f621c0-3bce-4d6f-8083-b3ea6d1a0ca1
-  sha: !binary |-
-    MjY4ZmI2ZjlmZmZkYWI0YWQzNGQwMThlMGYzOWFkZTNjYTgzZTYxZQ==
-  size: 306648
-glusterfs-client/python2.7_2.7.6-8ubuntu0.3_amd64.deb:
-  object_id: 4e48c8f6-0556-43db-9901-e237ba775658
-  sha: !binary |-
-    Yjg2OTg5ZWJhNTc3ZjJmOTk4YTgwMmY2NTNkMmU4ZWVhZmRlY2Y3NQ==
-  size: 196592
-container-images/gcr.io_google_containers_pause-amd64:3.0.tgz:
-  object_id: a6459b64-32ce-4e99-a944-4c696fa9fd52
-  sha: !binary |-
-    NTFkOTRjOWQ5NzEwNjAyNDQ1NGYyMGJmNDQzMTMyMDU4ZTNkOTMzNA==
-  size: 313309
+nginx/nginx-release-1.11.4.tar.gz:
+  size: 987038
+  object_id: eba69853-8891-4919-ae54-7f24eebda278
+  sha: deecc5583de7f250c6f30e8028589d3b09a58a83
+nginx/pcre-8.39.tar.gz:
+  size: 2062258
+  object_id: 37aa43ff-1bc6-4d01-8c06-6e7f21417464
+  sha: b3aec1f643d9701841e2f9d57ac121a7ff448fc8
