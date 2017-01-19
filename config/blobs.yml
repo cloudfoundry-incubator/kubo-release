@@ -99,6 +99,7 @@ glusterfs-client/python2.7_2.7.6-8ubuntu0.3_amd64.deb:
   object_id: 948c8ad1-00a0-4969-7ea0-23ad32b6da1a
   sha: b86989eba577f2f998a802f653d2e8eeafdecf75
 jq-linux64-1.5:
+  object_id: 51f8e13c-d23a-493e-6117-7cb0c9c6f981
   size: 3027945
   sha: d8e36831c3c94bb58be34dd544f44a6c6cb88568
 kubernetes-1.4.6/kube-apiserver:
