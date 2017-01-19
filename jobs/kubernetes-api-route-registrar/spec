@@ -4,30 +4,34 @@ name: kubernetes-api-route-registrar
 templates:
   bin/announce_loop.erb: bin/announce_loop
   bin/announce_route.erb: bin/announce_route
+  bin/kubernetes-api-route-registrar-ctl: bin/kubernetes-api-route-registrar-ctl
+
+packages:
+- jq
+- pid_utils
 
 properties:
   register_interval:
     description: "Amount of time, in seconds, between registrations of routes"
     example: 30
     default: 30
-  uaa_api_url:
-    description: "API URL for UAA"
-    example: http://uaa.cf.cf-app.com
-  uaa_client_id:
-    description: "UAA client id"
-    example: client_id
-  uaa_client_secret:
-    description: "UAA client secret"
-    example: "kljsfdkjldfskjlfsdsfd"
-  cloud_foundry_api_url:
-    description: "URL for Cloud Foundry API"
-    example: http://api.cf.cf-app.com
+  cloud_foundry:
+    api_url:
+      description: "URL for Cloud Foundry API"
+      example: http://api.cf.cf-app.com
+    uaa_url:
+      description: "API URL for UAA"
+      example: http://uaa.cf.cf-app.com
+    uaa_client_id:
+      description: "UAA client id"
+      example: client_id
+    uaa_client_secret:
+      description: "UAA client secret"
+      example: "kljsfdkjldfskjlfsdsfd"
   backend_port:
     description: "Router port to set up TCP route on"
-    example: 8769
-  backend_ip:
-    description: "IP address of a Kubernetes worker or master, defaults to machine this job deployed on"
-    example: 10.0.3.3
-  kubo_port:
-    description: "Node port for Kubernetes application"
+    default: 8443
+    example: 8443
+  external_kubo_port:
+    description: "Externally accessible port"
     example: 2749
