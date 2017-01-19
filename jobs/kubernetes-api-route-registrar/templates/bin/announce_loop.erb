@@ -1,0 +1,8 @@
+#!/bin/bash -e
+SECONDS=<%= p('register_interval') %>
+
+echo "Announcing route every ${SECONDS} seconds"
+while [ true ]; do
+	/var/vcap/jobs/kubernetes-api-route-registrar/bin/announce_route
+	sleep ${SECONDS} 
+done
