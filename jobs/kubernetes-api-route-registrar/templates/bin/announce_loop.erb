@@ -1,0 +1,8 @@
+#!/bin/bash
+SECONDS=<%= p("register_interval") =>
+
+echo "Announcing route every ${SECONDS} seconds"
+while [ true ]; do
+	./announce_route.sh
+	sleep ${SECONDS} 
+done
