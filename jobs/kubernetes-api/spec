@@ -21,7 +21,6 @@ properties:
     description: The password for the kubelet user
   tls.kubernetes:
     description: "Certificate and private key for the Kubernetes master"
-    type: certificate
 
 consumes:
 - name: etcd
