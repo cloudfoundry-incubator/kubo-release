@@ -4,21 +4,6 @@ events {
   worker_connections  1024;
 }
 
-stream {
-    upstream api_server {
-<%=
-  link("kubernetes-api").instances.map do |instance|
-    "        server #{instance.address}:8443;"
-  end.join("\n")
-%>
-    }
-
-    server {
-        listen 8443;
-        proxy_pass api_server;
-    }
-}
-
 http {
     upstream kubernetes-dashboard {
 <%=
