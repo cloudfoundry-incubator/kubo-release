@@ -9,8 +9,6 @@ packages:
 - nginx
 
 consumes:
-- name: kubernetes-api
-  type: kubernetes-api
 - name: kubernetes-workers
   type: kubernetes-workers
 
