@@ -1,5 +1,5 @@
 ---
-final_name: helmsman
+final_name: kubo
 blobstore:
   provider: s3
   options:
