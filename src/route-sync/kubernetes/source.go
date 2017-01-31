@@ -1,11 +1,15 @@
 package kubernetes
 
-import "route-sync/route"
+import (
+	"route-sync/route"
+
+	k8s "k8s.io/client-go/kubernetes"
+)
 
 type endpoint struct {
 }
 
-func New(kubeconfig string) route.Source {
+func New(clientset k8s.Interface) route.Source {
 	return &endpoint{}
 }
 
