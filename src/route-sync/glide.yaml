@@ -1,0 +1,13 @@
+package: route-sync
+import:
+- package: k8s.io/apimachinery
+  subpackages:
+  - pkg/apis/meta/v1
+- package: k8s.io/client-go
+  version: ^2.0.0-alpha.1
+  subpackages:
+  - kubernetes
+  - tools/clientcmd
+testImport:
+- package: github.com/onsi/ginkgo
+- package: github.com/onsi/gomega

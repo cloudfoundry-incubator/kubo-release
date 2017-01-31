@@ -19,10 +19,9 @@ package discovery
 import (
 	"fmt"
 
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/runtime/schema"
-	"k8s.io/apimachinery/pkg/util/sets"
-	apimachineryversion "k8s.io/apimachinery/pkg/version"
+	"k8s.io/client-go/pkg/api/unversioned"
+	"k8s.io/client-go/pkg/util/sets"
+	"k8s.io/client-go/pkg/version"
 	// Import solely to initialize client auth plugins.
 	_ "k8s.io/client-go/plugin/pkg/client/auth"
 )
@@ -30,14 +29,15 @@ import (
 // MatchesServerVersion queries the server to compares the build version
 // (git hash) of the client with the server's build version. It returns an error
 // if it failed to contact the server or if the versions are not an exact match.
-func MatchesServerVersion(clientVersion apimachineryversion.Info, client DiscoveryInterface) error {
+func MatchesServerVersion(client DiscoveryInterface) error {
+	cVer := version.Get()
 	sVer, err := client.ServerVersion()
 	if err != nil {
 		return fmt.Errorf("couldn't read version from server: %v\n", err)
 	}
 	// GitVersion includes GitCommit and GitTreeState, but best to be safe?
-	if clientVersion.GitVersion != sVer.GitVersion || clientVersion.GitCommit != sVer.GitCommit || clientVersion.GitTreeState != sVer.GitTreeState {
-		return fmt.Errorf("server version (%#v) differs from client version (%#v)!\n", sVer, clientVersion)
+	if cVer.GitVersion != sVer.GitVersion || cVer.GitCommit != sVer.GitCommit || cVer.GitTreeState != sVer.GitTreeState {
+		return fmt.Errorf("server version (%#v) differs from client version (%#v)!\n", sVer, cVer)
 	}
 
 	return nil
@@ -49,7 +49,7 @@ func MatchesServerVersion(clientVersion apimachineryversion.Info, client Discove
 //   preference.
 // - If version is provided and the server does not support it,
 //   return an error.
-func NegotiateVersion(client DiscoveryInterface, requiredGV *schema.GroupVersion, clientRegisteredGVs []schema.GroupVersion) (*schema.GroupVersion, error) {
+func NegotiateVersion(client DiscoveryInterface, requiredGV *unversioned.GroupVersion, clientRegisteredGVs []unversioned.GroupVersion) (*unversioned.GroupVersion, error) {
 	clientVersions := sets.String{}
 	for _, gv := range clientRegisteredGVs {
 		clientVersions.Insert(gv.String())
@@ -60,7 +60,7 @@ func NegotiateVersion(client DiscoveryInterface, requiredGV *schema.GroupVersion
 		// not a negotiation specific error.
 		return nil, err
 	}
-	versions := metav1.ExtractGroupVersions(groups)
+	versions := unversioned.ExtractGroupVersions(groups)
 	serverVersions := sets.String{}
 	for _, v := range versions {
 		serverVersions.Insert(v)
@@ -106,56 +106,4 @@ func NegotiateVersion(client DiscoveryInterface, requiredGV *schema.GroupVersion
 
 	return nil, fmt.Errorf("failed to negotiate an api version; server supports: %v, client supports: %v",
 		serverVersions, clientVersions)
-}
-
-// GroupVersionResources converts APIResourceLists to the GroupVersionResources.
-func GroupVersionResources(rls []*metav1.APIResourceList) (map[schema.GroupVersionResource]struct{}, error) {
-	gvrs := map[schema.GroupVersionResource]struct{}{}
-	for _, rl := range rls {
-		gv, err := schema.ParseGroupVersion(rl.GroupVersion)
-		if err != nil {
-			return nil, err
-		}
-		for i := range rl.APIResources {
-			gvrs[schema.GroupVersionResource{Group: gv.Group, Version: gv.Version, Resource: rl.APIResources[i].Name}] = struct{}{}
-		}
-	}
-	return gvrs, nil
-}
-
-// FilteredBy filters by the given predicate. Empty APIResourceLists are dropped.
-func FilteredBy(pred ResourcePredicate, rls []*metav1.APIResourceList) []*metav1.APIResourceList {
-	result := []*metav1.APIResourceList{}
-	for _, rl := range rls {
-		filtered := *rl
-		filtered.APIResources = nil
-		for i := range rl.APIResources {
-			if pred.Match(rl.GroupVersion, &rl.APIResources[i]) {
-				filtered.APIResources = append(filtered.APIResources, rl.APIResources[i])
-			}
-		}
-		if filtered.APIResources != nil {
-			result = append(result, &filtered)
-		}
-	}
-	return result
-}
-
-type ResourcePredicate interface {
-	Match(groupVersion string, r *metav1.APIResource) bool
-}
-
-type ResourcePredicateFunc func(groupVersion string, r *metav1.APIResource) bool
-
-func (fn ResourcePredicateFunc) Match(groupVersion string, r *metav1.APIResource) bool {
-	return fn(groupVersion, r)
-}
-
-// SupportsAllVerbs is a predicate matching a resource iff all given verbs are supported.
-type SupportsAllVerbs struct {
-	Verbs []string
-}
-
-func (p SupportsAllVerbs) Match(groupVersion string, r *metav1.APIResource) bool {
-	return sets.NewString([]string(r.Verbs)...).HasAll(p.Verbs...)
 }
