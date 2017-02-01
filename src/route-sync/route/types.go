@@ -10,10 +10,16 @@ type TCP struct {
 	Backend  []Endpoint
 }
 
+type HTTP struct {
+	Name    string
+	Backend []Endpoint
+}
+
 type Source interface {
 	TCP() ([]*TCP, error)
 }
 
 type Sink interface {
 	TCP(routes []*TCP) error
+	HTTP(routes []*HTTP) error
 }
