@@ -11,6 +11,7 @@ import:
 - package: github.com/cloudfoundry/route-registrar
   subpackages:
   - messagebus
+- package: code.cloudfoundry.org/lager
 testImport:
 - package: github.com/onsi/ginkgo
 - package: github.com/onsi/gomega
