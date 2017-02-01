@@ -8,6 +8,9 @@ import:
   subpackages:
   - kubernetes
   - tools/clientcmd
+- package: github.com/cloudfoundry/route-registrar
+  subpackages:
+  - messagebus
 testImport:
 - package: github.com/onsi/ginkgo
 - package: github.com/onsi/gomega
