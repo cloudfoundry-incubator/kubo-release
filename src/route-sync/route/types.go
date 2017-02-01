@@ -1,9 +1,7 @@
 package route
 
-import "net"
-
 type Endpoint struct {
-	IP   net.IP
+	IP   string
 	Port int
 }
 
