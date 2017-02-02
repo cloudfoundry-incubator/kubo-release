@@ -1,16 +1,46 @@
 package main
 
 import (
-	"fmt"
+	"encoding/json"
+	"flag"
+	"io/ioutil"
+	"os"
 	"route-sync/cloudfoundry"
 	"route-sync/fixed_source"
 	"route-sync/pooler"
 	"route-sync/route"
 	"time"
+
+	"code.cloudfoundry.org/lager"
+	"code.cloudfoundry.org/route-registrar/config"
+	"code.cloudfoundry.org/route-registrar/messagebus"
+)
+
+type serviceConfig struct {
+	natsServers []config.MessageBusServer
+}
+
+func parseConfig(data []byte) (serviceConfig, error) {
+	servers := serviceConfig{}
+	err := json.Unmarshal(data, &servers)
+
+	return servers, err
+}
+
+var (
+	configPath = flag.String("configPath", "./config.json", "path to a route-sync config file")
 )
 
 func main() {
-	fmt.Print("starting route-sync\n")
+	logger := lager.NewLogger("route-sync")
+	logger.RegisterSink(lager.NewWriterSink(os.Stdout, lager.DEBUG))
+
+	file, err := ioutil.ReadFile(*configPath)
+	if err != nil {
+		logger.Fatal("parsing config file", err)
+	}
+	config, err := parseConfig(file)
+
 	httpRoutes := []*route.HTTP{
 		&route.HTTP{
 			Name: "foo.bar.com",
@@ -26,16 +56,17 @@ func main() {
 	// TODO: replace this with a kubernetes source
 	src := fixed_source.New(nil, httpRoutes)
 
-	// TODO: pass in a valid MessageBus here
-	sink := cloudfoundry.NewSink(nil)
+	bus := messagebus.NewMessageBus(logger)
+	bus.Connect(config.natsServers)
+	sink := cloudfoundry.NewSink(bus)
 
 	pooler := pooler.ByTime(time.Duration(10 * time.Second))
 	done, tick := pooler.Start(src, sink)
 
-	fmt.Print("started, Ctrl+C to exit\n")
+	logger.Info("started, Ctrl+C to exit")
 	for {
 		<-tick
-		fmt.Print("announced!\n")
+		logger.Info("announced!")
 	}
 	done <- struct{}{}
 }
