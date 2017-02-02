@@ -1,5 +1,6 @@
 package: route-sync
 import:
+- package: github.com/golang/protobuf/proto
 - package: k8s.io/apimachinery
   subpackages:
   - pkg/apis/meta/v1
