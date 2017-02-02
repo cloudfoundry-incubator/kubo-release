@@ -41,7 +41,7 @@ var _ = Describe("Source", func() {
 			Expect(err).To(BeNil())
 			Expect(len(routes)).To(Equal(1))
 			tcpRoute := routes[0]
-			Expect(tcpRoute.Frontend.Port).To(Equal(nodePort))
+			Expect(tcpRoute.Frontend).To(Equal(nodePort))
 			backends := tcpRoute.Backend
 			Expect(len(backends)).To(Equal(1))
 			Expect(backends[0].Port).To(Equal(nodePort))
