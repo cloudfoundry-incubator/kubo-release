@@ -1,42 +1,41 @@
 package main
 
 import (
-	"flag"
 	"fmt"
-
-	"k8s.io/client-go/kubernetes"
-	"k8s.io/client-go/pkg/api/v1"
-	"k8s.io/client-go/tools/clientcmd"
-)
-
-var (
-	kubeconfig = flag.String("kubeconfig", "~/.kube/config", "absolute path to the kubeconfig file")
+	"route-sync/cloudfoundry"
+	"route-sync/fixed_source"
+	"route-sync/pooler"
+	"route-sync/route"
+	"time"
 )
 
 func main() {
-	flag.Parse()
-	config, err := clientcmd.BuildConfigFromFlags("", *kubeconfig)
-
-	if err != nil {
-		panic(err)
+	fmt.Print("starting route-sync\n")
+	httpRoutes := []*route.HTTP{
+		&route.HTTP{
+			Name: "foo.bar.com",
+			Backend: []route.Endpoint{
+				route.Endpoint{
+					IP:   "10.10.10.10",
+					Port: 8080,
+				},
+			},
+		},
 	}
 
-	clientset, err := kubernetes.NewForConfig(config)
+	// TODO: replace this with a kubernetes source
+	src := fixed_source.New(nil, httpRoutes)
 
-	if err != nil {
-		panic(err)
+	// TODO: pass in a valid MessageBus here
+	sink := cloudfoundry.NewSink(nil)
+
+	pooler := pooler.ByTime(time.Duration(10 * time.Second))
+	done, tick := pooler.Start(src, sink)
+
+	fmt.Print("started, Ctrl+C to exit\n")
+	for {
+		<-tick
+		fmt.Print("announced!\n")
 	}
-
-	services, err := clientset.CoreV1().Services("").List(v1.ListOptions{})
-	println("Hi")
-
-	if err != nil {
-		panic(err)
-	}
-
-	fmt.Printf("There are %d services in the cluster\n", len(services.Items))
-
-	for _, service := range services.Items {
-		fmt.Printf("%q\n", service)
-	}
+	done <- struct{}{}
 }
