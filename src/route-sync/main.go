@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"flag"
+	"fmt"
 	"io/ioutil"
 	"os"
 	"route-sync/cloudfoundry"
@@ -17,14 +18,21 @@ import (
 )
 
 type serviceConfig struct {
-	natsServers []config.MessageBusServer
+	NatsServers []config.MessageBusServer
 }
 
 func parseConfig(data []byte) (serviceConfig, error) {
-	servers := serviceConfig{}
-	err := json.Unmarshal(data, &servers)
+	var cfg serviceConfig
+	err := json.Unmarshal(data, &cfg)
 
-	return servers, err
+	// validate config
+	if err == nil {
+		if len(cfg.NatsServers) == 0 {
+			err = fmt.Errorf("no NatsServers specified in config")
+		}
+	}
+
+	return cfg, err
 }
 
 var (
@@ -37,9 +45,12 @@ func main() {
 
 	file, err := ioutil.ReadFile(*configPath)
 	if err != nil {
+		logger.Fatal("loading config file", err)
+	}
+	cfg, err := parseConfig(file)
+	if err != nil {
 		logger.Fatal("parsing config file", err)
 	}
-	config, err := parseConfig(file)
 
 	httpRoutes := []*route.HTTP{
 		&route.HTTP{
@@ -57,7 +68,7 @@ func main() {
 	src := fixed_source.New(nil, httpRoutes)
 
 	bus := messagebus.NewMessageBus(logger)
-	bus.Connect(config.natsServers)
+	bus.Connect(cfg.NatsServers)
 	sink := cloudfoundry.NewSink(bus)
 
 	pooler := pooler.ByTime(time.Duration(10 * time.Second))
