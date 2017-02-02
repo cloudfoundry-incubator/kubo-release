@@ -1,9 +1,7 @@
-{"natsServers":
-	[
-		{
-			"Username": "",
-			 "Pass": "",
-			 "Host": ""
-		}
-	]
-}
+{"NatsServers": [
+	{
+		"Host": "",
+		"User": "",
+		"Password": ""
+	}
+]}
