@@ -6,7 +6,7 @@ type Endpoint struct {
 }
 
 type TCP struct {
-	Frontend Endpoint
+	Frontend int // This is a port
 	Backend  []Endpoint
 }
 

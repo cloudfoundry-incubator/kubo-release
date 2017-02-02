@@ -24,7 +24,7 @@ var _ = Describe("FixedSource", func() {
 	})
 
 	It("returns TCP routes", func() {
-		routes := []*route.TCP{&route.TCP{Frontend: route.Endpoint{IP: "10.0.0.1", Port: 8080},
+		routes := []*route.TCP{&route.TCP{Frontend: 8080,
 			Backend: []route.Endpoint{route.Endpoint{IP: "10.10.10.10", Port: 9090}},
 		}}
 

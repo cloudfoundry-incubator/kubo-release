@@ -42,7 +42,7 @@ func (e *endpoint) TCP() ([]*route.TCP, error) {
 			continue
 		}
 		var nodePort int = int(service.Spec.Ports[0].NodePort)
-		frontend := route.Endpoint{IP:"", Port:nodePort}
+		frontend := nodePort
 
 		backends := []route.Endpoint{}
 		for _, ip := range ips {
@@ -51,7 +51,6 @@ func (e *endpoint) TCP() ([]*route.TCP, error) {
 
 		tcp := &route.TCP{Frontend: frontend, Backend: backends}
 		routes = append(routes, tcp)
-		return routes, nil
         }
 	return routes, nil
 }
