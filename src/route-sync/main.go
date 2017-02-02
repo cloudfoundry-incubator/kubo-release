@@ -68,7 +68,11 @@ func main() {
 	src := fixed_source.New(nil, httpRoutes)
 
 	bus := messagebus.NewMessageBus(logger)
-	bus.Connect(cfg.NatsServers)
+	err = bus.Connect(cfg.NatsServers)
+	if err != nil {
+		logger.Fatal("connecting to NATS", err)
+	}
+
 	sink := cloudfoundry.NewSink(bus)
 
 	pooler := pooler.ByTime(time.Duration(10 * time.Second))
