@@ -6,7 +6,7 @@ import (
 )
 
 type Pooler interface {
-	Start(route.Source, route.Sink) chan<- struct{}
+	Start(route.Source, route.Sink) (done chan<- struct{}, tick <-chan struct{})
 	Running() bool
 }
 
@@ -20,17 +20,26 @@ func ByTime(duration time.Duration) Pooler {
 }
 
 func (t *time_based) tick(src route.Source, sink route.Sink) {
-	routes, err := src.TCP()
+	tcpRoutes, err := src.TCP()
 	if err != nil {
 		panic(err)
 	}
-	err = sink.TCP(routes)
+	err = sink.TCP(tcpRoutes)
+	if err != nil {
+		panic(err)
+	}
+	httpRoutes, err := src.HTTP()
+	if err != nil {
+		panic(err)
+	}
+	err = sink.HTTP(httpRoutes)
 	if err != nil {
 		panic(err)
 	}
 }
 
-func (tb *time_based) Start(src route.Source, sink route.Sink) chan<- struct{} {
+func (tb *time_based) Start(src route.Source, sink route.Sink) (chan<- struct{}, <-chan struct{}) {
+	tick := make(chan struct{})
 	done := make(chan struct{})
 	go func() {
 		tb.running = true
@@ -41,12 +50,15 @@ func (tb *time_based) Start(src route.Source, sink route.Sink) chan<- struct{} {
 				return
 			default:
 				tb.tick(src, sink)
+				go func() {
+					tick <- struct{}{}
+				}()
 				time.Sleep(tb.duration)
 			}
 		}
 	}()
 
-	return done
+	return done, tick
 }
 
 func (tb *time_based) Running() bool {

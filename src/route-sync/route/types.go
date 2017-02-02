@@ -17,6 +17,7 @@ type HTTP struct {
 
 type Source interface {
 	TCP() ([]*TCP, error)
+	HTTP() ([]*HTTP, error)
 }
 
 type Sink interface {
