@@ -14,10 +14,6 @@ func New(clientset k8s.Interface) route.Source {
 	return &endpoint{clientset: clientset}
 }
 
-func (e *endpoint) HTTP() ([]*route.HTTP, error) {
-	return []*route.HTTP{}, nil
-}
-
 func (e *endpoint) TCP() ([]*route.TCP, error) {
 	nodes, err := e.clientset.CoreV1().Nodes().List(v1.ListOptions{})
 
