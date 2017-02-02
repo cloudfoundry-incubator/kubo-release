@@ -16,3 +16,7 @@ func New(clientset k8s.Interface) route.Source {
 func (e *endpoint) TCP() ([]*route.TCP, error) {
 	return []*route.TCP{}, nil
 }
+
+func (e *endpoint) HTTP() ([]*route.HTTP, error) {
+	return []*route.HTTP{}, nil
+}
