@@ -10,7 +10,20 @@ Synchronizes routes from a Kubernetes cluster to external L3/L7 routers.
 
 This repo should be imported as `route-sync` meaning your GOPATH should be set to `~/kubo-release`
 
-## Running tests
+### Running the application
+
+```
+cp .envrc.example .envrc
+
+# modify the config for your enviornment
+$EDITOR .envrc
+
+direnv allow
+
+go build && ./route-sync
+```
+
+### Running tests
 
 ``
 # ensure ginkgo is installed

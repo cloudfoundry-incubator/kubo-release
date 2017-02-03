@@ -1,7 +1,7 @@
-{"NatsServers": [
+export ROUTESYNC_NATS_SERVERS='[
 	{
 		"Host": "10.0.0.8:4222",
 		"User": "nats",
 		"Password": "UAA Password for nats"
 	}
-]}
+]'
