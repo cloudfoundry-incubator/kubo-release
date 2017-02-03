@@ -1,5 +1,5 @@
-hash: 62e7533e0fbc7ed7d2a0902b83d05fb336e79d730dcc7de30bddaed00a589832
-updated: 2017-02-02T17:50:15.023719007Z
+hash: eea193f7b4d7f687d71a29572d915d15a322adcfe075377fdd6c7b5d9c869f4e
+updated: 2017-02-03T18:46:14.752709197Z
 imports:
 - name: cloud.google.com/go
   version: 3b1ae45394a234c385be014e9a488f2bb6eef821
@@ -73,12 +73,10 @@ imports:
   - proto
 - name: github.com/google/gofuzz
   version: bbcb9da2d746f8bdbd6a936686a0a6067ada0ec5
-- name: github.com/howeyc/gopass
-  version: 3ca23474a7c7203e0a0a070fd33508f6efdb9b3d
-- name: github.com/imdario/mergo
-  version: 6633656539c1639d9d78127b7d47c622b5d7b6dc
 - name: github.com/jonboulle/clockwork
   version: 72f9bd7c4e0c2a40055ab3d0f09654f730cce982
+- name: github.com/kelseyhightower/envconfig
+  version: f611eb38b3875cc3bd991ca91c51d06446afa14c
 - name: github.com/mailru/easyjson
   version: d5b7844b561a7bc640052f1b935f7b800330d7e0
   subpackages:
@@ -86,12 +84,12 @@ imports:
   - jlexer
   - jwriter
 - name: github.com/nats-io/go-nats
-  version: b7beebdcbbc1ef027225b2efa81bf7e8887447aa
+  version: e6bb81b5a5f37ef7bf364bb6276e13813086c6ee
   subpackages:
   - encoders/builtin
   - util
 - name: github.com/nats-io/nats
-  version: b7beebdcbbc1ef027225b2efa81bf7e8887447aa
+  version: e6bb81b5a5f37ef7bf364bb6276e13813086c6ee
 - name: github.com/nats-io/nuid
   version: 289cccf02c178dc782430d534e3c1f5b72af807f
 - name: github.com/pborman/uuid
@@ -106,10 +104,6 @@ imports:
   version: f1f1a805ed361a0e078bb537e4ea78cd37dcf065
   subpackages:
   - codec
-- name: golang.org/x/crypto
-  version: 1f22c0103821b9390939b6776727195525381532
-  subpackages:
-  - ssh/terminal
 - name: golang.org/x/net
   version: e90d6d0afc4c315a0d87a568ae68577cc15149a0
   subpackages:
@@ -126,10 +120,6 @@ imports:
   - internal
   - jws
   - jwt
-- name: golang.org/x/sys
-  version: 8f0908ab3b2457e2e15403d3697c9ef5cb4b57a9
-  subpackages:
-  - unix
 - name: golang.org/x/text
   version: 2910a502d2bf9e43193af9d68ca516529614eed3
   subpackages:
@@ -160,7 +150,7 @@ imports:
 - name: gopkg.in/yaml.v2
   version: 53feefa2559fb8dfa8d81baad31be332c97d6c77
 - name: k8s.io/apimachinery
-  version: bb0944e83985eee62505a0386e7df9014cc55263
+  version: 21807b270ec15d19215659a5caa08b17f66d6f44
   subpackages:
   - pkg/apis/meta/v1
 - name: k8s.io/client-go
@@ -260,7 +250,6 @@ imports:
   - pkg/util/errors
   - pkg/util/flowcontrol
   - pkg/util/framer
-  - pkg/util/homedir
   - pkg/util/integer
   - pkg/util/intstr
   - pkg/util/json
@@ -285,11 +274,8 @@ imports:
   - plugin/pkg/client/auth/oidc
   - rest
   - testing
-  - tools/auth
   - tools/clientcmd
   - tools/clientcmd/api
-  - tools/clientcmd/api/latest
-  - tools/clientcmd/api/v1
   - tools/metrics
   - transport
 testImports:
@@ -326,3 +312,7 @@ testImports:
   - matchers/support/goraph/node
   - matchers/support/goraph/util
   - types
+- name: golang.org/x/sys
+  version: 8f0908ab3b2457e2e15403d3697c9ef5cb4b57a9
+  subpackages:
+  - unix
