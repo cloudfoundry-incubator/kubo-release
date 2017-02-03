@@ -10,7 +10,7 @@ import (
 
 var _ = Describe("Config", func() {
 	BeforeEach(func() {
-		os.Setenv("NATS_SERVERS", "[{\"Host\": \"10.0.1.8:4222\",\"User\": \"nats\", \"Password\": \"natspass\"}]")
+		os.Setenv("ROUTESYNC_NATS_SERVERS", "[{\"Host\": \"10.0.1.8:4222\",\"User\": \"nats\", \"Password\": \"natspass\"}]")
 	})
 
 	It("returns a valid config frm the enviornment", func() {
