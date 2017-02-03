@@ -16,7 +16,7 @@ type Config struct {
 func NewConfig() (*Config, error) {
 	cfg := Config{}
 
-	if err := envconfig.Process("", &cfg); err != nil {
+	if err := envconfig.Process("routesync", &cfg); err != nil {
 		return nil, err
 	}
 
