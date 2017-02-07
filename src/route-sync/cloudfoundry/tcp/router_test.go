@@ -78,24 +78,23 @@ var _ = Describe("routing-api TCP router", func() {
 	})
 
 	It("posts routes", func() {
-		requestChan := make(chan *http.Request)
+		type expectedResponse struct {
+			BackendPort     int    `json:"backend_port"`
+			Port            int    `json:"port"`
+			RouterGroupGuid string `json:"router_group_guid"`
+			TTL             int    `json:"ttl"`
+			BackendIp       string `json:"backend_ip"`
+		}
+		responseChan := make(chan []expectedResponse)
 		ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			decoder := json.NewDecoder(r.Body)
-			var tcpRoutes []map[string]interface{}
+
+			var tcpRoutes []expectedResponse
 			err := decoder.Decode(&tcpRoutes)
 			Expect(err).To(BeNil())
 
-			Expect(tcpRoutes).To(HaveLen(2))
-
-			tcpRoute := tcpRoutes[0]
-			Expect(tcpRoute["backend_port"].(float64)).To(Equal(float64(5050)))
-			Expect(tcpRoute["port"].(float64)).To(Equal(float64(1010)))
-			Expect(tcpRoute["router_group_guid"].(string)).To(Equal("foobar"))
-			Expect(tcpRoute["ttl"].(float64)).To(Equal(float64(60)))
-			Expect(tcpRoute["backend_ip"].(string)).To(Equal("10.0.0.2"))
-
 			go func() {
-				requestChan <- r
+				responseChan <- tcpRoutes
 			}()
 		}))
 		defer ts.Close()
@@ -120,7 +119,23 @@ var _ = Describe("routing-api TCP router", func() {
 		routerGroup.Guid = "foobar"
 		err := router.CreateRoutes(routerGroup, routes)
 
-		<-requestChan
+		tcpRoutes := <-responseChan
 		Expect(err).To(BeNil())
+
+		Expect(tcpRoutes).To(HaveLen(2))
+		Expect(tcpRoutes).To(ConsistOf(expectedResponse{
+			BackendPort:     5050,
+			Port:            1010,
+			RouterGroupGuid: "foobar",
+			TTL:             60,
+			BackendIp:       "10.0.0.2",
+		}, expectedResponse{
+			BackendPort:     2020,
+			Port:            1010,
+			RouterGroupGuid: "foobar",
+			TTL:             60,
+			BackendIp:       "10.0.0.3",
+		},
+		))
 	})
 })
