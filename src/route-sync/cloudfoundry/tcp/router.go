@@ -20,7 +20,7 @@ type RouterGroup struct {
 
 type TCPRouter interface {
 	RouterGroups() ([]RouterGroup, error)
-	CreateRoutes(RouterGroup, []route.TCP) error
+	CreateRoutes(RouterGroup, []*route.TCP) error
 }
 
 const routeTTL = 60
@@ -86,7 +86,7 @@ func (r *routing_api_router) RouterGroups() ([]RouterGroup, error) {
 	return routerGroups, err
 }
 
-func (r *routing_api_router) CreateRoutes(rg RouterGroup, routes []route.TCP) error {
+func (r *routing_api_router) CreateRoutes(rg RouterGroup, routes []*route.TCP) error {
 	req, client, err := r.buildRequest("POST", "/routing/v1/tcp_routes/create")
 	if err != nil {
 		return err
@@ -108,7 +108,7 @@ func (r *routing_api_router) CreateRoutes(rg RouterGroup, routes []route.TCP) er
 	return nil
 }
 
-func (r *routing_api_router) buildRoutes(rg RouterGroup, routes []route.TCP) []map[string]interface{} {
+func (r *routing_api_router) buildRoutes(rg RouterGroup, routes []*route.TCP) []map[string]interface{} {
 	tcpRoutes := []map[string]interface{}{}
 
 	for _, route := range routes {

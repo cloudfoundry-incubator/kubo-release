@@ -62,7 +62,7 @@ var _ = Describe("routing-api TCP router", func() {
 		req := <-requestChan
 		Expect(req.Header).To(HaveKeyWithValue("Authorization", []string{"bearer foo"}))
 
-		router.CreateRoutes(RouterGroup{}, []route.TCP{route.TCP{}})
+		router.CreateRoutes(RouterGroup{}, []*route.TCP{&route.TCP{}})
 		req = <-requestChan
 		Expect(req.Header).To(HaveKeyWithValue("Authorization", []string{"bearer foo"}))
 
@@ -112,7 +112,7 @@ var _ = Describe("routing-api TCP router", func() {
 
 		router, _ := NewRoutingApi(&fooClient, ts.URL)
 
-		routes := []route.TCP{route.TCP{
+		routes := []*route.TCP{&route.TCP{
 			Frontend: 1010,
 			Backend: []route.Endpoint{
 				route.Endpoint{

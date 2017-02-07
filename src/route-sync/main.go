@@ -43,7 +43,7 @@ func main() {
 		logger.Fatal("connecting to NATS", err)
 	}
 
-	sink := cloudfoundry.NewSink(bus)
+	sink := cloudfoundry.NewSink(bus, nil)
 
 	pooler := pooler.ByTime(time.Duration(10 * time.Second))
 	done, tick := pooler.Start(src, sink)
