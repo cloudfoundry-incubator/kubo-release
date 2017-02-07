@@ -7,6 +7,8 @@ import (
 	"io/ioutil"
 	"net/http"
 	"route-sync/route"
+
+	"code.cloudfoundry.org/uaa-go-client"
 )
 
 type RouterGroup struct {
@@ -24,19 +26,19 @@ type TCPRouter interface {
 const routeTTL = 60
 
 type routing_api_router struct {
-	uaaOathToken       string
+	uaaClient          uaa_go_client.Client
 	cloudFoundryApiUrl string
 }
 
-func NewRoutingApi(uaaOathToken string, cloudFoundryApiUrl string) (TCPRouter, error) {
-	if uaaOathToken == "" {
-		return nil, fmt.Errorf("uaaOathToken token requried")
+func NewRoutingApi(uaaClient uaa_go_client.Client, cloudFoundryApiUrl string) (TCPRouter, error) {
+	if uaaClient == nil {
+		return nil, fmt.Errorf("uaaClient token requried")
 	}
 	if cloudFoundryApiUrl == "" {
 		return nil, fmt.Errorf("cloudFoundryApiUrl required")
 	}
 
-	return &routing_api_router{uaaOathToken: uaaOathToken, cloudFoundryApiUrl: cloudFoundryApiUrl}, nil
+	return &routing_api_router{uaaClient: uaaClient, cloudFoundryApiUrl: cloudFoundryApiUrl}, nil
 }
 
 func (r *routing_api_router) buildRequest(verb string, path string) (*http.Request, *http.Client, error) {
@@ -47,7 +49,12 @@ func (r *routing_api_router) buildRequest(verb string, path string) (*http.Reque
 		return req, client, fmt.Errorf("routing_api_router: %v", err)
 	}
 
-	req.Header.Set("Authorization", fmt.Sprintf("bearer %s", r.uaaOathToken))
+	key, err := r.uaaClient.FetchKey()
+	if err != nil {
+		return req, client, fmt.Errorf("routing_api_router: %v", err)
+	}
+
+	req.Header.Set("Authorization", fmt.Sprintf("bearer %s", key))
 
 	return req, client, nil
 }
