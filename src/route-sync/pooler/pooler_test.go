@@ -13,7 +13,7 @@ import (
 var _ = Describe("Time-based Pooler", func() {
 
 	It("starts and stops", func() {
-		pool := pooler.ByTime(time.Duration(10))
+		pool := pooler.ByTime(time.Duration(0))
 
 		running := func() bool { return pool.Running() }
 
@@ -24,7 +24,7 @@ var _ = Describe("Time-based Pooler", func() {
 	})
 
 	It("pools and passes", func() {
-		pool := pooler.ByTime(time.Duration(10))
+		pool := pooler.ByTime(time.Duration(0))
 
 		src := &mocks.Source{}
 		tcpRoute := &route.TCP{Frontend: 8080,
