@@ -9,8 +9,14 @@ import (
 )
 
 type Config struct {
-	RawNatsServers string                      `envconfig:"nats_servers" required:"true"`
-	NatsServers    []cfConfig.MessageBusServer `ignore:"true"`
+	RawNatsServers         string                      `envconfig:"nats_servers" required:"true"`
+	NatsServers            []cfConfig.MessageBusServer `ignore:"true"`
+	CloudFoundryApiUrl     string                      `envconfig:"cloud_foundry_api_url" required:"true"`
+	UAAApiUrl              string                      `envconfig:"uaa_api_url" required:"true"`
+	RoutingApiUsername     string                      `envconfig:"routing_api_username" required:"true"`
+	RoutingApiClientSecret string                      `envconfig:"routing_api_client_secret" required:"true"`
+	SkipTlsVerification    bool                        `envconfig:"skip_tls_verification" required:"true"`
+	KubeConfigPath         string                      `envconfig:"kube_config_path" required:"true"`
 }
 
 func NewConfig() (*Config, error) {

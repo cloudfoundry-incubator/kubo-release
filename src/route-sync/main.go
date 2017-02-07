@@ -3,14 +3,21 @@ package main
 import (
 	"os"
 	"route-sync/cloudfoundry"
+	"route-sync/cloudfoundry/tcp"
 	"route-sync/config"
-	"route-sync/fixed_source"
 	"route-sync/pooler"
-	"route-sync/route"
 	"time"
 
+	k8s "route-sync/kubernetes"
+
+	"k8s.io/client-go/kubernetes"
+	"k8s.io/client-go/tools/clientcmd"
+
+	"code.cloudfoundry.org/clock"
 	"code.cloudfoundry.org/lager"
 	"code.cloudfoundry.org/route-registrar/messagebus"
+	uaa "code.cloudfoundry.org/uaa-go-client"
+	uaaconfig "code.cloudfoundry.org/uaa-go-client/config"
 )
 
 func main() {
@@ -22,28 +29,39 @@ func main() {
 		logger.Fatal("parsing config", err)
 	}
 
-	httpRoutes := []*route.HTTP{
-		&route.HTTP{
-			Name: "foo.bar.com",
-			Backend: []route.Endpoint{
-				route.Endpoint{
-					IP:   "10.10.10.10",
-					Port: 8080,
-				},
-			},
-		},
+	kubecfg, err := clientcmd.BuildConfigFromFlags("", cfg.KubeConfigPath)
+	if err != nil {
+		logger.Fatal("building config from flags", err)
+	}
+	clientset, err := kubernetes.NewForConfig(kubecfg)
+	if err != nil {
+		logger.Fatal("creating clientset from kube config", err)
 	}
 
-	// TODO: replace this with a kubernetes source
-	src := fixed_source.New(nil, httpRoutes)
-
+	src := k8s.New(clientset)
 	bus := messagebus.NewMessageBus(logger)
 	err = bus.Connect(cfg.NatsServers)
 	if err != nil {
 		logger.Fatal("connecting to NATS", err)
 	}
 
-	sink := cloudfoundry.NewSink(bus, nil)
+	uaaCfg := &uaaconfig.Config{
+		ClientName:       cfg.RoutingApiUsername,
+		ClientSecret:     cfg.RoutingApiClientSecret,
+		UaaEndpoint:      cfg.UAAApiUrl,
+		SkipVerification: cfg.SkipTlsVerification,
+	}
+
+	uaaClient, err := uaa.NewClient(logger, uaaCfg, clock.NewClock())
+	if err != nil {
+		logger.Fatal("creating UAA client", err)
+	}
+	tcpRouter, err := tcp.NewRoutingApi(uaaClient, cfg.CloudFoundryApiUrl)
+	if err != nil {
+		logger.Fatal("creating TCP router", err)
+	}
+
+	sink := cloudfoundry.NewSink(bus, tcpRouter)
 
 	pooler := pooler.ByTime(time.Duration(10 * time.Second))
 	done, tick := pooler.Start(src, sink)
