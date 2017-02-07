@@ -1,4 +1,4 @@
-package mocks
+package fakes
 
 import "route-sync/route"
 

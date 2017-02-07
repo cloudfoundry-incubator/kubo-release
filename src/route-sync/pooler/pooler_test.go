@@ -1,9 +1,9 @@
 package pooler_test
 
 import (
-	"route-sync/mocks"
 	"route-sync/pooler"
 	"route-sync/route"
+	routefakes "route-sync/route/fakes"
 	"time"
 
 	. "github.com/onsi/ginkgo"
@@ -17,7 +17,7 @@ var _ = Describe("Time-based Pooler", func() {
 
 		running := func() bool { return pool.Running() }
 
-		done, _ := pool.Start(&mocks.Source{}, &mocks.Sink{})
+		done, _ := pool.Start(&routefakes.Source{}, &routefakes.Sink{})
 		Eventually(running).Should(BeTrue())
 		done <- struct{}{}
 		Eventually(running).Should(BeFalse())
@@ -26,7 +26,7 @@ var _ = Describe("Time-based Pooler", func() {
 	It("pools and passes", func() {
 		pool := pooler.ByTime(time.Duration(0))
 
-		src := &mocks.Source{}
+		src := &routefakes.Source{}
 		tcpRoute := &route.TCP{Frontend: 8080,
 			Backend: []route.Endpoint{route.Endpoint{IP: "10.10.0.10", Port: 9090}}}
 		httpRoute := &route.HTTP{Name: "foo.bar.com",
@@ -34,7 +34,7 @@ var _ = Describe("Time-based Pooler", func() {
 
 		src.TCP_value = []*route.TCP{tcpRoute}
 		src.HTTP_value = []*route.HTTP{httpRoute}
-		sink := &mocks.Sink{}
+		sink := &routefakes.Sink{}
 
 		done, _ := pool.Start(src, sink)
 
