@@ -18,7 +18,7 @@ type RouterGroup struct {
 	Type            string
 }
 
-type TCPRouter interface {
+type Router interface {
 	RouterGroups() ([]RouterGroup, error)
 	CreateRoutes(RouterGroup, []*route.TCP) error
 }
@@ -30,7 +30,7 @@ type routing_api_router struct {
 	cloudFoundryApiUrl string
 }
 
-func NewRoutingApi(uaaClient uaa_go_client.Client, cloudFoundryApiUrl string) (TCPRouter, error) {
+func NewRoutingApi(uaaClient uaa_go_client.Client, cloudFoundryApiUrl string) (Router, error) {
 	if uaaClient == nil {
 		return nil, fmt.Errorf("uaaClient token requried")
 	}

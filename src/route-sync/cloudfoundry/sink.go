@@ -13,11 +13,11 @@ import (
 const privateInstanceId = "kubo-route-sync"
 
 type sink struct {
-	tcpRouter tcp.TCPRouter
+	tcpRouter tcp.Router
 	bus       messagebus.MessageBus
 }
 
-func NewSink(bus messagebus.MessageBus, tcpRouter tcp.TCPRouter) route.Sink {
+func NewSink(bus messagebus.MessageBus, tcpRouter tcp.Router) route.Sink {
 	return &sink{bus: bus, tcpRouter: tcpRouter}
 }
 
