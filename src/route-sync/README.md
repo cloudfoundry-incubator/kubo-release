@@ -25,7 +25,7 @@ go build && ./route-sync
 
 ### Running tests
 
-``
+```
 # ensure ginkgo is installed
 go get github.com/onsi/ginkgo/ginkgo
 go get github.com/onsi/gomega
