@@ -1,7 +1,9 @@
 package router
 
 import (
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"route-sync/route"
 )
@@ -9,7 +11,7 @@ import (
 type RouterGroup struct {
 	Guid            string
 	Name            string
-	ReservablePorts string
+	ReservablePorts string `json:"reservable_ports"`
 	Type            string
 }
 
@@ -48,19 +50,30 @@ func (r *routing_api_router) buildRequest(verb string, path string) (*http.Reque
 }
 
 func (r *routing_api_router) RouterGroups() ([]RouterGroup, error) {
-	routerGroups := []RouterGroup{}
+	var routerGroups []RouterGroup
 
 	req, client, err := r.buildRequest("GET", "/routing/v1/router_groups")
 	if err != nil {
 		return routerGroups, err
 	}
 
-	_, err = client.Do(req)
+	resp, err := client.Do(req)
 	if err != nil {
-		return routerGroups, fmt.Errorf("routing_api_router: %v", err)
+		return routerGroups, fmt.Errorf("routing_api_router: performing request: %v", err)
 	}
 
-	return routerGroups, fmt.Errorf("NYI")
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return routerGroups, fmt.Errorf("routing_api_router: reading response %v", err)
+	}
+
+	err = json.Unmarshal(body, &routerGroups)
+	if err != nil {
+		err = fmt.Errorf("routing_api_router: unmarshalling response: %v\n body: %s", err, body)
+	}
+
+	return routerGroups, err
 }
 
 func (r *routing_api_router) CreateRoutes(RouterGroup, []route.TCP) error {

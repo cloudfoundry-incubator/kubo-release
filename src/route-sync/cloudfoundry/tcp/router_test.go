@@ -53,5 +53,26 @@ var _ = Describe("routing-api TCP router", func() {
 		router.CreateRoutes(RouterGroup{}, []route.TCP{route.TCP{}})
 		req = <-requestChan
 		Expect(req.Header).To(HaveKeyWithValue("Authorization", []string{"bearer foobar"}))
+
+	})
+	It("handles routing groups", func() {
+		ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			w.Header().Set("Content-Type", "application/json")
+
+			w.Write([]byte(`[{"guid":"abc123","name":"default-tcp","reservable_ports":"1024-65535","type":"tcp"}]`))
+		}))
+		defer ts.Close()
+
+		router, _ := NewRoutingApi("foobar", ts.URL)
+
+		routerGroups, err := router.RouterGroups()
+		Expect(err).To(BeNil())
+
+		Expect(routerGroups).To(ConsistOf(RouterGroup{
+			Guid:            "abc123",
+			Name:            "default-tcp",
+			ReservablePorts: "1024-65535",
+			Type:            "tcp",
+		}))
 	})
 })
