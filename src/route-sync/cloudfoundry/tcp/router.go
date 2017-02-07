@@ -1,6 +1,7 @@
 package router
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -19,6 +20,8 @@ type TCPRouter interface {
 	RouterGroups() ([]RouterGroup, error)
 	CreateRoutes(RouterGroup, []route.TCP) error
 }
+
+const routeTTL = 60
 
 type routing_api_router struct {
 	uaaOathToken       string
@@ -76,15 +79,44 @@ func (r *routing_api_router) RouterGroups() ([]RouterGroup, error) {
 	return routerGroups, err
 }
 
-func (r *routing_api_router) CreateRoutes(RouterGroup, []route.TCP) error {
+func (r *routing_api_router) CreateRoutes(rg RouterGroup, routes []route.TCP) error {
 	req, client, err := r.buildRequest("POST", "/routing/v1/tcp_routes/create")
 	if err != nil {
 		return err
 	}
+	req.Header.Set("Content-Type", "application/json")
+
+	tcpRoutes := r.buildRoutes(rg, routes)
+	tcpRoutesJson, err := json.Marshal(tcpRoutes)
+	if err != nil {
+		err = fmt.Errorf("routing_api_router: marshalling request: %v", err)
+	}
+
+	req.Body = ioutil.NopCloser(bytes.NewBuffer(tcpRoutesJson))
 
 	_, err = client.Do(req)
 	if err != nil {
 		return fmt.Errorf("routing_api_router: %v", err)
 	}
-	return fmt.Errorf("NYI")
+	return nil
+}
+
+func (r *routing_api_router) buildRoutes(rg RouterGroup, routes []route.TCP) []map[string]interface{} {
+	tcpRoutes := []map[string]interface{}{}
+
+	for _, route := range routes {
+		for _, backend := range route.Backend {
+			tcpRoute := map[string]interface{}{
+				"router_group_guid": rg.Guid,
+				"port":              route.Frontend,
+				"ttl":               routeTTL,
+				"backend_ip":        backend.IP,
+				"backend_port":      backend.Port,
+			}
+
+			tcpRoutes = append(tcpRoutes, tcpRoute)
+		}
+	}
+
+	return tcpRoutes
 }

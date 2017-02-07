@@ -1,6 +1,7 @@
 package router_test
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"net/http/httptest"
@@ -74,5 +75,52 @@ var _ = Describe("routing-api TCP router", func() {
 			ReservablePorts: "1024-65535",
 			Type:            "tcp",
 		}))
+	})
+
+	It("posts routes", func() {
+		requestChan := make(chan *http.Request)
+		ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			decoder := json.NewDecoder(r.Body)
+			var tcpRoutes []map[string]interface{}
+			err := decoder.Decode(&tcpRoutes)
+			Expect(err).To(BeNil())
+
+			Expect(tcpRoutes).To(HaveLen(2))
+
+			tcpRoute := tcpRoutes[0]
+			Expect(tcpRoute["backend_port"].(float64)).To(Equal(float64(5050)))
+			Expect(tcpRoute["port"].(float64)).To(Equal(float64(1010)))
+			Expect(tcpRoute["router_group_guid"].(string)).To(Equal("foobar"))
+			Expect(tcpRoute["ttl"].(float64)).To(Equal(float64(60)))
+			Expect(tcpRoute["backend_ip"].(string)).To(Equal("10.0.0.2"))
+
+			go func() {
+				requestChan <- r
+			}()
+		}))
+		defer ts.Close()
+
+		router, _ := NewRoutingApi("foobar", ts.URL)
+
+		routes := []route.TCP{route.TCP{
+			Frontend: 1010,
+			Backend: []route.Endpoint{
+				route.Endpoint{
+					IP:   "10.0.0.2",
+					Port: 5050,
+				},
+				route.Endpoint{
+					IP:   "10.0.0.3",
+					Port: 2020,
+				},
+			},
+		}}
+
+		routerGroup := RouterGroup{}
+		routerGroup.Guid = "foobar"
+		err := router.CreateRoutes(routerGroup, routes)
+
+		<-requestChan
+		Expect(err).To(BeNil())
 	})
 })
