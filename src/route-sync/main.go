@@ -2,10 +2,12 @@ package main
 
 import (
 	"os"
+	"os/signal"
 	"route-sync/cloudfoundry"
 	"route-sync/cloudfoundry/tcp"
 	"route-sync/config"
 	"route-sync/pooler"
+	"sync"
 	"time"
 
 	k8s "route-sync/kubernetes"
@@ -64,12 +66,28 @@ func main() {
 	sink := cloudfoundry.NewSink(bus, tcpRouter)
 
 	pooler := pooler.ByTime(time.Duration(10 * time.Second))
-	done, tick := pooler.Start(src, sink)
+	poolerDone, tick := pooler.Start(src, sink)
 
-	logger.Info("started, Ctrl+C to exit")
-	for {
-		<-tick
-		logger.Info("announced!")
-	}
-	done <- struct{}{}
+	wg := sync.WaitGroup{}
+	wg.Add(2)
+
+	go func() {
+		// Catch SIGINT (Ctrl+C) and tell pooler to quit
+		logger.Info("started, Ctrl+C to exit")
+		sigChan := make(chan os.Signal, 1)
+		signal.Notify(sigChan, os.Interrupt)
+		<-sigChan
+		poolerDone <- struct{}{}
+		wg.Done()
+	}()
+
+	go func() {
+		for range tick {
+			logger.Info("announced!")
+		}
+		wg.Done()
+	}()
+
+	wg.Wait()
+	logger.Info("exiting")
 }
