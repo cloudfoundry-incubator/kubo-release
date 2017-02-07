@@ -2,6 +2,8 @@ package cloudfoundry_test
 
 import (
 	. "route-sync/cloudfoundry"
+	"route-sync/cloudfoundry/tcp"
+	tcpfakes "route-sync/cloudfoundry/tcp/fakes"
 	"route-sync/route"
 
 	messagebusfakes "code.cloudfoundry.org/route-registrar/messagebus/fakes"
@@ -14,12 +16,22 @@ var _ = Describe("Sink", func() {
 	Context("with a valid message bus", func() {
 		var (
 			sink       route.Sink
+			tcpRouter  tcpfakes.FakeRouter
 			msgBus     messagebusfakes.FakeMessageBus
 			httpRoutes []*route.HTTP
+			tcpRoutes  []*route.TCP
 		)
 		BeforeEach(func() {
 			msgBus = messagebusfakes.FakeMessageBus{}
-			sink = NewSink(&msgBus)
+			tcpRouter = tcpfakes.FakeRouter{}
+			tcpRouter.RouterGroupsResult = []tcp.RouterGroup{tcp.RouterGroup{
+				Guid:            "abc123",
+				Name:            "myRouter",
+				ReservablePorts: "1000-2000",
+				Type:            "tcp",
+			},
+			}
+			sink = NewSink(&msgBus, &tcpRouter)
 			httpRoutes = []*route.HTTP{
 				&route.HTTP{
 					Backend: []route.Endpoint{route.Endpoint{IP: "10.10.10.10", Port: 9090}},
@@ -33,9 +45,24 @@ var _ = Describe("Sink", func() {
 					Name: "baz.cf-app.com",
 				},
 			}
+
+			tcpRoutes = []*route.TCP{
+				&route.TCP{
+					Backend:  []route.Endpoint{route.Endpoint{IP: "10.10.10.10", Port: 9090}},
+					Frontend: 1010,
+				},
+				&route.TCP{
+					Backend: []route.Endpoint{
+						route.Endpoint{IP: "10.10.10.10", Port: 9090},
+						route.Endpoint{IP: "10.2.2.2", Port: 8080},
+					},
+					Frontend: 2020,
+				},
+			}
 		})
 		It("posts a single L7 route", func() {
-			sink.HTTP([]*route.HTTP{httpRoutes[0]})
+			Expect(sink.HTTP([]*route.HTTP{httpRoutes[0]})).To(Succeed())
+
 			Expect(msgBus.SendMessageCallCount()).To(Equal(1))
 			subject, host, route, privateInstanceId := msgBus.SendMessageArgsForCall(0)
 
@@ -47,11 +74,20 @@ var _ = Describe("Sink", func() {
 			Expect(privateInstanceId).NotTo(Equal(""))
 		})
 		It("posts multiple L7 routes with multiple backends", func() {
-			sink.HTTP(httpRoutes)
+			Expect(sink.HTTP(httpRoutes)).To(Succeed())
 			Expect(msgBus.SendMessageCallCount()).To(Equal(3))
 		})
 		It("posts a sinlge L4 route", func() {
+			Expect(sink.TCP([]*route.TCP{tcpRoutes[0]})).To(Succeed())
 
+			Expect(tcpRouter.CreateRoutesLastRoutes).To(ConsistOf(tcpRoutes[0]))
+			Expect(tcpRouter.CreateRoutesLastRouterGroup).To(Equal(tcpRouter.RouterGroupsResult[0]))
+		})
+		It("posts multiple L4 routes", func() {
+			Expect(sink.TCP(tcpRoutes)).To(Succeed())
+
+			Expect(tcpRouter.CreateRoutesLastRoutes).To(ConsistOf(tcpRoutes[0], tcpRoutes[1]))
+			Expect(tcpRouter.CreateRoutesLastRouterGroup).To(Equal(tcpRouter.RouterGroupsResult[0]))
 		})
 	})
 })
