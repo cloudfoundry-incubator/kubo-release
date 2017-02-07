@@ -1,13 +1,15 @@
-hash: eea193f7b4d7f687d71a29572d915d15a322adcfe075377fdd6c7b5d9c869f4e
-updated: 2017-02-03T18:46:14.752709197Z
+hash: c6eaba4a3995544cba5071beec5235e8f7315f671ed5b10968e54a4278b684d0
+updated: 2017-02-07T21:16:35.412716821Z
 imports:
 - name: cloud.google.com/go
   version: 3b1ae45394a234c385be014e9a488f2bb6eef821
   subpackages:
   - compute/metadata
   - internal
+- name: code.cloudfoundry.org/clock
+  version: b56e2850d2180cce6fd471226562ebe079047b3b
 - name: code.cloudfoundry.org/lager
-  version: 6cfe365fb6bb84343f0034b4a53cd250d173b61f
+  version: e95b952e262dcdb521c8b029ba15853f59292726
 - name: code.cloudfoundry.org/multierror
   version: dafed03eebc65cdf3de2928e3f94793bc893ede0
 - name: code.cloudfoundry.org/route-registrar
@@ -16,6 +18,13 @@ imports:
   - config
   - messagebus
   - messagebus/fakes
+- name: code.cloudfoundry.org/trace-logger
+  version: 107ef08a939d5be6092ce2b5f171a16aba149cb2
+- name: code.cloudfoundry.org/uaa-go-client
+  version: b075ab43efef78bbe8a8359b33edfa2b7ce547f5
+  subpackages:
+  - config
+  - schema
 - name: github.com/blang/semver
   version: 31b736133b98f26d5e078ec9eb591666edfd091f
 - name: github.com/cloudfoundry/route-registrar
@@ -40,6 +49,8 @@ imports:
   version: 5215b55f46b2b919f50a1df0eaa5886afe4e3b3d
   subpackages:
   - spew
+- name: github.com/dgrijalva/jwt-go
+  version: 268038b363c7a8d7306b8e35bf77a1fde4b0c402
 - name: github.com/docker/distribution
   version: cd27f179f2c10c5d300e6d09025b538c475b0d51
   subpackages:
@@ -73,6 +84,10 @@ imports:
   - proto
 - name: github.com/google/gofuzz
   version: bbcb9da2d746f8bdbd6a936686a0a6067ada0ec5
+- name: github.com/howeyc/gopass
+  version: 3ca23474a7c7203e0a0a070fd33508f6efdb9b3d
+- name: github.com/imdario/mergo
+  version: 6633656539c1639d9d78127b7d47c622b5d7b6dc
 - name: github.com/jonboulle/clockwork
   version: 72f9bd7c4e0c2a40055ab3d0f09654f730cce982
 - name: github.com/kelseyhightower/envconfig
@@ -104,6 +119,10 @@ imports:
   version: f1f1a805ed361a0e078bb537e4ea78cd37dcf065
   subpackages:
   - codec
+- name: golang.org/x/crypto
+  version: 1f22c0103821b9390939b6776727195525381532
+  subpackages:
+  - ssh/terminal
 - name: golang.org/x/net
   version: e90d6d0afc4c315a0d87a568ae68577cc15149a0
   subpackages:
@@ -120,6 +139,10 @@ imports:
   - internal
   - jws
   - jwt
+- name: golang.org/x/sys
+  version: 8f0908ab3b2457e2e15403d3697c9ef5cb4b57a9
+  subpackages:
+  - unix
 - name: golang.org/x/text
   version: 2910a502d2bf9e43193af9d68ca516529614eed3
   subpackages:
@@ -250,6 +273,7 @@ imports:
   - pkg/util/errors
   - pkg/util/flowcontrol
   - pkg/util/framer
+  - pkg/util/homedir
   - pkg/util/integer
   - pkg/util/intstr
   - pkg/util/json
@@ -274,8 +298,11 @@ imports:
   - plugin/pkg/client/auth/oidc
   - rest
   - testing
+  - tools/auth
   - tools/clientcmd
   - tools/clientcmd/api
+  - tools/clientcmd/api/latest
+  - tools/clientcmd/api/v1
   - tools/metrics
   - transport
 testImports:
@@ -312,7 +339,3 @@ testImports:
   - matchers/support/goraph/node
   - matchers/support/goraph/util
   - types
-- name: golang.org/x/sys
-  version: 8f0908ab3b2457e2e15403d3697c9ef5cb4b57a9
-  subpackages:
-  - unix
