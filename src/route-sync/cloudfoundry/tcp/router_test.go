@@ -8,30 +8,41 @@ import (
 	. "route-sync/cloudfoundry/tcp"
 	"route-sync/route"
 
+	"code.cloudfoundry.org/uaa-go-client"
+	uaafakes "code.cloudfoundry.org/uaa-go-client/fakes"
+
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 )
 
 var _ = Describe("routing-api TCP router", func() {
-	It("requires credentials and an API endpoint", func() {
+	var (
+		fooClient uaafakes.FakeClient
+	)
+	BeforeEach(func() {
+		fooClient = uaafakes.FakeClient{}
+		fooClient.FetchKeyReturns("foo", nil)
+	})
+
+	It("requires UAA client and an API endpoint", func() {
 		var invalidCreations = []struct {
-			creds string
-			api   string
+			uaaClient uaa_go_client.Client
+			api       string
 		}{
-			{"", ""},
-			{"foo", ""},
-			{"", "bar"},
+			{nil, ""},
+			{&fooClient, ""},
+			{nil, "bar"},
 		}
 
 		for _, t := range invalidCreations {
-			Context(fmt.Sprintf("creds: %s, api: %s", t.creds, t.api), func() {
-				router, err := NewRoutingApi(t.creds, t.api)
+			Context(fmt.Sprintf("uaaClient: %q, api: %s", t.uaaClient, t.api), func() {
+				router, err := NewRoutingApi(t.uaaClient, t.api)
 				Expect(router).To(BeNil())
 				Expect(err).NotTo(BeNil())
 			})
 		}
 
-		router, err := NewRoutingApi("foo", "foo")
+		router, err := NewRoutingApi(&fooClient, "foo")
 		Expect(router).NotTo(BeNil())
 		Expect(err).To(BeNil())
 	})
@@ -45,15 +56,15 @@ var _ = Describe("routing-api TCP router", func() {
 		}))
 		defer ts.Close()
 
-		router, _ := NewRoutingApi("foobar", ts.URL)
+		router, _ := NewRoutingApi(&fooClient, ts.URL)
 
 		router.RouterGroups()
 		req := <-requestChan
-		Expect(req.Header).To(HaveKeyWithValue("Authorization", []string{"bearer foobar"}))
+		Expect(req.Header).To(HaveKeyWithValue("Authorization", []string{"bearer foo"}))
 
 		router.CreateRoutes(RouterGroup{}, []route.TCP{route.TCP{}})
 		req = <-requestChan
-		Expect(req.Header).To(HaveKeyWithValue("Authorization", []string{"bearer foobar"}))
+		Expect(req.Header).To(HaveKeyWithValue("Authorization", []string{"bearer foo"}))
 
 	})
 	It("handles routing groups", func() {
@@ -64,7 +75,7 @@ var _ = Describe("routing-api TCP router", func() {
 		}))
 		defer ts.Close()
 
-		router, _ := NewRoutingApi("foobar", ts.URL)
+		router, _ := NewRoutingApi(&fooClient, ts.URL)
 
 		routerGroups, err := router.RouterGroups()
 		Expect(err).To(BeNil())
@@ -99,7 +110,7 @@ var _ = Describe("routing-api TCP router", func() {
 		}))
 		defer ts.Close()
 
-		router, _ := NewRoutingApi("foobar", ts.URL)
+		router, _ := NewRoutingApi(&fooClient, ts.URL)
 
 		routes := []route.TCP{route.TCP{
 			Frontend: 1010,
