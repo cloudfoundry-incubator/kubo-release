@@ -10,13 +10,16 @@ import (
 	"github.com/cloudfoundry/route-registrar/messagebus"
 )
 
-const privateInstanceId = "kubo-route-sync"
+const privateInstanceID = "kubo-route-sync"
 
 type sink struct {
 	tcpRouter tcp.Router
 	bus       messagebus.MessageBus
 }
 
+// NewSink creates a new route.Sink for CloudFoundry
+//
+// This object wraps the CloudFoundry HTTP (gorouter) and TCP (routing-api) routers
 func NewSink(bus messagebus.MessageBus, tcpRouter tcp.Router) route.Sink {
 	return &sink{bus: bus, tcpRouter: tcpRouter}
 }
@@ -50,7 +53,7 @@ func (ts *sink) HTTP(routes []*route.HTTP) error {
 			ts.bus.SendMessage("router.register", endpoint.IP, config.Route{
 				Port: endpoint.Port,
 				URIs: []string{httpRoute.Name},
-			}, privateInstanceId)
+			}, privateInstanceID)
 		}
 	}
 	return nil

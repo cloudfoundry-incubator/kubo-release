@@ -48,17 +48,17 @@ func main() {
 	}
 
 	uaaCfg := &uaaconfig.Config{
-		ClientName:       cfg.RoutingApiUsername,
-		ClientSecret:     cfg.RoutingApiClientSecret,
-		UaaEndpoint:      cfg.UAAApiUrl,
-		SkipVerification: cfg.SkipTlsVerification,
+		ClientName:       cfg.RoutingAPIUsername,
+		ClientSecret:     cfg.RoutingAPIClientSecret,
+		UaaEndpoint:      cfg.UAAApiURL,
+		SkipVerification: cfg.SkipTLSVerification,
 	}
 
 	uaaClient, err := uaa.NewClient(logger, uaaCfg, clock.NewClock())
 	if err != nil {
 		logger.Fatal("creating UAA client", err)
 	}
-	tcpRouter, err := tcp.NewRoutingApi(uaaClient, cfg.CloudFoundryApiUrl)
+	tcpRouter, err := tcp.NewRoutingApi(uaaClient, cfg.CloudFoundryAPIURL)
 	if err != nil {
 		logger.Fatal("creating TCP router", err)
 	}
