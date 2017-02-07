@@ -1,4 +1,4 @@
-package router
+package tcp
 
 import (
 	"bytes"
