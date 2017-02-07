@@ -1,4 +1,4 @@
-package router_test
+package tcp_test
 
 import (
 	"encoding/json"
