@@ -10,19 +10,19 @@ import (
 
 const privateInstanceId = "kubo-route-sync"
 
-type tcp_sink struct {
+type sink struct {
 	bus messagebus.MessageBus
 }
 
 func NewSink(bus messagebus.MessageBus) route.Sink {
-	return &tcp_sink{bus: bus}
+	return &sink{bus: bus}
 }
 
-func (ts *tcp_sink) TCP(routes []*route.TCP) error {
+func (ts *sink) TCP(routes []*route.TCP) error {
 	return nil
 }
 
-func (ts *tcp_sink) HTTP(routes []*route.HTTP) error {
+func (ts *sink) HTTP(routes []*route.HTTP) error {
 	for _, httpRoute := range routes {
 		for _, endpoint := range httpRoute.Backend {
 			ts.bus.SendMessage("router.register", endpoint.IP, config.Route{
