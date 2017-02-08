@@ -17,7 +17,7 @@ var _ = Describe("Time-based Pooler", func() {
 
 		running := func() bool { return pool.Running() }
 
-		done, _ := pool.Start(&routefakes.Source{}, &routefakes.Sink{})
+		done, _ := pool.Start(&routefakes.Source{}, &routefakes.Router{})
 		Eventually(running).Should(BeTrue())
 		done <- struct{}{}
 		Eventually(running).Should(BeFalse())
@@ -34,17 +34,17 @@ var _ = Describe("Time-based Pooler", func() {
 
 		src.TCP_value = []*route.TCP{tcpRoute}
 		src.HTTP_value = []*route.HTTP{httpRoute}
-		sink := &routefakes.Sink{}
+		router := &routefakes.Router{}
 
-		done, _ := pool.Start(src, sink)
+		done, _ := pool.Start(src, router)
 
 		Eventually(func() bool { return src.TCP_count > 0 }).Should(BeTrue())
-		Eventually(func() bool { return sink.TCP_count > 0 }).Should(BeTrue())
-		Expect(sink.TCP_values[0][0]).To(Equal(tcpRoute))
+		Eventually(func() bool { return router.TCP_count > 0 }).Should(BeTrue())
+		Expect(router.TCP_values[0][0]).To(Equal(tcpRoute))
 
 		Eventually(func() bool { return src.HTTP_count > 0 }).Should(BeTrue())
-		Eventually(func() bool { return sink.HTTP_count > 0 }).Should(BeTrue())
-		Expect(sink.HTTP_values[0][0]).To(Equal(httpRoute))
+		Eventually(func() bool { return router.HTTP_count > 0 }).Should(BeTrue())
+		Expect(router.HTTP_values[0][0]).To(Equal(httpRoute))
 
 		done <- struct{}{}
 	})

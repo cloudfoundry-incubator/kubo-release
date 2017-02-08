@@ -63,7 +63,7 @@ func main() {
 		logger.Fatal("creating TCP router", err)
 	}
 
-	sink := cloudfoundry.NewSink(bus, tcpRouter)
+	sink := cloudfoundry.NewRouter(bus, tcpRouter)
 
 	pooler := pooler.ByTime(time.Duration(10 * time.Second))
 	poolerDone, tick := pooler.Start(src, sink)

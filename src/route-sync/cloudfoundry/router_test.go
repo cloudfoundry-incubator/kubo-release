@@ -12,10 +12,10 @@ import (
 	. "github.com/onsi/gomega"
 )
 
-var _ = Describe("Sink", func() {
+var _ = Describe("Router", func() {
 	Context("with a valid message bus", func() {
 		var (
-			sink       route.Sink
+			router     route.Router
 			tcpRouter  tcpfakes.FakeRouter
 			msgBus     messagebusfakes.FakeMessageBus
 			httpRoutes []*route.HTTP
@@ -31,7 +31,7 @@ var _ = Describe("Sink", func() {
 				Type:            "tcp",
 			},
 			}
-			sink = NewSink(&msgBus, &tcpRouter)
+			router = NewRouter(&msgBus, &tcpRouter)
 			httpRoutes = []*route.HTTP{
 				&route.HTTP{
 					Backend: []route.Endpoint{route.Endpoint{IP: "10.10.10.10", Port: 9090}},
@@ -61,7 +61,7 @@ var _ = Describe("Sink", func() {
 			}
 		})
 		It("posts a single L7 route", func() {
-			Expect(sink.HTTP([]*route.HTTP{httpRoutes[0]})).To(Succeed())
+			Expect(router.HTTP([]*route.HTTP{httpRoutes[0]})).To(Succeed())
 
 			Expect(msgBus.SendMessageCallCount()).To(Equal(1))
 			subject, host, route, privateInstanceId := msgBus.SendMessageArgsForCall(0)
@@ -74,17 +74,17 @@ var _ = Describe("Sink", func() {
 			Expect(privateInstanceId).NotTo(Equal(""))
 		})
 		It("posts multiple L7 routes with multiple backends", func() {
-			Expect(sink.HTTP(httpRoutes)).To(Succeed())
+			Expect(router.HTTP(httpRoutes)).To(Succeed())
 			Expect(msgBus.SendMessageCallCount()).To(Equal(3))
 		})
 		It("posts a sinlge L4 route", func() {
-			Expect(sink.TCP([]*route.TCP{tcpRoutes[0]})).To(Succeed())
+			Expect(router.TCP([]*route.TCP{tcpRoutes[0]})).To(Succeed())
 
 			Expect(tcpRouter.CreateRoutesLastRoutes).To(ConsistOf(tcpRoutes[0]))
 			Expect(tcpRouter.CreateRoutesLastRouterGroup).To(Equal(tcpRouter.RouterGroupsResult[0]))
 		})
 		It("posts multiple L4 routes", func() {
-			Expect(sink.TCP(tcpRoutes)).To(Succeed())
+			Expect(router.TCP(tcpRoutes)).To(Succeed())
 
 			Expect(tcpRouter.CreateRoutesLastRoutes).To(ConsistOf(tcpRoutes[0], tcpRoutes[1]))
 			Expect(tcpRouter.CreateRoutesLastRouterGroup).To(Equal(tcpRouter.RouterGroupsResult[0]))

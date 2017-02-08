@@ -5,9 +5,9 @@ import (
 	"time"
 )
 
-// Pooler is responsible for querying a route.Source and updating a route.Sink
+// Pooler is responsible for querying a route.Source and updating a route.Router
 type Pooler interface {
-	Start(route.Source, route.Sink) (done chan<- struct{}, tick <-chan struct{})
+	Start(route.Source, route.Router) (done chan<- struct{}, tick <-chan struct{})
 	Running() bool
 }
 
@@ -21,12 +21,12 @@ func ByTime(duration time.Duration) Pooler {
 	return &timeBased{duration: duration, running: false}
 }
 
-func (tb *timeBased) tick(src route.Source, sink route.Sink) {
+func (tb *timeBased) tick(src route.Source, router route.Router) {
 	tcpRoutes, err := src.TCP()
 	if err != nil {
 		panic(err)
 	}
-	err = sink.TCP(tcpRoutes)
+	err = router.TCP(tcpRoutes)
 	if err != nil {
 		panic(err)
 	}
@@ -34,13 +34,13 @@ func (tb *timeBased) tick(src route.Source, sink route.Sink) {
 	if err != nil {
 		panic(err)
 	}
-	err = sink.HTTP(httpRoutes)
+	err = router.HTTP(httpRoutes)
 	if err != nil {
 		panic(err)
 	}
 }
 
-func (tb *timeBased) Start(src route.Source, sink route.Sink) (chan<- struct{}, <-chan struct{}) {
+func (tb *timeBased) Start(src route.Source, router route.Router) (chan<- struct{}, <-chan struct{}) {
 	tick := make(chan struct{})
 	done := make(chan struct{})
 	go func() {
@@ -51,7 +51,7 @@ func (tb *timeBased) Start(src route.Source, sink route.Sink) (chan<- struct{}, 
 				tb.running = false
 				return
 			default:
-				tb.tick(src, sink)
+				tb.tick(src, router)
 				go func() {
 					tick <- struct{}{}
 				}()
