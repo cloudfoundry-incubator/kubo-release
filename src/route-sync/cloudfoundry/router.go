@@ -51,7 +51,7 @@ func (ts *router) HTTP(routes []*route.HTTP) error {
 	for _, httpRoute := range routes {
 		for _, endpoint := range httpRoute.Backend {
 			ts.bus.SendMessage("router.register", endpoint.IP, config.Route{
-				Port: endpoint.Port,
+				Port: int(endpoint.Port),
 				URIs: []string{httpRoute.Name},
 			}, privateInstanceID)
 		}

@@ -1,14 +1,16 @@
 package route
 
+type Port int
+
 // Endpoint defines a given TCP Endpoint
 type Endpoint struct {
 	IP   string
-	Port int
+	Port Port
 }
 
 // TCP is a route definition for TCP traffic
 type TCP struct {
-	Frontend int // This is a port
+	Frontend Port
 	Backend  []Endpoint
 }
 

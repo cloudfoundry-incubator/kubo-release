@@ -2,6 +2,7 @@ package kubernetes_test
 
 import (
 	"route-sync/kubernetes"
+	"route-sync/route"
 
 	core "k8s.io/client-go/testing"
 
@@ -17,7 +18,7 @@ var _ = Describe("Source", func() {
 		It("returns list of HTTP routes", func() {
 			namespace := "kubo-test"
 			nodeAddress := "10.0.0.0"
-			nodePort := 42
+			nodePort := route.Port(42)
 			serviceName := "dashboard"
 			clientset := fake.NewSimpleClientset()
 			clientset.PrependReactor("list", "services", func(action core.Action) (bool, runtime.Object, error) {
@@ -58,7 +59,7 @@ var _ = Describe("Source", func() {
 			namespace := "kubo-test"
 			anotherNamespace := "default"
 			nodeAddress := "10.0.0.0"
-			nodePort := 42
+			nodePort := route.Port(42)
 			serviceName := "dashboard"
 			clientset := fake.NewSimpleClientset()
 			clientset.PrependReactor("list", "services", func(action core.Action) (bool, runtime.Object, error) {
@@ -105,7 +106,7 @@ var _ = Describe("Source", func() {
 		It("returns list of TCP routes", func() {
 			namespace := "kubo-test"
 			nodeAddress := "10.0.0.0"
-			nodePort := 42
+			nodePort := route.Port(42)
 			clientset := fake.NewSimpleClientset()
 			clientset.PrependReactor("list", "services", func(action core.Action) (bool, runtime.Object, error) {
 				port := v1.ServicePort{NodePort: int32(nodePort)}
@@ -144,7 +145,7 @@ var _ = Describe("Source", func() {
 		It("returns list of TCP routes", func() {
 			namespace := "kubo-test"
 			nodeAddress := "10.0.0.0"
-			nodePort := 42
+			nodePort := route.Port(42)
 			clientset := fake.NewSimpleClientset()
 			clientset.PrependReactor("list", "services", func(action core.Action) (bool, runtime.Object, error) {
 				port := v1.ServicePort{NodePort: int32(nodePort)}
@@ -201,9 +202,9 @@ var _ = Describe("Source", func() {
 		It("returns only TCP routes for services with multiple ports", func() {
 			namespace := "kubo-test"
 			nodeAddress := "10.0.0.0"
-			udpNodePort := 42
-			tcpNodePort := 43
-			anotherTCPNodePort := 4342
+			udpNodePort := route.Port(42)
+			tcpNodePort := route.Port(43)
+			anotherTCPNodePort := route.Port(4342)
 			clientset := fake.NewSimpleClientset()
 			clientset.PrependReactor("list", "services", func(action core.Action) (bool, runtime.Object, error) {
 				port1 := v1.ServicePort{Protocol: "UDP", NodePort: int32(udpNodePort)}
@@ -245,7 +246,7 @@ var _ = Describe("Source", func() {
 		It("skip routes for services with no NodePort", func() {
 			namespace := "kubo-test"
 			nodeAddress := "10.0.0.0"
-			nodePort := 42
+			nodePort := route.Port(42)
 			clientset := fake.NewSimpleClientset()
 			clientset.PrependReactor("list", "services", func(action core.Action) (bool, runtime.Object, error) {
 				port1 := v1.ServicePort{Protocol: "TCP", NodePort: int32(nodePort)}
