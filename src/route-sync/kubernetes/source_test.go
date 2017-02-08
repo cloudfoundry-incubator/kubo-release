@@ -16,6 +16,7 @@ import (
 var _ = Describe("Source", func() {
 	Context("HTTP", func() {
 		It("returns list of HTTP routes", func() {
+			domainName := "cf.example.com"
 			namespace := "kubo-test"
 			nodeAddress := "10.0.0.0"
 			nodePort := route.Port(42)
@@ -44,7 +45,7 @@ var _ = Describe("Source", func() {
 				namespaces := []v1.Namespace{ns1}
 				return true, &v1.NamespaceList{Items: namespaces}, nil
 			})
-			endpoint := kubernetes.New(clientset)
+			endpoint := kubernetes.New(clientset, domainName)
 			routes, err := endpoint.HTTP()
 			Expect(err).To(BeNil())
 			Expect(len(routes)).To(Equal(1))
@@ -56,6 +57,7 @@ var _ = Describe("Source", func() {
 			Expect(httpRoute.Backend[0].IP).To(Equal(nodeAddress))
 		})
 		It("returns list of HTTP routes across namespaces", func() {
+			domainName := "cf.example.com"
 			namespace := "kubo-test"
 			anotherNamespace := "default"
 			nodeAddress := "10.0.0.0"
@@ -87,7 +89,7 @@ var _ = Describe("Source", func() {
 				namespaces := []v1.Namespace{ns1, ns2}
 				return true, &v1.NamespaceList{Items: namespaces}, nil
 			})
-			endpoint := kubernetes.New(clientset)
+			endpoint := kubernetes.New(clientset, domainName)
 			routes, err := endpoint.HTTP()
 			Expect(err).To(BeNil())
 			Expect(len(routes)).To(Equal(2))
@@ -131,7 +133,7 @@ var _ = Describe("Source", func() {
 				return true, &v1.NamespaceList{Items: namespaces}, nil
 			})
 
-			endpoint := kubernetes.New(clientset)
+			endpoint := kubernetes.New(clientset, "")
 			routes, err := endpoint.TCP()
 			Expect(err).To(BeNil())
 			Expect(len(routes)).To(Equal(1))
@@ -172,7 +174,7 @@ var _ = Describe("Source", func() {
 				return true, &v1.NamespaceList{Items: namespaces}, nil
 			})
 
-			endpoint := kubernetes.New(clientset)
+			endpoint := kubernetes.New(clientset, "")
 			routes, err := endpoint.TCP()
 			Expect(err).To(BeNil())
 			Expect(len(routes)).To(Equal(2))
@@ -194,7 +196,7 @@ var _ = Describe("Source", func() {
 				return true, &v1.NodeList{Items: nodesList}, nil
 			})
 
-			endpoint := kubernetes.New(clientset)
+			endpoint := kubernetes.New(clientset, "")
 			routes, err := endpoint.TCP()
 			Expect(err).To(BeNil())
 			Expect(len(routes)).To(Equal(0))
@@ -231,7 +233,7 @@ var _ = Describe("Source", func() {
 				return true, &v1.NamespaceList{Items: namespaces}, nil
 			})
 
-			endpoint := kubernetes.New(clientset)
+			endpoint := kubernetes.New(clientset, "")
 			routes, err := endpoint.TCP()
 			Expect(err).To(BeNil())
 			Expect(len(routes)).To(Equal(2))
@@ -272,7 +274,7 @@ var _ = Describe("Source", func() {
 				return true, &v1.NamespaceList{Items: namespaces}, nil
 			})
 
-			endpoint := kubernetes.New(clientset)
+			endpoint := kubernetes.New(clientset, "")
 			routes, err := endpoint.TCP()
 			Expect(err).To(BeNil())
 			Expect(len(routes)).To(Equal(1))
