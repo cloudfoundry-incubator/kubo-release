@@ -24,8 +24,8 @@ type Source interface {
 	HTTP() ([]*HTTP, error)
 }
 
-// Sink consumes routes
-type Sink interface {
+// Router consumes routes
+type Router interface {
 	TCP(routes []*TCP) error
 	HTTP(routes []*HTTP) error
 }

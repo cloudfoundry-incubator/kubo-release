@@ -12,19 +12,19 @@ import (
 
 const privateInstanceID = "kubo-route-sync"
 
-type sink struct {
+type router struct {
 	tcpRouter tcp.Router
 	bus       messagebus.MessageBus
 }
 
-// NewSink creates a new route.Sink for CloudFoundry
+// NewRouter creates a new route.Router for CloudFoundry
 //
 // This object wraps the CloudFoundry HTTP (gorouter) and TCP (routing-api) routers
-func NewSink(bus messagebus.MessageBus, tcpRouter tcp.Router) route.Sink {
-	return &sink{bus: bus, tcpRouter: tcpRouter}
+func NewRouter(bus messagebus.MessageBus, tcpRouter tcp.Router) route.Router {
+	return &router{bus: bus, tcpRouter: tcpRouter}
 }
 
-func (ts *sink) TCP(routes []*route.TCP) error {
+func (ts *router) TCP(routes []*route.TCP) error {
 	routerGroup, err := ts.tcpRouterGroup()
 	if err != nil {
 		return err
@@ -33,7 +33,7 @@ func (ts *sink) TCP(routes []*route.TCP) error {
 	return ts.tcpRouter.CreateRoutes(routerGroup, routes)
 }
 
-func (ts *sink) tcpRouterGroup() (tcp.RouterGroup, error) {
+func (ts *router) tcpRouterGroup() (tcp.RouterGroup, error) {
 	routerGroups, err := ts.tcpRouter.RouterGroups()
 
 	if err != nil {
@@ -47,7 +47,7 @@ func (ts *sink) tcpRouterGroup() (tcp.RouterGroup, error) {
 	return routerGroups[0], nil
 }
 
-func (ts *sink) HTTP(routes []*route.HTTP) error {
+func (ts *router) HTTP(routes []*route.HTTP) error {
 	for _, httpRoute := range routes {
 		for _, endpoint := range httpRoute.Backend {
 			ts.bus.SendMessage("router.register", endpoint.IP, config.Route{
