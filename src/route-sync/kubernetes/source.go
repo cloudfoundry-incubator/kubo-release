@@ -38,7 +38,7 @@ func (e *endpoint) TCP() ([]*route.TCP, error) {
 
 		for _, service := range services.Items {
 			for _, port := range service.Spec.Ports {
-				nodePort := int(port.NodePort)
+				nodePort := route.Port(port.NodePort)
 				if port.Protocol == "UDP" {
 					continue
 				}
@@ -77,7 +77,7 @@ func (e *endpoint) HTTP() ([]*route.HTTP, error) {
 		for _, service := range services.Items {
 			for _, port := range service.Spec.Ports {
 				// TODO Which ports should we include for HTTP routing?
-				nodePort := int(port.NodePort)
+				nodePort := route.Port(port.NodePort)
 				if port.Protocol == "UDP" {
 					continue
 				}
@@ -108,7 +108,7 @@ func GetIPs(nodes *v1.NodeList) ([]string, error) {
 }
 
 // GetBackends returns a list of route.Endpoints for a set of backend IPs and a given nodePort
-func GetBackends(ips []string, nodePort int) ([]route.Endpoint, error) {
+func GetBackends(ips []string, nodePort route.Port) ([]route.Endpoint, error) {
 	backends := []route.Endpoint{}
 	for _, ip := range ips {
 		backends = append(backends, route.Endpoint{IP: ip, Port: nodePort})
