@@ -1,7 +1,7 @@
-package fixed_source_test
+package fixedsource_test
 
 import (
-	"route-sync/fixed_source"
+	"route-sync/fixedsource"
 	"route-sync/route"
 
 	. "github.com/onsi/ginkgo"
@@ -10,7 +10,7 @@ import (
 
 var _ = Describe("FixedSource", func() {
 	It("returns empty routes", func() {
-		fs := fixed_source.New(nil, nil)
+		fs := fixedsource.New(nil, nil)
 
 		tcpRoutes, err := fs.TCP()
 
@@ -28,7 +28,7 @@ var _ = Describe("FixedSource", func() {
 			Backend: []route.Endpoint{route.Endpoint{IP: "10.10.10.10", Port: 9090}},
 		}}
 
-		fs := fixed_source.New(routes, nil)
+		fs := fixedsource.New(routes, nil)
 
 		routes, error := fs.TCP()
 
@@ -41,7 +41,7 @@ var _ = Describe("FixedSource", func() {
 			Backend: []route.Endpoint{route.Endpoint{IP: "10.10.10.10", Port: 9090}},
 		}}
 
-		fs := fixed_source.New(nil, routes)
+		fs := fixedsource.New(nil, routes)
 
 		routes, error := fs.HTTP()
 
