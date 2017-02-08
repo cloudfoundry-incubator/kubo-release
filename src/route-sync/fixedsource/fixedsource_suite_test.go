@@ -1,4 +1,4 @@
-package fixed_source_test
+package fixedsource_test
 
 import (
 	. "github.com/onsi/ginkgo"
@@ -7,7 +7,7 @@ import (
 	"testing"
 )
 
-func TestFixedSource(t *testing.T) {
+func TestFixedsource(t *testing.T) {
 	RegisterFailHandler(Fail)
 	RunSpecs(t, "FixedSource Suite")
 }
