@@ -7,13 +7,14 @@ import (
 	"route-sync/cloudfoundry/tcp"
 	"route-sync/config"
 	"route-sync/pooler"
+	"route-sync/route"
 	"sync"
 	"time"
 
-	k8s "route-sync/kubernetes"
+	"route-sync/kubernetes"
 
-	"k8s.io/client-go/kubernetes"
-	"k8s.io/client-go/tools/clientcmd"
+	k8sclient "k8s.io/client-go/kubernetes"
+	k8sclientcmd "k8s.io/client-go/tools/clientcmd"
 
 	"code.cloudfoundry.org/clock"
 	"code.cloudfoundry.org/lager"
@@ -26,23 +27,64 @@ func main() {
 	logger := lager.NewLogger("route-sync")
 	logger.RegisterSink(lager.NewWriterSink(os.Stdout, lager.DEBUG))
 
+	cfg := loadConfig(logger)
+
+	pooler := pooler.ByTime(time.Duration(10 * time.Second))
+	poolerDone, tick := pooler.Start(newKubernetesSource(logger, cfg), newCloudFoundrySink(logger, cfg))
+
+	wg := sync.WaitGroup{}
+
+	wg.Add(2)
+	go gracefulExit(logger, &wg, poolerDone)
+	go heartbeat(logger, &wg, tick)
+	wg.Wait()
+
+	logger.Info("exiting")
+}
+
+// Catch SIGINT (Ctrl+C) and tell pooler to quit
+func gracefulExit(logger lager.Logger, wg *sync.WaitGroup, poolerDone chan<- struct{}) {
+	logger.Info("started, Ctrl+C to exit")
+	sigChan := make(chan os.Signal, 1)
+	signal.Notify(sigChan, os.Interrupt)
+	<-sigChan
+	poolerDone <- struct{}{}
+	wg.Done()
+}
+
+// Heartbeat for logs
+func heartbeat(logger lager.Logger, wg *sync.WaitGroup, tick <-chan struct{}) {
+	for range tick {
+		logger.Info("announced!")
+	}
+	wg.Done()
+}
+
+func loadConfig(logger lager.Logger) *config.Config {
 	cfg, err := config.NewConfig()
 	if err != nil {
 		logger.Fatal("parsing config", err)
 	}
 
-	kubecfg, err := clientcmd.BuildConfigFromFlags("", cfg.KubeConfigPath)
+	return cfg
+}
+
+func newKubernetesSource(logger lager.Logger, cfg *config.Config) route.Source {
+	kubecfg, err := k8sclientcmd.BuildConfigFromFlags("", cfg.KubeConfigPath)
 	if err != nil {
 		logger.Fatal("building config from flags", err)
 	}
-	clientset, err := kubernetes.NewForConfig(kubecfg)
+	clientset, err := k8sclient.NewForConfig(kubecfg)
 	if err != nil {
 		logger.Fatal("creating clientset from kube config", err)
 	}
 
-	src := k8s.New(clientset)
+	return kubernetes.New(clientset)
+}
+
+func newCloudFoundrySink(logger lager.Logger, cfg *config.Config) route.Router {
 	bus := messagebus.NewMessageBus(logger)
-	err = bus.Connect(cfg.NatsServers)
+	err := bus.Connect(cfg.NatsServers)
 	if err != nil {
 		logger.Fatal("connecting to NATS", err)
 	}
@@ -63,31 +105,5 @@ func main() {
 		logger.Fatal("creating TCP router", err)
 	}
 
-	sink := cloudfoundry.NewRouter(bus, tcpRouter)
-
-	pooler := pooler.ByTime(time.Duration(10 * time.Second))
-	poolerDone, tick := pooler.Start(src, sink)
-
-	wg := sync.WaitGroup{}
-	wg.Add(2)
-
-	go func() {
-		// Catch SIGINT (Ctrl+C) and tell pooler to quit
-		logger.Info("started, Ctrl+C to exit")
-		sigChan := make(chan os.Signal, 1)
-		signal.Notify(sigChan, os.Interrupt)
-		<-sigChan
-		poolerDone <- struct{}{}
-		wg.Done()
-	}()
-
-	go func() {
-		for range tick {
-			logger.Info("announced!")
-		}
-		wg.Done()
-	}()
-
-	wg.Wait()
-	logger.Info("exiting")
+	return cloudfoundry.NewRouter(bus, tcpRouter)
 }
