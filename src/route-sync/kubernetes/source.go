@@ -20,15 +20,19 @@ func New(clientset k8s.Interface, cfDomain string) route.Source {
 func (e *endpoint) TCP() ([]*route.TCP, error) {
 	namespaces, err := e.clientset.CoreV1().Namespaces().List(v1.ListOptions{})
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 
-	ips := getIPs(e.clientset)
+	ips, err := getIPs(e.clientset)
+	if err != nil {
+		return nil, err
+	}
+
 	routes := []*route.TCP{}
 	for _, namespace := range namespaces.Items {
 		services, err := e.clientset.CoreV1().Services(namespace.ObjectMeta.GetName()).List(v1.ListOptions{})
 		if err != nil {
-			panic(err)
+			return nil, err
 		}
 
 		for _, service := range services.Items {
@@ -49,15 +53,19 @@ func (e *endpoint) TCP() ([]*route.TCP, error) {
 func (e *endpoint) HTTP() ([]*route.HTTP, error) {
 	namespaces, err := e.clientset.CoreV1().Namespaces().List(v1.ListOptions{})
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 
-	ips := getIPs(e.clientset)
+	ips, err := getIPs(e.clientset)
+	if err != nil {
+		return nil, err
+	}
+
 	routes := []*route.HTTP{}
 	for _, namespace := range namespaces.Items {
 		services, err := e.clientset.CoreV1().Services(namespace.ObjectMeta.GetName()).List(v1.ListOptions{})
 		if err != nil {
-			panic(err)
+			return nil, err
 		}
 
 		for _, service := range services.Items {
@@ -88,10 +96,10 @@ func isValidPort(port v1.ServicePort) bool {
 }
 
 // getIPs returns the IP of all minions
-func getIPs(clientset k8s.Interface) []string {
+func getIPs(clientset k8s.Interface) ([]string, error) {
 	nodes, err := clientset.CoreV1().Nodes().List(v1.ListOptions{})
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 	ips := []string{}
 	for _, node := range nodes.Items {
@@ -101,7 +109,7 @@ func getIPs(clientset k8s.Interface) []string {
 			}
 		}
 	}
-	return ips
+	return ips, nil
 }
 
 // getBackends returns a list of route.Endpoints for a set of backend IPs and a given nodePort
