@@ -9,24 +9,21 @@ import (
 
 type endpoint struct {
 	clientset k8s.Interface
+	cfDomain  string
 }
 
 // New creates a route.Source for a given Kubernetes instance
-func New(clientset k8s.Interface) route.Source {
-	return &endpoint{clientset: clientset}
+func New(clientset k8s.Interface, cfDomain string) route.Source {
+	return &endpoint{clientset: clientset, cfDomain: cfDomain}
 }
 
 func (e *endpoint) TCP() ([]*route.TCP, error) {
-	nodes, err := e.clientset.CoreV1().Nodes().List(v1.ListOptions{})
-	if err != nil {
-		panic(err)
-	}
-
 	namespaces, err := e.clientset.CoreV1().Namespaces().List(v1.ListOptions{})
 	if err != nil {
 		panic(err)
 	}
 
+	ips := getIPs(e.clientset)
 	routes := []*route.TCP{}
 	for _, namespace := range namespaces.Items {
 		services, err := e.clientset.CoreV1().Services(namespace.ObjectMeta.GetName()).List(v1.ListOptions{})
@@ -34,18 +31,13 @@ func (e *endpoint) TCP() ([]*route.TCP, error) {
 			panic(err)
 		}
 
-		ips, _ := GetIPs(nodes)
-
 		for _, service := range services.Items {
 			for _, port := range service.Spec.Ports {
+				if !isValidPort(port) {
+					continue
+				}
 				nodePort := route.Port(port.NodePort)
-				if port.Protocol == "UDP" {
-					continue
-				}
-				if nodePort <= 0 {
-					continue
-				}
-				backends, _ := GetBackends(ips, nodePort)
+				backends := getBackends(ips, nodePort)
 				tcp := &route.TCP{Frontend: nodePort, Backend: backends}
 				routes = append(routes, tcp)
 			}
@@ -55,16 +47,12 @@ func (e *endpoint) TCP() ([]*route.TCP, error) {
 }
 
 func (e *endpoint) HTTP() ([]*route.HTTP, error) {
-	nodes, err := e.clientset.CoreV1().Nodes().List(v1.ListOptions{})
-	if err != nil {
-		panic(err)
-	}
-
 	namespaces, err := e.clientset.CoreV1().Namespaces().List(v1.ListOptions{})
 	if err != nil {
 		panic(err)
 	}
 
+	ips := getIPs(e.clientset)
 	routes := []*route.HTTP{}
 	for _, namespace := range namespaces.Items {
 		services, err := e.clientset.CoreV1().Services(namespace.ObjectMeta.GetName()).List(v1.ListOptions{})
@@ -72,21 +60,15 @@ func (e *endpoint) HTTP() ([]*route.HTTP, error) {
 			panic(err)
 		}
 
-		ips, _ := GetIPs(nodes)
-
 		for _, service := range services.Items {
 			for _, port := range service.Spec.Ports {
-				// TODO Which ports should we include for HTTP routing?
+				if !isValidPort(port) {
+					continue
+				}
 				nodePort := route.Port(port.NodePort)
-				if port.Protocol == "UDP" {
-					continue
-				}
-				if nodePort <= 0 {
-					continue
-				}
-				backends, _ := GetBackends(ips, nodePort)
-				// TODO Append a CF domain onto the Name param
-				http := &route.HTTP{Name: service.ObjectMeta.GetName() + "." + namespace.ObjectMeta.GetName(), Backend: backends}
+				backends := getBackends(ips, nodePort)
+				fullName := service.ObjectMeta.GetName() + "." + namespace.ObjectMeta.GetName() + "." + e.cfDomain
+				http := &route.HTTP{Name: fullName, Backend: backends}
 				routes = append(routes, http)
 			}
 		}
@@ -94,8 +76,23 @@ func (e *endpoint) HTTP() ([]*route.HTTP, error) {
 	return routes, nil
 }
 
-// GetIPs returns the IP of all minions
-func GetIPs(nodes *v1.NodeList) ([]string, error) {
+// isValidPort returns true if this is a port we want to route to
+func isValidPort(port v1.ServicePort) bool {
+	if port.Protocol == "UDP" {
+		return false
+	}
+	if route.Port(port.NodePort) <= 0 {
+		return false
+	}
+	return true
+}
+
+// getIPs returns the IP of all minions
+func getIPs(clientset k8s.Interface) []string {
+	nodes, err := clientset.CoreV1().Nodes().List(v1.ListOptions{})
+	if err != nil {
+		panic(err)
+	}
 	ips := []string{}
 	for _, node := range nodes.Items {
 		for _, address := range node.Status.Addresses {
@@ -104,14 +101,14 @@ func GetIPs(nodes *v1.NodeList) ([]string, error) {
 			}
 		}
 	}
-	return ips, nil
+	return ips
 }
 
-// GetBackends returns a list of route.Endpoints for a set of backend IPs and a given nodePort
-func GetBackends(ips []string, nodePort route.Port) ([]route.Endpoint, error) {
+// getBackends returns a list of route.Endpoints for a set of backend IPs and a given nodePort
+func getBackends(ips []string, nodePort route.Port) []route.Endpoint {
 	backends := []route.Endpoint{}
 	for _, ip := range ips {
 		backends = append(backends, route.Endpoint{IP: ip, Port: nodePort})
 	}
-	return backends, nil
+	return backends
 }

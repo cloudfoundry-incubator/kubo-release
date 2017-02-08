@@ -13,6 +13,7 @@ type Config struct {
 	RawNatsServers         string                      `envconfig:"nats_servers" required:"true"`
 	NatsServers            []cfConfig.MessageBusServer `ignore:"true"`
 	CloudFoundryAPIURL     string                      `envconfig:"cloud_foundry_api_url" required:"true"`
+	CloudFoundryAPPURL     string                      `envconfig:"cloud_foundry_app_url" required:"true"`
 	UAAApiURL              string                      `envconfig:"uaa_api_url" required:"true"`
 	RoutingAPIUsername     string                      `envconfig:"routing_api_username" required:"true"`
 	RoutingAPIClientSecret string                      `envconfig:"routing_api_client_secret" required:"true"`

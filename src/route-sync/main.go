@@ -79,7 +79,7 @@ func newKubernetesSource(logger lager.Logger, cfg *config.Config) route.Source {
 		logger.Fatal("creating clientset from kube config", err)
 	}
 
-	return kubernetes.New(clientset)
+	return kubernetes.New(clientset, cfg.CloudFoundryAPPURL)
 }
 
 func newCloudFoundrySink(logger lager.Logger, cfg *config.Config) route.Router {
