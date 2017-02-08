@@ -2,6 +2,7 @@ package pooler
 
 import (
 	"route-sync/route"
+	"sync"
 	"time"
 )
 
@@ -12,6 +13,7 @@ type Pooler interface {
 }
 
 type timeBased struct {
+	sync.Mutex
 	duration time.Duration
 	running  bool
 }
@@ -44,11 +46,12 @@ func (tb *timeBased) Start(src route.Source, router route.Router) (chan<- struct
 	tick := make(chan struct{})
 	done := make(chan struct{})
 	go func() {
-		tb.running = true
+		tb.setRunning(true)
+
 		for {
 			select {
 			case <-done:
-				tb.running = false
+				tb.setRunning(false)
 				return
 			default:
 				tb.tick(src, router)
@@ -64,5 +67,15 @@ func (tb *timeBased) Start(src route.Source, router route.Router) (chan<- struct
 }
 
 func (tb *timeBased) Running() bool {
+	tb.Lock()
+	defer tb.Unlock()
+
 	return tb.running
+}
+
+func (tb *timeBased) setRunning(to bool) {
+	tb.Lock()
+	defer tb.Unlock()
+
+	tb.running = to
 }
