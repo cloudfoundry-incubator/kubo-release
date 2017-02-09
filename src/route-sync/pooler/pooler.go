@@ -47,9 +47,9 @@ func (tb *timeBased) Start(src route.Source, router route.Router) (chan<- struct
 	done := make(chan struct{})
 	go func() {
 		tb.setRunning(true)
+		timer := time.Tick(1)
 
 		for {
-			timer := time.Tick(tb.duration)
 			select {
 			case <-done:
 				tb.setRunning(false)
@@ -57,6 +57,7 @@ func (tb *timeBased) Start(src route.Source, router route.Router) (chan<- struct
 				return
 			case <-timer:
 				tb.tick(src, router)
+				timer = time.Tick(tb.duration)
 				go func() {
 					tick <- struct{}{}
 				}()
