@@ -19,11 +19,7 @@ var _ = Describe("Time-based Pooler", func() {
 
 		running := func() bool { return pool.Running() }
 
-		done, ticks := pool.Start(&routefakes.Source{}, &routefakes.Router{})
-		go func() {
-			for range ticks {
-			}
-		}()
+		done := pool.Start(&routefakes.Source{}, &routefakes.Router{})
 
 		Eventually(running).Should(BeTrue())
 		done <- struct{}{}
@@ -43,12 +39,7 @@ var _ = Describe("Time-based Pooler", func() {
 		src.HTTP_value = []*route.HTTP{httpRoute}
 		router := &routefakes.Router{}
 
-		done, ticks := pool.Start(src, router)
-
-		go func() {
-			for range ticks {
-			}
-		}()
+		done := pool.Start(src, router)
 
 		Eventually(func() bool {
 			src.Lock()

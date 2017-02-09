@@ -30,13 +30,12 @@ func main() {
 	cfg := loadConfig(logger)
 
 	pooler := pooler.ByTime(time.Duration(30*time.Second), logger)
-	poolerDone, tick := pooler.Start(newKubernetesSource(logger, cfg), newCloudFoundrySink(logger, cfg))
+	poolerDone := pooler.Start(newKubernetesSource(logger, cfg), newCloudFoundrySink(logger, cfg))
 
 	wg := sync.WaitGroup{}
 
-	wg.Add(2)
+	wg.Add(1)
 	go gracefulExit(logger, &wg, poolerDone)
-	go heartbeat(logger, &wg, tick)
 	wg.Wait()
 
 	logger.Info("exiting")
@@ -50,14 +49,6 @@ func gracefulExit(logger lager.Logger, wg *sync.WaitGroup, poolerDone chan<- str
 	<-sigChan
 	logger.Info("recieved Ctrl+C, exiting")
 	poolerDone <- struct{}{}
-	wg.Done()
-}
-
-// Heartbeat for logs
-func heartbeat(logger lager.Logger, wg *sync.WaitGroup, tick <-chan struct{}) {
-	for range tick {
-		logger.Info("announced!")
-	}
 	wg.Done()
 }
 
