@@ -2,6 +2,7 @@ package tcp
 
 import (
 	"bytes"
+	"crypto/tls"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -26,11 +27,12 @@ type Router interface {
 const routeTTL = 60
 
 type routing_api_router struct {
-	uaaClient          uaa_go_client.Client
-	cloudFoundryApiUrl string
+	uaaClient           uaa_go_client.Client
+	cloudFoundryApiUrl  string
+	skipTlsVerification bool
 }
 
-func NewRoutingApi(uaaClient uaa_go_client.Client, cloudFoundryApiUrl string) (Router, error) {
+func NewRoutingApi(uaaClient uaa_go_client.Client, cloudFoundryApiUrl string, skipTlsVerification bool) (Router, error) {
 	if uaaClient == nil {
 		return nil, fmt.Errorf("uaaClient token requried")
 	}
@@ -38,11 +40,14 @@ func NewRoutingApi(uaaClient uaa_go_client.Client, cloudFoundryApiUrl string) (R
 		return nil, fmt.Errorf("cloudFoundryApiUrl required")
 	}
 
-	return &routing_api_router{uaaClient: uaaClient, cloudFoundryApiUrl: cloudFoundryApiUrl}, nil
+	return &routing_api_router{uaaClient: uaaClient, cloudFoundryApiUrl: cloudFoundryApiUrl, skipTlsVerification: skipTlsVerification}, nil
 }
 
 func (r *routing_api_router) buildRequest(verb string, path string) (*http.Request, *http.Client, error) {
-	client := &http.Client{}
+	tr := &http.Transport{
+		TLSClientConfig: &tls.Config{InsecureSkipVerify: r.skipTlsVerification},
+	}
+	client := &http.Client{Transport: tr}
 	req, err := http.NewRequest(verb, fmt.Sprintf("%s/%s", r.cloudFoundryApiUrl, path), nil)
 
 	if err != nil {
@@ -62,7 +67,7 @@ func (r *routing_api_router) buildRequest(verb string, path string) (*http.Reque
 func (r *routing_api_router) RouterGroups() ([]RouterGroup, error) {
 	var routerGroups []RouterGroup
 
-	req, client, err := r.buildRequest("GET", "/routing/v1/router_groups")
+	req, client, err := r.buildRequest("GET", "routing/v1/router_groups")
 	if err != nil {
 		return routerGroups, err
 	}
@@ -87,7 +92,7 @@ func (r *routing_api_router) RouterGroups() ([]RouterGroup, error) {
 }
 
 func (r *routing_api_router) CreateRoutes(rg RouterGroup, routes []*route.TCP) error {
-	req, client, err := r.buildRequest("POST", "/routing/v1/tcp_routes/create")
+	req, client, err := r.buildRequest("POST", "routing/v1/tcp_routes/create")
 	if err != nil {
 		return err
 	}

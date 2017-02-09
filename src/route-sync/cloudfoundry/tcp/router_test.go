@@ -36,13 +36,13 @@ var _ = Describe("routing-api TCP router", func() {
 
 		for _, t := range invalidCreations {
 			Context(fmt.Sprintf("uaaClient: %q, api: %s", t.uaaClient, t.api), func() {
-				router, err := NewRoutingApi(t.uaaClient, t.api)
+				router, err := NewRoutingApi(t.uaaClient, t.api, false)
 				Expect(router).To(BeNil())
 				Expect(err).NotTo(BeNil())
 			})
 		}
 
-		router, err := NewRoutingApi(&fooClient, "foo")
+		router, err := NewRoutingApi(&fooClient, "foo", false)
 		Expect(router).NotTo(BeNil())
 		Expect(err).To(BeNil())
 	})
@@ -56,7 +56,7 @@ var _ = Describe("routing-api TCP router", func() {
 		}))
 		defer ts.Close()
 
-		router, _ := NewRoutingApi(&fooClient, ts.URL)
+		router, _ := NewRoutingApi(&fooClient, ts.URL, false)
 
 		router.RouterGroups()
 		req := <-requestChan
@@ -75,7 +75,7 @@ var _ = Describe("routing-api TCP router", func() {
 		}))
 		defer ts.Close()
 
-		router, _ := NewRoutingApi(&fooClient, ts.URL)
+		router, _ := NewRoutingApi(&fooClient, ts.URL, false)
 
 		routerGroups, err := router.RouterGroups()
 		Expect(err).To(BeNil())
@@ -110,7 +110,7 @@ var _ = Describe("routing-api TCP router", func() {
 		}))
 		defer ts.Close()
 
-		router, _ := NewRoutingApi(&fooClient, ts.URL)
+		router, _ := NewRoutingApi(&fooClient, ts.URL, false)
 
 		routes := []*route.TCP{&route.TCP{
 			Frontend: 1010,
