@@ -48,6 +48,7 @@ func gracefulExit(logger lager.Logger, wg *sync.WaitGroup, poolerDone chan<- str
 	sigChan := make(chan os.Signal, 1)
 	signal.Notify(sigChan, os.Interrupt)
 	<-sigChan
+	logger.Info("recieved Ctrl+C, exiting")
 	poolerDone <- struct{}{}
 	wg.Done()
 }

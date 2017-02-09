@@ -49,16 +49,17 @@ func (tb *timeBased) Start(src route.Source, router route.Router) (chan<- struct
 		tb.setRunning(true)
 
 		for {
+			timer := time.Tick(tb.duration)
 			select {
 			case <-done:
 				tb.setRunning(false)
+				close(tick)
 				return
-			default:
+			case <-timer:
 				tb.tick(src, router)
 				go func() {
 					tick <- struct{}{}
 				}()
-				time.Sleep(tb.duration)
 			}
 		}
 	}()
