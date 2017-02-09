@@ -54,11 +54,16 @@ func (r *routing_api_router) buildRequest(verb string, path string) (*http.Reque
 		return req, client, fmt.Errorf("routing_api_router: %v", err)
 	}
 
-	key, err := r.uaaClient.FetchKey()
+	token, err := r.uaaClient.FetchToken(false)
 	if err != nil {
 		return req, client, fmt.Errorf("routing_api_router: %v", err)
 	}
 
+	if token == nil {
+		return req, client, fmt.Errorf("routing_api_router: nil token from uaaClient", err)
+	}
+
+	key := token.AccessToken
 	req.Header.Set("Authorization", fmt.Sprintf("bearer %s", key))
 
 	return req, client, nil
