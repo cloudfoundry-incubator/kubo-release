@@ -1,0 +1,96 @@
+#!/bin/bash -ex
+<%
+require 'json'
+nats_ips = nil
+if_p('nats.machines') do |ips|
+  nats_ips = ips.compact
+end.else do
+  nats_ips = link('nats').instances.map { |instance| instance.address }
+end
+
+nats_port = nil
+if_p('nats.port') do |prop|
+  nats_port = prop
+end.else do
+  nats_port = link('nats').p("nats.port")
+end
+nats_user = nil
+if_p('nats.user') do |prop|
+  nats_user = prop
+end.else do
+  nats_user = link('nats').p("nats.user")
+end
+nats_password = nil
+if_p('nats.password') do |prop|
+  nats_password = prop
+end.else do
+  nats_password = link('nats').p("nats.password")
+end
+
+
+message_bus_servers = nats_ips.map do |ip|
+{
+ Host: "#{ip}:#{nats_port}",
+ User: nats_user,
+ Password: nats_password
+}
+end
+%>
+
+NAME="${0##*/}"
+
+RUN_DIR=/var/vcap/sys/run/route-sync
+PIDFILE=$RUN_DIR/route-sync.pid
+LOG_DIR=/var/vcap/sys/log/route-sync
+DATA_DIR=/var/vcap/store/route-sync
+
+# shellcheck disable=SC1091
+. /var/vcap/packages/pid_utils/pid_utils.sh
+
+setup_directories() {
+  mkdir -p "$RUN_DIR" "$LOG_DIR" "$DATA_DIR"
+  chown -R vcap:vcap "$RUN_DIR" "$LOG_DIR" "$DATA_DIR"
+}
+
+start_registrar() {
+  pid_guard $PIDFILE route-sync
+  echo $$ > $PIDFILE
+
+  export ROUTESYNC_CLOUD_FOUNDRY_API_URL="<%=p("cloud_foundry.api_url") %>"
+  export ROUTESYNC_CLOUD_FOUNDRY_APP_URL="<%=p("cloud_foundry.app_domain") %>"
+  export ROUTESYNC_UAA_API_URL="<%=p("cloud_foundry.uaa_url") %>"
+  export ROUTESYNC_ROUTING_API_USERNAME="<%=p("cloud_foundry.routing_api_client_id") %>"
+  export ROUTESYNC_ROUTING_API_CLIENT_SECRET="<%=p("cloud_foundry.routing_api_client_secret") %>"
+  export ROUTESYNC_SKIP_TLS_VERIFICATION="<%=p("cloud_foundry.skip_tls_verification") %>"
+  export ROUTESYNC_KUBE_CONFIG_PATH="/var/vcap/jobs/kubeconfig/config/kubeconfig"
+  export ROUTESYNC_NATS_SERVERS='<%=JSON.pretty_generate(message_bus_servers) %>'
+
+  exec chpst -u vcap:vcap /var/vcap/packages/route-sync/bin/route-sync \
+    1>> $LOG_DIR/route-sync.stdout.log \
+    2>> $LOG_DIR/route-sync.stderr.log
+}
+
+stop_registrar() {
+  kill_and_wait "$PIDFILE"
+}
+
+pid() {
+  head -1 "$PIDFILE"
+}
+
+case $1 in
+
+  start)
+    setup_directories
+    start_registrar
+    ;;
+
+  stop)
+    stop_registrar
+    ;;
+
+  *)
+    echo "Usage: $0 {start|stop}"
+    ;;
+
+esac
