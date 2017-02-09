@@ -10,6 +10,7 @@ import (
 
 	"code.cloudfoundry.org/uaa-go-client"
 	uaafakes "code.cloudfoundry.org/uaa-go-client/fakes"
+	uaaschema "code.cloudfoundry.org/uaa-go-client/schema"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
@@ -21,7 +22,10 @@ var _ = Describe("routing-api TCP router", func() {
 	)
 	BeforeEach(func() {
 		fooClient = uaafakes.FakeClient{}
-		fooClient.FetchKeyReturns("foo", nil)
+		fooClient.FetchTokenReturns(&uaaschema.Token{
+			AccessToken: "foo",
+			ExpiresIn:   0,
+		}, nil)
 	})
 
 	It("requires UAA client and an API endpoint", func() {
