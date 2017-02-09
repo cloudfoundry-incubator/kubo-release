@@ -6,6 +6,8 @@ import (
 	routefakes "route-sync/route/fakes"
 	"time"
 
+	"code.cloudfoundry.org/lager"
+
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 )
@@ -13,7 +15,7 @@ import (
 var _ = Describe("Time-based Pooler", func() {
 
 	It("starts and stops", func() {
-		pool := pooler.ByTime(time.Duration(0))
+		pool := pooler.ByTime(time.Duration(0), lager.NewLogger("pooler_test"))
 
 		running := func() bool { return pool.Running() }
 
@@ -29,7 +31,7 @@ var _ = Describe("Time-based Pooler", func() {
 	})
 
 	It("pools and passes", func() {
-		pool := pooler.ByTime(time.Duration(0))
+		pool := pooler.ByTime(time.Duration(0), lager.NewLogger("pooler_test"))
 
 		src := &routefakes.Source{}
 		tcpRoute := &route.TCP{Frontend: 8080,
