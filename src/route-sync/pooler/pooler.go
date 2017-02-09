@@ -11,7 +11,7 @@ import (
 
 // Pooler is responsible for querying a route.Source and updating a route.Router
 type Pooler interface {
-	Start(route.Source, route.Router) (done chan<- struct{}, tick <-chan struct{})
+	Start(route.Source, route.Router) (done chan<- struct{})
 	Running() bool
 }
 
@@ -50,8 +50,7 @@ func (tb *timeBased) tick(src route.Source, router route.Router) {
 	})
 }
 
-func (tb *timeBased) Start(src route.Source, router route.Router) (chan<- struct{}, <-chan struct{}) {
-	tick := make(chan struct{})
+func (tb *timeBased) Start(src route.Source, router route.Router) chan<- struct{} {
 	done := make(chan struct{})
 	go func() {
 		tb.setRunning(true)
@@ -61,19 +60,15 @@ func (tb *timeBased) Start(src route.Source, router route.Router) (chan<- struct
 			select {
 			case <-done:
 				tb.setRunning(false)
-				close(tick)
 				return
 			case <-timer:
 				tb.tick(src, router)
 				timer = time.Tick(tb.duration)
-				go func() {
-					tick <- struct{}{}
-				}()
 			}
 		}
 	}()
 
-	return done, tick
+	return done
 }
 
 func (tb *timeBased) Running() bool {
