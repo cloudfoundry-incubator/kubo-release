@@ -100,7 +100,7 @@ func newCloudFoundrySink(logger lager.Logger, cfg *config.Config) route.Router {
 	if err != nil {
 		logger.Fatal("creating UAA client", err)
 	}
-	tcpRouter, err := tcp.NewRoutingApi(uaaClient, cfg.CloudFoundryAPIURL)
+	tcpRouter, err := tcp.NewRoutingApi(uaaClient, cfg.CloudFoundryAPIURL, cfg.SkipTLSVerification)
 	if err != nil {
 		logger.Fatal("creating TCP router", err)
 	}
