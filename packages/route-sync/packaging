@@ -1,0 +1,21 @@
+set -u # report the usage of uninitialized variables
+
+# Set package dependencies directory
+PACKAGES_DIR=${BOSH_PACKAGES_DIR:-/var/vcap/packages}
+
+# Set Golang dependency
+export GOROOT=$(cd "${PACKAGES_DIR}/golang" && pwd -P)
+export PATH=${GOROOT}/bin:${PATH}
+
+# Build route-sync package
+export ROUTE_SYNC_PATH=${BOSH_COMPILE_TARGET}/go/src
+mkdir -p ${ROUTE_SYNC_PATH}
+mv ${BOSH_COMPILE_TARGET}/route-sync ${ROUTE_SYNC_PATH}
+cd ${ROUTE_SYNC_PATH}/route-sync
+export GOPATH=${BOSH_COMPILE_TARGET}/go
+go build -o out/route-sync main.go
+
+# Copy built route-sync package
+mkdir -p ${BOSH_INSTALL_TARGET}/bin
+cp -a ${ROUTE_SYNC_PATH}/route-sync/out/route-sync ${BOSH_INSTALL_TARGET}/bin/
+
