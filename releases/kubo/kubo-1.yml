@@ -1,0 +1,84 @@
+name: kubo
+version: "1"
+commit_hash: 1f1959a
+uncommitted_changes: false
+jobs:
+- name: flanneld
+  version: d0a26de8102964448ea06a834dd8de0800b9decc
+  fingerprint: d0a26de8102964448ea06a834dd8de0800b9decc
+  sha1: e6a47f6d20ccbd581aff9f7fc60d2b062587a9e8
+- name: kubeconfig
+  version: a231cdac5d0b3d6767b3183658841ffc2615b6ea
+  fingerprint: a231cdac5d0b3d6767b3183658841ffc2615b6ea
+  sha1: ce5ac9c166a3bfe3afcd78e6c7647406682b463a
+- name: kubelet
+  version: 1becfd806ce36fb621278c1e0b3572a54a6dae6d
+  fingerprint: 1becfd806ce36fb621278c1e0b3572a54a6dae6d
+  sha1: fa11d17f15cc1969c92fc180ae423b4b691440cd
+- name: kubernetes-api
+  version: ed4ded81c6ffaaaf189e17b41755f0c9a534fcba
+  fingerprint: ed4ded81c6ffaaaf189e17b41755f0c9a534fcba
+  sha1: 0b2003ae3437d3fd3bfa95907c62651276e63700
+- name: kubernetes-api-route-registrar
+  version: 45f0a471b51ad34c69feb2d6bf720cf58389a3b1
+  fingerprint: 45f0a471b51ad34c69feb2d6bf720cf58389a3b1
+  sha1: 7e430a1446f88c90b7544999dcece52058901bb4
+- name: kubernetes-controller-manager
+  version: a2d43217dfc1145fa7d56893ff566f9dc3c79ee3
+  fingerprint: a2d43217dfc1145fa7d56893ff566f9dc3c79ee3
+  sha1: 3c57a1e893646e1a5bbdc4717026ef81e21df017
+- name: kubernetes-proxy
+  version: ca5713d1edeab20266c6bdfd4a9597b6264138db
+  fingerprint: ca5713d1edeab20266c6bdfd4a9597b6264138db
+  sha1: be9e987ca915eacdb785293f5d657ba3e8831ac2
+- name: kubernetes-scheduler
+  version: 466bc37ad7132f3131e3ce36994b9d06616f31ba
+  fingerprint: 466bc37ad7132f3131e3ce36994b9d06616f31ba
+  sha1: e3f2e12d287e82d71bb99b439612c20623b63b4f
+- name: kubernetes-system-specs
+  version: d715a13a1025824fc095d69b5c31d6757aa63ad2
+  fingerprint: d715a13a1025824fc095d69b5c31d6757aa63ad2
+  sha1: 27df54aeb7dd8b1ad7747bb34e92d1e12179e9d1
+- name: nginx
+  version: a2676986e7ab36815cb3b34d4ea334ce644d4cad
+  fingerprint: a2676986e7ab36815cb3b34d4ea334ce644d4cad
+  sha1: fc8b5418b71ab6af80ebe9a1a1acc00c08a9cec5
+- name: syslog-forwarding-setup
+  version: 844a26588f86525a3a677cd664e4875619781245
+  fingerprint: 844a26588f86525a3a677cd664e4875619781245
+  sha1: 7dc2c11c6b135ea624804c875bb2d226cd4ca58e
+packages:
+- name: etcdctl
+  version: 35165b48a3100f6f0e4af03c211f913dcf0055b2
+  fingerprint: 35165b48a3100f6f0e4af03c211f913dcf0055b2
+  sha1: c97fe1b5f17783c55b55ba1bacf9c6a6cb653444
+  dependencies: []
+- name: flanneld
+  version: 69e5913473152bb3a97fee5ad5f237cb6b3becba
+  fingerprint: 69e5913473152bb3a97fee5ad5f237cb6b3becba
+  sha1: 453e0cabbfccb3cef347419f5e5b01ad1cfb6ce5
+  dependencies: []
+- name: jq
+  version: a8a92d1eb93b806ff9e4f9e8daab4d0dec04b962
+  fingerprint: a8a92d1eb93b806ff9e4f9e8daab4d0dec04b962
+  sha1: bf88761ab2e7b0940986bb126c2dfc4f1b6a1bce
+  dependencies: []
+- name: kubernetes
+  version: dc8d6b902fd1d2f39dc80f67a916fa7c821d0fa4
+  fingerprint: dc8d6b902fd1d2f39dc80f67a916fa7c821d0fa4
+  sha1: 277d50dcaf2e35da91fa7625ea47d66012ccf2c6
+  dependencies: []
+- name: nginx
+  version: 8529a0248c092a9a5d6c25c2418baa40713bd6be
+  fingerprint: 8529a0248c092a9a5d6c25c2418baa40713bd6be
+  sha1: a93286312a015a847482d3b3b0b84f1ecfd789c7
+  dependencies: []
+- name: pid_utils
+  version: 34bbbbb0c7c87b158ab63b26d5776516e9c1c926
+  fingerprint: 34bbbbb0c7c87b158ab63b26d5776516e9c1c926
+  sha1: b0ab6a4a8df78cbe3cfebe210176f4abd3c10eb7
+  dependencies: []
+license:
+  version: 01d3b6fe4d9347d32f09bff84d7cb0057bd22605
+  fingerprint: 01d3b6fe4d9347d32f09bff84d7cb0057bd22605
+  sha1: b7a061d18cb157fb3b461c5f92ad084f4d5ef65a
