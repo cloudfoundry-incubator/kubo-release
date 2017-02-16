@@ -11,3 +11,4 @@
 /.final_builds/jobs/**/*.tgz
 /.final_builds/packages/**/*.tgz
 /.cache
+/kubo-release.iml
