@@ -1,0 +1,3 @@
+#!/bin/bash -e
+
+/var/vcap/jobs/kubernetes-api-route-registrar/bin/announce_route
