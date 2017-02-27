@@ -5,6 +5,7 @@ templates:
   bin/announce_loop.erb: bin/announce_loop
   bin/announce_route.erb: bin/announce_route
   bin/kubernetes-api-route-registrar-ctl: bin/kubernetes-api-route-registrar-ctl
+  bin/post-start: bin/post-start
 
 packages:
 - jq
