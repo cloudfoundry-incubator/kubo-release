@@ -1,7 +1,9 @@
 #@IgnoreInspection BashAddShebang
 set -ex
 
-cat - pid_utils.sh > "${BOSH_INSTALL_TARGET:?}/pid_utils.sh" <<EOF
+target_filename="${BOSH_INSTALL_TARGET:?}/pid_utils.sh"
+
+cat - pid_utils.sh > "$target_filename" <<EOF
 # taken from  https://github.com/cloudfoundry/capi-release/blob/master/src/capi_utils/pid_utils.sh
 # capi-release
 
@@ -20,3 +22,6 @@ cat - pid_utils.sh > "${BOSH_INSTALL_TARGET:?}/pid_utils.sh" <<EOF
 # limitations under the License.
 
 EOF
+
+chown --reference=pid_utils.sh "$target_filename"
+chmod --reference=pid_utils.sh "$target_filename"
