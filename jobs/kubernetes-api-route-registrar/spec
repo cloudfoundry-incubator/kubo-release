@@ -36,3 +36,6 @@ properties:
   external_kubo_port:
     description: "Externally accessible port"
     example: 2749
+  external_kubo_hostname:
+    description: "hostname of the external TCP router"
+    example: "tcp.main.kubo.cf-app.com"
