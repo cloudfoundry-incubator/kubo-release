@@ -23,8 +23,6 @@ load_cached_containers() {
 
 load_cached_containers
 
-${kubectl} uncordon ${node_name}
-
 TIMEOUT=120
 
 if timeout "$TIMEOUT" /var/vcap/jobs/kubelet/bin/ensure_kubelet_up_and_running
@@ -34,3 +32,5 @@ else
   echo "kubelet failed post-start checks after $TIMEOUT seconds"
   exit 1
 fi
+
+${kubectl} uncordon ${node_name}
