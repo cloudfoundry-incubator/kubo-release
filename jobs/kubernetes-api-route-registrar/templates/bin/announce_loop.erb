@@ -1,4 +1,8 @@
-#!/bin/bash -e
+#!/bin/bash -ex
+
+exec 10>/var/vcap/sys/log/kubernetes-api-route-registrar/trace.log
+export BASH_XTRACEFD=10
+
 register_interval=<%= p('register_interval') %>
 
 echo "Announcing route every ${register_interval} seconds"
