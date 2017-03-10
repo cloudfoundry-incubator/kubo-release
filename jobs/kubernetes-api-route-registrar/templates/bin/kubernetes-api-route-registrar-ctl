@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/bin/bash -ex
 
 NAME="${0##*/}"
 
@@ -11,9 +11,6 @@ DATA_DIR=/var/vcap/store/kubernetes-api-route-registrar
 . /var/vcap/packages/pid_utils/pid_utils.sh
 
 export PS4='+\t (${BASH_SOURCE}:${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
-exec 10>"$LOG_DIR/$NAME.stdout.log"
-export BASH_XTRACEFD=10
-set -x
 
 setup_directories() {
   mkdir -p "$RUN_DIR" "$LOG_DIR" "$DATA_DIR"
@@ -21,6 +18,8 @@ setup_directories() {
 }
 
 send_process_stdout_to_logfile() {
+  exec 10>"$LOG_DIR/$NAME.stdout.log"
+  export BASH_XTRACEFD=10
   exec 1>> "$LOG_DIR/$NAME.stdout.log"
 }
 
@@ -55,6 +54,9 @@ case $1 in
     ;;
 
   stop)
+    setup_directories
+    send_process_stdout_to_logfile
+    send_process_stderr_to_logfile
     stop_registrar
     ;;
 
