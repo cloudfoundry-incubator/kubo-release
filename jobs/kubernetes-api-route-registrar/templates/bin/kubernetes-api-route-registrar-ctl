@@ -10,18 +10,30 @@ DATA_DIR=/var/vcap/store/kubernetes-api-route-registrar
 # shellcheck disable=SC1091
 . /var/vcap/packages/pid_utils/pid_utils.sh
 
+export PS4='+\t (${BASH_SOURCE}:${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
+
 setup_directories() {
   mkdir -p "$RUN_DIR" "$LOG_DIR" "$DATA_DIR"
   chown -R vcap:vcap "$RUN_DIR" "$LOG_DIR" "$DATA_DIR"
 }
 
+send_process_stdout_to_logfile() {
+  exec 10>> "$LOG_DIR/$NAME.stdout.log"
+  export BASH_XTRACEFD=10
+  exec 1>> "$LOG_DIR/$NAME.stdout.log"
+}
+
+send_process_stderr_to_logfile() {
+  exec 2>> "$LOG_DIR/$NAME.stderr.log"
+}
+
 start_registrar() {
   pid_guard $PIDFILE kubernetes-api-route-registrar
   echo $$ > $PIDFILE
-  
+
   exec chpst -u vcap:vcap /var/vcap/jobs/kubernetes-api-route-registrar/bin/announce_loop \
-    1>> $LOG_DIR/kubernetes-api-route-registrar.stdout.log \
-    2>> $LOG_DIR/kubernetes-api-route-registrar.stderr.log
+    1>> "$LOG_DIR/$NAME.stdout.log" \
+    2>> "$LOG_DIR/$NAME.stderr.log"
 }
 
 stop_registrar() {
@@ -36,10 +48,15 @@ case $1 in
 
   start)
     setup_directories
+    send_process_stdout_to_logfile
+    send_process_stderr_to_logfile
     start_registrar
     ;;
 
   stop)
+    setup_directories
+    send_process_stdout_to_logfile
+    send_process_stderr_to_logfile
     stop_registrar
     ;;
 
