@@ -18,7 +18,7 @@ setup_directories() {
 }
 
 send_process_stdout_to_logfile() {
-  exec 10>"$LOG_DIR/$NAME.stdout.log"
+  exec 10>> "$LOG_DIR/$NAME.stdout.log"
   export BASH_XTRACEFD=10
   exec 1>> "$LOG_DIR/$NAME.stdout.log"
 }
