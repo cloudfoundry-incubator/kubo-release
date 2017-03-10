@@ -20,6 +20,14 @@ setup_directories() {
   chown -R vcap:vcap "$RUN_DIR" "$LOG_DIR" "$DATA_DIR"
 }
 
+send_process_stdout_to_logfile() {
+  exec 1>> "$LOG_DIR/$NAME.stdout.log"
+}
+
+send_process_stderr_to_logfile() {
+  exec 2>> "$LOG_DIR/$NAME.stderr.log"
+}
+
 start_registrar() {
   pid_guard $PIDFILE kubernetes-api-route-registrar
   echo $$ > $PIDFILE
@@ -41,6 +49,8 @@ case $1 in
 
   start)
     setup_directories
+    send_process_stdout_to_logfile
+    send_process_stderr_to_logfile
     start_registrar
     ;;
 
