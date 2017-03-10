@@ -23,10 +23,10 @@ setup_directories() {
 start_registrar() {
   pid_guard $PIDFILE kubernetes-api-route-registrar
   echo $$ > $PIDFILE
-  
+
   exec chpst -u vcap:vcap /var/vcap/jobs/kubernetes-api-route-registrar/bin/announce_loop \
-    1>> $LOG_DIR/kubernetes-api-route-registrar.stdout.log \
-    2>> $LOG_DIR/kubernetes-api-route-registrar.stderr.log
+    1>> "$LOG_DIR/$NAME.stdout.log" \
+    2>> "$LOG_DIR/$NAME.stderr.log"
 }
 
 stop_registrar() {
