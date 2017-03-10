@@ -1,7 +1,10 @@
-#!/bin/bash -ex
+#!/bin/bash -e
 
+trap 'echo "Stopping announce loop at $(date --rfc-3339=seconds)" > /var/vcap/sys/log/kubernetes-api-route-registrar/trace.log' 0
+export PS4='+\t (${BASH_SOURCE}:${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
 exec 10>/var/vcap/sys/log/kubernetes-api-route-registrar/trace.log
 export BASH_XTRACEFD=10
+set -x
 
 register_interval=<%= p('register_interval') %>
 

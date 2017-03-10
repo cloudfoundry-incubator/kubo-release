@@ -1,4 +1,4 @@
-#!/bin/bash -ex
+#!/bin/bash -e
 
 NAME="${0##*/}"
 
@@ -9,6 +9,11 @@ DATA_DIR=/var/vcap/store/kubernetes-api-route-registrar
 
 # shellcheck disable=SC1091
 . /var/vcap/packages/pid_utils/pid_utils.sh
+
+export PS4='+\t (${BASH_SOURCE}:${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
+exec 10>"$LOG_DIR/$NAME.stdout.log"
+export BASH_XTRACEFD=10
+set -x
 
 setup_directories() {
   mkdir -p "$RUN_DIR" "$LOG_DIR" "$DATA_DIR"
