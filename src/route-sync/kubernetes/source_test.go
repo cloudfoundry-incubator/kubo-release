@@ -50,7 +50,7 @@ var _ = Describe("Source", func() {
 			Expect(err).To(BeNil())
 			Expect(len(routes)).To(Equal(1))
 			httpRoute := routes[0]
-			Expect(httpRoute.Name).To(Equal(serviceName + "." + namespace))
+			Expect(httpRoute.Name).To(Equal(serviceName + "." + namespace + "." + domainName))
 			backends := httpRoute.Backend
 			Expect(len(backends)).To(Equal(1))
 			Expect(backends[0].Port).To(Equal(nodePort))
