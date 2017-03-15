@@ -10,15 +10,15 @@ import (
 
 // Config contains settings for the route-sync with envconfig annotations
 type Config struct {
-	RawNatsServers         string                      `envconfig:"nats_servers" required:"true"`
-	NatsServers            []cfConfig.MessageBusServer `ignore:"true"`
-	CloudFoundryAPIURL     string                      `envconfig:"cloud_foundry_api_url" required:"true"`
-	CloudFoundryAPPURL     string                      `envconfig:"cloud_foundry_app_url" required:"true"`
-	UAAApiURL              string                      `envconfig:"uaa_api_url" required:"true"`
-	RoutingAPIUsername     string                      `envconfig:"routing_api_username" required:"true"`
-	RoutingAPIClientSecret string                      `envconfig:"routing_api_client_secret" required:"true"`
-	SkipTLSVerification    bool                        `envconfig:"skip_tls_verification" required:"true"`
-	KubeConfigPath         string                      `envconfig:"kube_config_path" required:"true"`
+	RawNatsServers            string                      `envconfig:"nats_servers" required:"true"`
+	NatsServers               []cfConfig.MessageBusServer `ignore:"true"`
+	CloudFoundryAPIURL        string                      `envconfig:"cloud_foundry_api_url" required:"true"`
+	CloudFoundryAPPDomainName string                      `envconfig:"cloud_foundry_app_domain_name" required:"true"`
+	UAAApiURL                 string                      `envconfig:"uaa_api_url" required:"true"`
+	RoutingAPIUsername        string                      `envconfig:"routing_api_username" required:"true"`
+	RoutingAPIClientSecret    string                      `envconfig:"routing_api_client_secret" required:"true"`
+	SkipTLSVerification       bool                        `envconfig:"skip_tls_verification" required:"true"`
+	KubeConfigPath            string                      `envconfig:"kube_config_path" required:"true"`
 }
 
 // NewConfig creates a Config object from the systems enviornment variables

@@ -30,7 +30,7 @@ func (e *endpoint) TCP() ([]*route.TCP, error) {
 
 	routes := []*route.TCP{}
 	for _, namespace := range namespaces.Items {
-		services, err := e.clientset.CoreV1().Services(namespace.ObjectMeta.GetName()).List(v1.ListOptions{})
+		services, err := e.clientset.CoreV1().Services(namespace.ObjectMeta.GetName()).List(v1.ListOptions{LabelSelector: "tcp-route-sync=true"})
 		if err != nil {
 			return nil, err
 		}
@@ -63,7 +63,7 @@ func (e *endpoint) HTTP() ([]*route.HTTP, error) {
 
 	routes := []*route.HTTP{}
 	for _, namespace := range namespaces.Items {
-		services, err := e.clientset.CoreV1().Services(namespace.ObjectMeta.GetName()).List(v1.ListOptions{})
+		services, err := e.clientset.CoreV1().Services(namespace.ObjectMeta.GetName()).List(v1.ListOptions{LabelSelector: "http-route-sync=true"})
 		if err != nil {
 			return nil, err
 		}
