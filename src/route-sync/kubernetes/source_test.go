@@ -27,7 +27,7 @@ var _ = Describe("Source", func() {
 	)
 
 	Context("HTTP", func() {
-		It("returns list of HTTP routes", func() {
+		BeforeEach(func() {
 			clientset.PrependReactor("list", "services", func(action core.Action) (bool, runtime.Object, error) {
 				port := v1.ServicePort{NodePort: int32(nodePort)}
 				ports := []v1.ServicePort{port}
@@ -53,6 +53,8 @@ var _ = Describe("Source", func() {
 				namespaces := []v1.Namespace{ns1}
 				return true, &v1.NamespaceList{Items: namespaces}, nil
 			})
+		})
+		It("returns list of HTTP routes", func() {
 			endpoint := kubernetes.New(clientset, domainName)
 			routes, err := endpoint.HTTP()
 			Expect(err).To(BeNil())
@@ -65,25 +67,6 @@ var _ = Describe("Source", func() {
 			Expect(httpRoute.Backend[0].IP).To(Equal(nodeAddress))
 		})
 		It("returns list of HTTP routes across namespaces", func() {
-			clientset.PrependReactor("list", "services", func(action core.Action) (bool, runtime.Object, error) {
-				port := v1.ServicePort{NodePort: int32(nodePort)}
-				ports := []v1.ServicePort{port}
-				spec := v1.ServiceSpec{Ports: ports}
-				labels := make(map[string]string)
-				labels["http-route-sync"] = "true"
-				objectMeta := v1.ObjectMeta{Name: serviceName, Labels: labels}
-				s1 := v1.Service{Spec: spec, ObjectMeta: objectMeta}
-				serviceList := []v1.Service{s1}
-				return true, &v1.ServiceList{Items: serviceList}, nil
-			})
-			clientset.PrependReactor("list", "nodes", func(action core.Action) (bool, runtime.Object, error) {
-				address := v1.NodeAddress{Type: "InternalIP", Address: nodeAddress}
-				addresses := []v1.NodeAddress{address}
-				ns := v1.NodeStatus{Addresses: addresses}
-				n1 := v1.Node{Status: ns}
-				nodesList := []v1.Node{n1}
-				return true, &v1.NodeList{Items: nodesList}, nil
-			})
 			clientset.PrependReactor("list", "namespaces", func(action core.Action) (bool, runtime.Object, error) {
 				objectMeta := v1.ObjectMeta{Name: namespace}
 				objectMeta2 := v1.ObjectMeta{Name: anotherNamespace}
@@ -120,22 +103,6 @@ var _ = Describe("Source", func() {
 				serviceList := []v1.Service{s1, s2}
 				return true, &v1.ServiceList{Items: serviceList}, nil
 			})
-			clientset.PrependReactor("list", "nodes", func(action core.Action) (bool, runtime.Object, error) {
-				address := v1.NodeAddress{Type: "InternalIP", Address: nodeAddress}
-				addresses := []v1.NodeAddress{address}
-				ns := v1.NodeStatus{Addresses: addresses}
-				n1 := v1.Node{Status: ns}
-				nodesList := []v1.Node{n1}
-				return true, &v1.NodeList{Items: nodesList}, nil
-			})
-			clientset.PrependReactor("list", "namespaces", func(action core.Action) (bool, runtime.Object, error) {
-				objectMeta := v1.ObjectMeta{Name: namespace}
-				objectMeta2 := v1.ObjectMeta{Name: anotherNamespace}
-				ns1 := v1.Namespace{ObjectMeta: objectMeta}
-				ns2 := v1.Namespace{ObjectMeta: objectMeta2}
-				namespaces := []v1.Namespace{ns1, ns2}
-				return true, &v1.NamespaceList{Items: namespaces}, nil
-			})
 			endpoint := kubernetes.New(clientset, domainName)
 			routes, err := endpoint.HTTP()
 			Expect(err).To(BeNil())
@@ -144,7 +111,7 @@ var _ = Describe("Source", func() {
 	})
 
 	Context("TCP", func() {
-		It("returns list of TCP routes", func() {
+		BeforeEach(func() {
 			clientset.PrependReactor("list", "services", func(action core.Action) (bool, runtime.Object, error) {
 				port := v1.ServicePort{NodePort: int32(nodePort)}
 				ports := []v1.ServicePort{port}
@@ -170,7 +137,8 @@ var _ = Describe("Source", func() {
 				namespaces := []v1.Namespace{ns1}
 				return true, &v1.NamespaceList{Items: namespaces}, nil
 			})
-
+		})
+		It("returns list of TCP routes", func() {
 			endpoint := kubernetes.New(clientset, "")
 			routes, err := endpoint.TCP()
 			Expect(err).To(BeNil())
@@ -182,7 +150,7 @@ var _ = Describe("Source", func() {
 			Expect(backends[0].Port).To(Equal(nodePort))
 			Expect(tcpRoute.Backend[0].IP).To(Equal(nodeAddress))
 		})
-		It("returns list of TCP routes", func() {
+		It("returns list of TCP routes across namespaces", func() {
 			clientset.PrependReactor("list", "services", func(action core.Action) (bool, runtime.Object, error) {
 				port := v1.ServicePort{NodePort: int32(nodePort)}
 				ports := []v1.ServicePort{port}
@@ -204,13 +172,6 @@ var _ = Describe("Source", func() {
 				nodesList := []v1.Node{n1, n2}
 				return true, &v1.NodeList{Items: nodesList}, nil
 			})
-			clientset.PrependReactor("list", "namespaces", func(action core.Action) (bool, runtime.Object, error) {
-				objectMeta := v1.ObjectMeta{Name: namespace}
-				ns1 := v1.Namespace{ObjectMeta: objectMeta}
-				namespaces := []v1.Namespace{ns1}
-				return true, &v1.NamespaceList{Items: namespaces}, nil
-			})
-
 			endpoint := kubernetes.New(clientset, "")
 			routes, err := endpoint.TCP()
 			Expect(err).To(BeNil())
@@ -227,11 +188,6 @@ var _ = Describe("Source", func() {
 				serviceList := []v1.Service{}
 				return true, &v1.ServiceList{Items: serviceList}, nil
 			})
-			clientset.PrependReactor("list", "nodes", func(action core.Action) (bool, runtime.Object, error) {
-				nodesList := []v1.Node{}
-				return true, &v1.NodeList{Items: nodesList}, nil
-			})
-
 			endpoint := kubernetes.New(clientset, "")
 			routes, err := endpoint.TCP()
 			Expect(err).To(BeNil())
@@ -254,21 +210,6 @@ var _ = Describe("Source", func() {
 				serviceList := []v1.Service{s1}
 				return true, &v1.ServiceList{Items: serviceList}, nil
 			})
-			clientset.PrependReactor("list", "nodes", func(action core.Action) (bool, runtime.Object, error) {
-				address := v1.NodeAddress{Type: "InternalIP", Address: nodeAddress}
-				addresses := []v1.NodeAddress{address}
-				ns := v1.NodeStatus{Addresses: addresses}
-				n1 := v1.Node{Status: ns}
-				nodesList := []v1.Node{n1}
-				return true, &v1.NodeList{Items: nodesList}, nil
-			})
-			clientset.PrependReactor("list", "namespaces", func(action core.Action) (bool, runtime.Object, error) {
-				objectMeta := v1.ObjectMeta{Name: namespace}
-				ns1 := v1.Namespace{ObjectMeta: objectMeta}
-				namespaces := []v1.Namespace{ns1}
-				return true, &v1.NamespaceList{Items: namespaces}, nil
-			})
-
 			endpoint := kubernetes.New(clientset, "")
 			routes, err := endpoint.TCP()
 			Expect(err).To(BeNil())
@@ -294,21 +235,6 @@ var _ = Describe("Source", func() {
 				serviceList := []v1.Service{s1}
 				return true, &v1.ServiceList{Items: serviceList}, nil
 			})
-			clientset.PrependReactor("list", "nodes", func(action core.Action) (bool, runtime.Object, error) {
-				address := v1.NodeAddress{Type: "InternalIP", Address: nodeAddress}
-				addresses := []v1.NodeAddress{address}
-				ns := v1.NodeStatus{Addresses: addresses}
-				n1 := v1.Node{Status: ns}
-				nodesList := []v1.Node{n1}
-				return true, &v1.NodeList{Items: nodesList}, nil
-			})
-			clientset.PrependReactor("list", "namespaces", func(action core.Action) (bool, runtime.Object, error) {
-				objectMeta := v1.ObjectMeta{Name: namespace}
-				ns1 := v1.Namespace{ObjectMeta: objectMeta}
-				namespaces := []v1.Namespace{ns1}
-				return true, &v1.NamespaceList{Items: namespaces}, nil
-			})
-
 			endpoint := kubernetes.New(clientset, "")
 			routes, err := endpoint.TCP()
 			Expect(err).To(BeNil())
@@ -334,21 +260,6 @@ var _ = Describe("Source", func() {
 				serviceList := []v1.Service{s1, s2}
 				return true, &v1.ServiceList{Items: serviceList}, nil
 			})
-			clientset.PrependReactor("list", "nodes", func(action core.Action) (bool, runtime.Object, error) {
-				address := v1.NodeAddress{Type: "InternalIP", Address: nodeAddress}
-				addresses := []v1.NodeAddress{address}
-				ns := v1.NodeStatus{Addresses: addresses}
-				n1 := v1.Node{Status: ns}
-				nodesList := []v1.Node{n1}
-				return true, &v1.NodeList{Items: nodesList}, nil
-			})
-			clientset.PrependReactor("list", "namespaces", func(action core.Action) (bool, runtime.Object, error) {
-				objectMeta := v1.ObjectMeta{Name: namespace}
-				ns1 := v1.Namespace{ObjectMeta: objectMeta}
-				namespaces := []v1.Namespace{ns1}
-				return true, &v1.NamespaceList{Items: namespaces}, nil
-			})
-
 			endpoint := kubernetes.New(clientset, "")
 			routes, err := endpoint.TCP()
 			Expect(err).To(BeNil())
