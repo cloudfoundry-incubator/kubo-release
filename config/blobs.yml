@@ -98,6 +98,10 @@ glusterfs-client/python2.7_2.7.6-8ubuntu0.3_amd64.deb:
   size: 196592
   object_id: 8437a746-08d5-41be-4e31-3660df2f28ba
   sha: b86989eba577f2f998a802f653d2e8eeafdecf75
+go/go1.8.linux-amd64.tar.gz:
+  size: 89803580
+  object_id: c150a8bd-e241-4070-46bb-8d08c2a5ee2d
+  sha: a93fe8fc245e3554f956bc823f30ef4eb23c2068
 jq-linux64-1.5:
   size: 3027945
   object_id: 83f251b9-8af2-41e6-4d13-5426d10109b7
