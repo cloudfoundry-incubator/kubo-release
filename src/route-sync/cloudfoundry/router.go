@@ -50,11 +50,10 @@ func (ts *router) tcpRouterGroup() (tcp.RouterGroup, error) {
 func (ts *router) HTTP(routes []*route.HTTP) error {
 	for _, httpRoute := range routes {
 		for _, endpoint := range httpRoute.Backend {
-			err := ts.bus.SendMessage("router.register", endpoint.IP, config.Route{
+			ts.bus.SendMessage("router.register", endpoint.IP, config.Route{
 				Port: int(endpoint.Port),
 				URIs: []string{httpRoute.Name},
 			}, privateInstanceID)
-			fmt.Printf("ENDPOINT %v PORT %v NAME %v ERROR %v", endpoint.IP, endpoint.Port, httpRoute.Name, err)
 		}
 	}
 	return nil
