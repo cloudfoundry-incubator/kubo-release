@@ -47,45 +47,62 @@ var _ = Describe("routing-api TCP router", func() {
 		}
 	})
 
-	It("posts the UAA token during a request", func() {
-		requestChan := make(chan *http.Request)
-		ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			go func() {
-				requestChan <- r
-			}()
-		}))
-		defer ts.Close()
+	Context("With a valid UAA token", func() {
+		var (
+			requests chan *http.Request
+			server   *httptest.Server
+			router   Router
+		)
 
-		router, _ := NewRoutingApi(&fooClient, ts.URL, false)
+		BeforeEach(func() {
+			requests = make(chan *http.Request)
+			server = httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				go func() {
+					requests <- r
+				}()
+			}))
+			router, _ = NewRoutingApi(&fooClient, server.URL, false)
+		})
 
-		router.RouterGroups()
-		req := <-requestChan
-		Expect(req.Header).To(HaveKeyWithValue("Authorization", []string{"bearer foo"}))
+		AfterEach(func() {
+			close(requests)
+			server.Close()
+		})
 
-		router.CreateRoutes(RouterGroup{}, []*route.TCP{&route.TCP{}})
-		req = <-requestChan
-		Expect(req.Header).To(HaveKeyWithValue("Authorization", []string{"bearer foo"}))
+		It("posts the token with RouterGroups", func() {
+			router.RouterGroups()
+			req := <-requests
+			Expect(req.Header).To(HaveKeyWithValue("Authorization", []string{"bearer foo"}))
+		})
+
+		It("posts the token with CreateRoutes", func() {
+			router.CreateRoutes(RouterGroup{}, []*route.TCP{&route.TCP{}})
+			req := <-requests
+			Expect(req.Header).To(HaveKeyWithValue("Authorization", []string{"bearer foo"}))
+		})
 	})
 
-	It("handles routing groups", func() {
-		ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			w.Header().Set("Content-Type", "application/json")
+	Context("RouterGroups", func() {
+		It("parses a single router routing group", func() {
+			ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				w.Header().Set("Content-Type", "application/json")
 
-			w.Write([]byte(`[{"guid":"abc123","name":"default-tcp","reservable_ports":"1024-65535","type":"tcp"}]`))
-		}))
-		defer ts.Close()
+				w.Write([]byte(`[{"guid":"abc123","name":"default-tcp","reservable_ports":"1024-65535","type":"tcp"}]`))
+			}))
+			defer ts.Close()
 
-		router, _ := NewRoutingApi(&fooClient, ts.URL, false)
+			router, _ := NewRoutingApi(&fooClient, ts.URL, false)
 
-		routerGroups, err := router.RouterGroups()
-		Expect(err).To(BeNil())
+			routerGroups, err := router.RouterGroups()
+			Expect(err).To(BeNil())
 
-		Expect(routerGroups).To(ConsistOf(RouterGroup{
-			Guid:            "abc123",
-			Name:            "default-tcp",
-			ReservablePorts: "1024-65535",
-			Type:            "tcp",
-		}))
+			Expect(routerGroups).To(ConsistOf(RouterGroup{
+				Guid:            "abc123",
+				Name:            "default-tcp",
+				ReservablePorts: "1024-65535",
+				Type:            "tcp",
+			}))
+		})
 	})
 
 	It("posts routes", func() {
