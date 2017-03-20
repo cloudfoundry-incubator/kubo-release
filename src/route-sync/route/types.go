@@ -20,11 +20,15 @@ type HTTP struct {
 	Backend []Endpoint
 }
 
+//go:generate counterfeiter . Source
+
 // Source provides routes
 type Source interface {
 	TCP() ([]*TCP, error)
 	HTTP() ([]*HTTP, error)
 }
+
+//go:generate counterfeiter . Router
 
 // Router consumes routes
 type Router interface {
