@@ -45,10 +45,6 @@ var _ = Describe("routing-api TCP router", func() {
 				Expect(err).NotTo(BeNil())
 			})
 		}
-
-		router, err := NewRoutingApi(&fooClient, "foo", false)
-		Expect(router).NotTo(BeNil())
-		Expect(err).To(BeNil())
 	})
 
 	It("posts the UAA token during a request", func() {
@@ -69,8 +65,8 @@ var _ = Describe("routing-api TCP router", func() {
 		router.CreateRoutes(RouterGroup{}, []*route.TCP{&route.TCP{}})
 		req = <-requestChan
 		Expect(req.Header).To(HaveKeyWithValue("Authorization", []string{"bearer foo"}))
-
 	})
+
 	It("handles routing groups", func() {
 		ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			w.Header().Set("Content-Type", "application/json")
