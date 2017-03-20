@@ -4,11 +4,11 @@ Synchronizes routes from a Kubernetes cluster to external L3/L7 routers.
 
 ## Dependencies
 
-- golang 1.7.4 
+- golang 1.8 
 
 ## Development
 
-This repo should be imported as `route-sync` meaning your GOPATH should be set to `~/kubo-release`
+This repo should be imported as `route-sync` meaning your GOPATH should be set to the `kubo-release` directory.
 
 ### Running the application
 
