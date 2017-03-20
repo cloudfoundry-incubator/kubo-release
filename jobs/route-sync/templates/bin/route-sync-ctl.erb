@@ -56,9 +56,9 @@ start_route_sync() {
   pid_guard $PIDFILE route-sync
   echo $$ > $PIDFILE
 
-  export ROUTESYNC_CLOUD_FOUNDRY_API_URL="<%=p("cloud_foundry.api_url") %>"
   export ROUTESYNC_CLOUD_FOUNDRY_APP_DOMAIN_NAME="<%=p("cloud_foundry.app_domain") %>"
   export ROUTESYNC_UAA_API_URL="<%=p("cloud_foundry.uaa_url") %>"
+  export ROUTESYNC_ROUTING_API_URL="<%=p("cloud_foundry.routing_api_url") %>"
   export ROUTESYNC_ROUTING_API_USERNAME="<%=p("cloud_foundry.routing_api_client_id") %>"
   export ROUTESYNC_ROUTING_API_CLIENT_SECRET="<%=p("cloud_foundry.routing_api_client_secret") %>"
   export ROUTESYNC_SKIP_TLS_VERIFICATION="<%=p("cloud_foundry.skip_tls_verification") %>"

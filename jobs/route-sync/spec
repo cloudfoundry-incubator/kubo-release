@@ -10,12 +10,12 @@ packages:
 
 properties:
   cloud_foundry:
-    api_url:
-      description: "URL for Cloud Foundry API"
-      example: http://api.cf.cf-app.com
     uaa_url:
-      description: "API URL for UAA"
+      description: "URL for UAA API"
       example: http://uaa.cf.cf-app.com
+    routing_api_url:
+      description: "URL for Routing API"
+      example: http://api.cf.cf-app.com
     routing_api_client_id:
       description: "Routing API client id (UAA)"
       example: tcp_router
