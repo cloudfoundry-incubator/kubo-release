@@ -71,7 +71,7 @@ func newKubernetesSource(logger lager.Logger, cfg *config.Config) route.Source {
 		logger.Fatal("creating clientset from kube config", err)
 	}
 
-	return kubernetes.New(clientset, cfg.CloudFoundryAPPDomainName)
+	return kubernetes.New(clientset, cfg.CloudFoundryAppDomainName)
 }
 
 func newCloudFoundrySink(logger lager.Logger, cfg *config.Config) route.Router {
@@ -92,7 +92,7 @@ func newCloudFoundrySink(logger lager.Logger, cfg *config.Config) route.Router {
 	if err != nil {
 		logger.Fatal("creating UAA client", err)
 	}
-	tcpRouter, err := tcp.NewRoutingApi(uaaClient, cfg.CloudFoundryAPIURL, cfg.SkipTLSVerification)
+	tcpRouter, err := tcp.NewRoutingApi(uaaClient, cfg.RoutingApiUrl, cfg.SkipTLSVerification)
 	if err != nil {
 		logger.Fatal("creating TCP router", err)
 	}

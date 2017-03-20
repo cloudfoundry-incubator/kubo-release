@@ -11,9 +11,9 @@ import (
 var _ = Describe("Config", func() {
 	BeforeEach(func() {
 		os.Setenv("ROUTESYNC_NATS_SERVERS", "[{\"Host\": \"10.0.1.8:4222\",\"User\": \"nats\", \"Password\": \"natspass\"}]")
-		os.Setenv("ROUTESYNC_CLOUD_FOUNDRY_API_URL", "https://api.cf.example.org")
 		os.Setenv("ROUTESYNC_CLOUD_FOUNDRY_APP_DOMAIN_NAME", "apps.cf.example.org")
 		os.Setenv("ROUTESYNC_UAA_API_URL", "https://uaa.cf.example.org")
+		os.Setenv("ROUTESYNC_ROUTING_API_URL", "https://api.cf.example.org")
 		os.Setenv("ROUTESYNC_ROUTING_API_USERNAME", "routeUser")
 		os.Setenv("ROUTESYNC_ROUTING_API_CLIENT_SECRET", "aabbcc")
 		os.Setenv("ROUTESYNC_SKIP_TLS_VERIFICATION", "true")

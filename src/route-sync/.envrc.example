@@ -5,9 +5,9 @@ export ROUTESYNC_NATS_SERVERS='[
 		"Password": "UAA Password for nats"
 	}
 ]'
-export ROUTESYNC_CLOUD_FOUNDRY_API_URL='https://api.cf.example.org'
 export ROUTESYNC_CLOUD_FOUNDRY_APP_DOMAIN_NAME='apps.cf.example.org'
 export ROUTESYNC_UAA_API_URL='https://api.cf.example.org'
+export ROUTESYNC_ROUTING_API_URL='https://api.cf.example.org'
 export ROUTESYNC_ROUTING_API_USERNAME='routing uaa username'
 export ROUTESYNC_ROUTING_API_CLIENT_SECRET='aabbcc'
 export ROUTESYNC_SKIP_TLS_VERIFICATION='true'

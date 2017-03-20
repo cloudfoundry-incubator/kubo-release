@@ -28,19 +28,19 @@ const routeTTL = 60
 
 type routing_api_router struct {
 	uaaClient           uaa_go_client.Client
-	cloudFoundryApiUrl  string
+	routingApiUrl       string
 	skipTlsVerification bool
 }
 
-func NewRoutingApi(uaaClient uaa_go_client.Client, cloudFoundryApiUrl string, skipTlsVerification bool) (Router, error) {
+func NewRoutingApi(uaaClient uaa_go_client.Client, routingApiUrl string, skipTlsVerification bool) (Router, error) {
 	if uaaClient == nil {
 		return nil, fmt.Errorf("uaaClient token requried")
 	}
-	if cloudFoundryApiUrl == "" {
-		return nil, fmt.Errorf("cloudFoundryApiUrl required")
+	if routingApiUrl == "" {
+		return nil, fmt.Errorf("routingApiUrl required")
 	}
 
-	return &routing_api_router{uaaClient: uaaClient, cloudFoundryApiUrl: cloudFoundryApiUrl, skipTlsVerification: skipTlsVerification}, nil
+	return &routing_api_router{uaaClient: uaaClient, routingApiUrl: routingApiUrl, skipTlsVerification: skipTlsVerification}, nil
 }
 
 func (r *routing_api_router) buildRequest(verb string, path string) (*http.Request, *http.Client, error) {
@@ -48,7 +48,7 @@ func (r *routing_api_router) buildRequest(verb string, path string) (*http.Reque
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: r.skipTlsVerification},
 	}
 	client := &http.Client{Transport: tr}
-	req, err := http.NewRequest(verb, fmt.Sprintf("%s/%s", r.cloudFoundryApiUrl, path), nil)
+	req, err := http.NewRequest(verb, fmt.Sprintf("%s/%s", r.routingApiUrl, path), nil)
 
 	if err != nil {
 		return req, client, fmt.Errorf("routing_api_router: %v", err)
