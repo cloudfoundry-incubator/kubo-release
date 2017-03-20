@@ -29,8 +29,8 @@ func main() {
 
 	cfg := loadConfig(logger)
 
-	pooler := pooler.ByTime(time.Duration(30*time.Second), logger)
-	poolerDone := pooler.Start(newKubernetesSource(logger, cfg), newCloudFoundrySink(logger, cfg))
+	mainPooler := pooler.ByTime(time.Duration(30*time.Second), logger)
+	poolerDone := mainPooler.Start(newKubernetesSource(logger, cfg), newCloudFoundrySink(logger, cfg))
 
 	wg := sync.WaitGroup{}
 
