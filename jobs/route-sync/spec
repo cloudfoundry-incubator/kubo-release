@@ -21,10 +21,9 @@ properties:
       example: tcp_router
     routing_api_client_secret:
       description: "Routing API client secret"
-      example: "kljsfdkjldfskjlfsdsfd"
     skip_tls_verification:
       description: "Skip TLS verification of Cloud Foundry APIs (dev/test only)"
-      example: "false"
+      default: false
     app_domain:
       description: "Cloud Foundry apps domain"
       example: app.cf.cf-app.com
@@ -36,13 +35,12 @@ properties:
       - 192.168.52.123
   nats.port:
     description: TCP port of NATS servers
-    example: 4222
+    default: 4222
   nats.user:
     description: User name for NATS authentication
-    example: nats
+    default: nats
   nats.password:
     description: Password for NATS authentication
-    example: natSpa55w0rd
 
 consumes:
 - name: kubernetes-workers
