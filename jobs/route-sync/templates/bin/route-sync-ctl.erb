@@ -52,7 +52,7 @@ setup_directories() {
   chown -R vcap:vcap "$RUN_DIR" "$LOG_DIR" "$DATA_DIR"
 }
 
-start_registrar() {
+start_route_sync() {
   pid_guard $PIDFILE route-sync
   echo $$ > $PIDFILE
 
@@ -82,7 +82,7 @@ case $1 in
 
   start)
     setup_directories
-    start_registrar
+    start_route_sync
     ;;
 
   stop)
