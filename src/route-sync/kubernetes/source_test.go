@@ -3,6 +3,7 @@ package kubernetes_test
 import (
 	"route-sync/kubernetes"
 	"route-sync/route"
+	"strconv"
 
 	core "k8s.io/client-go/testing"
 
@@ -19,8 +20,10 @@ var _ = Describe("Source", func() {
 		namespace        = "kubo-test"
 		nodeAddress      = "10.0.0.0"
 		nodePort         = route.Port(42)
+		frontendPort     = route.Port(1000)
 		serviceName      = "dashboard"
 		anotherNamespace = "default"
+		httpServiceLabel = "example-app"
 	)
 	var (
 		clientset = fake.NewSimpleClientset()
@@ -33,7 +36,7 @@ var _ = Describe("Source", func() {
 				ports := []v1.ServicePort{port}
 				spec := v1.ServiceSpec{Ports: ports}
 				labels := make(map[string]string)
-				labels["http-route-sync"] = "true"
+				labels["http-route-sync"] = httpServiceLabel
 				objectMeta := v1.ObjectMeta{Name: serviceName, Labels: labels}
 				s1 := v1.Service{Spec: spec, ObjectMeta: objectMeta}
 				serviceList := []v1.Service{s1}
@@ -60,7 +63,7 @@ var _ = Describe("Source", func() {
 			Expect(err).To(BeNil())
 			Expect(len(routes)).To(Equal(1))
 			httpRoute := routes[0]
-			Expect(httpRoute.Name).To(Equal(serviceName + "." + namespace + "." + domainName))
+			Expect(httpRoute.Name).To(Equal(httpServiceLabel + "." + domainName))
 			backends := httpRoute.Backend
 			Expect(len(backends)).To(Equal(1))
 			Expect(backends[0].Port).To(Equal(nodePort))
@@ -80,13 +83,13 @@ var _ = Describe("Source", func() {
 			Expect(err).To(BeNil())
 			Expect(len(routes)).To(Equal(2))
 			ns1Route := routes[0]
-			Expect(ns1Route.Name).To(Equal(serviceName + "." + namespace + "." + domainName))
+			Expect(ns1Route.Name).To(Equal(httpServiceLabel + "." + domainName))
 			backends := ns1Route.Backend
 			Expect(len(backends)).To(Equal(1))
 			Expect(backends[0].Port).To(Equal(nodePort))
 			Expect(ns1Route.Backend[0].IP).To(Equal(nodeAddress))
 			ns2Route := routes[1]
-			Expect(ns2Route.Name).To(Equal(serviceName + "." + anotherNamespace + "." + domainName))
+			Expect(ns2Route.Name).To(Equal(httpServiceLabel + "." + domainName))
 		})
 
 		It("skip HTTP routes without proper label", func() {
@@ -117,7 +120,7 @@ var _ = Describe("Source", func() {
 				ports := []v1.ServicePort{port}
 				spec := v1.ServiceSpec{Ports: ports}
 				labels := make(map[string]string)
-				labels["tcp-route-sync"] = "true"
+				labels["tcp-route-sync"] = strconv.Itoa(int(frontendPort))
 				objectMeta := v1.ObjectMeta{Labels: labels}
 				s1 := v1.Service{ObjectMeta: objectMeta, Spec: spec}
 				serviceList := []v1.Service{s1}
@@ -144,44 +147,33 @@ var _ = Describe("Source", func() {
 			Expect(err).To(BeNil())
 			Expect(len(routes)).To(Equal(1))
 			tcpRoute := routes[0]
-			Expect(tcpRoute.Frontend).To(Equal(nodePort))
+			Expect(tcpRoute.Frontend).To(Equal(frontendPort))
 			backends := tcpRoute.Backend
 			Expect(len(backends)).To(Equal(1))
 			Expect(backends[0].Port).To(Equal(nodePort))
 			Expect(tcpRoute.Backend[0].IP).To(Equal(nodeAddress))
 		})
 		It("returns list of TCP routes across namespaces", func() {
-			clientset.PrependReactor("list", "services", func(action core.Action) (bool, runtime.Object, error) {
-				port := v1.ServicePort{NodePort: int32(nodePort)}
-				ports := []v1.ServicePort{port}
-				spec := v1.ServiceSpec{Ports: ports}
-				labels := make(map[string]string)
-				labels["tcp-route-sync"] = "true"
-				objectMeta := v1.ObjectMeta{Labels: labels}
-				s1 := v1.Service{ObjectMeta: objectMeta, Spec: spec}
-				s2 := v1.Service{ObjectMeta: objectMeta, Spec: spec}
-				serviceList := []v1.Service{s1, s2}
-				return true, &v1.ServiceList{Items: serviceList}, nil
+			clientset.PrependReactor("list", "namespaces", func(action core.Action) (bool, runtime.Object, error) {
+				objectMeta := v1.ObjectMeta{Name: namespace}
+				objectMeta2 := v1.ObjectMeta{Name: anotherNamespace}
+				ns1 := v1.Namespace{ObjectMeta: objectMeta}
+				ns2 := v1.Namespace{ObjectMeta: objectMeta2}
+				namespaces := []v1.Namespace{ns1, ns2}
+				return true, &v1.NamespaceList{Items: namespaces}, nil
 			})
-			clientset.PrependReactor("list", "nodes", func(action core.Action) (bool, runtime.Object, error) {
-				address := v1.NodeAddress{Type: "InternalIP", Address: nodeAddress}
-				addresses := []v1.NodeAddress{address}
-				ns := v1.NodeStatus{Addresses: addresses}
-				n1 := v1.Node{Status: ns}
-				n2 := v1.Node{Status: ns}
-				nodesList := []v1.Node{n1, n2}
-				return true, &v1.NodeList{Items: nodesList}, nil
-			})
-			endpoint := kubernetes.New(clientset, "")
+			endpoint := kubernetes.New(clientset, domainName)
 			routes, err := endpoint.TCP()
 			Expect(err).To(BeNil())
 			Expect(len(routes)).To(Equal(2))
-			tcpRoute := routes[0]
-			Expect(tcpRoute.Frontend).To(Equal(nodePort))
-			backends := tcpRoute.Backend
-			Expect(len(backends)).To(Equal(2))
+			ns1Route := routes[0]
+			Expect(ns1Route.Frontend).To(Equal(frontendPort))
+			backends := ns1Route.Backend
+			Expect(len(backends)).To(Equal(1))
 			Expect(backends[0].Port).To(Equal(nodePort))
-			Expect(tcpRoute.Backend[0].IP).To(Equal(nodeAddress))
+			Expect(ns1Route.Backend[0].IP).To(Equal(nodeAddress))
+			ns2Route := routes[1]
+			Expect(ns2Route.Frontend).To(Equal(frontendPort))
 		})
 		It("returns empty list of TCP routes when there are no services", func() {
 			clientset.PrependReactor("list", "services", func(action core.Action) (bool, runtime.Object, error) {
@@ -204,7 +196,7 @@ var _ = Describe("Source", func() {
 				ports := []v1.ServicePort{port1, port2, port3}
 				spec := v1.ServiceSpec{Ports: ports}
 				labels := make(map[string]string)
-				labels["tcp-route-sync"] = "true"
+				labels["tcp-route-sync"] = strconv.Itoa(int(frontendPort))
 				objectMeta := v1.ObjectMeta{Labels: labels}
 				s1 := v1.Service{ObjectMeta: objectMeta, Spec: spec}
 				serviceList := []v1.Service{s1}
@@ -215,7 +207,7 @@ var _ = Describe("Source", func() {
 			Expect(err).To(BeNil())
 			Expect(len(routes)).To(Equal(2))
 			tcpRoute := routes[0]
-			Expect(tcpRoute.Frontend).To(Equal(tcpNodePort))
+			Expect(tcpRoute.Frontend).To(Equal(frontendPort))
 			backends := tcpRoute.Backend
 			Expect(len(backends)).To(Equal(1))
 			Expect(backends[0].Port).To(Equal(tcpNodePort))
@@ -229,7 +221,7 @@ var _ = Describe("Source", func() {
 				ports := []v1.ServicePort{port1, port2}
 				spec := v1.ServiceSpec{Ports: ports}
 				labels := make(map[string]string)
-				labels["tcp-route-sync"] = "true"
+				labels["tcp-route-sync"] = "1000"
 				objectMeta := v1.ObjectMeta{Labels: labels}
 				s1 := v1.Service{ObjectMeta: objectMeta, Spec: spec}
 				serviceList := []v1.Service{s1}
@@ -240,7 +232,7 @@ var _ = Describe("Source", func() {
 			Expect(err).To(BeNil())
 			Expect(len(routes)).To(Equal(1))
 			tcpRoute := routes[0]
-			Expect(tcpRoute.Frontend).To(Equal(nodePort))
+			Expect(tcpRoute.Frontend).To(Equal(frontendPort))
 			backends := tcpRoute.Backend
 			Expect(len(backends)).To(Equal(1))
 			Expect(backends[0].Port).To(Equal(nodePort))
