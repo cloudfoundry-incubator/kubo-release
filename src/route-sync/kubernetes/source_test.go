@@ -14,6 +14,33 @@ import (
 	"k8s.io/client-go/pkg/runtime"
 )
 
+type k8sServiceData struct {
+	serviceName string
+	nodePort    int32
+	labelName   string
+	labelVal    string
+}
+
+func addServiceReactor(clientset *fake.Clientset, services []k8sServiceData) {
+	clientset.PrependReactor("list", "services", func(action core.Action) (bool, runtime.Object, error) {
+		serviceList := []v1.Service{}
+		for _, serviceData := range services {
+			ports := []v1.ServicePort{}
+			if serviceData.nodePort != int32(-1) {
+				port := v1.ServicePort{NodePort: int32(serviceData.nodePort)}
+				ports = append(ports, port)
+			}
+			spec := v1.ServiceSpec{Ports: ports}
+			labels := make(map[string]string)
+			labels[serviceData.labelName] = serviceData.labelVal
+			objectMeta := v1.ObjectMeta{Name: serviceData.serviceName, Labels: labels}
+			s := v1.Service{Spec: spec, ObjectMeta: objectMeta}
+			serviceList = append(serviceList, s)
+		}
+		return true, &v1.ServiceList{Items: serviceList}, nil
+	})
+}
+
 var _ = Describe("Source", func() {
 	const (
 		domainName       = "cf.example.com"
@@ -31,17 +58,13 @@ var _ = Describe("Source", func() {
 
 	Context("HTTP", func() {
 		BeforeEach(func() {
-			clientset.PrependReactor("list", "services", func(action core.Action) (bool, runtime.Object, error) {
-				port := v1.ServicePort{NodePort: int32(nodePort)}
-				ports := []v1.ServicePort{port}
-				spec := v1.ServiceSpec{Ports: ports}
-				labels := make(map[string]string)
-				labels["http-route-sync"] = httpServiceLabel
-				objectMeta := v1.ObjectMeta{Name: serviceName, Labels: labels}
-				s1 := v1.Service{Spec: spec, ObjectMeta: objectMeta}
-				serviceList := []v1.Service{s1}
-				return true, &v1.ServiceList{Items: serviceList}, nil
-			})
+			serviceData := k8sServiceData{
+				serviceName: serviceName,
+				nodePort:    int32(nodePort),
+				labelName:   "http-route-sync",
+				labelVal:    httpServiceLabel,
+			}
+			addServiceReactor(clientset, []k8sServiceData{serviceData})
 			clientset.PrependReactor("list", "nodes", func(action core.Action) (bool, runtime.Object, error) {
 				address := v1.NodeAddress{Type: "InternalIP", Address: nodeAddress}
 				addresses := []v1.NodeAddress{address}
@@ -93,19 +116,13 @@ var _ = Describe("Source", func() {
 		})
 
 		It("skip HTTP routes without proper label", func() {
-			clientset.PrependReactor("list", "services", func(action core.Action) (bool, runtime.Object, error) {
-				port := v1.ServicePort{NodePort: int32(nodePort)}
-				ports := []v1.ServicePort{port}
-				spec := v1.ServiceSpec{Ports: ports}
-				objectMeta := v1.ObjectMeta{Name: serviceName}
-				s1 := v1.Service{Spec: spec, ObjectMeta: objectMeta}
-				labels := make(map[string]string)
-				labels["noRouteSync"] = "true"
-				objectMeta2 := v1.ObjectMeta{Name: serviceName, Labels: labels}
-				s2 := v1.Service{Spec: spec, ObjectMeta: objectMeta2}
-				serviceList := []v1.Service{s1, s2}
-				return true, &v1.ServiceList{Items: serviceList}, nil
-			})
+			serviceData := k8sServiceData{
+				serviceName: serviceName,
+				nodePort:    int32(nodePort),
+				labelName:   "noRouteSync",
+				labelVal:    "no",
+			}
+			addServiceReactor(clientset, []k8sServiceData{serviceData})
 			endpoint := kubernetes.New(clientset, domainName)
 			routes, err := endpoint.HTTP()
 			Expect(err).To(BeNil())
@@ -115,17 +132,13 @@ var _ = Describe("Source", func() {
 
 	Context("TCP", func() {
 		BeforeEach(func() {
-			clientset.PrependReactor("list", "services", func(action core.Action) (bool, runtime.Object, error) {
-				port := v1.ServicePort{NodePort: int32(nodePort)}
-				ports := []v1.ServicePort{port}
-				spec := v1.ServiceSpec{Ports: ports}
-				labels := make(map[string]string)
-				labels["tcp-route-sync"] = strconv.Itoa(int(frontendPort))
-				objectMeta := v1.ObjectMeta{Labels: labels}
-				s1 := v1.Service{ObjectMeta: objectMeta, Spec: spec}
-				serviceList := []v1.Service{s1}
-				return true, &v1.ServiceList{Items: serviceList}, nil
-			})
+			serviceData := k8sServiceData{
+				serviceName: serviceName,
+				nodePort:    int32(nodePort),
+				labelName:   "tcp-route-sync",
+				labelVal:    "1000",
+			}
+			addServiceReactor(clientset, []k8sServiceData{serviceData})
 			clientset.PrependReactor("list", "nodes", func(action core.Action) (bool, runtime.Object, error) {
 				address := v1.NodeAddress{Type: "InternalIP", Address: nodeAddress}
 				addresses := []v1.NodeAddress{address}
@@ -176,10 +189,7 @@ var _ = Describe("Source", func() {
 			Expect(ns2Route.Frontend).To(Equal(frontendPort))
 		})
 		It("returns empty list of TCP routes when there are no services", func() {
-			clientset.PrependReactor("list", "services", func(action core.Action) (bool, runtime.Object, error) {
-				serviceList := []v1.Service{}
-				return true, &v1.ServiceList{Items: serviceList}, nil
-			})
+			addServiceReactor(clientset, []k8sServiceData{})
 			endpoint := kubernetes.New(clientset, "")
 			routes, err := endpoint.TCP()
 			Expect(err).To(BeNil())
@@ -215,43 +225,26 @@ var _ = Describe("Source", func() {
 			Expect(routes[1].Backend[0].Port).To(Equal(anotherTCPNodePort))
 		})
 		It("skip routes for services with no NodePort", func() {
-			clientset.PrependReactor("list", "services", func(action core.Action) (bool, runtime.Object, error) {
-				port1 := v1.ServicePort{Protocol: "TCP", NodePort: int32(nodePort)}
-				port2 := v1.ServicePort{Protocol: "TCP"}
-				ports := []v1.ServicePort{port1, port2}
-				spec := v1.ServiceSpec{Ports: ports}
-				labels := make(map[string]string)
-				labels["tcp-route-sync"] = "1000"
-				objectMeta := v1.ObjectMeta{Labels: labels}
-				s1 := v1.Service{ObjectMeta: objectMeta, Spec: spec}
-				serviceList := []v1.Service{s1}
-				return true, &v1.ServiceList{Items: serviceList}, nil
-			})
+			serviceData := k8sServiceData{
+				serviceName: serviceName,
+				nodePort:    int32(-1),
+				labelName:   "tcp-route-sync",
+				labelVal:    "1000",
+			}
+			addServiceReactor(clientset, []k8sServiceData{serviceData})
 			endpoint := kubernetes.New(clientset, "")
 			routes, err := endpoint.TCP()
 			Expect(err).To(BeNil())
-			Expect(len(routes)).To(Equal(1))
-			tcpRoute := routes[0]
-			Expect(tcpRoute.Frontend).To(Equal(frontendPort))
-			backends := tcpRoute.Backend
-			Expect(len(backends)).To(Equal(1))
-			Expect(backends[0].Port).To(Equal(nodePort))
-			Expect(tcpRoute.Backend[0].IP).To(Equal(nodeAddress))
+			Expect(len(routes)).To(Equal(0))
 		})
 		It("skip TCP routes for services without proper label", func() {
-			clientset.PrependReactor("list", "services", func(action core.Action) (bool, runtime.Object, error) {
-				port1 := v1.ServicePort{Protocol: "TCP", NodePort: int32(nodePort)}
-				port2 := v1.ServicePort{Protocol: "TCP"}
-				ports := []v1.ServicePort{port1, port2}
-				spec := v1.ServiceSpec{Ports: ports}
-				labels := make(map[string]string)
-				labels["noRouteSync"] = "true"
-				objectMeta := v1.ObjectMeta{Labels: labels}
-				s1 := v1.Service{ObjectMeta: objectMeta, Spec: spec}
-				s2 := v1.Service{Spec: spec}
-				serviceList := []v1.Service{s1, s2}
-				return true, &v1.ServiceList{Items: serviceList}, nil
-			})
+			serviceData := k8sServiceData{
+				serviceName: serviceName,
+				nodePort:    int32(-1),
+				labelName:   "noRouteSync",
+				labelVal:    "no",
+			}
+			addServiceReactor(clientset, []k8sServiceData{serviceData})
 			endpoint := kubernetes.New(clientset, "")
 			routes, err := endpoint.TCP()
 			Expect(err).To(BeNil())
