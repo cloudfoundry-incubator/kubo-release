@@ -2,6 +2,7 @@ package kubernetes
 
 import (
 	"route-sync/route"
+	"strconv"
 
 	k8s "k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/pkg/api/v1"
@@ -30,7 +31,7 @@ func (e *endpoint) TCP() ([]*route.TCP, error) {
 
 	routes := []*route.TCP{}
 	for _, namespace := range namespaces.Items {
-		services, err := e.clientset.CoreV1().Services(namespace.ObjectMeta.GetName()).List(v1.ListOptions{LabelSelector: "tcp-route-sync=true"})
+		services, err := e.clientset.CoreV1().Services(namespace.ObjectMeta.GetName()).List(v1.ListOptions{LabelSelector: "tcp-route-sync"})
 		if err != nil {
 			return nil, err
 		}
@@ -40,9 +41,14 @@ func (e *endpoint) TCP() ([]*route.TCP, error) {
 				if !isValidPort(port) {
 					continue
 				}
+				portLabel, _ := strconv.Atoi(service.ObjectMeta.Labels["tcp-route-sync"])
+				if portLabel == 0 {
+					continue
+				}
+				frontendPort := route.Port(portLabel)
 				nodePort := route.Port(port.NodePort)
 				backends := getBackends(ips, nodePort)
-				tcp := &route.TCP{Frontend: nodePort, Backend: backends}
+				tcp := &route.TCP{Frontend: frontendPort, Backend: backends}
 				routes = append(routes, tcp)
 			}
 		}
@@ -63,7 +69,7 @@ func (e *endpoint) HTTP() ([]*route.HTTP, error) {
 
 	routes := []*route.HTTP{}
 	for _, namespace := range namespaces.Items {
-		services, err := e.clientset.CoreV1().Services(namespace.ObjectMeta.GetName()).List(v1.ListOptions{LabelSelector: "http-route-sync=true"})
+		services, err := e.clientset.CoreV1().Services(namespace.ObjectMeta.GetName()).List(v1.ListOptions{LabelSelector: "http-route-sync"})
 		if err != nil {
 			return nil, err
 		}
@@ -75,7 +81,8 @@ func (e *endpoint) HTTP() ([]*route.HTTP, error) {
 				}
 				nodePort := route.Port(port.NodePort)
 				backends := getBackends(ips, nodePort)
-				fullName := service.ObjectMeta.GetName() + "." + namespace.ObjectMeta.GetName() + "." + e.cfDomain
+				routeName := service.ObjectMeta.Labels["http-route-sync"]
+				fullName := routeName + "." + e.cfDomain
 				http := &route.HTTP{Name: fullName, Backend: backends}
 				routes = append(routes, http)
 			}
