@@ -3,7 +3,6 @@ package kubernetes_test
 import (
 	"route-sync/kubernetes"
 	"route-sync/route"
-	"strconv"
 
 	core "k8s.io/client-go/testing"
 
@@ -16,6 +15,7 @@ import (
 
 type k8sServiceData struct {
 	serviceName string
+	udpPort     int32
 	nodePort    int32
 	labelName   string
 	labelVal    string
@@ -26,8 +26,12 @@ func addServiceReactor(clientset *fake.Clientset, services []k8sServiceData) {
 		serviceList := []v1.Service{}
 		for _, serviceData := range services {
 			ports := []v1.ServicePort{}
-			if serviceData.nodePort != int32(-1) {
+			if serviceData.nodePort > 0 {
 				port := v1.ServicePort{NodePort: int32(serviceData.nodePort)}
+				ports = append(ports, port)
+			}
+			if serviceData.udpPort > 0 {
+				port := v1.ServicePort{Protocol: "UDP", NodePort: int32(serviceData.udpPort)}
 				ports = append(ports, port)
 			}
 			spec := v1.ServiceSpec{Ports: ports}
@@ -41,6 +45,32 @@ func addServiceReactor(clientset *fake.Clientset, services []k8sServiceData) {
 	})
 }
 
+func addNodeReactor(clientset *fake.Clientset, ipAddresses []string) {
+	clientset.PrependReactor("list", "nodes", func(action core.Action) (bool, runtime.Object, error) {
+		nodes := []v1.Node{}
+		for _, ip := range ipAddresses {
+			address := v1.NodeAddress{Type: "InternalIP", Address: ip}
+			addresses := []v1.NodeAddress{address}
+			ns := v1.NodeStatus{Addresses: addresses}
+			node := v1.Node{Status: ns}
+			nodes = append(nodes, node)
+		}
+		return true, &v1.NodeList{Items: nodes}, nil
+	})
+}
+
+func addNamespaceReactor(clientset *fake.Clientset, namespaceNames []string) {
+	clientset.PrependReactor("list", "namespaces", func(action core.Action) (bool, runtime.Object, error) {
+		namespaces := []v1.Namespace{}
+		for _, name := range namespaceNames {
+			objectMeta := v1.ObjectMeta{Name: name}
+			ns := v1.Namespace{ObjectMeta: objectMeta}
+			namespaces = append(namespaces, ns)
+		}
+		return true, &v1.NamespaceList{Items: namespaces}, nil
+	})
+}
+
 var _ = Describe("Source", func() {
 	const (
 		domainName       = "cf.example.com"
@@ -50,69 +80,85 @@ var _ = Describe("Source", func() {
 		frontendPort     = route.Port(1000)
 		serviceName      = "dashboard"
 		anotherNamespace = "default"
-		httpServiceLabel = "example-app"
+		httpServiceLabel = "http-route-sync"
+		httpRouteName    = "example-app"
+		tcpServiceLabel  = "tcp-route-sync"
+		tcpLabelPort     = "1000"
 	)
 	var (
 		clientset = fake.NewSimpleClientset()
 	)
 
 	Context("HTTP", func() {
-		BeforeEach(func() {
+		It("returns list of HTTP routes", func() {
 			serviceData := k8sServiceData{
 				serviceName: serviceName,
 				nodePort:    int32(nodePort),
-				labelName:   "http-route-sync",
-				labelVal:    httpServiceLabel,
+				labelName:   httpServiceLabel,
+				labelVal:    httpRouteName,
 			}
 			addServiceReactor(clientset, []k8sServiceData{serviceData})
-			clientset.PrependReactor("list", "nodes", func(action core.Action) (bool, runtime.Object, error) {
-				address := v1.NodeAddress{Type: "InternalIP", Address: nodeAddress}
-				addresses := []v1.NodeAddress{address}
-				ns := v1.NodeStatus{Addresses: addresses}
-				n1 := v1.Node{Status: ns}
-				nodesList := []v1.Node{n1}
-				return true, &v1.NodeList{Items: nodesList}, nil
-			})
-			clientset.PrependReactor("list", "namespaces", func(action core.Action) (bool, runtime.Object, error) {
-				objectMeta := v1.ObjectMeta{Name: namespace}
-				ns1 := v1.Namespace{ObjectMeta: objectMeta}
-				namespaces := []v1.Namespace{ns1}
-				return true, &v1.NamespaceList{Items: namespaces}, nil
-			})
-		})
-		It("returns list of HTTP routes", func() {
+			addNodeReactor(clientset, []string{nodeAddress})
+			addNamespaceReactor(clientset, []string{namespace})
+
 			endpoint := kubernetes.New(clientset, domainName)
 			routes, err := endpoint.HTTP()
+
 			Expect(err).To(BeNil())
 			Expect(len(routes)).To(Equal(1))
 			httpRoute := routes[0]
-			Expect(httpRoute.Name).To(Equal(httpServiceLabel + "." + domainName))
+			Expect(httpRoute.Name).To(Equal(httpRouteName + "." + domainName))
 			backends := httpRoute.Backend
 			Expect(len(backends)).To(Equal(1))
 			Expect(backends[0].Port).To(Equal(nodePort))
 			Expect(httpRoute.Backend[0].IP).To(Equal(nodeAddress))
 		})
-		It("returns list of HTTP routes across namespaces", func() {
-			clientset.PrependReactor("list", "namespaces", func(action core.Action) (bool, runtime.Object, error) {
-				objectMeta := v1.ObjectMeta{Name: namespace}
-				objectMeta2 := v1.ObjectMeta{Name: anotherNamespace}
-				ns1 := v1.Namespace{ObjectMeta: objectMeta}
-				ns2 := v1.Namespace{ObjectMeta: objectMeta2}
-				namespaces := []v1.Namespace{ns1, ns2}
-				return true, &v1.NamespaceList{Items: namespaces}, nil
-			})
+		It("returns list multiple of HTTP routes", func() {
+			serviceDataList := []k8sServiceData{}
+			numServices := 10
+			for i := 0; i < numServices; i++ {
+				serviceData := k8sServiceData{
+					serviceName: serviceName,
+					nodePort:    int32(nodePort),
+					labelName:   httpServiceLabel,
+					labelVal:    httpRouteName,
+				}
+				serviceDataList = append(serviceDataList, serviceData)
+			}
+			addServiceReactor(clientset, serviceDataList)
+			addNodeReactor(clientset, []string{nodeAddress})
+			addNamespaceReactor(clientset, []string{namespace})
+
 			endpoint := kubernetes.New(clientset, domainName)
 			routes, err := endpoint.HTTP()
+
+			Expect(err).To(BeNil())
+			Expect(len(routes)).To(Equal(numServices))
+		})
+		It("returns list of HTTP routes across namespaces", func() {
+			serviceData := k8sServiceData{
+				serviceName: serviceName,
+				nodePort:    int32(nodePort),
+				labelName:   httpServiceLabel,
+				labelVal:    httpRouteName,
+			}
+			addServiceReactor(clientset, []k8sServiceData{serviceData})
+			addNodeReactor(clientset, []string{nodeAddress})
+			addNamespaceReactor(clientset, []string{namespace, anotherNamespace})
+
+			endpoint := kubernetes.New(clientset, domainName)
+			routes, err := endpoint.HTTP()
+
 			Expect(err).To(BeNil())
 			Expect(len(routes)).To(Equal(2))
 			ns1Route := routes[0]
-			Expect(ns1Route.Name).To(Equal(httpServiceLabel + "." + domainName))
+			Expect(ns1Route.Name).To(Equal(httpRouteName + "." + domainName))
 			backends := ns1Route.Backend
 			Expect(len(backends)).To(Equal(1))
 			Expect(backends[0].Port).To(Equal(nodePort))
 			Expect(ns1Route.Backend[0].IP).To(Equal(nodeAddress))
 			ns2Route := routes[1]
-			Expect(ns2Route.Name).To(Equal(httpServiceLabel + "." + domainName))
+			Expect(ns2Route.Name).To(Equal(httpRouteName + "." + domainName))
 		})
 
 		It("skip HTTP routes without proper label", func() {
@@ -123,40 +169,32 @@ var _ = Describe("Source", func() {
 				labelVal:    "no",
 			}
 			addServiceReactor(clientset, []k8sServiceData{serviceData})
+			addNodeReactor(clientset, []string{nodeAddress})
+			addNamespaceReactor(clientset, []string{namespace})
+
 			endpoint := kubernetes.New(clientset, domainName)
 			routes, err := endpoint.HTTP()
+
 			Expect(err).To(BeNil())
 			Expect(len(routes)).To(Equal(0))
 		})
 	})
 
 	Context("TCP", func() {
-		BeforeEach(func() {
+		It("returns list of TCP routes", func() {
 			serviceData := k8sServiceData{
 				serviceName: serviceName,
 				nodePort:    int32(nodePort),
-				labelName:   "tcp-route-sync",
-				labelVal:    "1000",
+				labelName:   tcpServiceLabel,
+				labelVal:    tcpLabelPort,
 			}
 			addServiceReactor(clientset, []k8sServiceData{serviceData})
-			clientset.PrependReactor("list", "nodes", func(action core.Action) (bool, runtime.Object, error) {
-				address := v1.NodeAddress{Type: "InternalIP", Address: nodeAddress}
-				addresses := []v1.NodeAddress{address}
-				ns := v1.NodeStatus{Addresses: addresses}
-				n1 := v1.Node{Status: ns}
-				nodesList := []v1.Node{n1}
-				return true, &v1.NodeList{Items: nodesList}, nil
-			})
-			clientset.PrependReactor("list", "namespaces", func(action core.Action) (bool, runtime.Object, error) {
-				objectMeta := v1.ObjectMeta{Name: namespace}
-				ns1 := v1.Namespace{ObjectMeta: objectMeta}
-				namespaces := []v1.Namespace{ns1}
-				return true, &v1.NamespaceList{Items: namespaces}, nil
-			})
-		})
-		It("returns list of TCP routes", func() {
+			addNodeReactor(clientset, []string{nodeAddress})
+			addNamespaceReactor(clientset, []string{namespace})
+
 			endpoint := kubernetes.New(clientset, "")
 			routes, err := endpoint.TCP()
+
 			Expect(err).To(BeNil())
 			Expect(len(routes)).To(Equal(1))
 			tcpRoute := routes[0]
@@ -166,17 +204,42 @@ var _ = Describe("Source", func() {
 			Expect(backends[0].Port).To(Equal(nodePort))
 			Expect(tcpRoute.Backend[0].IP).To(Equal(nodeAddress))
 		})
-		It("returns list of TCP routes across namespaces", func() {
-			clientset.PrependReactor("list", "namespaces", func(action core.Action) (bool, runtime.Object, error) {
-				objectMeta := v1.ObjectMeta{Name: namespace}
-				objectMeta2 := v1.ObjectMeta{Name: anotherNamespace}
-				ns1 := v1.Namespace{ObjectMeta: objectMeta}
-				ns2 := v1.Namespace{ObjectMeta: objectMeta2}
-				namespaces := []v1.Namespace{ns1, ns2}
-				return true, &v1.NamespaceList{Items: namespaces}, nil
-			})
+		It("returns list multiple of TCP routes", func() {
+			serviceDataList := []k8sServiceData{}
+			numServices := 10
+			for i := 0; i < numServices; i++ {
+				serviceData := k8sServiceData{
+					serviceName: serviceName,
+					nodePort:    int32(nodePort),
+					labelName:   tcpServiceLabel,
+					labelVal:    tcpLabelPort,
+				}
+				serviceDataList = append(serviceDataList, serviceData)
+			}
+			addServiceReactor(clientset, serviceDataList)
+			addNodeReactor(clientset, []string{nodeAddress})
+			addNamespaceReactor(clientset, []string{namespace})
+
 			endpoint := kubernetes.New(clientset, domainName)
 			routes, err := endpoint.TCP()
+
+			Expect(err).To(BeNil())
+			Expect(len(routes)).To(Equal(numServices))
+		})
+		It("returns list of TCP routes across namespaces", func() {
+			serviceData := k8sServiceData{
+				serviceName: serviceName,
+				nodePort:    int32(nodePort),
+				labelName:   tcpServiceLabel,
+				labelVal:    tcpLabelPort,
+			}
+			addServiceReactor(clientset, []k8sServiceData{serviceData})
+			addNodeReactor(clientset, []string{nodeAddress})
+			addNamespaceReactor(clientset, []string{namespace, anotherNamespace})
+
+			endpoint := kubernetes.New(clientset, domainName)
+			routes, err := endpoint.TCP()
+
 			Expect(err).To(BeNil())
 			Expect(len(routes)).To(Equal(2))
 			ns1Route := routes[0]
@@ -190,63 +253,71 @@ var _ = Describe("Source", func() {
 		})
 		It("returns empty list of TCP routes when there are no services", func() {
 			addServiceReactor(clientset, []k8sServiceData{})
+			addNodeReactor(clientset, []string{nodeAddress})
+			addNamespaceReactor(clientset, []string{namespace})
+
 			endpoint := kubernetes.New(clientset, "")
 			routes, err := endpoint.TCP()
+
 			Expect(err).To(BeNil())
 			Expect(len(routes)).To(Equal(0))
 		})
 		It("returns only TCP routes for services with multiple ports", func() {
-			udpNodePort := route.Port(42)
-			tcpNodePort := route.Port(43)
-			anotherTCPNodePort := route.Port(4342)
-			clientset.PrependReactor("list", "services", func(action core.Action) (bool, runtime.Object, error) {
-				port1 := v1.ServicePort{Protocol: "UDP", NodePort: int32(udpNodePort)}
-				port2 := v1.ServicePort{Protocol: "TCP", NodePort: int32(tcpNodePort)}
-				port3 := v1.ServicePort{Protocol: "TCP", NodePort: int32(anotherTCPNodePort)}
-				ports := []v1.ServicePort{port1, port2, port3}
-				spec := v1.ServiceSpec{Ports: ports}
-				labels := make(map[string]string)
-				labels["tcp-route-sync"] = strconv.Itoa(int(frontendPort))
-				objectMeta := v1.ObjectMeta{Labels: labels}
-				s1 := v1.Service{ObjectMeta: objectMeta, Spec: spec}
-				serviceList := []v1.Service{s1}
-				return true, &v1.ServiceList{Items: serviceList}, nil
-			})
+			tcpPort := int32(43)
+			serviceData := k8sServiceData{
+				serviceName: serviceName,
+				udpPort:     int32(42),
+				nodePort:    tcpPort,
+				labelName:   tcpServiceLabel,
+				labelVal:    tcpLabelPort,
+			}
+			addServiceReactor(clientset, []k8sServiceData{serviceData})
+			addNodeReactor(clientset, []string{nodeAddress})
+			addNamespaceReactor(clientset, []string{namespace})
+
 			endpoint := kubernetes.New(clientset, "")
 			routes, err := endpoint.TCP()
+
 			Expect(err).To(BeNil())
-			Expect(len(routes)).To(Equal(2))
+			Expect(len(routes)).To(Equal(1))
 			tcpRoute := routes[0]
 			Expect(tcpRoute.Frontend).To(Equal(frontendPort))
 			backends := tcpRoute.Backend
 			Expect(len(backends)).To(Equal(1))
-			Expect(backends[0].Port).To(Equal(tcpNodePort))
+			Expect(backends[0].Port).To(Equal(route.Port(tcpPort)))
 			Expect(tcpRoute.Backend[0].IP).To(Equal(nodeAddress))
-			Expect(routes[1].Backend[0].Port).To(Equal(anotherTCPNodePort))
 		})
 		It("skip routes for services with no NodePort", func() {
 			serviceData := k8sServiceData{
 				serviceName: serviceName,
 				nodePort:    int32(-1),
-				labelName:   "tcp-route-sync",
-				labelVal:    "1000",
+				labelName:   tcpServiceLabel,
+				labelVal:    tcpLabelPort,
 			}
 			addServiceReactor(clientset, []k8sServiceData{serviceData})
+			addNodeReactor(clientset, []string{nodeAddress})
+			addNamespaceReactor(clientset, []string{namespace})
+
 			endpoint := kubernetes.New(clientset, "")
 			routes, err := endpoint.TCP()
+
 			Expect(err).To(BeNil())
 			Expect(len(routes)).To(Equal(0))
 		})
 		It("skip TCP routes for services without proper label", func() {
+			addNodeReactor(clientset, []string{nodeAddress})
+			addNamespaceReactor(clientset, []string{namespace})
 			serviceData := k8sServiceData{
 				serviceName: serviceName,
-				nodePort:    int32(-1),
+				nodePort:    int32(nodePort),
 				labelName:   "noRouteSync",
 				labelVal:    "no",
 			}
 			addServiceReactor(clientset, []k8sServiceData{serviceData})
+
 			endpoint := kubernetes.New(clientset, "")
 			routes, err := endpoint.TCP()
+
 			Expect(err).To(BeNil())
 			Expect(len(routes)).To(Equal(0))
 		})
