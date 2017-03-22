@@ -101,7 +101,7 @@ var _ = Describe("Source", func() {
 			addNodeReactor(clientset, []string{nodeAddress})
 			addNamespaceReactor(clientset, []string{namespace})
 
-			endpoint := kubernetes.New(clientset, domainName)
+			endpoint := kubernetes.NewSource(clientset, domainName)
 			routes, err := endpoint.HTTP()
 
 			Expect(err).To(BeNil())
@@ -129,7 +129,7 @@ var _ = Describe("Source", func() {
 			addNodeReactor(clientset, []string{nodeAddress})
 			addNamespaceReactor(clientset, []string{namespace})
 
-			endpoint := kubernetes.New(clientset, domainName)
+			endpoint := kubernetes.NewSource(clientset, domainName)
 			routes, err := endpoint.HTTP()
 
 			Expect(err).To(BeNil())
@@ -146,7 +146,7 @@ var _ = Describe("Source", func() {
 			addNodeReactor(clientset, []string{nodeAddress})
 			addNamespaceReactor(clientset, []string{namespace, anotherNamespace})
 
-			endpoint := kubernetes.New(clientset, domainName)
+			endpoint := kubernetes.NewSource(clientset, domainName)
 			routes, err := endpoint.HTTP()
 
 			Expect(err).To(BeNil())
@@ -172,7 +172,7 @@ var _ = Describe("Source", func() {
 			addNodeReactor(clientset, []string{nodeAddress})
 			addNamespaceReactor(clientset, []string{namespace})
 
-			endpoint := kubernetes.New(clientset, domainName)
+			endpoint := kubernetes.NewSource(clientset, domainName)
 			routes, err := endpoint.HTTP()
 
 			Expect(err).To(BeNil())
@@ -192,7 +192,7 @@ var _ = Describe("Source", func() {
 			addNodeReactor(clientset, []string{nodeAddress})
 			addNamespaceReactor(clientset, []string{namespace})
 
-			endpoint := kubernetes.New(clientset, "")
+			endpoint := kubernetes.NewSource(clientset, "")
 			routes, err := endpoint.TCP()
 
 			Expect(err).To(BeNil())
@@ -220,7 +220,7 @@ var _ = Describe("Source", func() {
 			addNodeReactor(clientset, []string{nodeAddress})
 			addNamespaceReactor(clientset, []string{namespace})
 
-			endpoint := kubernetes.New(clientset, domainName)
+			endpoint := kubernetes.NewSource(clientset, domainName)
 			routes, err := endpoint.TCP()
 
 			Expect(err).To(BeNil())
@@ -237,7 +237,7 @@ var _ = Describe("Source", func() {
 			addNodeReactor(clientset, []string{nodeAddress})
 			addNamespaceReactor(clientset, []string{namespace, anotherNamespace})
 
-			endpoint := kubernetes.New(clientset, domainName)
+			endpoint := kubernetes.NewSource(clientset, domainName)
 			routes, err := endpoint.TCP()
 
 			Expect(err).To(BeNil())
@@ -256,7 +256,7 @@ var _ = Describe("Source", func() {
 			addNodeReactor(clientset, []string{nodeAddress})
 			addNamespaceReactor(clientset, []string{namespace})
 
-			endpoint := kubernetes.New(clientset, "")
+			endpoint := kubernetes.NewSource(clientset, "")
 			routes, err := endpoint.TCP()
 
 			Expect(err).To(BeNil())
@@ -275,7 +275,7 @@ var _ = Describe("Source", func() {
 			addNodeReactor(clientset, []string{nodeAddress})
 			addNamespaceReactor(clientset, []string{namespace})
 
-			endpoint := kubernetes.New(clientset, "")
+			endpoint := kubernetes.NewSource(clientset, "")
 			routes, err := endpoint.TCP()
 
 			Expect(err).To(BeNil())
@@ -298,7 +298,7 @@ var _ = Describe("Source", func() {
 			addNodeReactor(clientset, []string{nodeAddress})
 			addNamespaceReactor(clientset, []string{namespace})
 
-			endpoint := kubernetes.New(clientset, "")
+			endpoint := kubernetes.NewSource(clientset, "")
 			routes, err := endpoint.TCP()
 
 			Expect(err).To(BeNil())
@@ -315,7 +315,7 @@ var _ = Describe("Source", func() {
 			}
 			addServiceReactor(clientset, []k8sServiceData{serviceData})
 
-			endpoint := kubernetes.New(clientset, "")
+			endpoint := kubernetes.NewSource(clientset, "")
 			routes, err := endpoint.TCP()
 
 			Expect(err).To(BeNil())
