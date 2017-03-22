@@ -122,7 +122,7 @@ func (r *routing_api_router) buildRoutes(rg RouterGroup, routes []*route.TCP) []
 	tcpRoutes := []map[string]interface{}{}
 
 	for _, route := range routes {
-		for _, backend := range route.Backend {
+		for _, backend := range route.Backends {
 			tcpRoute := map[string]interface{}{
 				"router_group_guid": rg.Guid,
 				"port":              route.Frontend,

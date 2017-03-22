@@ -131,7 +131,7 @@ var _ = Describe("routing-api TCP router", func() {
 
 		routes := []*route.TCP{&route.TCP{
 			Frontend: 1010,
-			Backend: []route.Endpoint{
+			Backends: []route.Endpoint{
 				route.Endpoint{
 					IP:   "10.0.0.2",
 					Port: 5050,

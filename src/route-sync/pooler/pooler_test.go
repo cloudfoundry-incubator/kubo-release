@@ -31,9 +31,9 @@ var _ = Describe("Time-based Pooler", func() {
 
 		src := &routefakes.Source{}
 		tcpRoute := &route.TCP{Frontend: 8080,
-			Backend: []route.Endpoint{route.Endpoint{IP: "10.10.0.10", Port: 9090}}}
+			Backends: []route.Endpoint{route.Endpoint{IP: "10.10.0.10", Port: 9090}}}
 		httpRoute := &route.HTTP{Name: "foo.bar.com",
-			Backend: []route.Endpoint{route.Endpoint{IP: "10.10.0.10", Port: 9090}}}
+			Backends: []route.Endpoint{route.Endpoint{IP: "10.10.0.10", Port: 9090}}}
 
 		src.TCP_value = []*route.TCP{tcpRoute}
 		src.HTTP_value = []*route.HTTP{httpRoute}

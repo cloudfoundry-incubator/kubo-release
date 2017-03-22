@@ -34,11 +34,11 @@ var _ = Describe("Router", func() {
 			router = NewRouter(&msgBus, &tcpRouter)
 			httpRoutes = []*route.HTTP{
 				&route.HTTP{
-					Backend: []route.Endpoint{route.Endpoint{IP: "10.10.10.10", Port: 9090}},
-					Name:    "foobar.cf-app.com",
+					Backends: []route.Endpoint{route.Endpoint{IP: "10.10.10.10", Port: 9090}},
+					Name:     "foobar.cf-app.com",
 				},
 				&route.HTTP{
-					Backend: []route.Endpoint{
+					Backends: []route.Endpoint{
 						route.Endpoint{IP: "10.10.10.10", Port: 9090},
 						route.Endpoint{IP: "10.2.2.2", Port: 8080},
 					},
@@ -48,11 +48,11 @@ var _ = Describe("Router", func() {
 
 			tcpRoutes = []*route.TCP{
 				&route.TCP{
-					Backend:  []route.Endpoint{route.Endpoint{IP: "10.10.10.10", Port: 9090}},
+					Backends: []route.Endpoint{route.Endpoint{IP: "10.10.10.10", Port: 9090}},
 					Frontend: 1010,
 				},
 				&route.TCP{
-					Backend: []route.Endpoint{
+					Backends: []route.Endpoint{
 						route.Endpoint{IP: "10.10.10.10", Port: 9090},
 						route.Endpoint{IP: "10.2.2.2", Port: 8080},
 					},

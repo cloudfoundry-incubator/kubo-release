@@ -49,7 +49,7 @@ func (ts *router) tcpRouterGroup() (tcp.RouterGroup, error) {
 
 func (ts *router) HTTP(routes []*route.HTTP) error {
 	for _, httpRoute := range routes {
-		for _, endpoint := range httpRoute.Backend {
+		for _, endpoint := range httpRoute.Backends {
 			ts.bus.SendMessage("router.register", endpoint.IP, config.Route{
 				Port: int(endpoint.Port),
 				URIs: []string{httpRoute.Name},
