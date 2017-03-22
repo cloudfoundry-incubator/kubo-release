@@ -48,7 +48,7 @@ func (e *endpoint) TCP() ([]*route.TCP, error) {
 				frontendPort := route.Port(portLabel)
 				nodePort := route.Port(port.NodePort)
 				backends := getBackends(ips, nodePort)
-				tcp := &route.TCP{Frontend: frontendPort, Backend: backends}
+				tcp := &route.TCP{Frontend: frontendPort, Backends: backends}
 				routes = append(routes, tcp)
 			}
 		}
@@ -83,7 +83,7 @@ func (e *endpoint) HTTP() ([]*route.HTTP, error) {
 				backends := getBackends(ips, nodePort)
 				routeName := service.ObjectMeta.Labels["http-route-sync"]
 				fullName := routeName + "." + e.cfDomain
-				http := &route.HTTP{Name: fullName, Backend: backends}
+				http := &route.HTTP{Name: fullName, Backends: backends}
 				routes = append(routes, http)
 			}
 		}

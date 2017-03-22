@@ -108,10 +108,10 @@ var _ = Describe("Source", func() {
 			Expect(len(routes)).To(Equal(1))
 			httpRoute := routes[0]
 			Expect(httpRoute.Name).To(Equal(httpRouteName + "." + domainName))
-			backends := httpRoute.Backend
+			backends := httpRoute.Backends
 			Expect(len(backends)).To(Equal(1))
 			Expect(backends[0].Port).To(Equal(nodePort))
-			Expect(httpRoute.Backend[0].IP).To(Equal(nodeAddress))
+			Expect(httpRoute.Backends[0].IP).To(Equal(nodeAddress))
 		})
 		It("returns list multiple of HTTP routes", func() {
 			serviceDataList := []k8sServiceData{}
@@ -153,10 +153,10 @@ var _ = Describe("Source", func() {
 			Expect(len(routes)).To(Equal(2))
 			ns1Route := routes[0]
 			Expect(ns1Route.Name).To(Equal(httpRouteName + "." + domainName))
-			backends := ns1Route.Backend
+			backends := ns1Route.Backends
 			Expect(len(backends)).To(Equal(1))
 			Expect(backends[0].Port).To(Equal(nodePort))
-			Expect(ns1Route.Backend[0].IP).To(Equal(nodeAddress))
+			Expect(ns1Route.Backends[0].IP).To(Equal(nodeAddress))
 			ns2Route := routes[1]
 			Expect(ns2Route.Name).To(Equal(httpRouteName + "." + domainName))
 		})
@@ -199,10 +199,10 @@ var _ = Describe("Source", func() {
 			Expect(len(routes)).To(Equal(1))
 			tcpRoute := routes[0]
 			Expect(tcpRoute.Frontend).To(Equal(frontendPort))
-			backends := tcpRoute.Backend
+			backends := tcpRoute.Backends
 			Expect(len(backends)).To(Equal(1))
 			Expect(backends[0].Port).To(Equal(nodePort))
-			Expect(tcpRoute.Backend[0].IP).To(Equal(nodeAddress))
+			Expect(tcpRoute.Backends[0].IP).To(Equal(nodeAddress))
 		})
 		It("returns list multiple of TCP routes", func() {
 			serviceDataList := []k8sServiceData{}
@@ -244,10 +244,10 @@ var _ = Describe("Source", func() {
 			Expect(len(routes)).To(Equal(2))
 			ns1Route := routes[0]
 			Expect(ns1Route.Frontend).To(Equal(frontendPort))
-			backends := ns1Route.Backend
+			backends := ns1Route.Backends
 			Expect(len(backends)).To(Equal(1))
 			Expect(backends[0].Port).To(Equal(nodePort))
-			Expect(ns1Route.Backend[0].IP).To(Equal(nodeAddress))
+			Expect(ns1Route.Backends[0].IP).To(Equal(nodeAddress))
 			ns2Route := routes[1]
 			Expect(ns2Route.Frontend).To(Equal(frontendPort))
 		})
@@ -282,10 +282,10 @@ var _ = Describe("Source", func() {
 			Expect(len(routes)).To(Equal(1))
 			tcpRoute := routes[0]
 			Expect(tcpRoute.Frontend).To(Equal(frontendPort))
-			backends := tcpRoute.Backend
+			backends := tcpRoute.Backends
 			Expect(len(backends)).To(Equal(1))
 			Expect(backends[0].Port).To(Equal(route.Port(tcpPort)))
-			Expect(tcpRoute.Backend[0].IP).To(Equal(nodeAddress))
+			Expect(tcpRoute.Backends[0].IP).To(Equal(nodeAddress))
 		})
 		It("skip routes for services with no NodePort", func() {
 			serviceData := k8sServiceData{

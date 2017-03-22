@@ -11,13 +11,13 @@ type Endpoint struct {
 // TCP is a route definition for TCP traffic
 type TCP struct {
 	Frontend Port
-	Backend  []Endpoint
+	Backends []Endpoint
 }
 
 // HTTP is a route definition for HTTP traffic
 type HTTP struct {
-	Name    string
-	Backend []Endpoint
+	Name     string
+	Backends []Endpoint
 }
 
 //go:generate counterfeiter . Source
