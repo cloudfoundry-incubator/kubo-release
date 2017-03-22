@@ -14,7 +14,7 @@ type endpoint struct {
 }
 
 // New creates a route.Source for a given Kubernetes instance
-func New(clientset k8s.Interface, cfDomain string) route.Source {
+func NewSource(clientset k8s.Interface, cfDomain string) route.Source {
 	return &endpoint{clientset: clientset, cfDomain: cfDomain}
 }
 
