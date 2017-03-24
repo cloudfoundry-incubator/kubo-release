@@ -17,14 +17,14 @@ type Pooler interface {
 
 type timeBased struct {
 	sync.Mutex
-	duration time.Duration
+	interval time.Duration
 	running  bool
 	logger   lager.Logger
 }
 
-// ByTime returns a Pooler that refreshes every duration
-func ByTime(duration time.Duration, logger lager.Logger) Pooler {
-	return &timeBased{duration: duration, running: false, logger: logger}
+// ByTime returns a Pooler that refreshes every interval
+func ByTime(interval time.Duration, logger lager.Logger) Pooler {
+	return &timeBased{interval: interval, running: false, logger: logger}
 }
 
 func (tb *timeBased) tick(src route.Source, router route.Router) {
@@ -63,7 +63,7 @@ func (tb *timeBased) Start(src route.Source, router route.Router) chan<- struct{
 				return
 			case <-timer:
 				tb.tick(src, router)
-				timer = time.Tick(tb.duration)
+				timer = time.Tick(tb.interval)
 			}
 		}
 	}()
