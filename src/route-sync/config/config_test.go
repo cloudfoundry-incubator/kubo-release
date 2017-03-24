@@ -23,12 +23,37 @@ var _ = Describe("Config", func() {
 	It("returns a valid config frm the enviornment", func() {
 		c, err := NewConfig()
 
-		Expect(err).To(BeNil())
+		Expect(err).NotTo(HaveOccurred())
 		Expect(c.NatsServers).To(HaveLen(1))
 
 		natsServer := c.NatsServers[0]
 		Expect(natsServer.Host).To(Equal("10.0.1.8:4222"))
 		Expect(natsServer.User).To(Equal("nats"))
 		Expect(natsServer.Password).To(Equal("natspass"))
+	})
+
+
+	It("returns an error when nats server is not set", func() {
+		os.Setenv("ROUTESYNC_NATS_SERVERS", "[]")
+		cfg, err := NewConfig()
+		Expect(err).To(HaveOccurred())
+		Expect(err.Error()).To(ContainSubstring("no NATS servers"))
+		Expect(cfg).To(BeNil())
+	})
+
+	It("returns an error when nats server is not a JSON object", func() {
+		os.Setenv("ROUTESYNC_NATS_SERVERS", "")
+		cfg, err := NewConfig()
+		Expect(err).To(HaveOccurred())
+		Expect(err.Error()).To(ContainSubstring("JSON"))
+		Expect(cfg).To(BeNil())
+	})
+
+	It("Produces a UAA config", func() {
+		cfg, _ := NewConfig()
+		Expect(cfg.UAAConfig().ClientName).To(Equal("routeUser"))
+		Expect(cfg.UAAConfig().ClientSecret).To(Equal("aabbcc"))
+		Expect(cfg.UAAConfig().UaaEndpoint).To(Equal("https://uaa.cf.example.org"))
+		Expect(cfg.UAAConfig().SkipVerification).To(BeTrue())
 	})
 })
