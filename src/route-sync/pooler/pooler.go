@@ -9,6 +9,8 @@ import (
 	"code.cloudfoundry.org/lager"
 )
 
+//go:generate counterfeiter . Pooler
+
 // Pooler is responsible for querying a route.Source and updating a route.Router
 type Pooler interface {
 	Start(route.Source, route.Router) (done chan<- struct{})

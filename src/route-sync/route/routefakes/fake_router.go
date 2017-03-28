@@ -4,15 +4,27 @@ package routefakes
 import (
 	"route-sync/route"
 	"sync"
+
+	"code.cloudfoundry.org/lager"
+	cfconfig "code.cloudfoundry.org/route-registrar/config"
 )
 
 type FakeRouter struct {
+	ConnectStub        func(natsServers []cfconfig.MessageBusServer, logger lager.Logger)
+	connectMutex       sync.RWMutex
+	connectArgsForCall []struct {
+		natsServers []cfconfig.MessageBusServer
+		logger      lager.Logger
+	}
 	TCPStub        func(routes []*route.TCP) error
 	tCPMutex       sync.RWMutex
 	tCPArgsForCall []struct {
 		routes []*route.TCP
 	}
 	tCPReturns struct {
+		result1 error
+	}
+	tCPReturnsOnCall map[int]struct {
 		result1 error
 	}
 	HTTPStub        func(routes []*route.HTTP) error
@@ -23,8 +35,41 @@ type FakeRouter struct {
 	hTTPReturns struct {
 		result1 error
 	}
+	hTTPReturnsOnCall map[int]struct {
+		result1 error
+	}
 	invocations      map[string][][]interface{}
 	invocationsMutex sync.RWMutex
+}
+
+func (fake *FakeRouter) Connect(natsServers []cfconfig.MessageBusServer, logger lager.Logger) {
+	var natsServersCopy []cfconfig.MessageBusServer
+	if natsServers != nil {
+		natsServersCopy = make([]cfconfig.MessageBusServer, len(natsServers))
+		copy(natsServersCopy, natsServers)
+	}
+	fake.connectMutex.Lock()
+	fake.connectArgsForCall = append(fake.connectArgsForCall, struct {
+		natsServers []cfconfig.MessageBusServer
+		logger      lager.Logger
+	}{natsServersCopy, logger})
+	fake.recordInvocation("Connect", []interface{}{natsServersCopy, logger})
+	fake.connectMutex.Unlock()
+	if fake.ConnectStub != nil {
+		fake.ConnectStub(natsServers, logger)
+	}
+}
+
+func (fake *FakeRouter) ConnectCallCount() int {
+	fake.connectMutex.RLock()
+	defer fake.connectMutex.RUnlock()
+	return len(fake.connectArgsForCall)
+}
+
+func (fake *FakeRouter) ConnectArgsForCall(i int) ([]cfconfig.MessageBusServer, lager.Logger) {
+	fake.connectMutex.RLock()
+	defer fake.connectMutex.RUnlock()
+	return fake.connectArgsForCall[i].natsServers, fake.connectArgsForCall[i].logger
 }
 
 func (fake *FakeRouter) TCP(routes []*route.TCP) error {
@@ -34,6 +79,7 @@ func (fake *FakeRouter) TCP(routes []*route.TCP) error {
 		copy(routesCopy, routes)
 	}
 	fake.tCPMutex.Lock()
+	ret, specificReturn := fake.tCPReturnsOnCall[len(fake.tCPArgsForCall)]
 	fake.tCPArgsForCall = append(fake.tCPArgsForCall, struct {
 		routes []*route.TCP
 	}{routesCopy})
@@ -41,9 +87,11 @@ func (fake *FakeRouter) TCP(routes []*route.TCP) error {
 	fake.tCPMutex.Unlock()
 	if fake.TCPStub != nil {
 		return fake.TCPStub(routes)
-	} else {
-		return fake.tCPReturns.result1
 	}
+	if specificReturn {
+		return ret.result1
+	}
+	return fake.tCPReturns.result1
 }
 
 func (fake *FakeRouter) TCPCallCount() int {
@@ -65,6 +113,18 @@ func (fake *FakeRouter) TCPReturns(result1 error) {
 	}{result1}
 }
 
+func (fake *FakeRouter) TCPReturnsOnCall(i int, result1 error) {
+	fake.TCPStub = nil
+	if fake.tCPReturnsOnCall == nil {
+		fake.tCPReturnsOnCall = make(map[int]struct {
+			result1 error
+		})
+	}
+	fake.tCPReturnsOnCall[i] = struct {
+		result1 error
+	}{result1}
+}
+
 func (fake *FakeRouter) HTTP(routes []*route.HTTP) error {
 	var routesCopy []*route.HTTP
 	if routes != nil {
@@ -72,6 +132,7 @@ func (fake *FakeRouter) HTTP(routes []*route.HTTP) error {
 		copy(routesCopy, routes)
 	}
 	fake.hTTPMutex.Lock()
+	ret, specificReturn := fake.hTTPReturnsOnCall[len(fake.hTTPArgsForCall)]
 	fake.hTTPArgsForCall = append(fake.hTTPArgsForCall, struct {
 		routes []*route.HTTP
 	}{routesCopy})
@@ -79,9 +140,11 @@ func (fake *FakeRouter) HTTP(routes []*route.HTTP) error {
 	fake.hTTPMutex.Unlock()
 	if fake.HTTPStub != nil {
 		return fake.HTTPStub(routes)
-	} else {
-		return fake.hTTPReturns.result1
 	}
+	if specificReturn {
+		return ret.result1
+	}
+	return fake.hTTPReturns.result1
 }
 
 func (fake *FakeRouter) HTTPCallCount() int {
@@ -103,9 +166,23 @@ func (fake *FakeRouter) HTTPReturns(result1 error) {
 	}{result1}
 }
 
+func (fake *FakeRouter) HTTPReturnsOnCall(i int, result1 error) {
+	fake.HTTPStub = nil
+	if fake.hTTPReturnsOnCall == nil {
+		fake.hTTPReturnsOnCall = make(map[int]struct {
+			result1 error
+		})
+	}
+	fake.hTTPReturnsOnCall[i] = struct {
+		result1 error
+	}{result1}
+}
+
 func (fake *FakeRouter) Invocations() map[string][][]interface{} {
 	fake.invocationsMutex.RLock()
 	defer fake.invocationsMutex.RUnlock()
+	fake.connectMutex.RLock()
+	defer fake.connectMutex.RUnlock()
 	fake.tCPMutex.RLock()
 	defer fake.tCPMutex.RUnlock()
 	fake.hTTPMutex.RLock()
