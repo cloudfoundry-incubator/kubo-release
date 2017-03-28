@@ -3,7 +3,8 @@ name: kubernetes-system-specs
 
 templates:
   bin/post-deploy: bin/post-deploy
-  config/kubedns.yml: config/kubedns.yml
+  config/kubedns-svc.yml: config/kubedns-svc.yml
+  config/kubedns-rc.yml: config/kubedns-rc.yml
   config/influxdb.yml: config/influxdb.yml
   config/heapster.yml.erb: config/heapster.yml
   config/kubernetes-dashboard.yml: config/kubernetes-dashboard.yml
