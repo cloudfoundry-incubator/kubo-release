@@ -1,15 +1,20 @@
 package cloudfoundry_test
 
 import (
+	"errors"
 	. "route-sync/cloudfoundry"
 	"route-sync/cloudfoundry/tcp"
 	tcpfakes "route-sync/cloudfoundry/tcp/fakes"
 	"route-sync/route"
 
+	"code.cloudfoundry.org/lager"
+	"code.cloudfoundry.org/lager/lagertest"
+	"code.cloudfoundry.org/route-registrar/config"
 	messagebusfakes "code.cloudfoundry.org/route-registrar/messagebus/fakes"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	"github.com/onsi/gomega/gbytes"
 )
 
 var _ = Describe("Router", func() {
@@ -20,8 +25,10 @@ var _ = Describe("Router", func() {
 			msgBus     messagebusfakes.FakeMessageBus
 			httpRoutes []*route.HTTP
 			tcpRoutes  []*route.TCP
+			logger     lager.Logger
 		)
 		BeforeEach(func() {
+			logger = lagertest.NewTestLogger("")
 			msgBus = messagebusfakes.FakeMessageBus{}
 			tcpRouter = tcpfakes.FakeRouter{}
 			tcpRouter.RouterGroupsResult = []tcp.RouterGroup{tcp.RouterGroup{
@@ -88,6 +95,20 @@ var _ = Describe("Router", func() {
 
 			Expect(tcpRouter.CreateRoutesLastRoutes).To(ConsistOf(tcpRoutes[0], tcpRoutes[1]))
 			Expect(tcpRouter.CreateRoutesLastRouterGroup).To(Equal(tcpRouter.RouterGroupsResult[0]))
+		})
+		It("connects to nats", func() {
+			router.Connect(nil, logger)
+			Expect(msgBus.ConnectCallCount()).To(Equal(1))
+		})
+		It("panics when failing to connect to nats", func() {
+			msgBus.ConnectStub = func([]config.MessageBusServer) error {
+				return errors.New("Failed to connect")
+			}
+			defer func() {
+				recover()
+				Eventually(logger).Should(gbytes.Say("connecting to NATS"))
+			}()
+			router.Connect(nil, logger)
 		})
 	})
 })

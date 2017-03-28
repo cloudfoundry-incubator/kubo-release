@@ -5,7 +5,9 @@ import (
 	"route-sync/cloudfoundry/tcp"
 	"route-sync/route"
 
+	"code.cloudfoundry.org/lager"
 	"code.cloudfoundry.org/route-registrar/config"
+	cfconfig "code.cloudfoundry.org/route-registrar/config"
 
 	"github.com/cloudfoundry/route-registrar/messagebus"
 )
@@ -22,6 +24,13 @@ type router struct {
 // This object wraps the CloudFoundry HTTP (gorouter) and TCP (routing-api) routers
 func NewRouter(bus messagebus.MessageBus, tcpRouter tcp.Router) route.Router {
 	return &router{bus: bus, tcpRouter: tcpRouter}
+}
+
+func (ts *router) Connect(natsServers []cfconfig.MessageBusServer, logger lager.Logger) {
+	err := ts.bus.Connect(natsServers)
+	if err != nil {
+		logger.Fatal("connecting to NATS", err)
+	}
 }
 
 func (ts *router) TCP(routes []*route.TCP) error {

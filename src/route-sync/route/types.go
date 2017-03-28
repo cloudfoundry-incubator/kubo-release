@@ -1,5 +1,10 @@
 package route
 
+import (
+	"code.cloudfoundry.org/lager"
+	cfconfig "code.cloudfoundry.org/route-registrar/config"
+)
+
 type Port int
 
 // Endpoint defines a given TCP Endpoint
@@ -32,6 +37,7 @@ type Source interface {
 
 // Router consumes routes
 type Router interface {
+	Connect(natsServers []cfconfig.MessageBusServer, logger lager.Logger)
 	TCP(routes []*TCP) error
 	HTTP(routes []*HTTP) error
 }
