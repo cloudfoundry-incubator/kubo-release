@@ -5,11 +5,12 @@ kubectl="/var/vcap/packages/kubernetes/bin/kubectl --kubeconfig=/var/vcap/jobs/k
 
 apply_spec() {
   local spec="$1"
-  ${kubectl} apply -f ${spec_dir}/${spec} || echo "${spec} was already deployed"
+  ${kubectl} apply -f "${spec_dir}/${spec}" || echo "${spec} was already deployed"
 }
 
 deploy_specs() {
-  apply_spec "kubedns.yml"
+  apply_spec "kubedns-svc.yml"
+  apply_spec "kubedns-rc.yml"
   apply_spec "influxdb.yml"
   apply_spec "heapster.yml"
   apply_spec "kubernetes-dashboard.yml"
