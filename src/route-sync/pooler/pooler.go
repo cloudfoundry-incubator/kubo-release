@@ -1,6 +1,7 @@
 package pooler
 
 import (
+	"context"
 	"fmt"
 	"route-sync/route"
 	"sync"
@@ -13,20 +14,18 @@ import (
 
 // Pooler is responsible for querying a route.Source and updating a route.Router
 type Pooler interface {
-	Start(route.Source, route.Router) (done chan<- struct{})
-	IsRunning() bool
+	Run(context.Context, route.Source, route.Router)
 }
 
 type timeBased struct {
 	sync.Mutex
 	interval time.Duration
-	running  bool
 	logger   lager.Logger
 }
 
 // ByTime returns a Pooler that refreshes every interval
 func ByTime(interval time.Duration, logger lager.Logger) Pooler {
-	return &timeBased{interval: interval, running: false, logger: logger}
+	return &timeBased{interval: interval, logger: logger}
 }
 
 func (tb *timeBased) tick(src route.Source, router route.Router) {
@@ -52,37 +51,16 @@ func (tb *timeBased) tick(src route.Source, router route.Router) {
 	})
 }
 
-func (tb *timeBased) Start(src route.Source, router route.Router) chan<- struct{} {
-	done := make(chan struct{})
-	go func() {
-		tb.setRunning(true)
-		timer := time.Tick(1)
+func (tb *timeBased) Run(ctx context.Context, src route.Source, router route.Router) {
+	timer := time.Tick(1)
 
-		for {
-			select {
-			case <-done:
-				tb.setRunning(false)
-				return
-			case <-timer:
-				tb.tick(src, router)
-				timer = time.Tick(tb.interval)
-			}
+	for {
+		select {
+		case <-ctx.Done():
+			return
+		case <-timer:
+			tb.tick(src, router)
+			timer = time.Tick(tb.interval)
 		}
-	}()
-
-	return done
-}
-
-func (tb *timeBased) IsRunning() bool {
-	tb.Lock()
-	defer tb.Unlock()
-
-	return tb.running
-}
-
-func (tb *timeBased) setRunning(to bool) {
-	tb.Lock()
-	defer tb.Unlock()
-
-	tb.running = to
+	}
 }

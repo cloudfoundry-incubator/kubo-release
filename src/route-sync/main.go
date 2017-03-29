@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"os"
 	"route-sync/application"
 	"route-sync/config"
@@ -21,7 +22,8 @@ func main() {
 	router := application.GetCloudFoundryRouter(cfg, logger)
 
 	app := application.NewApplication(logger, applicationPooler, src, router)
-	app.Run(1, cfg)
+	ctx := context.Background()
+	app.Run(ctx, application.InterruptWaitFunc, cfg)
 }
 
 func loadConfig(logger lager.Logger) *config.Config {

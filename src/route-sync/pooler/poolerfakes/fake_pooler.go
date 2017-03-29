@@ -2,97 +2,55 @@
 package poolerfakes
 
 import (
+	"context"
 	"route-sync/pooler"
 	"route-sync/route"
 	"sync"
 )
 
 type FakePooler struct {
-	StartStub        func(route.Source, route.Router) (done chan<- struct{})
-	startMutex       sync.RWMutex
-	startArgsForCall []struct {
-		arg1 route.Source
-		arg2 route.Router
-	}
-	startReturns struct {
-		result1 chan<- struct{}
-	}
-	IsRunningStub        func() bool
-	isRunningMutex       sync.RWMutex
-	isRunningArgsForCall []struct{}
-	isRunningReturns     struct {
-		result1 bool
+	RunStub        func(context.Context, route.Source, route.Router)
+	runMutex       sync.RWMutex
+	runArgsForCall []struct {
+		arg1 context.Context
+		arg2 route.Source
+		arg3 route.Router
 	}
 	invocations      map[string][][]interface{}
 	invocationsMutex sync.RWMutex
 }
 
-func (fake *FakePooler) Start(arg1 route.Source, arg2 route.Router) (done chan<- struct{}) {
-	fake.startMutex.Lock()
-	fake.startArgsForCall = append(fake.startArgsForCall, struct {
-		arg1 route.Source
-		arg2 route.Router
-	}{arg1, arg2})
-	fake.recordInvocation("Start", []interface{}{arg1, arg2})
-	fake.startMutex.Unlock()
-	if fake.StartStub != nil {
-		return fake.StartStub(arg1, arg2)
-	} else {
-		return fake.startReturns.result1
+func (fake *FakePooler) Run(arg1 context.Context, arg2 route.Source, arg3 route.Router) {
+	fake.runMutex.Lock()
+	fake.runArgsForCall = append(fake.runArgsForCall, struct {
+		arg1 context.Context
+		arg2 route.Source
+		arg3 route.Router
+	}{arg1, arg2, arg3})
+	fake.recordInvocation("Run", []interface{}{arg1, arg2, arg3})
+	fake.runMutex.Unlock()
+	if fake.RunStub != nil {
+		fake.RunStub(arg1, arg2, arg3)
 	}
 }
 
-func (fake *FakePooler) StartCallCount() int {
-	fake.startMutex.RLock()
-	defer fake.startMutex.RUnlock()
-	return len(fake.startArgsForCall)
+func (fake *FakePooler) RunCallCount() int {
+	fake.runMutex.RLock()
+	defer fake.runMutex.RUnlock()
+	return len(fake.runArgsForCall)
 }
 
-func (fake *FakePooler) StartArgsForCall(i int) (route.Source, route.Router) {
-	fake.startMutex.RLock()
-	defer fake.startMutex.RUnlock()
-	return fake.startArgsForCall[i].arg1, fake.startArgsForCall[i].arg2
-}
-
-func (fake *FakePooler) StartReturns(result1 chan<- struct{}) {
-	fake.StartStub = nil
-	fake.startReturns = struct {
-		result1 chan<- struct{}
-	}{result1}
-}
-
-func (fake *FakePooler) IsRunning() bool {
-	fake.isRunningMutex.Lock()
-	fake.isRunningArgsForCall = append(fake.isRunningArgsForCall, struct{}{})
-	fake.recordInvocation("IsRunning", []interface{}{})
-	fake.isRunningMutex.Unlock()
-	if fake.IsRunningStub != nil {
-		return fake.IsRunningStub()
-	} else {
-		return fake.isRunningReturns.result1
-	}
-}
-
-func (fake *FakePooler) IsRunningCallCount() int {
-	fake.isRunningMutex.RLock()
-	defer fake.isRunningMutex.RUnlock()
-	return len(fake.isRunningArgsForCall)
-}
-
-func (fake *FakePooler) IsRunningReturns(result1 bool) {
-	fake.IsRunningStub = nil
-	fake.isRunningReturns = struct {
-		result1 bool
-	}{result1}
+func (fake *FakePooler) RunArgsForCall(i int) (context.Context, route.Source, route.Router) {
+	fake.runMutex.RLock()
+	defer fake.runMutex.RUnlock()
+	return fake.runArgsForCall[i].arg1, fake.runArgsForCall[i].arg2, fake.runArgsForCall[i].arg3
 }
 
 func (fake *FakePooler) Invocations() map[string][][]interface{} {
 	fake.invocationsMutex.RLock()
 	defer fake.invocationsMutex.RUnlock()
-	fake.startMutex.RLock()
-	defer fake.startMutex.RUnlock()
-	fake.isRunningMutex.RLock()
-	defer fake.isRunningMutex.RUnlock()
+	fake.runMutex.RLock()
+	defer fake.runMutex.RUnlock()
 	return fake.invocations
 }
 
