@@ -1,7 +1,6 @@
 package cloudfoundry
 
 import (
-	"fmt"
 	"route-sync/cloudfoundry/tcp"
 	"route-sync/route"
 
@@ -10,6 +9,7 @@ import (
 	cfconfig "code.cloudfoundry.org/route-registrar/config"
 
 	"github.com/cloudfoundry/route-registrar/messagebus"
+	"errors"
 )
 
 const privateInstanceID = "kubo-route-sync"
@@ -50,7 +50,7 @@ func (ts *router) tcpRouterGroup() (tcp.RouterGroup, error) {
 	}
 
 	if len(routerGroups) != 1 {
-		return tcp.RouterGroup{}, fmt.Errorf("NYI: Multiple router groups not supported")
+		return tcp.RouterGroup{}, errors.New("NYI: Multiple router groups not supported")
 	}
 
 	return routerGroups[0], nil
