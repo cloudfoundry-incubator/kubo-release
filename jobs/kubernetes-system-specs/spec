@@ -3,12 +3,16 @@ name: kubernetes-system-specs
 
 templates:
   bin/post-deploy: bin/post-deploy
-  config/kubedns.yml: config/kubedns.yml
+  bin/ensure-specs-running: bin/ensure-specs-running
+  config/kubedns-svc.yml: config/kubedns-svc.yml
+  config/kubedns-rc.yml: config/kubedns-rc.yml
   config/influxdb.yml: config/influxdb.yml
   config/heapster.yml.erb: config/heapster.yml
   config/kubernetes-dashboard.yml: config/kubernetes-dashboard.yml
 
-packages: []
+packages:
+- jq
+- kubernetes
 
 properties:
   kubernetes-api-url:

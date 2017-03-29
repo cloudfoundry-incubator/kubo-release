@@ -27,10 +27,10 @@ TIMEOUT=120
 
 if timeout "$TIMEOUT" /var/vcap/jobs/kubelet/bin/ensure_kubelet_up_and_running
 then
+  ${kubectl} uncordon ${node_name}
+  ${kubectl} get nodes ${node_name} | grep -e ' Ready '
   echo "kubelet post-start checks succeeded"
 else
   echo "kubelet failed post-start checks after $TIMEOUT seconds"
   exit 1
 fi
-
-${kubectl} uncordon ${node_name}
