@@ -29,7 +29,7 @@ func NewSourceBuilder(logger lager.Logger,
 	}
 }
 
-func (builder *SourceBuilder) GetSource(cfg *config.Config) route.Source {
+func (builder *SourceBuilder) CreateSource(cfg *config.Config) route.Source {
 	kubecfg, err := builder.buildConfig("", cfg.KubeConfigPath)
 	if err != nil {
 		builder.logger.Fatal("building config from flags", err)
