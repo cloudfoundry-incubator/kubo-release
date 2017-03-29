@@ -17,7 +17,7 @@ var _ = Describe("Time-based Pooler", func() {
 	It("starts and stops", func() {
 		pool := pooler.ByTime(time.Duration(0), lager.NewLogger("pooler_test"))
 
-		running := func() bool { return pool.Running() }
+		running := func() bool { return pool.IsRunning() }
 
 		done := pool.Start(&routefakes.FakeSource{}, &routefakes.FakeRouter{})
 
