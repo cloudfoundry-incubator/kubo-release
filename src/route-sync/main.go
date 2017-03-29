@@ -16,11 +16,11 @@ func main() {
 
 	cfg := loadConfig(logger)
 
-	pooler := pooler.ByTime(time.Duration(30*time.Second), logger)
+	applicationPooler := pooler.ByTime(time.Duration(30*time.Second), logger)
 	src := application.GetKubernetesSource(cfg, logger)
 	router := application.GetCloudFoundryRouter(cfg, logger)
 
-	app := application.NewApplication(logger, pooler, src, router)
+	app := application.NewApplication(logger, applicationPooler, src, router)
 	app.Run(1, cfg)
 }
 
