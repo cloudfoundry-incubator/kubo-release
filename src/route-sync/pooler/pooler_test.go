@@ -1,32 +1,20 @@
 package pooler_test
 
 import (
+	"context"
 	"route-sync/pooler"
 	"route-sync/route"
 	"time"
 
 	"code.cloudfoundry.org/lager"
 
+	"route-sync/route/routefakes"
+
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
-	"route-sync/route/routefakes"
 )
 
 var _ = Describe("Time-based Pooler", func() {
-
-	It("starts and stops", func() {
-		pool := pooler.ByTime(time.Duration(0), lager.NewLogger("pooler_test"))
-
-		running := func() bool { return pool.IsRunning() }
-
-		done := pool.Start(&routefakes.FakeSource{}, &routefakes.FakeRouter{})
-
-
-
-		Eventually(running).Should(BeTrue())
-		done <- struct{}{}
-		Eventually(running).Should(BeFalse())
-	})
 
 	It("pools and passes", func() {
 		pool := pooler.ByTime(time.Duration(0), lager.NewLogger("pooler_test"))
@@ -41,17 +29,12 @@ var _ = Describe("Time-based Pooler", func() {
 		src.HTTPReturns([]*route.HTTP{httpRoute}, nil)
 		router := &routefakes.FakeRouter{}
 
-
-		done := pool.Start(src, router)
+		ctx, cancelFunc := context.WithCancel(context.Background())
+		defer cancelFunc()
+		go pool.Run(ctx, src, router)
 
 		Eventually(func() bool {
 			return router.HTTPCallCount() > 0 && router.TCPCallCount() > 0
 		}).Should(BeTrue())
-
-		done <- struct{}{}
-
-
-		Expect(src.HTTPCallCount() > 0).Should(BeTrue())
-		Expect(src.TCPCallCount() > 0).Should(BeTrue())
 	})
 })

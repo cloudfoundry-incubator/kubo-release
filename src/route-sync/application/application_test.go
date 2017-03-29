@@ -1,9 +1,13 @@
 package application
 
 import (
+	"context"
 	"route-sync/config"
 	"route-sync/pooler/poolerfakes"
+	"route-sync/route"
 	"route-sync/route/routefakes"
+	"sync"
+
 	cfConfig "code.cloudfoundry.org/route-registrar/config"
 
 	"code.cloudfoundry.org/lager"
@@ -15,11 +19,11 @@ import (
 
 var _ = Describe("Application", func() {
 	var (
-		logger lager.Logger
-		pooler *poolerfakes.FakePooler
-		source *routefakes.FakeSource
-		router *routefakes.FakeRouter
-		cfg    = &config.Config{
+		logger     lager.Logger
+		poolerFake *poolerfakes.FakePooler
+		sourceFake *routefakes.FakeSource
+		routerFake *routefakes.FakeRouter
+		cfg        = &config.Config{
 			RawNatsServers:            "[{\"Host\": \"host\",\"User\": \"user\", \"Password\": \"password\"}]",
 			NatsServers:               []cfConfig.MessageBusServer{{Host: "host", User: "user", Password: "password"}},
 			RoutingApiUrl:             "https://api.cf.example.org",
@@ -33,35 +37,35 @@ var _ = Describe("Application", func() {
 	)
 	BeforeEach(func() {
 		logger = lagertest.NewTestLogger("")
-		pooler = &poolerfakes.FakePooler{}
-		source = &routefakes.FakeSource{}
-		router = &routefakes.FakeRouter{}
+		poolerFake = &poolerfakes.FakePooler{}
+		sourceFake = &routefakes.FakeSource{}
+		routerFake = &routefakes.FakeRouter{}
 	})
 	Context("Application", func() {
 		It("runs the Application and eventually finishes", func() {
-			app := NewApplication(logger, pooler, source, router)
-			app.Run(0, cfg)
+			app := NewApplication(logger, poolerFake, sourceFake, routerFake)
+			app.Run(context.Background(), nil, cfg)
 
 			Eventually(logger).Should(gbytes.Say("exiting"))
 		})
 
 		It("starts the pooler", func() {
-			app := NewApplication(logger, pooler, source, router)
-			app.Run(0, cfg)
+			app := NewApplication(logger, poolerFake, sourceFake, routerFake)
+			app.Run(context.Background(), nil, cfg)
 
-			Expect(pooler.StartCallCount()).To(Equal(1))
+			Expect(poolerFake.RunCallCount()).To(Equal(1))
 
-			startSource, startRouter := pooler.StartArgsForCall(0)
-			Expect(startSource).To(BeEquivalentTo(source))
-			Expect(startRouter).To(BeEquivalentTo(router))
+			_, startSource, startRouter := poolerFake.RunArgsForCall(0)
+			Expect(startSource).To(BeEquivalentTo(sourceFake))
+			Expect(startRouter).To(BeEquivalentTo(routerFake))
 		})
 
 		It("starts a connection to nats", func() {
-			app := NewApplication(logger, pooler, source, router)
-			app.Run(0, cfg)
+			app := NewApplication(logger, poolerFake, sourceFake, routerFake)
+			app.Run(context.Background(), nil, cfg)
 
-			Expect(router.ConnectCallCount()).To(Equal(1))
-			messageBusServers, log := router.ConnectArgsForCall(0)
+			Expect(routerFake.ConnectCallCount()).To(Equal(1))
+			messageBusServers, log := routerFake.ConnectArgsForCall(0)
 
 			Expect(messageBusServers).To(HaveLen(1))
 			Expect(messageBusServers[0].Host).To(Equal("host"))
@@ -69,6 +73,41 @@ var _ = Describe("Application", func() {
 			Expect(messageBusServers[0].Password).To(Equal("password"))
 
 			Expect(log).To(BeEquivalentTo(logger))
+		})
+
+		Context("with a pooler that waits till cancel", func() {
+			BeforeEach(func() {
+				poolerFake.RunStub = func(ctx context.Context, _ route.Source, _ route.Router) {
+					<-ctx.Done()
+				}
+			})
+			It("runs until cancelled", func() {
+				ctx, cancelFunc := context.WithCancel(context.Background())
+
+				app := NewApplication(logger, poolerFake, sourceFake, routerFake)
+
+				wg := sync.WaitGroup{}
+				wg.Add(1)
+				go func() {
+					app.Run(ctx, nil, cfg)
+					wg.Done()
+				}()
+				cancelFunc()
+				wg.Wait()
+
+				_, chanOpen := <-ctx.Done()
+				Expect(chanOpen).To(BeFalse())
+			})
+			It("supports an abort function", func() {
+				abortCalled := false
+				abortFunc := func(_ context.Context, cancelFunc context.CancelFunc, logger lager.Logger) {
+					abortCalled = true
+					cancelFunc()
+				}
+				app := NewApplication(logger, poolerFake, sourceFake, routerFake)
+				app.Run(context.Background(), abortFunc, cfg)
+				Expect(abortCalled).To(BeTrue())
+			})
 		})
 	})
 })
