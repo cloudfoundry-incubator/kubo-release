@@ -15,16 +15,6 @@ import (
 	"k8s.io/client-go/rest"
 )
 
-func fakeBuildConfig(string, string) (*rest.Config, error) {
-
-	return nil, nil
-}
-
-func fakeNewKubernetesClientSet(*rest.Config) (*k8sclient.Clientset, error) {
-
-	return nil, nil
-}
-
 var _ = Describe("Source", func() {
 	Context("SourceBuilder", func() {
 		var (
@@ -64,9 +54,9 @@ var _ = Describe("Source", func() {
 			}
 		})
 
-		It("builds a config and return a Source", func() {
+		It("builds a config and returns a Source", func() {
 			srcBuilder := NewSourceBuilder(logger, fakeBuildConfig, fakeNewKubernetesClientSet, fakeKubernetesSource)
-			src := srcBuilder.GetSource(cfg)
+			src := srcBuilder.CreateSource(cfg)
 			Expect(fakeBuildConfigCallCount).To(Equal(1))
 			Expect(fakeNewKubernetesClientSetCallCount).To(Equal(1))
 			Expect(src).To(Equal(fakeSrc))
@@ -82,7 +72,7 @@ var _ = Describe("Source", func() {
 				recover()
 				Eventually(logger).Should(gbytes.Say("building config from flags"))
 			}()
-			srcBuilder.GetSource(cfg)
+			srcBuilder.CreateSource(cfg)
 		})
 
 		It("panics when there are errors in kubernetes client", func() {
@@ -94,7 +84,7 @@ var _ = Describe("Source", func() {
 				recover()
 				Eventually(logger).Should(gbytes.Say("creating clientset from kube config"))
 			}()
-			srcBuilder.GetSource(cfg)
+			srcBuilder.CreateSource(cfg)
 		})
 	})
 })

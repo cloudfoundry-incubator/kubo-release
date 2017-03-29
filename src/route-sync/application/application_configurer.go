@@ -17,7 +17,7 @@ import (
 
 func GetKubernetesSource(cfg *config.Config, logger lager.Logger) route.Source {
 	srcBuilder := kubernetes.NewSourceBuilder(logger, k8sclientcmd.BuildConfigFromFlags, k8sclient.NewForConfig, kubernetes.NewSource)
-	return srcBuilder.GetSource(cfg)
+	return srcBuilder.CreateSource(cfg)
 }
 
 func GetCloudFoundryRouter(cfg *config.Config, logger lager.Logger) route.Router {
