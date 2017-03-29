@@ -19,8 +19,8 @@ var _ = Describe("Application", func() {
 		pooler *poolerfakes.FakePooler
 		source *routefakes.FakeSource
 		router *routefakes.FakeRouter
-		cfg        = &config.Config{
-			RawNatsServers:            "[{\"Host\": \"10.0.1.8:4222\",\"User\": \"nats\", \"Password\": \"natspass\"}]",
+		cfg    = &config.Config{
+			RawNatsServers:            "[{\"Host\": \"host\",\"User\": \"user\", \"Password\": \"password\"}]",
 			NatsServers:               []cfConfig.MessageBusServer{{Host: "host", User: "user", Password: "password"}},
 			RoutingApiUrl:             "https://api.cf.example.org",
 			CloudFoundryAppDomainName: "apps.cf.example.org",

@@ -5,6 +5,7 @@ import (
 	"route-sync/cloudfoundry/tcp"
 	tcpfakes "route-sync/cloudfoundry/tcp/fakes"
 	"route-sync/config"
+	cfConfig "code.cloudfoundry.org/route-registrar/config"
 
 	"code.cloudfoundry.org/clock"
 	"code.cloudfoundry.org/lager"
@@ -22,7 +23,8 @@ var _ = Describe("CloudFoundryRouterBuilder", func() {
 	var (
 		logger lager.Logger
 		cfg    = &config.Config{
-			RawNatsServers:            "[{\"Host\": \"10.0.1.8:4222\",\"User\": \"nats\", \"Password\": \"natspass\"}]",
+			RawNatsServers:            "[{\"Host\": \"host\",\"User\": \"user\", \"Password\": \"password\"}]",
+			NatsServers:               []cfConfig.MessageBusServer{{Host: "host", User: "user", Password: "password"}},
 			RoutingApiUrl:             "https://api.cf.example.org",
 			CloudFoundryAppDomainName: "apps.cf.example.org",
 			UAAApiURL:                 "https://uaa.cf.example.org",
@@ -37,62 +39,64 @@ var _ = Describe("CloudFoundryRouterBuilder", func() {
 	})
 	Context("TCPRouter", func() {
 		var (
-			fakeNewUAAClient func(logger lager.Logger, cfg *uaaconfig.Config, clock clock.Clock) (uaa.Client, error)
-			fakeNewTCPRouter func(uaaClient uaa.Client, routingApiUrl string, skipTlsVerification bool) (tcp.Router, error)
-			fakeRouter       tcp.Router
+			uaaClientBuilderFunc func(logger lager.Logger, cfg *uaaconfig.Config, clock clock.Clock) (uaa.Client, error)
+			tcpRouterBuilderFunc func(uaaClient uaa.Client, routingApiUrl string, skipTlsVerification bool) (tcp.Router, error)
+			fakeRouter           tcp.Router
 		)
 		BeforeEach(func() {
 			fakeRouter = &tcpfakes.FakeRouter{}
-			fakeNewUAAClient = func(logger lager.Logger, cfg *uaaconfig.Config, clock clock.Clock) (uaa.Client, error) {
+			uaaClientBuilderFunc = func(logger lager.Logger, cfg *uaaconfig.Config, clock clock.Clock) (uaa.Client, error) {
 				return nil, nil
 			}
-			fakeNewTCPRouter = func(uaaClient uaa.Client, routingApiUrl string, skipTlsVerification bool) (tcp.Router, error) {
+			tcpRouterBuilderFunc = func(uaaClient uaa.Client, routingApiUrl string, skipTlsVerification bool) (tcp.Router, error) {
 				return fakeRouter, nil
 			}
 		})
 		It("returns a TCP router", func() {
-			router := NewCloudFoundryRoutingBuilder(cfg, logger)
-			client := router.GetTCPRouter(fakeNewUAAClient, fakeNewTCPRouter)
+			routingBuilder := NewCloudFoundryRoutingBuilder(cfg, logger)
+			client := routingBuilder.CreateTCPRouter(uaaClientBuilderFunc, tcpRouterBuilderFunc)
 			Expect(client).To(Equal(fakeRouter))
 		})
 		It("panics when uaa client fails", func() {
-			fakeNewUAAClient = func(logger lager.Logger, cfg *uaaconfig.Config, clock clock.Clock) (uaa.Client, error) {
+			uaaClientBuilderFunc = func(logger lager.Logger, cfg *uaaconfig.Config, clock clock.Clock) (uaa.Client, error) {
 				return nil, errors.New("")
 			}
-			router := NewCloudFoundryRoutingBuilder(cfg, logger)
+			routingBuilder := NewCloudFoundryRoutingBuilder(cfg, logger)
 			defer func() {
 				recover()
 				Eventually(logger).Should(gbytes.Say("creating UAA client"))
 			}()
-			router.GetTCPRouter(fakeNewUAAClient, fakeNewTCPRouter)
+			routingBuilder.CreateTCPRouter(uaaClientBuilderFunc, tcpRouterBuilderFunc)
 		})
 		It("panics when tcp router creation fails", func() {
-			fakeNewTCPRouter = func(uaaClient uaa.Client, routingApiUrl string, skipTlsVerification bool) (tcp.Router, error) {
+			tcpRouterBuilderFunc = func(uaaClient uaa.Client, routingApiUrl string, skipTlsVerification bool) (tcp.Router, error) {
 				return nil, errors.New("")
 			}
-			router := NewCloudFoundryRoutingBuilder(cfg, logger)
+			routingBuilder := NewCloudFoundryRoutingBuilder(cfg, logger)
 			defer func() {
 				recover()
 				Eventually(logger).Should(gbytes.Say("creating TCP router"))
 			}()
-			router.GetTCPRouter(fakeNewUAAClient, fakeNewTCPRouter)
+			routingBuilder.CreateTCPRouter(uaaClientBuilderFunc, tcpRouterBuilderFunc)
 		})
 	})
 
 	Context("HTTPRouter", func() {
 		var (
-			fakeMessageBus    *messagebusfakes.FakeMessageBus
-			fakeNewMessageBus func(logger lager.Logger) messagebus.MessageBus
+			fakeMessageBus        *messagebusfakes.FakeMessageBus
+			messageBusBuilderFunc func(logger lager.Logger) messagebus.MessageBus
 		)
+
 		BeforeEach(func() {
 			fakeMessageBus = &messagebusfakes.FakeMessageBus{}
-			fakeNewMessageBus = func(logger lager.Logger) messagebus.MessageBus {
+			messageBusBuilderFunc = func(logger lager.Logger) messagebus.MessageBus {
 				return fakeMessageBus
 			}
 		})
+
 		It("returns correct HTTP router", func() {
-			router := NewCloudFoundryRoutingBuilder(cfg, logger)
-			mb := router.GetHTTPRouter(fakeNewMessageBus)
+			routingBuilder := NewCloudFoundryRoutingBuilder(cfg, logger)
+			mb := routingBuilder.CreateHTTPRouter(messageBusBuilderFunc)
 			Expect(mb).To(Equal(fakeMessageBus))
 		})
 	})

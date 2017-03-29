@@ -22,5 +22,5 @@ func GetKubernetesSource(cfg *config.Config, logger lager.Logger) route.Source {
 
 func GetCloudFoundryRouter(cfg *config.Config, logger lager.Logger) route.Router {
 	routerBuilder := cloudfoundry.NewCloudFoundryRoutingBuilder(cfg, logger)
-	return cloudfoundry.NewRouter(routerBuilder.GetHTTPRouter(messagebus.NewMessageBus), routerBuilder.GetTCPRouter(uaa.NewClient, tcp.NewRoutingApi))
+	return cloudfoundry.NewRouter(routerBuilder.CreateHTTPRouter(messagebus.NewMessageBus), routerBuilder.CreateTCPRouter(uaa.NewClient, tcp.NewRoutingApi))
 }
