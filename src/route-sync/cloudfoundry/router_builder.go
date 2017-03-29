@@ -23,7 +23,7 @@ func NewCloudFoundryRoutingBuilder(config *config.Config, logger lager.Logger) *
 	}
 }
 
-func (builder *CloudFoundryRoutingBuilder) GetTCPRouter(
+func (builder *CloudFoundryRoutingBuilder) CreateTCPRouter(
 	newUAAClient func(logger lager.Logger, cfg *uaaconfig.Config, clock clock.Clock) (uaa.Client, error),
 	newTCPRouter func(uaaClient uaa.Client, routingApiUrl string, skipTlsVerification bool) (tcp.Router, error)) tcp.Router {
 
@@ -38,6 +38,6 @@ func (builder *CloudFoundryRoutingBuilder) GetTCPRouter(
 	return tcpRouter
 }
 
-func (builder *CloudFoundryRoutingBuilder) GetHTTPRouter(newMessageBus func(logger lager.Logger) messagebus.MessageBus) messagebus.MessageBus {
+func (builder *CloudFoundryRoutingBuilder) CreateHTTPRouter(newMessageBus func(logger lager.Logger) messagebus.MessageBus) messagebus.MessageBus {
 	return newMessageBus(builder.logger)
 }
