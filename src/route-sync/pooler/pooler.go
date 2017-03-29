@@ -14,7 +14,7 @@ import (
 // Pooler is responsible for querying a route.Source and updating a route.Router
 type Pooler interface {
 	Start(route.Source, route.Router) (done chan<- struct{})
-	Running() bool
+	IsRunning() bool
 }
 
 type timeBased struct {
@@ -73,7 +73,7 @@ func (tb *timeBased) Start(src route.Source, router route.Router) chan<- struct{
 	return done
 }
 
-func (tb *timeBased) Running() bool {
+func (tb *timeBased) IsRunning() bool {
 	tb.Lock()
 	defer tb.Unlock()
 

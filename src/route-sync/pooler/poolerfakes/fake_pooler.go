@@ -17,16 +17,10 @@ type FakePooler struct {
 	startReturns struct {
 		result1 chan<- struct{}
 	}
-	startReturnsOnCall map[int]struct {
-		result1 chan<- struct{}
-	}
-	RunningStub        func() bool
-	runningMutex       sync.RWMutex
-	runningArgsForCall []struct{}
-	runningReturns     struct {
-		result1 bool
-	}
-	runningReturnsOnCall map[int]struct {
+	IsRunningStub        func() bool
+	isRunningMutex       sync.RWMutex
+	isRunningArgsForCall []struct{}
+	isRunningReturns     struct {
 		result1 bool
 	}
 	invocations      map[string][][]interface{}
@@ -35,7 +29,6 @@ type FakePooler struct {
 
 func (fake *FakePooler) Start(arg1 route.Source, arg2 route.Router) (done chan<- struct{}) {
 	fake.startMutex.Lock()
-	ret, specificReturn := fake.startReturnsOnCall[len(fake.startArgsForCall)]
 	fake.startArgsForCall = append(fake.startArgsForCall, struct {
 		arg1 route.Source
 		arg2 route.Router
@@ -44,11 +37,9 @@ func (fake *FakePooler) Start(arg1 route.Source, arg2 route.Router) (done chan<-
 	fake.startMutex.Unlock()
 	if fake.StartStub != nil {
 		return fake.StartStub(arg1, arg2)
+	} else {
+		return fake.startReturns.result1
 	}
-	if specificReturn {
-		return ret.result1
-	}
-	return fake.startReturns.result1
 }
 
 func (fake *FakePooler) StartCallCount() int {
@@ -70,54 +61,27 @@ func (fake *FakePooler) StartReturns(result1 chan<- struct{}) {
 	}{result1}
 }
 
-func (fake *FakePooler) StartReturnsOnCall(i int, result1 chan<- struct{}) {
-	fake.StartStub = nil
-	if fake.startReturnsOnCall == nil {
-		fake.startReturnsOnCall = make(map[int]struct {
-			result1 chan<- struct{}
-		})
+func (fake *FakePooler) IsRunning() bool {
+	fake.isRunningMutex.Lock()
+	fake.isRunningArgsForCall = append(fake.isRunningArgsForCall, struct{}{})
+	fake.recordInvocation("IsRunning", []interface{}{})
+	fake.isRunningMutex.Unlock()
+	if fake.IsRunningStub != nil {
+		return fake.IsRunningStub()
+	} else {
+		return fake.isRunningReturns.result1
 	}
-	fake.startReturnsOnCall[i] = struct {
-		result1 chan<- struct{}
-	}{result1}
 }
 
-func (fake *FakePooler) Running() bool {
-	fake.runningMutex.Lock()
-	ret, specificReturn := fake.runningReturnsOnCall[len(fake.runningArgsForCall)]
-	fake.runningArgsForCall = append(fake.runningArgsForCall, struct{}{})
-	fake.recordInvocation("Running", []interface{}{})
-	fake.runningMutex.Unlock()
-	if fake.RunningStub != nil {
-		return fake.RunningStub()
-	}
-	if specificReturn {
-		return ret.result1
-	}
-	return fake.runningReturns.result1
+func (fake *FakePooler) IsRunningCallCount() int {
+	fake.isRunningMutex.RLock()
+	defer fake.isRunningMutex.RUnlock()
+	return len(fake.isRunningArgsForCall)
 }
 
-func (fake *FakePooler) RunningCallCount() int {
-	fake.runningMutex.RLock()
-	defer fake.runningMutex.RUnlock()
-	return len(fake.runningArgsForCall)
-}
-
-func (fake *FakePooler) RunningReturns(result1 bool) {
-	fake.RunningStub = nil
-	fake.runningReturns = struct {
-		result1 bool
-	}{result1}
-}
-
-func (fake *FakePooler) RunningReturnsOnCall(i int, result1 bool) {
-	fake.RunningStub = nil
-	if fake.runningReturnsOnCall == nil {
-		fake.runningReturnsOnCall = make(map[int]struct {
-			result1 bool
-		})
-	}
-	fake.runningReturnsOnCall[i] = struct {
+func (fake *FakePooler) IsRunningReturns(result1 bool) {
+	fake.IsRunningStub = nil
+	fake.isRunningReturns = struct {
 		result1 bool
 	}{result1}
 }
@@ -127,8 +91,8 @@ func (fake *FakePooler) Invocations() map[string][][]interface{} {
 	defer fake.invocationsMutex.RUnlock()
 	fake.startMutex.RLock()
 	defer fake.startMutex.RUnlock()
-	fake.runningMutex.RLock()
-	defer fake.runningMutex.RUnlock()
+	fake.isRunningMutex.RLock()
+	defer fake.isRunningMutex.RUnlock()
 	return fake.invocations
 }
 
