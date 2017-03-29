@@ -22,14 +22,14 @@ var _ = Describe("Router", func() {
 		var (
 			router     route.Router
 			tcpRouter  tcpfakes.FakeRouter
-			msgBus     messagebusfakes.FakeMessageBus
+			messageBus messagebusfakes.FakeMessageBus
 			httpRoutes []*route.HTTP
 			tcpRoutes  []*route.TCP
 			logger     lager.Logger
 		)
 		BeforeEach(func() {
 			logger = lagertest.NewTestLogger("")
-			msgBus = messagebusfakes.FakeMessageBus{}
+			messageBus = messagebusfakes.FakeMessageBus{}
 			tcpRouter = tcpfakes.FakeRouter{}
 			tcpRouter.RouterGroupsResult = []tcp.RouterGroup{tcp.RouterGroup{
 				Guid:            "abc123",
@@ -38,7 +38,7 @@ var _ = Describe("Router", func() {
 				Type:            "tcp",
 			},
 			}
-			router = NewRouter(&msgBus, &tcpRouter)
+			router = NewRouter(&messageBus, &tcpRouter)
 			httpRoutes = []*route.HTTP{
 				&route.HTTP{
 					Backends: []route.Endpoint{route.Endpoint{IP: "10.10.10.10", Port: 9090}},
@@ -70,8 +70,8 @@ var _ = Describe("Router", func() {
 		It("posts a single L7 route", func() {
 			Expect(router.HTTP([]*route.HTTP{httpRoutes[0]})).To(Succeed())
 
-			Expect(msgBus.SendMessageCallCount()).To(Equal(1))
-			subject, host, route, privateInstanceId := msgBus.SendMessageArgsForCall(0)
+			Expect(messageBus.SendMessageCallCount()).To(Equal(1))
+			subject, host, route, privateInstanceId := messageBus.SendMessageArgsForCall(0)
 
 			Expect(subject).To(Equal("router.register"))
 			Expect(host).To(Equal("10.10.10.10"))
@@ -80,28 +80,33 @@ var _ = Describe("Router", func() {
 			Expect(route.URIs[0]).To(Equal("foobar.cf-app.com"))
 			Expect(privateInstanceId).NotTo(Equal(""))
 		})
+
 		It("posts multiple L7 routes with multiple backends", func() {
 			Expect(router.HTTP(httpRoutes)).To(Succeed())
-			Expect(msgBus.SendMessageCallCount()).To(Equal(3))
+			Expect(messageBus.SendMessageCallCount()).To(Equal(3))
 		})
+
 		It("posts a sinlge L4 route", func() {
 			Expect(router.TCP([]*route.TCP{tcpRoutes[0]})).To(Succeed())
 
 			Expect(tcpRouter.CreateRoutesLastRoutes).To(ConsistOf(tcpRoutes[0]))
 			Expect(tcpRouter.CreateRoutesLastRouterGroup).To(Equal(tcpRouter.RouterGroupsResult[0]))
 		})
+
 		It("posts multiple L4 routes", func() {
 			Expect(router.TCP(tcpRoutes)).To(Succeed())
 
 			Expect(tcpRouter.CreateRoutesLastRoutes).To(ConsistOf(tcpRoutes[0], tcpRoutes[1]))
 			Expect(tcpRouter.CreateRoutesLastRouterGroup).To(Equal(tcpRouter.RouterGroupsResult[0]))
 		})
+
 		It("connects to nats", func() {
 			router.Connect(nil, logger)
-			Expect(msgBus.ConnectCallCount()).To(Equal(1))
+			Expect(messageBus.ConnectCallCount()).To(Equal(1))
 		})
+		
 		It("panics when failing to connect to nats", func() {
-			msgBus.ConnectStub = func([]config.MessageBusServer) error {
+			messageBus.ConnectStub = func([]config.MessageBusServer) error {
 				return errors.New("Failed to connect")
 			}
 			defer func() {
@@ -109,6 +114,14 @@ var _ = Describe("Router", func() {
 				Eventually(logger).Should(gbytes.Say("connecting to NATS"))
 			}()
 			router.Connect(nil, logger)
+		})
+
+		It("Returns messagebus errors", func() {
+			messageBus.SendMessageStub = func(string, string, config.Route, string) error {
+				return errors.New("BOOM!")
+			}
+
+			Expect(router.HTTP(httpRoutes)).To(HaveOccurred())
 		})
 	})
 })
