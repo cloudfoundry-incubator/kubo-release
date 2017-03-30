@@ -6,7 +6,6 @@ import (
 	"route-sync/pooler/poolerfakes"
 	"route-sync/route"
 	"route-sync/route/routefakes"
-	"sync"
 
 	cfConfig "code.cloudfoundry.org/route-registrar/config"
 
@@ -44,14 +43,14 @@ var _ = Describe("Application", func() {
 	Context("Application", func() {
 		It("runs the Application and eventually finishes", func() {
 			app := NewApplication(logger, poolerFake, sourceFake, routerFake)
-			app.Run(context.Background(), nil, cfg)
+			app.Run(context.Background(), cfg)
 
 			Eventually(logger).Should(gbytes.Say("exiting"))
 		})
 
 		It("starts the pooler", func() {
 			app := NewApplication(logger, poolerFake, sourceFake, routerFake)
-			app.Run(context.Background(), nil, cfg)
+			app.Run(context.Background(), cfg)
 
 			Expect(poolerFake.RunCallCount()).To(Equal(1))
 
@@ -62,7 +61,7 @@ var _ = Describe("Application", func() {
 
 		It("starts a connection to nats", func() {
 			app := NewApplication(logger, poolerFake, sourceFake, routerFake)
-			app.Run(context.Background(), nil, cfg)
+			app.Run(context.Background(), cfg)
 
 			Expect(routerFake.ConnectCallCount()).To(Equal(1))
 			messageBusServers, log := routerFake.ConnectArgsForCall(0)
@@ -86,27 +85,17 @@ var _ = Describe("Application", func() {
 
 				app := NewApplication(logger, poolerFake, sourceFake, routerFake)
 
-				wg := sync.WaitGroup{}
-				wg.Add(1)
+				var appRunning bool
+				var isAppRunning = func() bool { return appRunning }
 				go func() {
-					app.Run(ctx, nil, cfg)
-					wg.Done()
+					appRunning = true
+					app.Run(ctx, cfg)
+					appRunning = false
 				}()
-				cancelFunc()
-				wg.Wait()
 
-				_, chanOpen := <-ctx.Done()
-				Expect(chanOpen).To(BeFalse())
-			})
-			It("supports an abort function", func() {
-				abortCalled := false
-				abortFunc := func(_ context.Context, cancelFunc context.CancelFunc, logger lager.Logger) {
-					abortCalled = true
-					cancelFunc()
-				}
-				app := NewApplication(logger, poolerFake, sourceFake, routerFake)
-				app.Run(context.Background(), abortFunc, cfg)
-				Expect(abortCalled).To(BeTrue())
+				Eventually(isAppRunning).Should(BeTrue())
+				cancelFunc()
+				Eventually(isAppRunning).Should(BeFalse())
 			})
 		})
 	})

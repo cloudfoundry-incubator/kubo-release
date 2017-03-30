@@ -8,9 +8,10 @@ import (
 	"route-sync/pooler"
 	"time"
 
-	"code.cloudfoundry.org/lager"
-	"route-sync/kubernetes"
 	"route-sync/cloudfoundry"
+	"route-sync/kubernetes"
+
+	"code.cloudfoundry.org/lager"
 )
 
 func main() {
@@ -26,7 +27,7 @@ func main() {
 
 	app := application.NewApplication(logger, applicationPooler, src, router)
 	ctx := context.Background()
-	app.Run(ctx, application.InterruptWaitFunc, cfg)
+	app.Run(ctx, cfg)
 }
 
 func loadConfig(logger lager.Logger) *config.Config {
