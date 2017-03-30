@@ -2,42 +2,61 @@ package cloudfoundry
 
 import (
 	"route-sync/cloudfoundry/tcp"
-	"route-sync/config"
-
 	"code.cloudfoundry.org/clock"
 	"code.cloudfoundry.org/lager"
 	"code.cloudfoundry.org/route-registrar/messagebus"
 	uaa "code.cloudfoundry.org/uaa-go-client"
-	uaaconfig "code.cloudfoundry.org/uaa-go-client/config"
+	uaaConfig "code.cloudfoundry.org/uaa-go-client/config"
+	"route-sync/config"
+	"route-sync/route"
 )
 
-type CloudFoundryRoutingBuilder struct {
-	logger lager.Logger
-	config *config.Config
+type RouterBuilder struct {
+	newUAAClient  func(lager.Logger, *uaaConfig.Config, clock.Clock) (uaa.Client, error)
+	newTCPRouter  func(uaa.Client, string, bool) (tcp.Router, error)
+	newMessageBus func(lager.Logger) messagebus.MessageBus
+	newRouter     func(messagebus.MessageBus, tcp.Router) route.Router
 }
 
-func NewCloudFoundryRoutingBuilder(config *config.Config, logger lager.Logger) *CloudFoundryRoutingBuilder {
-	return &CloudFoundryRoutingBuilder{
-		logger: logger,
-		config: config,
+func DefaultRouterBuilder() *RouterBuilder {
+	return &RouterBuilder{
+		newUAAClient:  uaa.NewClient,
+		newTCPRouter:  tcp.NewRoutingApi,
+		newMessageBus: messagebus.NewMessageBus,
+		newRouter:     NewRouter,
 	}
 }
 
-func (builder *CloudFoundryRoutingBuilder) CreateTCPRouter(
-	newUAAClient func(logger lager.Logger, cfg *uaaconfig.Config, clock clock.Clock) (uaa.Client, error),
-	newTCPRouter func(uaaClient uaa.Client, routingApiUrl string, skipTlsVerification bool) (tcp.Router, error)) tcp.Router {
-
-	uaaClient, err := newUAAClient(builder.logger, builder.config.UAAConfig(), clock.NewClock())
-	if err != nil {
-		builder.logger.Fatal("creating UAA client", err)
+func NewRouterBuilder(
+	newUAAClient func(lager.Logger, *uaaConfig.Config, clock.Clock) (uaa.Client, error),
+	newTCPRouter func(uaa.Client, string, bool) (tcp.Router, error),
+	newMessageBus func(lager.Logger) messagebus.MessageBus,
+	newRouter func(messagebus.MessageBus, tcp.Router) route.Router) *RouterBuilder {
+	return &RouterBuilder{
+		newUAAClient:  newUAAClient,
+		newTCPRouter:  newTCPRouter,
+		newMessageBus: newMessageBus,
+		newRouter:     newRouter,
 	}
-	tcpRouter, err := newTCPRouter(uaaClient, builder.config.RoutingApiUrl, builder.config.SkipTLSVerification)
+}
+
+func (builder *RouterBuilder) CreateRouter(cfg *config.Config, logger lager.Logger) route.Router {
+	return builder.newRouter(builder.createHTTPRouter(logger), builder.createTCPRouter(cfg, logger))
+}
+
+func (builder *RouterBuilder) createTCPRouter(cfg *config.Config, logger lager.Logger) tcp.Router {
+
+	uaaClient, err := builder.newUAAClient(logger, cfg.UAAConfig(), clock.NewClock())
 	if err != nil {
-		builder.logger.Fatal("creating TCP router", err)
+		logger.Fatal("creating UAA client", err)
+	}
+	tcpRouter, err := builder.newTCPRouter(uaaClient, cfg.RoutingApiUrl, cfg.SkipTLSVerification)
+	if err != nil {
+		logger.Fatal("creating TCP router", err)
 	}
 	return tcpRouter
 }
 
-func (builder *CloudFoundryRoutingBuilder) CreateHTTPRouter(newMessageBus func(logger lager.Logger) messagebus.MessageBus) messagebus.MessageBus {
-	return newMessageBus(builder.logger)
+func (builder *RouterBuilder) createHTTPRouter(logger lager.Logger) messagebus.MessageBus {
+	return builder.newMessageBus(logger)
 }

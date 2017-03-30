@@ -10,6 +10,7 @@ import (
 
 	"code.cloudfoundry.org/lager"
 	"route-sync/kubernetes"
+	"route-sync/cloudfoundry"
 )
 
 func main() {
@@ -21,7 +22,7 @@ func main() {
 	applicationPooler := pooler.ByTime(time.Duration(30*time.Second), logger)
 	src := kubernetes.DefaultSourceBuilder().CreateSource(cfg, logger)
 
-	router := application.GetCloudFoundryRouter(cfg, logger)
+	router := cloudfoundry.DefaultRouterBuilder().CreateRouter(cfg, logger)
 
 	app := application.NewApplication(logger, applicationPooler, src, router)
 	ctx := context.Background()
