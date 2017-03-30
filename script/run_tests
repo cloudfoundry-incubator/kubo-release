@@ -1,5 +1,21 @@
-#!/bin/bash
+#!/bin/bash -e
+[ -z "$DEBUG" ] || set -x
 
-# There's no code in this release, so no tests as yet
+project_root="$( cd "$( dirname "${BASH_SOURCE[0]}" )/../" && pwd )"
+
+test_route_sync() {
+  pushd "${project_root}/src/route-sync" > /dev/null
+    export GOPATH=${project_root}
+    echo "Running ginkgo"
+    ginkgo -r .
+    echo "Running ginkgo to check race conditions"
+    ginkgo -r -race .
+    echo "Compiling final binary"
+    go build
+  popd > /dev/null
+}
+
+
+test_route_sync
 
 exit 0
