@@ -5,7 +5,6 @@ import (
 	"route-sync/config"
 	"route-sync/pooler"
 	"route-sync/route"
-	"sync"
 
 	"code.cloudfoundry.org/lager"
 )
@@ -28,27 +27,10 @@ func NewApplication(logger lager.Logger, pooler pooler.Pooler, src route.Source,
 
 // Execute the Application on the current goroutine.
 //
-// Application will run until the pooler exits or it is cancelled.
-// Cancellation is handled by the provided ctx or optional abortFunc.
-func (app *Application) Run(ctx context.Context, abortFunc AbortFunc, config *config.Config) {
+// Application will run until the pooler exits or it is cancelled by the ctx.
+func (app *Application) Run(ctx context.Context, config *config.Config) {
 	app.router.Connect(config.NatsServers, app.logger)
-	poolerCtx, cancelFunc := context.WithCancel(ctx)
 
-	wg := sync.WaitGroup{}
-	wg.Add(1)
-	go func() {
-		app.pooler.Run(poolerCtx, app.src, app.router)
-		wg.Done()
-	}()
-
-	if abortFunc != nil {
-		go func() {
-			wg.Add(1)
-			abortFunc(poolerCtx, cancelFunc, app.logger)
-			wg.Done()
-		}()
-	}
-
-	wg.Wait()
+	app.pooler.Run(ctx, app.src, app.router)
 	app.logger.Info("exiting")
 }
