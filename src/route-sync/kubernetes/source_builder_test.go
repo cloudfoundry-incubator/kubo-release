@@ -55,9 +55,8 @@ var _ = Describe("Source", func() {
 		})
 
 		It("builds a config and returns a Source", func() {
-			srcBuilder := NewSourceBuilder(logger,
-				SourceBuildStrategy{fakeBuildConfig, fakeNewKubernetesClientSet, fakeKubernetesSource })
-			src := srcBuilder.CreateSource(cfg)
+			srcBuilder := NewSourceBuilder(fakeBuildConfig, fakeNewKubernetesClientSet, fakeKubernetesSource)
+			src := srcBuilder.CreateSource(cfg, logger)
 			Expect(fakeBuildConfigCallCount).To(Equal(1))
 			Expect(fakeNewKubernetesClientSetCallCount).To(Equal(1))
 			Expect(src).To(Equal(fakeSrc))
@@ -67,9 +66,8 @@ var _ = Describe("Source", func() {
 			fakeBuildConfig = func(string, string) (*rest.Config, error) {
 				return nil, errors.New("")
 			}
-			srcBuilder := NewSourceBuilder(logger,
-				SourceBuildStrategy{fakeBuildConfig, fakeNewKubernetesClientSet, fakeKubernetesSource })
-			var createSource = func() { srcBuilder.CreateSource(cfg) }
+			srcBuilder := NewSourceBuilder(fakeBuildConfig, fakeNewKubernetesClientSet, fakeKubernetesSource)
+			var createSource = func() { srcBuilder.CreateSource(cfg, logger) }
 
 			Expect(createSource).To(Panic())
 			Expect(logger).To(gbytes.Say("building config from flags"))
@@ -79,9 +77,8 @@ var _ = Describe("Source", func() {
 			fakeNewKubernetesClientSet = func(*rest.Config) (*k8sclient.Clientset, error) {
 				return nil, errors.New("")
 			}
-			srcBuilder := NewSourceBuilder(logger,
-				SourceBuildStrategy{fakeBuildConfig, fakeNewKubernetesClientSet, fakeKubernetesSource })
-			var createSource = func() { srcBuilder.CreateSource(cfg) }
+			srcBuilder := NewSourceBuilder(fakeBuildConfig, fakeNewKubernetesClientSet, fakeKubernetesSource)
+			var createSource = func() { srcBuilder.CreateSource(cfg, logger) }
 			Expect(createSource).To(Panic())
 
 			Expect(logger).To(gbytes.Say("creating clientset from kube config"))

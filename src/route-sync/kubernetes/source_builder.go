@@ -10,38 +10,35 @@ import (
 	"k8s.io/client-go/rest"
 )
 
-type SourceBuildStrategy struct {
+type SourceBuilder struct {
 	buildConfig            func(string, string) (*rest.Config, error)
 	newKubernetesClientSet func(*rest.Config) (*k8sclient.Clientset, error)
 	newKubernetesSource    func(k8sclient.Interface, string) route.Source
 }
 
-type SourceBuilder struct {
-	logger   lager.Logger
-	strategy SourceBuildStrategy
+func DefaultSourceBuilder() *SourceBuilder {
+	return NewSourceBuilder(k8sclientcmd.BuildConfigFromFlags, k8sclient.NewForConfig, NewSource)
 }
 
-func DefaultBuildStrategy() SourceBuildStrategy {
-	return SourceBuildStrategy{k8sclientcmd.BuildConfigFromFlags, k8sclient.NewForConfig, NewSource }
-}
-
-func NewSourceBuilder(logger lager.Logger, strategy SourceBuildStrategy) *SourceBuilder {
-
+func NewSourceBuilder(buildConfig func(string, string) (*rest.Config, error),
+	newKubernetesClientSet func(*rest.Config) (*k8sclient.Clientset, error),
+	newKubernetesSource func(k8sclient.Interface, string) route.Source) *SourceBuilder {
 	return &SourceBuilder{
-		logger:   logger,
-		strategy: strategy,
+		buildConfig: buildConfig,
+		newKubernetesClientSet: newKubernetesClientSet,
+		newKubernetesSource: newKubernetesSource,
 	}
 }
 
-func (builder *SourceBuilder) CreateSource(cfg *config.Config) route.Source {
-	kubecfg, err := builder.strategy.buildConfig("", cfg.KubeConfigPath)
+func (builder *SourceBuilder) CreateSource(cfg *config.Config, logger lager.Logger) route.Source {
+	kubecfg, err := builder.buildConfig("", cfg.KubeConfigPath)
 	if err != nil {
-		builder.logger.Fatal("building config from flags", err)
+		logger.Fatal("building config from flags", err)
 	}
-	clientset, err := builder.strategy.newKubernetesClientSet(kubecfg)
+	clientset, err := builder.newKubernetesClientSet(kubecfg)
 	if err != nil {
-		builder.logger.Fatal("creating clientset from kube config", err)
+		logger.Fatal("creating clientset from kube config", err)
 	}
 
-	return builder.strategy.newKubernetesSource(clientset, cfg.CloudFoundryAppDomainName)
+	return builder.newKubernetesSource(clientset, cfg.CloudFoundryAppDomainName)
 }
