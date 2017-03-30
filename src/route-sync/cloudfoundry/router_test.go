@@ -100,11 +100,44 @@ var _ = Describe("Router", func() {
 			Expect(tcpRouter.CreateRoutesLastRouterGroup).To(Equal(tcpRouter.RouterGroupsResult[0]))
 		})
 
+		Context("when there are multiple router groups", func() {
+			BeforeEach(func() {
+				tcpRouter.RouterGroupsResult = []tcp.RouterGroup{
+					{
+						Guid:            "abc123",
+						Name:            "myRouter",
+						ReservablePorts: "1000-2000",
+						Type:            "tcp",
+					},
+					{
+						Guid:            "abc121",
+						Name:            "notmyRouter",
+						ReservablePorts: "2000-3000",
+						Type:            "tcp",
+					},
+				}
+			})
+
+			It("returns error", func() {
+				Expect(router.TCP(tcpRoutes)).NotTo(Succeed())
+			})
+		})
+
+		Context("when TCP Router fails during RouterGroups", func() {
+			BeforeEach(func() {
+				tcpRouter.RouterGroupsError = errors.New("fail")
+			})
+
+			It("returns error", func() {
+				Expect(router.TCP(tcpRoutes)).NotTo(Succeed())
+			})
+		})
+
 		It("connects to nats", func() {
 			router.Connect(nil, logger)
 			Expect(messageBus.ConnectCallCount()).To(Equal(1))
 		})
-		
+
 		It("panics when failing to connect to nats", func() {
 			messageBus.ConnectStub = func([]config.MessageBusServer) error {
 				return errors.New("Failed to connect")
