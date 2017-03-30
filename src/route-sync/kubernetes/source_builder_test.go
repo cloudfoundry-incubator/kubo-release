@@ -55,7 +55,8 @@ var _ = Describe("Source", func() {
 		})
 
 		It("builds a config and returns a Source", func() {
-			srcBuilder := NewSourceBuilder(logger, fakeBuildConfig, fakeNewKubernetesClientSet, fakeKubernetesSource)
+			srcBuilder := NewSourceBuilder(logger,
+				SourceBuildStrategy{fakeBuildConfig, fakeNewKubernetesClientSet, fakeKubernetesSource })
 			src := srcBuilder.CreateSource(cfg)
 			Expect(fakeBuildConfigCallCount).To(Equal(1))
 			Expect(fakeNewKubernetesClientSetCallCount).To(Equal(1))
@@ -64,27 +65,26 @@ var _ = Describe("Source", func() {
 
 		It("panics when there are errors in build config", func() {
 			fakeBuildConfig = func(string, string) (*rest.Config, error) {
-				fakeBuildConfigCallCount++
 				return nil, errors.New("")
 			}
-			srcBuilder := NewSourceBuilder(logger, fakeBuildConfig, fakeNewKubernetesClientSet, fakeKubernetesSource)
-			defer func() {
-				recover()
-				Eventually(logger).Should(gbytes.Say("building config from flags"))
-			}()
-			srcBuilder.CreateSource(cfg)
+			srcBuilder := NewSourceBuilder(logger,
+				SourceBuildStrategy{fakeBuildConfig, fakeNewKubernetesClientSet, fakeKubernetesSource })
+			var createSource = func() { srcBuilder.CreateSource(cfg) }
+
+			Expect(createSource).To(Panic())
+			Expect(logger).To(gbytes.Say("building config from flags"))
 		})
 
 		It("panics when there are errors in kubernetes client", func() {
 			fakeNewKubernetesClientSet = func(*rest.Config) (*k8sclient.Clientset, error) {
 				return nil, errors.New("")
 			}
-			srcBuilder := NewSourceBuilder(logger, fakeBuildConfig, fakeNewKubernetesClientSet, fakeKubernetesSource)
-			defer func() {
-				recover()
-				Eventually(logger).Should(gbytes.Say("creating clientset from kube config"))
-			}()
-			srcBuilder.CreateSource(cfg)
+			srcBuilder := NewSourceBuilder(logger,
+				SourceBuildStrategy{fakeBuildConfig, fakeNewKubernetesClientSet, fakeKubernetesSource })
+			var createSource = func() { srcBuilder.CreateSource(cfg) }
+			Expect(createSource).To(Panic())
+
+			Expect(logger).To(gbytes.Say("creating clientset from kube config"))
 		})
 	})
 })
