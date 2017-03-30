@@ -20,34 +20,57 @@ import (
 var _ = Describe("Time-based Pooler", func() {
 
 	var (
-		logger lager.Logger
-		pool   pooler.Pooler
-		src    *routefakes.FakeSource
-		router *routefakes.FakeRouter
+		logger     lager.Logger
+		pool       pooler.Pooler
+		src        *routefakes.FakeSource
+		router     *routefakes.FakeRouter
+		tcpRoutes  []*route.TCP
+		httpRoutes []*route.HTTP
 	)
 
 	BeforeEach(func() {
 		logger = lagertest.NewTestLogger("")
 		pool = pooler.ByTime(time.Duration(0), logger)
 		src = &routefakes.FakeSource{}
-		tcpRoute := &route.TCP{Frontend: 8080,
-			Backends: []route.Endpoint{route.Endpoint{IP: "10.10.0.10", Port: 9090}}}
-		httpRoute := &route.HTTP{Name: "foo.bar.com",
-			Backends: []route.Endpoint{route.Endpoint{IP: "10.10.0.10", Port: 9090}}}
 
-		src.TCPReturns([]*route.TCP{tcpRoute}, nil)
-		src.HTTPReturns([]*route.HTTP{httpRoute}, nil)
+		tcpRoutes = []*route.TCP{
+			&route.TCP{
+				Frontend: 8080,
+				Backends: []route.Endpoint{
+					{IP: "10.10.0.10", Port: 9090},
+				},
+			},
+		}
+
+		httpRoutes = []*route.HTTP{
+			&route.HTTP{
+				Name: "foo.bar.com",
+				Backends: []route.Endpoint{
+					{IP: "10.10.0.10", Port: 9090},
+				},
+			},
+		}
+
+		src.TCPReturns(tcpRoutes, nil)
+		src.HTTPReturns(httpRoutes, nil)
 		router = &routefakes.FakeRouter{}
 	})
 
-	It("pools and passes", func() {
+	It("passes routes from the source to the router", func() {
 		ctx, cancelFunc := context.WithCancel(context.Background())
 		defer cancelFunc()
+
 		go pool.Run(ctx, src, router)
 
 		Eventually(func() bool {
 			return router.HTTPCallCount() > 0 && router.TCPCallCount() > 0
 		}).Should(BeTrue())
+
+		httpRoutesRecieved := router.HTTPArgsForCall(0)
+		tcpRoutesRecieved := router.TCPArgsForCall(0)
+
+		Expect(httpRoutesRecieved).Should(Equal(httpRoutes))
+		Expect(tcpRoutesRecieved).Should(Equal(tcpRoutes))
 	})
 
 	Context("with a failing TCP source", func() {
