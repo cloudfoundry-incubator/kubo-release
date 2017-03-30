@@ -10,6 +10,7 @@ import (
 	"route-sync/route"
 
 	"code.cloudfoundry.org/uaa-go-client"
+	"errors"
 )
 
 type RouterGroup struct {
@@ -34,33 +35,33 @@ type routing_api_router struct {
 
 func NewRoutingApi(uaaClient uaa_go_client.Client, routingApiUrl string, skipTlsVerification bool) (Router, error) {
 	if uaaClient == nil {
-		return nil, fmt.Errorf("uaaClient token requried")
+		return nil, errors.New("uaaClient token requried")
 	}
 	if routingApiUrl == "" {
-		return nil, fmt.Errorf("routingApiUrl required")
+		return nil, errors.New("routingApiUrl required")
 	}
 
 	return &routing_api_router{uaaClient: uaaClient, routingApiUrl: routingApiUrl, skipTlsVerification: skipTlsVerification}, nil
 }
 
-func (r *routing_api_router) buildRequest(verb string, path string) (*http.Request, *http.Client, error) {
+func (router *routing_api_router) buildRequest(verb string, path string) (*http.Request, *http.Client, error) {
 	tr := &http.Transport{
-		TLSClientConfig: &tls.Config{InsecureSkipVerify: r.skipTlsVerification},
+		TLSClientConfig: &tls.Config{InsecureSkipVerify: router.skipTlsVerification},
 	}
 	client := &http.Client{Transport: tr}
-	req, err := http.NewRequest(verb, fmt.Sprintf("%s/%s", r.routingApiUrl, path), nil)
+	req, err := http.NewRequest(verb, fmt.Sprintf("%s/%s", router.routingApiUrl, path), nil)
 
 	if err != nil {
 		return req, client, fmt.Errorf("routing_api_router: %v", err)
 	}
 
-	token, err := r.uaaClient.FetchToken(false)
+	token, err := router.uaaClient.FetchToken(false)
 	if err != nil {
 		return req, client, fmt.Errorf("routing_api_router: %v", err)
 	}
 
 	if token == nil {
-		return req, client, fmt.Errorf("routing_api_router: nil token from uaaClient", err)
+		return req, client, errors.New("routing_api_router: nil token from uaaClient")
 	}
 
 	key := token.AccessToken
@@ -69,10 +70,10 @@ func (r *routing_api_router) buildRequest(verb string, path string) (*http.Reque
 	return req, client, nil
 }
 
-func (r *routing_api_router) RouterGroups() ([]RouterGroup, error) {
+func (router *routing_api_router) RouterGroups() ([]RouterGroup, error) {
 	var routerGroups []RouterGroup
 
-	req, client, err := r.buildRequest("GET", "routing/v1/router_groups")
+	req, client, err := router.buildRequest("GET", "routing/v1/router_groups")
 	if err != nil {
 		return routerGroups, err
 	}
@@ -96,20 +97,20 @@ func (r *routing_api_router) RouterGroups() ([]RouterGroup, error) {
 	return routerGroups, err
 }
 
-func (r *routing_api_router) CreateRoutes(rg RouterGroup, routes []*route.TCP) error {
-	req, client, err := r.buildRequest("POST", "routing/v1/tcp_routes/create")
+func (router *routing_api_router) CreateRoutes(rg RouterGroup, inputRoutes []*route.TCP) error {
+	req, client, err := router.buildRequest("POST", "routing/v1/tcp_routes/create")
 	if err != nil {
 		return err
 	}
 	req.Header.Set("Content-Type", "application/json")
 
-	tcpRoutes := r.buildRoutes(rg, routes)
-	tcpRoutesJson, err := json.Marshal(tcpRoutes)
+	outputRoutes := router.buildRoutes(rg, inputRoutes)
+	outputRoutesJson, err := json.Marshal(outputRoutes)
 	if err != nil {
 		err = fmt.Errorf("routing_api_router: marshalling request: %v", err)
 	}
 
-	req.Body = ioutil.NopCloser(bytes.NewBuffer(tcpRoutesJson))
+	req.Body = ioutil.NopCloser(bytes.NewBuffer(outputRoutesJson))
 
 	_, err = client.Do(req)
 	if err != nil {
@@ -118,22 +119,22 @@ func (r *routing_api_router) CreateRoutes(rg RouterGroup, routes []*route.TCP) e
 	return nil
 }
 
-func (r *routing_api_router) buildRoutes(rg RouterGroup, routes []*route.TCP) []map[string]interface{} {
-	tcpRoutes := []map[string]interface{}{}
+func (router *routing_api_router) buildRoutes(routerGroup RouterGroup, inputRoutes []*route.TCP) []map[string]interface{} {
+	result := []map[string]interface{}{}
 
-	for _, route := range routes {
-		for _, backend := range route.Backends {
-			tcpRoute := map[string]interface{}{
-				"router_group_guid": rg.Guid,
-				"port":              route.Frontend,
+	for _, inputRoute := range inputRoutes {
+		for _, backend := range inputRoute.Backends {
+			outputRoute := map[string]interface{}{
+				"router_group_guid": routerGroup.Guid,
+				"port":              inputRoute.Frontend,
 				"ttl":               routeTTL,
 				"backend_ip":        backend.IP,
 				"backend_port":      backend.Port,
 			}
 
-			tcpRoutes = append(tcpRoutes, tcpRoute)
+			result = append(result, outputRoute)
 		}
 	}
 
-	return tcpRoutes
+	return result
 }
