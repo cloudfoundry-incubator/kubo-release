@@ -8,11 +8,9 @@ package stenographer
 
 import (
 	"fmt"
-	"io"
 	"runtime"
 	"strings"
 
-	"github.com/onsi/ginkgo/reporters/stenographer/support/go-colorable"
 	"github.com/onsi/ginkgo/types"
 )
 
@@ -61,26 +59,22 @@ type Stenographer interface {
 	SummarizeFailures(summaries []*types.SpecSummary)
 }
 
-func New(color bool, enableFlakes bool) Stenographer {
+func New(color bool) Stenographer {
 	denoter := "•"
 	if runtime.GOOS == "windows" {
 		denoter = "+"
 	}
 	return &consoleStenographer{
-		color:        color,
-		denoter:      denoter,
-		cursorState:  cursorStateTop,
-		enableFlakes: enableFlakes,
-		w:            colorable.NewColorableStdout(),
+		color:       color,
+		denoter:     denoter,
+		cursorState: cursorStateTop,
 	}
 }
 
 type consoleStenographer struct {
-	color        bool
-	denoter      string
-	cursorState  cursorStateType
-	enableFlakes bool
-	w            io.Writer
+	color       bool
+	denoter     string
+	cursorState cursorStateType
 }
 
 var alternatingColors = []string{defaultStyle, grayColor}
@@ -159,16 +153,11 @@ func (s *consoleStenographer) AnnounceSpecRunCompletion(summary *types.SuiteSumm
 		status = s.colorize(boldStyle+redColor, "FAIL!")
 	}
 
-	flakes := ""
-	if s.enableFlakes {
-		flakes = " | " + s.colorize(yellowColor+boldStyle, "%d Flaked", summary.NumberOfFlakedSpecs)
-	}
-
 	s.print(0,
 		"%s -- %s | %s | %s | %s ",
 		status,
 		s.colorize(greenColor+boldStyle, "%d Passed", summary.NumberOfPassedSpecs),
-		s.colorize(redColor+boldStyle, "%d Failed", summary.NumberOfFailedSpecs)+flakes,
+		s.colorize(redColor+boldStyle, "%d Failed", summary.NumberOfFailedSpecs),
 		s.colorize(yellowColor+boldStyle, "%d Pending", summary.NumberOfPendingSpecs),
 		s.colorize(cyanColor+boldStyle, "%d Skipped", summary.NumberOfSkippedSpecs),
 	)

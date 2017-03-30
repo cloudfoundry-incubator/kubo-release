@@ -56,6 +56,14 @@ var _ = Describe("Messagebus test Suite", func() {
 		opts.Servers = servers
 
 		testSpyClient, err = opts.Connect()
+		Expect(err).ToNot(HaveOccurred())
+
+		// Ensure nats server is listening before tests
+		Eventually(func() string {
+			connStatus := testSpyClient.Status()
+			return fmt.Sprintf("%v", connStatus)
+		}, 5*time.Second).Should(Equal("1"))
+
 		Expect(err).ShouldNot(HaveOccurred())
 
 		messageBusServer := config.MessageBusServer{
@@ -64,7 +72,7 @@ var _ = Describe("Messagebus test Suite", func() {
 			natsPassword,
 		}
 
-		messageBusServers = []config.MessageBusServer{messageBusServer, messageBusServer}
+		messageBusServers = []config.MessageBusServer{messageBusServer}
 
 		messageBus = messagebus.NewMessageBus(logger)
 	})
@@ -73,6 +81,8 @@ var _ = Describe("Messagebus test Suite", func() {
 		testSpyClient.Close()
 
 		err := natsCmd.Process.Kill()
+		Expect(err).NotTo(HaveOccurred())
+		_, err = natsCmd.Process.Wait()
 		Expect(err).NotTo(HaveOccurred())
 	})
 
@@ -160,7 +170,7 @@ var _ = Describe("Messagebus test Suite", func() {
 
 			// Assert that we got the right message
 			var receivedMessage string
-			Eventually(registered).Should(Receive(&receivedMessage))
+			Eventually(registered, 2).Should(Receive(&receivedMessage))
 
 			expectedRegistryMessage := messagebus.Message{
 				URIs:            route.URIs,
