@@ -8,15 +8,13 @@ import (
 	"route-sync/route"
 
 	uaa "code.cloudfoundry.org/uaa-go-client"
-	k8sclient "k8s.io/client-go/kubernetes"
-	k8sclientcmd "k8s.io/client-go/tools/clientcmd"
 
 	"code.cloudfoundry.org/lager"
 	"code.cloudfoundry.org/route-registrar/messagebus"
 )
 
-func GetKubernetesSource(cfg *config.Config, logger lager.Logger) route.Source {
-	srcBuilder := kubernetes.NewSourceBuilder(logger, k8sclientcmd.BuildConfigFromFlags, k8sclient.NewForConfig, kubernetes.NewSource)
+func GetKubernetesSource(cfg *config.Config, logger lager.Logger, strategy kubernetes.SourceBuildStrategy) route.Source {
+	srcBuilder := kubernetes.NewSourceBuilder(logger, strategy)
 	return srcBuilder.CreateSource(cfg)
 }
 
