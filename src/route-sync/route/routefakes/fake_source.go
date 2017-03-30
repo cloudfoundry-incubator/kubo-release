@@ -14,10 +14,18 @@ type FakeSource struct {
 		result1 []*route.TCP
 		result2 error
 	}
+	tCPReturnsOnCall map[int]struct {
+		result1 []*route.TCP
+		result2 error
+	}
 	HTTPStub        func() ([]*route.HTTP, error)
 	hTTPMutex       sync.RWMutex
 	hTTPArgsForCall []struct{}
 	hTTPReturns     struct {
+		result1 []*route.HTTP
+		result2 error
+	}
+	hTTPReturnsOnCall map[int]struct {
 		result1 []*route.HTTP
 		result2 error
 	}
@@ -27,14 +35,17 @@ type FakeSource struct {
 
 func (fake *FakeSource) TCP() ([]*route.TCP, error) {
 	fake.tCPMutex.Lock()
+	ret, specificReturn := fake.tCPReturnsOnCall[len(fake.tCPArgsForCall)]
 	fake.tCPArgsForCall = append(fake.tCPArgsForCall, struct{}{})
 	fake.recordInvocation("TCP", []interface{}{})
 	fake.tCPMutex.Unlock()
 	if fake.TCPStub != nil {
 		return fake.TCPStub()
-	} else {
-		return fake.tCPReturns.result1, fake.tCPReturns.result2
 	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	return fake.tCPReturns.result1, fake.tCPReturns.result2
 }
 
 func (fake *FakeSource) TCPCallCount() int {
@@ -51,16 +62,33 @@ func (fake *FakeSource) TCPReturns(result1 []*route.TCP, result2 error) {
 	}{result1, result2}
 }
 
+func (fake *FakeSource) TCPReturnsOnCall(i int, result1 []*route.TCP, result2 error) {
+	fake.TCPStub = nil
+	if fake.tCPReturnsOnCall == nil {
+		fake.tCPReturnsOnCall = make(map[int]struct {
+			result1 []*route.TCP
+			result2 error
+		})
+	}
+	fake.tCPReturnsOnCall[i] = struct {
+		result1 []*route.TCP
+		result2 error
+	}{result1, result2}
+}
+
 func (fake *FakeSource) HTTP() ([]*route.HTTP, error) {
 	fake.hTTPMutex.Lock()
+	ret, specificReturn := fake.hTTPReturnsOnCall[len(fake.hTTPArgsForCall)]
 	fake.hTTPArgsForCall = append(fake.hTTPArgsForCall, struct{}{})
 	fake.recordInvocation("HTTP", []interface{}{})
 	fake.hTTPMutex.Unlock()
 	if fake.HTTPStub != nil {
 		return fake.HTTPStub()
-	} else {
-		return fake.hTTPReturns.result1, fake.hTTPReturns.result2
 	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	return fake.hTTPReturns.result1, fake.hTTPReturns.result2
 }
 
 func (fake *FakeSource) HTTPCallCount() int {
@@ -72,6 +100,20 @@ func (fake *FakeSource) HTTPCallCount() int {
 func (fake *FakeSource) HTTPReturns(result1 []*route.HTTP, result2 error) {
 	fake.HTTPStub = nil
 	fake.hTTPReturns = struct {
+		result1 []*route.HTTP
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeSource) HTTPReturnsOnCall(i int, result1 []*route.HTTP, result2 error) {
+	fake.HTTPStub = nil
+	if fake.hTTPReturnsOnCall == nil {
+		fake.hTTPReturnsOnCall = make(map[int]struct {
+			result1 []*route.HTTP
+			result2 error
+		})
+	}
+	fake.hTTPReturnsOnCall[i] = struct {
 		result1 []*route.HTTP
 		result2 error
 	}{result1, result2}
