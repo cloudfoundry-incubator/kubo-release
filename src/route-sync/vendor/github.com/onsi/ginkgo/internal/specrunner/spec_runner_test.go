@@ -718,7 +718,6 @@ var _ = Describe("Spec Runner", func() {
 				"R1.WillRun",
 				"R2.WillRun",
 				"B",
-				"BYTES",
 				"R2.DidComplete",
 				"DUMP",
 				"R1.DidComplete",

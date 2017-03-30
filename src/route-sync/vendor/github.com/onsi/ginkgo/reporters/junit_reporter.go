@@ -31,7 +31,6 @@ type JUnitTestCase struct {
 	FailureMessage *JUnitFailureMessage `xml:"failure,omitempty"`
 	Skipped        *JUnitSkipped        `xml:"skipped,omitempty"`
 	Time           float64              `xml:"time,attr"`
-	SystemOut      string               `xml:"system-out,omitempty"`
 }
 
 type JUnitFailureMessage struct {
@@ -90,7 +89,6 @@ func (reporter *JUnitReporter) handleSetupSummary(name string, setupSummary *typ
 			Type:    reporter.failureTypeForState(setupSummary.State),
 			Message: failureMessage(setupSummary.Failure),
 		}
-		testCase.SystemOut = setupSummary.CapturedOutput
 		testCase.Time = setupSummary.RunTime.Seconds()
 		reporter.suite.TestCases = append(reporter.suite.TestCases, testCase)
 	}
@@ -106,7 +104,6 @@ func (reporter *JUnitReporter) SpecDidComplete(specSummary *types.SpecSummary) {
 			Type:    reporter.failureTypeForState(specSummary.State),
 			Message: failureMessage(specSummary.Failure),
 		}
-		testCase.SystemOut = specSummary.CapturedOutput
 	}
 	if specSummary.State == types.SpecStateSkipped || specSummary.State == types.SpecStatePending {
 		testCase.Skipped = &JUnitSkipped{}
