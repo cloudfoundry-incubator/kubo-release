@@ -35,18 +35,18 @@ var _ = Describe("Time-based Pooler", func() {
 
 		tcpRoutes = []*route.TCP{
 			&route.TCP{
-				Frontend: 8080,
+				Frontend: 9999999,
 				Backends: []route.Endpoint{
-					{IP: "10.10.0.10", Port: 9090},
+					{IP: "TCP Backend", Port: 11111},
 				},
 			},
 		}
 
 		httpRoutes = []*route.HTTP{
 			&route.HTTP{
-				Name: "foo.bar.com",
+				Name: "HTTP Frontend",
 				Backends: []route.Endpoint{
-					{IP: "10.10.0.10", Port: 9090},
+					{IP: "HTTP Backend", Port: 22222},
 				},
 			},
 		}
@@ -71,6 +71,11 @@ var _ = Describe("Time-based Pooler", func() {
 
 		Expect(httpRoutesRecieved).Should(Equal(httpRoutes))
 		Expect(tcpRoutesRecieved).Should(Equal(tcpRoutes))
+
+		Expect(logger).To(gbytes.Say("registered routes"))
+		Expect(logger).To(gbytes.Say("HTTP Frontend"))
+		Expect(logger).To(gbytes.Say("HTTP Backend"))
+		Expect(logger).To(gbytes.Say("TCP Backend"))
 	})
 
 	Context("with a failing TCP source", func() {
