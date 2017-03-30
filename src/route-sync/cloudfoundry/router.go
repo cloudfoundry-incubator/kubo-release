@@ -6,8 +6,8 @@ import (
 
 	"code.cloudfoundry.org/lager"
 	"code.cloudfoundry.org/route-registrar/config"
-	"code.cloudfoundry.org/route-registrar/messagebus"
 	cfConfig "code.cloudfoundry.org/route-registrar/config"
+	"code.cloudfoundry.org/route-registrar/messagebus"
 
 	"errors"
 )
@@ -50,7 +50,7 @@ func (ts *router) tcpRouterGroup() (tcp.RouterGroup, error) {
 	}
 
 	if len(routerGroups) != 1 {
-		return tcp.RouterGroup{}, errors.New("NYI: Multiple router groups not supported")
+		return tcp.RouterGroup{}, errors.New("There must be exactly 1 TCP Router Group")
 	}
 
 	return routerGroups[0], nil
