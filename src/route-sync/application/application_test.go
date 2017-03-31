@@ -14,6 +14,7 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"github.com/onsi/gomega/gbytes"
+	"sync"
 )
 
 var _ = Describe("Application", func() {
@@ -85,12 +86,26 @@ var _ = Describe("Application", func() {
 
 				app := NewApplication(logger, poolerFake, sourceFake, routerFake)
 
-				var appRunning bool
-				var isAppRunning = func() bool { return appRunning }
+				var (
+					appRunning bool
+					lock       sync.Mutex
+				)
+
+				var isAppRunning = func() bool {
+					lock.Lock()
+					var result = appRunning
+					lock.Unlock()
+					return result
+				}
+
 				go func() {
+					lock.Lock()
 					appRunning = true
+					lock.Unlock()
 					app.Run(ctx, cfg)
+					lock.Lock()
 					appRunning = false
+					lock.Unlock()
 				}()
 
 				Eventually(isAppRunning).Should(BeTrue())
