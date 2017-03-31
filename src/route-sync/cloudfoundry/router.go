@@ -6,7 +6,6 @@ import (
 
 	"code.cloudfoundry.org/lager"
 	"code.cloudfoundry.org/route-registrar/config"
-	cfConfig "code.cloudfoundry.org/route-registrar/config"
 	"code.cloudfoundry.org/route-registrar/messagebus"
 
 	"errors"
@@ -26,7 +25,7 @@ func NewRouter(bus messagebus.MessageBus, tcpRouter tcp.Router) route.Router {
 	return &router{bus: bus, tcpRouter: tcpRouter}
 }
 
-func (ts *router) Connect(natsServers []cfConfig.MessageBusServer, logger lager.Logger) {
+func (ts *router) Connect(natsServers []config.MessageBusServer, logger lager.Logger) {
 	err := ts.bus.Connect(natsServers)
 	if err != nil {
 		logger.Fatal("connecting to NATS", err)
