@@ -145,6 +145,8 @@ yaml-error
 		}
 
 		for _, testCase := range fieldRequiredTests {
+			// Create a fresh copy of testCase so each func points to a unique value
+			testCase := testCase
 			Context(fmt.Sprintf("With field %s missing", testCase.fieldName), func() {
 				It("returns an error", func() {
 					testCase.removalFunc(schema)
