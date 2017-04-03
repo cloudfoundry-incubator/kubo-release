@@ -11,6 +11,7 @@ import (
 	uaaconfig "code.cloudfoundry.org/uaa-go-client/config"
 )
 
+// ConfigSchema defines the file schema for the YAML configuration of route-sync
 type ConfigSchema struct {
 	NatsServers               []MessageBusServerSchema `yaml:"nats_servers"`
 	RoutingAPIURL             string                   `yaml:"routing_api_url"`
@@ -22,12 +23,14 @@ type ConfigSchema struct {
 	KubeConfigPath            string                   `yaml:"kube_config_path"`
 }
 
+// MessageBusServerSchema defines the schema for NATS Servers in the route-sync config
 type MessageBusServerSchema struct {
 	Host     string `yaml:"host"`
 	User     string `yaml:"user"`
 	Password string `yaml:"password"`
 }
 
+// Config is the final application configuration for route-sync
 type Config struct {
 	NatsServers               []cfConfig.MessageBusServer
 	RoutingAPIURL             string
@@ -39,6 +42,7 @@ type Config struct {
 	KubeConfigPath            string
 }
 
+// NewConfigSchemaFromFile Loads a YAML file that contains the route-sync config
 func NewConfigSchemaFromFile(path string) (*ConfigSchema, error) {
 	var schema ConfigSchema
 
@@ -59,6 +63,7 @@ func missingOptionError(option, desc string) error {
 	return fmt.Errorf("config option: %s, error: %s", option, desc)
 }
 
+// ToConfig Validates and builds a Config object if the ConfigSchema is valid
 func (cs *ConfigSchema) ToConfig() (*Config, error) {
 	errs := multierror.NewMultiError("config")
 
