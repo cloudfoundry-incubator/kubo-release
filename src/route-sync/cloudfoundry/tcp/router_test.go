@@ -39,6 +39,8 @@ var _ = Describe("routing-api TCP router", func() {
 		}
 
 		for _, t := range invalidCreations {
+			// Create a fresh copy of t so each func points to a unique value
+			t := t
 			Context(fmt.Sprintf("uaaClient: %q, api: %s", t.uaaClient, t.api), func() {
 				router, err := NewRoutingApi(t.uaaClient, t.api, false)
 				Expect(router).To(BeNil())
