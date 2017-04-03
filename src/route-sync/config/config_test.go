@@ -136,6 +136,9 @@ yaml-error
 		}{
 			{"nats_servers", func(cs *ConfigSchema) { cs.NatsServers = nil }},
 			{"nats_servers", func(cs *ConfigSchema) { cs.NatsServers = []MessageBusServerSchema{} }},
+			{`nats_servers\[\].host`, func(cs *ConfigSchema) { cs.NatsServers[0].Host = "" }},
+			{`nats_servers\[\].user`, func(cs *ConfigSchema) { cs.NatsServers[0].User = "" }},
+			{`nats_servers\[\].password`, func(cs *ConfigSchema) { cs.NatsServers[0].Password = "" }},
 			{"app_domain_name", func(cs *ConfigSchema) { cs.CloudFoundryAppDomainName = "" }},
 			{"uaa_api_url", func(cs *ConfigSchema) { cs.UAAApiURL = "" }},
 			{"routing_api_url", func(cs *ConfigSchema) { cs.RoutingAPIURL = "" }},

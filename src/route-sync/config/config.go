@@ -69,7 +69,12 @@ func (cs *ConfigSchema) ToConfig() (*Config, error) {
 
 	messageBusServers := []cfConfig.MessageBusServer{}
 	for _, messageBusServer := range cs.NatsServers {
-		messageBusServers = append(messageBusServers, messageBusServer.ToConfig())
+		server, err := messageBusServer.ToConfig()
+		if err != nil {
+			errs.Add(err)
+		} else {
+			messageBusServers = append(messageBusServers, server)
+		}
 	}
 
 	if len(cs.NatsServers) == 0 {
@@ -118,8 +123,26 @@ func (cs *ConfigSchema) ToConfig() (*Config, error) {
 	return cfg, nil
 }
 
-func (mbs *MessageBusServerSchema) ToConfig() cfConfig.MessageBusServer {
-	return cfConfig.MessageBusServer{Host: mbs.Host, User: mbs.User, Password: mbs.Password}
+func (mbs *MessageBusServerSchema) ToConfig() (cfConfig.MessageBusServer, error) {
+	errs := multierror.NewMultiError("config")
+
+	if len(mbs.Host) == 0 {
+		errs.Add(missingOptionError("nats_servers[].host", "can not be blank"))
+	}
+
+	if len(mbs.User) == 0 {
+		errs.Add(missingOptionError("nats_servers[].user", "can not be blank"))
+	}
+
+	if len(mbs.Password) == 0 {
+		errs.Add(missingOptionError("nats_servers[].password", "can not be blank"))
+	}
+
+	if errs.Length() > 0 {
+		return cfConfig.MessageBusServer{}, errs
+	}
+
+	return cfConfig.MessageBusServer{Host: mbs.Host, User: mbs.User, Password: mbs.Password}, nil
 }
 
 func (cfg *Config) UAAConfig() *uaaconfig.Config {
