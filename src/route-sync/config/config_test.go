@@ -8,6 +8,7 @@ import (
 	cfConfig "code.cloudfoundry.org/route-registrar/config"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	"github.com/onsi/gomega/gbytes"
 )
 
 var _ = Describe("Config", func() {
@@ -107,6 +108,18 @@ yaml-error
 				Expect(cfg.RoutingAPIClientSecret).To(Equal("mysecret"))
 				Expect(cfg.SkipTLSVerification).To(BeFalse())
 				Expect(cfg.KubeConfigPath).To(Equal("somewhere"))
+			})
+		})
+		Context("with no NATS servers", func() {
+			BeforeEach(func() {
+				schema.NatsServers = []MessageBusServerSchema{}
+			})
+			It("returns an error", func() {
+				cfg, err := schema.ToConfig()
+				Expect(err).To(HaveOccurred())
+				Expect(cfg).To(BeNil())
+				buf := gbytes.BufferWithBytes([]byte(err.Error()))
+				Expect(buf).To(gbytes.Say("nats server is required"))
 			})
 		})
 	})

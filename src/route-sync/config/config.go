@@ -1,10 +1,12 @@
 package config
 
 import (
+	"errors"
 	"io/ioutil"
 
 	yaml "gopkg.in/yaml.v2"
 
+	"code.cloudfoundry.org/multierror"
 	cfConfig "code.cloudfoundry.org/route-registrar/config"
 	uaaconfig "code.cloudfoundry.org/uaa-go-client/config"
 )
@@ -54,9 +56,15 @@ func NewConfigSchemaFromFile(path string) (*ConfigSchema, error) {
 }
 
 func (cs *ConfigSchema) ToConfig() (*Config, error) {
+	errs := multierror.NewMultiError("config")
+
 	messageBusServers := []cfConfig.MessageBusServer{}
 	for _, messageBusServer := range cs.NatsServers {
 		messageBusServers = append(messageBusServers, messageBusServer.ToConfig())
+	}
+
+	if len(messageBusServers) == 0 {
+		errs.Add(errors.New("at least 1 nats server is required"))
 	}
 
 	cfg := &Config{
@@ -68,6 +76,10 @@ func (cs *ConfigSchema) ToConfig() (*Config, error) {
 		RoutingAPIClientSecret:    cs.RoutingAPIClientSecret,
 		SkipTLSVerification:       cs.SkipTLSVerification,
 		KubeConfigPath:            cs.KubeConfigPath,
+	}
+
+	if errs.Length() > 0 {
+		return nil, errs
 	}
 
 	return cfg, nil
