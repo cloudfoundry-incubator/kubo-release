@@ -84,7 +84,7 @@ yaml-error
 					{Host: "myhost", User: "user", Password: "pass"},
 					{Host: "myhost2", User: "user2", Password: "pass2"},
 				},
-				RoutingApiUrl:             "routingurl",
+				RoutingAPIURL:             "routingurl",
 				CloudFoundryAppDomainName: "appdomain",
 				UAAApiURL:                 "uaaurl",
 				RoutingAPIUsername:        "myuser",
@@ -102,7 +102,7 @@ yaml-error
 					{Host: "myhost", User: "user", Password: "pass"},
 					{Host: "myhost2", User: "user2", Password: "pass2"},
 				}))
-				Expect(cfg.RoutingApiUrl).To(Equal("routingurl"))
+				Expect(cfg.RoutingAPIURL).To(Equal("routingurl"))
 				Expect(cfg.CloudFoundryAppDomainName).To(Equal("appdomain"))
 				Expect(cfg.UAAApiURL).To(Equal("uaaurl"))
 				Expect(cfg.RoutingAPIUsername).To(Equal("myuser"))
@@ -120,7 +120,7 @@ yaml-error
 			{"nats_servers", func(cs *ConfigSchema) { cs.NatsServers = []MessageBusServerSchema{} }},
 			{"app_domain_name", func(cs *ConfigSchema) { cs.CloudFoundryAppDomainName = "" }},
 			{"uaa_api_url", func(cs *ConfigSchema) { cs.UAAApiURL = "" }},
-			{"routing_api_url", func(cs *ConfigSchema) { cs.RoutingApiUrl = "" }},
+			{"routing_api_url", func(cs *ConfigSchema) { cs.RoutingAPIURL = "" }},
 			{"routing_api_username", func(cs *ConfigSchema) { cs.RoutingAPIUsername = "" }},
 			{"routing_api_client_secret", func(cs *ConfigSchema) { cs.RoutingAPIClientSecret = "" }},
 			{"kube_config_path", func(cs *ConfigSchema) { cs.KubeConfigPath = "" }},

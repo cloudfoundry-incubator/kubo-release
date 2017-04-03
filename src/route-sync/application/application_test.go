@@ -26,7 +26,7 @@ var _ = Describe("Application", func() {
 		routerFake *routefakes.FakeRouter
 		cfg        = &config.Config{
 			NatsServers:               []cfConfig.MessageBusServer{{Host: "host", User: "user", Password: "password"}},
-			RoutingApiUrl:             "https://api.cf.example.org",
+			RoutingAPIURL:             "https://api.cf.example.org",
 			CloudFoundryAppDomainName: "apps.cf.example.org",
 			UAAApiURL:                 "https://uaa.cf.example.org",
 			RoutingAPIUsername:        "routeUser",

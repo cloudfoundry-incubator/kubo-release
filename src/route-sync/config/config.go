@@ -13,7 +13,7 @@ import (
 
 type ConfigSchema struct {
 	NatsServers               []MessageBusServerSchema `yaml:"nats_servers"`
-	RoutingApiUrl             string                   `yaml:"routing_api_url"`
+	RoutingAPIURL             string                   `yaml:"routing_api_url"`
 	CloudFoundryAppDomainName string                   `yaml:"app_domain_name"`
 	UAAApiURL                 string                   `yaml:"uaa_api_url"`
 	RoutingAPIUsername        string                   `yaml:"routing_api_username"`
@@ -30,7 +30,7 @@ type MessageBusServerSchema struct {
 
 type Config struct {
 	NatsServers               []cfConfig.MessageBusServer
-	RoutingApiUrl             string
+	RoutingAPIURL             string
 	CloudFoundryAppDomainName string
 	UAAApiURL                 string
 	RoutingAPIUsername        string
@@ -71,7 +71,7 @@ func (cs *ConfigSchema) ToConfig() (*Config, error) {
 		errs.Add(missingOptionError("nats_servers", "at least 1 nats server is required"))
 	}
 
-	if len(cs.RoutingApiUrl) == 0 {
+	if len(cs.RoutingAPIURL) == 0 {
 		errs.Add(missingOptionError("routing_api_url", "can not be blank"))
 	}
 
@@ -97,7 +97,7 @@ func (cs *ConfigSchema) ToConfig() (*Config, error) {
 
 	cfg := &Config{
 		NatsServers:               messageBusServers,
-		RoutingApiUrl:             cs.RoutingApiUrl,
+		RoutingAPIURL:             cs.RoutingAPIURL,
 		CloudFoundryAppDomainName: cs.CloudFoundryAppDomainName,
 		UAAApiURL:                 cs.UAAApiURL,
 		RoutingAPIUsername:        cs.RoutingAPIUsername,
