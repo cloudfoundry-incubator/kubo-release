@@ -24,7 +24,6 @@ var _ = Describe("Source", func() {
 			fakeNewKubernetesClientSet func(*rest.Config) (*k8sclient.Clientset, error)
 			fakeBuildConfig            func(string, string) (*rest.Config, error)
 			cfg                        = &config.Config{
-				RawNatsServers:            "[{\"Host\": \"10.0.1.8:4222\",\"User\": \"nats\", \"Password\": \"natspass\"}]",
 				RoutingApiUrl:             "https://api.cf.example.org",
 				CloudFoundryAppDomainName: "apps.cf.example.org",
 				UAAApiURL:                 "https://uaa.cf.example.org",

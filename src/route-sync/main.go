@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"flag"
 	"os"
 	"route-sync/application"
 	"route-sync/config"
@@ -31,7 +32,19 @@ func main() {
 }
 
 func loadConfig(logger lager.Logger) *config.Config {
-	cfg, err := config.NewConfig()
+	var configPath string
+
+	flags := flag.NewFlagSet(os.Args[0], flag.ExitOnError)
+	flags.StringVar(&configPath, "configPath", "", "path to configuration file with json encoded content")
+	flags.Set("configPath", "route-sync.yml")
+	flags.Parse(os.Args[1:])
+
+	cfgSchema, err := config.NewConfigSchemaFromFile(configPath)
+	if err != nil {
+		logger.Fatal("loading config", err)
+	}
+
+	cfg, err := cfgSchema.ToConfig()
 	if err != nil {
 		logger.Fatal("parsing config", err)
 	}

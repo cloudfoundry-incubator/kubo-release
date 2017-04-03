@@ -1,79 +1,113 @@
 package config_test
 
 import (
+	"io/ioutil"
 	"os"
 	. "route-sync/config"
 
+	cfConfig "code.cloudfoundry.org/route-registrar/config"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 )
 
 var _ = Describe("Config", func() {
-	Context("Configuration is set", func() {
+	Context("Reading schema from a file that doesn't exist", func() {
+		It("does not return a config schema", func() {
+			cs, err := NewConfigSchemaFromFile("why-do-you-have-this-file")
+			Expect(err).To(HaveOccurred())
+			Expect(cs).To(BeNil())
+		})
+	})
+	Context("Reading schema from a file", func() {
+		var (
+			configFile *os.File
+		)
 
 		BeforeEach(func() {
-			os.Setenv("ROUTESYNC_NATS_SERVERS", "[{\"Host\": \"10.0.1.8:4222\",\"User\": \"nats\", \"Password\": \"natspass\"}]")
-			os.Setenv("ROUTESYNC_CLOUD_FOUNDRY_APP_DOMAIN_NAME", "apps.cf.example.org")
-			os.Setenv("ROUTESYNC_UAA_API_URL", "https://uaa.cf.example.org")
-			os.Setenv("ROUTESYNC_ROUTING_API_URL", "https://api.cf.example.org")
-			os.Setenv("ROUTESYNC_ROUTING_API_USERNAME", "routeUser")
-			os.Setenv("ROUTESYNC_ROUTING_API_CLIENT_SECRET", "aabbcc")
-			os.Setenv("ROUTESYNC_SKIP_TLS_VERIFICATION", "true")
-			os.Setenv("ROUTESYNC_KUBE_CONFIG_PATH", "~/.config/kube")
+			var err error
+			configFile, err = ioutil.TempFile("", "routesync")
+			if err != nil {
+				panic(err)
+			}
 		})
 
 		AfterEach(func() {
-			os.Unsetenv("ROUTESYNC_NATS_SERVERS")
-			os.Unsetenv("ROUTESYNC_CLOUD_FOUNDRY_APP_DOMAIN_NAME")
-			os.Unsetenv("ROUTESYNC_UAA_API_URL")
-			os.Unsetenv("ROUTESYNC_ROUTING_API_URL")
-			os.Unsetenv("ROUTESYNC_ROUTING_API_USERNAME")
-			os.Unsetenv("ROUTESYNC_ROUTING_API_CLIENT_SECRET")
-			os.Unsetenv("ROUTESYNC_SKIP_TLS_VERIFICATION")
-			os.Unsetenv("ROUTESYNC_KUBE_CONFIG_PATH")
+			configFile.Close()
+			os.Remove(configFile.Name())
 		})
 
-		It("returns a valid config frm the enviornment", func() {
-			c, err := NewConfig()
-
-			Expect(err).NotTo(HaveOccurred())
-			Expect(c.NatsServers).To(HaveLen(1))
-
-			natsServer := c.NatsServers[0]
-			Expect(natsServer.Host).To(Equal("10.0.1.8:4222"))
-			Expect(natsServer.User).To(Equal("nats"))
-			Expect(natsServer.Password).To(Equal("natspass"))
+		Context("with an empty file", func() {
+			It("returns a ConfigSchema", func() {
+				cs, err := NewConfigSchemaFromFile(configFile.Name())
+				Expect(err).NotTo(HaveOccurred())
+				Expect(cs).NotTo(BeNil())
+			})
 		})
-
-		It("returns an error when nats server is not set", func() {
-			os.Setenv("ROUTESYNC_NATS_SERVERS", "[]")
-			cfg, err := NewConfig()
-			Expect(err).To(HaveOccurred())
-			Expect(err.Error()).To(ContainSubstring("no NATS servers"))
-			Expect(cfg).To(BeNil())
+		Context("with a partially filled in file", func() {
+			BeforeEach(func() {
+				configFile.Write([]byte(`---
+app_domain_name: mydomain
+uaa_api_url: yoururl
+`))
+			})
+			It("returns a partially filled ConfigSchema", func() {
+				cs, err := NewConfigSchemaFromFile(configFile.Name())
+				Expect(err).NotTo(HaveOccurred())
+				Expect(cs.CloudFoundryAppDomainName).To(Equal("mydomain"))
+				Expect(cs.UAAApiURL).To(Equal("yoururl"))
+			})
 		})
+		Context("with a poorly formated file", func() {
+			BeforeEach(func() {
+				configFile.Write([]byte(`---
+yaml-error
+`))
+			})
+			It("does not return a config schema", func() {
+				cs, err := NewConfigSchemaFromFile(configFile.Name())
 
-		It("returns an error when nats server is not a JSON object", func() {
-			os.Setenv("ROUTESYNC_NATS_SERVERS", "")
-			cfg, err := NewConfig()
-			Expect(err).To(HaveOccurred())
-			Expect(err.Error()).To(ContainSubstring("JSON"))
-			Expect(cfg).To(BeNil())
-		})
-
-		It("Produces a UAA config", func() {
-			cfg, _ := NewConfig()
-			Expect(cfg.UAAConfig().ClientName).To(Equal("routeUser"))
-			Expect(cfg.UAAConfig().ClientSecret).To(Equal("aabbcc"))
-			Expect(cfg.UAAConfig().UaaEndpoint).To(Equal("https://uaa.cf.example.org"))
-			Expect(cfg.UAAConfig().SkipVerification).To(BeTrue())
+				Expect(err).To(HaveOccurred())
+				Expect(cs).To(BeNil())
+			})
 		})
 	})
 
-	Context("Configuration is not set", func() {
-		It("fails", func() {
-			_, err := NewConfig()
-			Expect(err).To(HaveOccurred())
+	Context("ToSchema", func() {
+		var (
+			schema *ConfigSchema
+		)
+		BeforeEach(func() {
+			schema = &ConfigSchema{
+				NatsServers: []MessageBusServerSchema{
+					{Host: "myhost", User: "user", Password: "pass"},
+					{Host: "myhost2", User: "user2", Password: "pass2"},
+				},
+				RoutingApiUrl:             "routingurl",
+				CloudFoundryAppDomainName: "appdomain",
+				UAAApiURL:                 "uaaurl",
+				RoutingAPIUsername:        "myuser",
+				RoutingAPIClientSecret:    "mysecret",
+				SkipTLSVerification:       false,
+				KubeConfigPath:            "somewhere",
+			}
+		})
+		Context("with a valid schema", func() {
+			It("parses to a config object", func() {
+				cfg, err := schema.ToConfig()
+				Expect(err).ToNot(HaveOccurred())
+				Expect(cfg).ToNot(BeNil())
+				Expect(cfg.NatsServers).To(BeEquivalentTo([]cfConfig.MessageBusServer{
+					{Host: "myhost", User: "user", Password: "pass"},
+					{Host: "myhost2", User: "user2", Password: "pass2"},
+				}))
+				Expect(cfg.RoutingApiUrl).To(Equal("routingurl"))
+				Expect(cfg.CloudFoundryAppDomainName).To(Equal("appdomain"))
+				Expect(cfg.UAAApiURL).To(Equal("uaaurl"))
+				Expect(cfg.RoutingAPIUsername).To(Equal("myuser"))
+				Expect(cfg.RoutingAPIClientSecret).To(Equal("mysecret"))
+				Expect(cfg.SkipTLSVerification).To(BeFalse())
+				Expect(cfg.KubeConfigPath).To(Equal("somewhere"))
+			})
 		})
 	})
 })
