@@ -1,7 +1,7 @@
 package config
 
 import (
-	"errors"
+	"fmt"
 	"io/ioutil"
 
 	yaml "gopkg.in/yaml.v2"
@@ -55,6 +55,10 @@ func NewConfigSchemaFromFile(path string) (*ConfigSchema, error) {
 	return &schema, err
 }
 
+func missingOptionError(option, desc string) error {
+	return fmt.Errorf("config option: %s, error: %s", option, desc)
+}
+
 func (cs *ConfigSchema) ToConfig() (*Config, error) {
 	errs := multierror.NewMultiError("config")
 
@@ -63,8 +67,32 @@ func (cs *ConfigSchema) ToConfig() (*Config, error) {
 		messageBusServers = append(messageBusServers, messageBusServer.ToConfig())
 	}
 
-	if len(messageBusServers) == 0 {
-		errs.Add(errors.New("at least 1 nats server is required"))
+	if len(cs.NatsServers) == 0 {
+		errs.Add(missingOptionError("nats_servers", "at least 1 nats server is required"))
+	}
+
+	if len(cs.RoutingApiUrl) == 0 {
+		errs.Add(missingOptionError("routing_api_url", "can not be blank"))
+	}
+
+	if len(cs.CloudFoundryAppDomainName) == 0 {
+		errs.Add(missingOptionError("app_domain_name", "can not be blank"))
+	}
+
+	if len(cs.UAAApiURL) == 0 {
+		errs.Add(missingOptionError("uaa_api_url", "can not be blank"))
+	}
+
+	if len(cs.RoutingAPIUsername) == 0 {
+		errs.Add(missingOptionError("routing_api_username", "can not be blank"))
+	}
+
+	if len(cs.RoutingAPIClientSecret) == 0 {
+		errs.Add(missingOptionError("routing_api_client_secret", "can not be blank"))
+	}
+
+	if len(cs.KubeConfigPath) == 0 {
+		errs.Add(missingOptionError("kube_config_path", "can not be blank"))
 	}
 
 	cfg := &Config{

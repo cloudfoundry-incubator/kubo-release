@@ -1,6 +1,7 @@
 package config_test
 
 import (
+	"fmt"
 	"io/ioutil"
 	"os"
 	. "route-sync/config"
@@ -110,17 +111,32 @@ yaml-error
 				Expect(cfg.KubeConfigPath).To(Equal("somewhere"))
 			})
 		})
-		Context("with no NATS servers", func() {
-			BeforeEach(func() {
-				schema.NatsServers = []MessageBusServerSchema{}
+
+		fieldRequiredTests := []struct {
+			fieldName   string
+			removalFunc func(*ConfigSchema)
+		}{
+			{"nats_servers", func(cs *ConfigSchema) { cs.NatsServers = nil }},
+			{"nats_servers", func(cs *ConfigSchema) { cs.NatsServers = []MessageBusServerSchema{} }},
+			{"app_domain_name", func(cs *ConfigSchema) { cs.CloudFoundryAppDomainName = "" }},
+			{"uaa_api_url", func(cs *ConfigSchema) { cs.UAAApiURL = "" }},
+			{"routing_api_url", func(cs *ConfigSchema) { cs.RoutingApiUrl = "" }},
+			{"routing_api_username", func(cs *ConfigSchema) { cs.RoutingAPIUsername = "" }},
+			{"routing_api_client_secret", func(cs *ConfigSchema) { cs.RoutingAPIClientSecret = "" }},
+			{"kube_config_path", func(cs *ConfigSchema) { cs.KubeConfigPath = "" }},
+		}
+
+		for _, testCase := range fieldRequiredTests {
+			Context(fmt.Sprintf("With field %s missing", testCase.fieldName), func() {
+				It("returns an error", func() {
+					testCase.removalFunc(schema)
+					cfg, err := schema.ToConfig()
+					Expect(err).To(HaveOccurred())
+					Expect(cfg).To(BeNil())
+					buf := gbytes.BufferWithBytes([]byte(err.Error()))
+					Expect(buf).To(gbytes.Say(testCase.fieldName))
+				})
 			})
-			It("returns an error", func() {
-				cfg, err := schema.ToConfig()
-				Expect(err).To(HaveOccurred())
-				Expect(cfg).To(BeNil())
-				buf := gbytes.BufferWithBytes([]byte(err.Error()))
-				Expect(buf).To(gbytes.Say("nats server is required"))
-			})
-		})
+		}
 	})
 })
