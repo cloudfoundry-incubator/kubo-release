@@ -1,13 +1,14 @@
 package config_test
 
 import (
-	"fmt"
 	"io/ioutil"
 	"os"
 	. "route-sync/config"
 
 	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/ginkgo/extensions/table"
 	. "github.com/onsi/gomega"
+
 	"github.com/onsi/gomega/gbytes"
 
 	cfConfig "code.cloudfoundry.org/route-registrar/config"
@@ -130,36 +131,25 @@ yaml-error
 			})
 		})
 
-		fieldRequiredTests := []struct {
-			fieldName   string
-			removalFunc func(*ConfigSchema)
-		}{
-			{"nats_servers", func(cs *ConfigSchema) { cs.NatsServers = nil }},
-			{"nats_servers", func(cs *ConfigSchema) { cs.NatsServers = []MessageBusServerSchema{} }},
-			{`nats_servers\[\].host`, func(cs *ConfigSchema) { cs.NatsServers[0].Host = "" }},
-			{`nats_servers\[\].user`, func(cs *ConfigSchema) { cs.NatsServers[0].User = "" }},
-			{`nats_servers\[\].password`, func(cs *ConfigSchema) { cs.NatsServers[0].Password = "" }},
-			{"app_domain_name", func(cs *ConfigSchema) { cs.CloudFoundryAppDomainName = "" }},
-			{"uaa_api_url", func(cs *ConfigSchema) { cs.UAAApiURL = "" }},
-			{"routing_api_url", func(cs *ConfigSchema) { cs.RoutingAPIURL = "" }},
-			{"routing_api_username", func(cs *ConfigSchema) { cs.RoutingAPIUsername = "" }},
-			{"routing_api_client_secret", func(cs *ConfigSchema) { cs.RoutingAPIClientSecret = "" }},
-			{"kube_config_path", func(cs *ConfigSchema) { cs.KubeConfigPath = "" }},
-		}
-
-		for _, testCase := range fieldRequiredTests {
-			// Create a fresh copy of testCase so each func points to a unique value
-			testCase := testCase
-			Context(fmt.Sprintf("With field %s missing", testCase.fieldName), func() {
-				It("returns an error", func() {
-					testCase.removalFunc(schema)
-					cfg, err := schema.ToConfig()
-					Expect(err).To(HaveOccurred())
-					Expect(cfg).To(BeNil())
-					buf := gbytes.BufferWithBytes([]byte(err.Error()))
-					Expect(buf).To(gbytes.Say(testCase.fieldName))
-				})
-			})
-		}
+		DescribeTable("with a field missing", func(fieldName string, removalFunc func(*ConfigSchema)) {
+			removalFunc(schema)
+			cfg, err := schema.ToConfig()
+			Expect(err).To(HaveOccurred())
+			Expect(cfg).To(BeNil())
+			buf := gbytes.BufferWithBytes([]byte(err.Error()))
+			Expect(buf).To(gbytes.Say(fieldName))
+		},
+			Entry("nil nats_servers", "nats_servers", func(cs *ConfigSchema) { cs.NatsServers = nil }),
+			Entry("empty nats_servers", "nats_servers", func(cs *ConfigSchema) { cs.NatsServers = []MessageBusServerSchema{} }),
+			Entry("a nats server with an empty host", `nats_servers\[\].host`, func(cs *ConfigSchema) { cs.NatsServers[0].Host = "" }),
+			Entry("a nats server with an empty user", `nats_servers\[\].user`, func(cs *ConfigSchema) { cs.NatsServers[0].User = "" }),
+			Entry("a nats server with an empty password", `nats_servers\[\].password`, func(cs *ConfigSchema) { cs.NatsServers[0].Password = "" }),
+			Entry("empty app_domain_name", "app_domain_name", func(cs *ConfigSchema) { cs.CloudFoundryAppDomainName = "" }),
+			Entry("empty uaa_api_url", "uaa_api_url", func(cs *ConfigSchema) { cs.UAAApiURL = "" }),
+			Entry("empty routing_api_url", "routing_api_url", func(cs *ConfigSchema) { cs.RoutingAPIURL = "" }),
+			Entry("empty routing_api_username", "routing_api_username", func(cs *ConfigSchema) { cs.RoutingAPIUsername = "" }),
+			Entry("empty routing_api_client_secret", "routing_api_client_secret", func(cs *ConfigSchema) { cs.RoutingAPIClientSecret = "" }),
+			Entry("empty kube_config_path", "kube_config_path", func(cs *ConfigSchema) { cs.KubeConfigPath = "" }),
+		)
 	})
 })
