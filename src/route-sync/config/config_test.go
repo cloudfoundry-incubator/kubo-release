@@ -6,10 +6,12 @@ import (
 	"os"
 	. "route-sync/config"
 
-	cfConfig "code.cloudfoundry.org/route-registrar/config"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"github.com/onsi/gomega/gbytes"
+
+	cfConfig "code.cloudfoundry.org/route-registrar/config"
+	uaaconfig "code.cloudfoundry.org/uaa-go-client/config"
 )
 
 var _ = Describe("Config", func() {
@@ -94,10 +96,18 @@ yaml-error
 			}
 		})
 		Context("with a valid schema", func() {
-			It("parses to a config object", func() {
-				cfg, err := schema.ToConfig()
+			var (
+				cfg *Config
+				err error
+			)
+			BeforeEach(func() {
+				cfg, err = schema.ToConfig()
+			})
+			It("creates a config object without error", func() {
 				Expect(err).ToNot(HaveOccurred())
 				Expect(cfg).ToNot(BeNil())
+			})
+			It("parses to a config object", func() {
 				Expect(cfg.NatsServers).To(BeEquivalentTo([]cfConfig.MessageBusServer{
 					{Host: "myhost", User: "user", Password: "pass"},
 					{Host: "myhost2", User: "user2", Password: "pass2"},
@@ -109,6 +119,14 @@ yaml-error
 				Expect(cfg.RoutingAPIClientSecret).To(Equal("mysecret"))
 				Expect(cfg.SkipTLSVerification).To(BeFalse())
 				Expect(cfg.KubeConfigPath).To(Equal("somewhere"))
+			})
+			It("can construct a UAAConfig", func() {
+				Expect(cfg.UAAConfig()).To(BeEquivalentTo(&uaaconfig.Config{
+					ClientName:       "myuser",
+					ClientSecret:     "mysecret",
+					UaaEndpoint:      "uaaurl",
+					SkipVerification: false,
+				}))
 			})
 		})
 
