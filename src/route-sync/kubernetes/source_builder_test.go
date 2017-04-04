@@ -24,12 +24,12 @@ var _ = Describe("Source", func() {
 			fakeNewKubernetesClientSet func(*rest.Config) (*k8sclient.Clientset, error)
 			fakeBuildConfig            func(string, string) (*rest.Config, error)
 			cfg                        = &config.Config{
-				RoutingAPIURL:             "https://api.cf.example.org",
+				RoutingApiUrl:             "https://api.cf.example.org",
 				CloudFoundryAppDomainName: "apps.cf.example.org",
-				UAAApiURL:                 "https://uaa.cf.example.org",
-				RoutingAPIUsername:        "routeUser",
-				RoutingAPIClientSecret:    "aabbcc",
-				SkipTLSVerification:       true,
+				UaaApiUrl:                 "https://uaa.cf.example.org",
+				RoutingApiUsername:        "routeUser",
+				RoutingApiClientSecret:    "aabbcc",
+				SkipTlsVerification:       true,
 				KubeConfigPath:            "~/.config/kube",
 			}
 			fakeBuildConfigCallCount            = 0

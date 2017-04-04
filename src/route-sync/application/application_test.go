@@ -26,12 +26,12 @@ var _ = Describe("Application", func() {
 		routerFake *routefakes.FakeRouter
 		cfg        = &config.Config{
 			NatsServers:               []cfConfig.MessageBusServer{{Host: "host", User: "user", Password: "password"}},
-			RoutingAPIURL:             "https://api.cf.example.org",
+			RoutingApiUrl:             "https://api.cf.example.org",
 			CloudFoundryAppDomainName: "apps.cf.example.org",
-			UAAApiURL:                 "https://uaa.cf.example.org",
-			RoutingAPIUsername:        "routeUser",
-			RoutingAPIClientSecret:    "aabbcc",
-			SkipTLSVerification:       true,
+			UaaApiUrl:                 "https://uaa.cf.example.org",
+			RoutingApiUsername:        "routeUser",
+			RoutingApiClientSecret:    "aabbcc",
+			SkipTlsVerification:       true,
 			KubeConfigPath:            "~/.config/kube",
 		}
 	)

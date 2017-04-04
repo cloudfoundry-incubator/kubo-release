@@ -14,12 +14,12 @@ import (
 // ConfigSchema defines the file schema for the YAML configuration of route-sync
 type ConfigSchema struct {
 	NatsServers               []MessageBusServerSchema `yaml:"nats_servers"`
-	RoutingAPIURL             string                   `yaml:"routing_api_url"`
+	RoutingApiUrl             string                   `yaml:"routing_api_url"`
 	CloudFoundryAppDomainName string                   `yaml:"app_domain_name"`
-	UAAApiURL                 string                   `yaml:"uaa_api_url"`
-	RoutingAPIUsername        string                   `yaml:"routing_api_username"`
-	RoutingAPIClientSecret    string                   `yaml:"routing_api_client_secret"`
-	SkipTLSVerification       bool                     `yaml:"skip_tls_verification"`
+	UaaApiUrl                 string                   `yaml:"uaa_api_url"`
+	RoutingApiUsername        string                   `yaml:"routing_api_username"`
+	RoutingApiClientSecret    string                   `yaml:"routing_api_client_secret"`
+	SkipTlsVerification       bool                     `yaml:"skip_tls_verification"`
 	KubeConfigPath            string                   `yaml:"kube_config_path"`
 }
 
@@ -33,12 +33,12 @@ type MessageBusServerSchema struct {
 // Config is the final application configuration for route-sync
 type Config struct {
 	NatsServers               []cfConfig.MessageBusServer
-	RoutingAPIURL             string
+	RoutingApiUrl             string
 	CloudFoundryAppDomainName string
-	UAAApiURL                 string
-	RoutingAPIUsername        string
-	RoutingAPIClientSecret    string
-	SkipTLSVerification       bool
+	UaaApiUrl                 string
+	RoutingApiUsername        string
+	RoutingApiClientSecret    string
+	SkipTlsVerification       bool
 	KubeConfigPath            string
 }
 
@@ -81,7 +81,7 @@ func (cs *ConfigSchema) ToConfig() (*Config, error) {
 		errs.Add(missingOptionError("nats_servers", "at least 1 nats server is required"))
 	}
 
-	if len(cs.RoutingAPIURL) == 0 {
+	if len(cs.RoutingApiUrl) == 0 {
 		errs.Add(missingOptionError("routing_api_url", "can not be blank"))
 	}
 
@@ -89,15 +89,15 @@ func (cs *ConfigSchema) ToConfig() (*Config, error) {
 		errs.Add(missingOptionError("app_domain_name", "can not be blank"))
 	}
 
-	if len(cs.UAAApiURL) == 0 {
+	if len(cs.UaaApiUrl) == 0 {
 		errs.Add(missingOptionError("uaa_api_url", "can not be blank"))
 	}
 
-	if len(cs.RoutingAPIUsername) == 0 {
+	if len(cs.RoutingApiUsername) == 0 {
 		errs.Add(missingOptionError("routing_api_username", "can not be blank"))
 	}
 
-	if len(cs.RoutingAPIClientSecret) == 0 {
+	if len(cs.RoutingApiClientSecret) == 0 {
 		errs.Add(missingOptionError("routing_api_client_secret", "can not be blank"))
 	}
 
@@ -107,12 +107,12 @@ func (cs *ConfigSchema) ToConfig() (*Config, error) {
 
 	cfg := &Config{
 		NatsServers:               messageBusServers,
-		RoutingAPIURL:             cs.RoutingAPIURL,
+		RoutingApiUrl:             cs.RoutingApiUrl,
 		CloudFoundryAppDomainName: cs.CloudFoundryAppDomainName,
-		UAAApiURL:                 cs.UAAApiURL,
-		RoutingAPIUsername:        cs.RoutingAPIUsername,
-		RoutingAPIClientSecret:    cs.RoutingAPIClientSecret,
-		SkipTLSVerification:       cs.SkipTLSVerification,
+		UaaApiUrl:                 cs.UaaApiUrl,
+		RoutingApiUsername:        cs.RoutingApiUsername,
+		RoutingApiClientSecret:    cs.RoutingApiClientSecret,
+		SkipTlsVerification:       cs.SkipTlsVerification,
 		KubeConfigPath:            cs.KubeConfigPath,
 	}
 
@@ -147,9 +147,9 @@ func (mbs *MessageBusServerSchema) ToConfig() (cfConfig.MessageBusServer, error)
 
 func (cfg *Config) UAAConfig() *uaaconfig.Config {
 	return &uaaconfig.Config{
-		ClientName:       cfg.RoutingAPIUsername,
-		ClientSecret:     cfg.RoutingAPIClientSecret,
-		UaaEndpoint:      cfg.UAAApiURL,
-		SkipVerification: cfg.SkipTLSVerification,
+		ClientName:       cfg.RoutingApiUsername,
+		ClientSecret:     cfg.RoutingApiClientSecret,
+		UaaEndpoint:      cfg.UaaApiUrl,
+		SkipVerification: cfg.SkipTlsVerification,
 	}
 }

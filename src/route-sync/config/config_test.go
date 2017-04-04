@@ -59,7 +59,7 @@ uaa_api_url: yoururl
 				cs, err := NewConfigSchemaFromFile(configFile.Name())
 				Expect(err).NotTo(HaveOccurred())
 				Expect(cs.CloudFoundryAppDomainName).To(Equal("mydomain"))
-				Expect(cs.UAAApiURL).To(Equal("yoururl"))
+				Expect(cs.UaaApiUrl).To(Equal("yoururl"))
 			})
 		})
 		Context("with a poorly formated file", func() {
@@ -87,12 +87,12 @@ yaml-error
 					{Host: "myhost", User: "user", Password: "pass"},
 					{Host: "myhost2", User: "user2", Password: "pass2"},
 				},
-				RoutingAPIURL:             "routingurl",
+				RoutingApiUrl:             "routingurl",
 				CloudFoundryAppDomainName: "appdomain",
-				UAAApiURL:                 "uaaurl",
-				RoutingAPIUsername:        "myuser",
-				RoutingAPIClientSecret:    "mysecret",
-				SkipTLSVerification:       false,
+				UaaApiUrl:                 "uaaurl",
+				RoutingApiUsername:        "myuser",
+				RoutingApiClientSecret:    "mysecret",
+				SkipTlsVerification:       false,
 				KubeConfigPath:            "somewhere",
 			}
 		})
@@ -113,12 +113,12 @@ yaml-error
 					{Host: "myhost", User: "user", Password: "pass"},
 					{Host: "myhost2", User: "user2", Password: "pass2"},
 				}))
-				Expect(cfg.RoutingAPIURL).To(Equal("routingurl"))
+				Expect(cfg.RoutingApiUrl).To(Equal("routingurl"))
 				Expect(cfg.CloudFoundryAppDomainName).To(Equal("appdomain"))
-				Expect(cfg.UAAApiURL).To(Equal("uaaurl"))
-				Expect(cfg.RoutingAPIUsername).To(Equal("myuser"))
-				Expect(cfg.RoutingAPIClientSecret).To(Equal("mysecret"))
-				Expect(cfg.SkipTLSVerification).To(BeFalse())
+				Expect(cfg.UaaApiUrl).To(Equal("uaaurl"))
+				Expect(cfg.RoutingApiUsername).To(Equal("myuser"))
+				Expect(cfg.RoutingApiClientSecret).To(Equal("mysecret"))
+				Expect(cfg.SkipTlsVerification).To(BeFalse())
 				Expect(cfg.KubeConfigPath).To(Equal("somewhere"))
 			})
 			It("can construct a UAAConfig", func() {
@@ -145,10 +145,10 @@ yaml-error
 			Entry("a nats server with an empty user", `nats_servers\[\].user`, func(cs *ConfigSchema) { cs.NatsServers[0].User = "" }),
 			Entry("a nats server with an empty password", `nats_servers\[\].password`, func(cs *ConfigSchema) { cs.NatsServers[0].Password = "" }),
 			Entry("empty app_domain_name", "app_domain_name", func(cs *ConfigSchema) { cs.CloudFoundryAppDomainName = "" }),
-			Entry("empty uaa_api_url", "uaa_api_url", func(cs *ConfigSchema) { cs.UAAApiURL = "" }),
-			Entry("empty routing_api_url", "routing_api_url", func(cs *ConfigSchema) { cs.RoutingAPIURL = "" }),
-			Entry("empty routing_api_username", "routing_api_username", func(cs *ConfigSchema) { cs.RoutingAPIUsername = "" }),
-			Entry("empty routing_api_client_secret", "routing_api_client_secret", func(cs *ConfigSchema) { cs.RoutingAPIClientSecret = "" }),
+			Entry("empty uaa_api_url", "uaa_api_url", func(cs *ConfigSchema) { cs.UaaApiUrl = "" }),
+			Entry("empty routing_api_url", "routing_api_url", func(cs *ConfigSchema) { cs.RoutingApiUrl = "" }),
+			Entry("empty routing_api_username", "routing_api_username", func(cs *ConfigSchema) { cs.RoutingApiUsername = "" }),
+			Entry("empty routing_api_client_secret", "routing_api_client_secret", func(cs *ConfigSchema) { cs.RoutingApiClientSecret = "" }),
 			Entry("empty kube_config_path", "kube_config_path", func(cs *ConfigSchema) { cs.KubeConfigPath = "" }),
 		)
 	})
