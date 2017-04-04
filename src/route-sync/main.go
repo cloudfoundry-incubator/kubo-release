@@ -15,11 +15,14 @@ import (
 	"code.cloudfoundry.org/lager"
 )
 
+var configPathFlag = flag.String("configPath", "route-sync.yml", "path to configuration file with json encoded content")
+
 func main() {
 	logger := lager.NewLogger("route-sync")
 	logger.RegisterSink(lager.NewWriterSink(os.Stdout, lager.DEBUG))
 
-	cfg := loadConfig(logger)
+	flag.Parse()
+	cfg := loadConfig(logger, *configPathFlag)
 
 	applicationPooler := pooler.ByTime(time.Duration(30*time.Second), logger)
 	src := kubernetes.DefaultSourceBuilder().CreateSource(cfg, logger)
@@ -31,14 +34,7 @@ func main() {
 	app.Run(ctx, cfg)
 }
 
-func loadConfig(logger lager.Logger) *config.Config {
-	var configPath string
-
-	flags := flag.NewFlagSet(os.Args[0], flag.ExitOnError)
-	flags.StringVar(&configPath, "configPath", "", "path to configuration file with json encoded content")
-	flags.Set("configPath", "route-sync.yml")
-	flags.Parse(os.Args[1:])
-
+func loadConfig(logger lager.Logger, configPath string) *config.Config {
 	cfgSchema, err := config.NewConfigSchemaFromFile(configPath)
 	if err != nil {
 		logger.Fatal("loading config", err)
