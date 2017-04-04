@@ -1,6 +1,5 @@
 ---
 <%
-require 'json'
 nats_ips = nil
 if_p('nats.machines') do |ips|
   nats_ips = ips.compact
@@ -27,17 +26,14 @@ end.else do
   nats_password = link('nats').p("nats.password")
 end
 
-
-message_bus_servers = nats_ips.map do |ip|
-{
- host: "#{ip}:#{nats_port}",
- user: nats_user,
- password: nats_password
-}
-end
 %>
 
-nats_servers: <%=JSON.pretty_generate(message_bus_servers) %>
+nats_servers:
+<% nats_ips.each do |ip| %>
+   - host: <%="#{ip}:#{nats_port}" %>
+     user: <%=nats_user %>
+     password: <%=nats_password %>
+<% end %>
 app_domain_name: <%=p("cloud_foundry.app_domain") %>
 uaa_api_url: <%=p("cloud_foundry.uaa_url") %>
 routing_api_url: <%=p("cloud_foundry.routing_api_url") %>
