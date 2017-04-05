@@ -44,7 +44,7 @@ add_blob() {
     binary_path=$1
     binary_name=$2
 
-    bosh_cli add-blob "${binary_path}" "container-images/${binary_name}"
+    bosh-cli add-blob "${binary_path}" "container-images/${binary_name}"
 }
 
 main
