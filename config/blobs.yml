@@ -14,10 +14,9 @@ container-images/gcr.io_google_containers_kubedns-amd64:1.7.tgz:
   size: 11894000
   object_id: e37d8b8a-2eae-4170-6216-596da69f26c6
   sha: 9ce0ba73de89e615c7612814a0f06101f55625d5
-container-images/gcr.io_google_containers_kubernetes-dashboard-amd64:v1.4.2.tgz:
-  size: 24933158
-  object_id: ed44fc93-1285-48c9-726f-38e4d8946613
-  sha: 40d47ce31a6ed86d796a1a8f016ef055c796ec42
+container-images/gcr.io_google_containers_kubernetes-dashboard-amd64:v1.6.0.tgz:
+  size: 29053901
+  sha: a49f94b91863986583005118b88e60072e015e75
 container-images/gcr.io_google_containers_pause-amd64:3.0.tgz:
   size: 313309
   object_id: a55832b3-1358-4f78-5cf3-df2a3c13994b
