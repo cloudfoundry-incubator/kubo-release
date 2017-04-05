@@ -17,7 +17,7 @@ import (
 
 var _ = Describe("Config", func() {
 	Context("Reading schema from a file that doesn't exist", func() {
-		It("does not return a config schema", func() {
+		It("returns an error", func() {
 			cs, err := NewConfigSchemaFromFile("why-do-you-have-this-file")
 			Expect(err).To(HaveOccurred())
 			Expect(cs).To(BeNil())
@@ -41,13 +41,6 @@ var _ = Describe("Config", func() {
 			os.Remove(configFile.Name())
 		})
 
-		Context("with an empty file", func() {
-			It("returns a ConfigSchema", func() {
-				cs, err := NewConfigSchemaFromFile(configFile.Name())
-				Expect(err).NotTo(HaveOccurred())
-				Expect(cs).NotTo(BeNil())
-			})
-		})
 		Context("with a partially filled in file", func() {
 			BeforeEach(func() {
 				configFile.Write([]byte(`---
