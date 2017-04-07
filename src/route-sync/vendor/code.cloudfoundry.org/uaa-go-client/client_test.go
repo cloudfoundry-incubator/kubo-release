@@ -404,7 +404,7 @@ const tokenPayload = `{
     "some.scope"
   ],
   "iat": 1481253086,
-  "exp": 1491253686
+  "exp": 2491253686
 }`
 
 func makeValidToken(privateKey *rsa.PrivateKey) (string, error) {

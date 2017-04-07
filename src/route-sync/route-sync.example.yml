@@ -1,0 +1,12 @@
+---
+nats_servers:
+   - host: "localhost"
+     user: "nats"
+     password: "your-secret"
+routing_api_url: https://api.cf.your-domain.com
+app_domain_name: cf.your-domain.com
+uaa_api_url: https://uaa.cf.your-domain.com
+routing_api_username: admin
+routing_api_client_secret: foobar123
+skip_tls_verification: false
+kube_config_path: /var/vcap/jobs/kubeconfig/config/kubeconfig

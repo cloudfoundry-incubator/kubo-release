@@ -1,5 +1,5 @@
-hash: 7919d1f837b220a7c6faec1e9962e29cbf58d219a38894cc289ea5a746ee33ee
-updated: 2017-03-30T14:34:09.183212295+01:00
+hash: e6f59975c13a4afe92013073df86a61f7c9bf169c776c71a7cfb27be7aaa4858
+updated: 2017-04-07T14:09:51.31863337+01:00
 imports:
 - name: cloud.google.com/go
   version: 3b1ae45394a234c385be014e9a488f2bb6eef821
@@ -9,7 +9,7 @@ imports:
 - name: code.cloudfoundry.org/clock
   version: 2269160ae1757f96bbb8c6475e6fa36c805e73e0
 - name: code.cloudfoundry.org/lager
-  version: 62951a8009ab331bb21dc418074fa54e66eb9b6a
+  version: de8e9c6c6e474e5e3668aea1a9817bdb4ceeceb0
   subpackages:
   - lagertest
 - name: code.cloudfoundry.org/multierror
@@ -23,7 +23,7 @@ imports:
 - name: code.cloudfoundry.org/trace-logger
   version: 107ef08a939d5be6092ce2b5f171a16aba149cb2
 - name: code.cloudfoundry.org/uaa-go-client
-  version: b075ab43efef78bbe8a8359b33edfa2b7ce547f5
+  version: cf81a3f10c84f8c50094b58724492f30cfed240b
   subpackages:
   - config
   - fakes
@@ -91,8 +91,6 @@ imports:
   version: 72f9bd7c4e0c2a40055ab3d0f09654f730cce982
 - name: github.com/juju/ratelimit
   version: 77ed1c8a01217656d2080ad51981f6e99adaa177
-- name: github.com/kelseyhightower/envconfig
-  version: f611eb38b3875cc3bd991ca91c51d06446afa14c
 - name: github.com/mailru/easyjson
   version: d5b7844b561a7bc640052f1b935f7b800330d7e0
   subpackages:
@@ -100,33 +98,37 @@ imports:
   - jlexer
   - jwriter
 - name: github.com/nats-io/go-nats
-  version: 399fe00b07f048bdacbdbfdfeda39712642e6a11
+  version: 6949c8e06a246e4177961aab22940b5c411e48f0
   subpackages:
   - encoders/builtin
   - util
 - name: github.com/nats-io/nats
-  version: 399fe00b07f048bdacbdbfdfeda39712642e6a11
+  version: 6949c8e06a246e4177961aab22940b5c411e48f0
 - name: github.com/nats-io/nuid
   version: 3cf34f9fca4e88afa9da8eabd75e3326c9941b44
 - name: github.com/onsi/ginkgo
-  version: 43e2af1f01ace55adbb6d7d0f30416476db1baae
+  version: 77a8c1e5c40d6bb6c5eb4dd4bdce9763564f6298
   subpackages:
   - config
+  - extensions/table
   - internal/codelocation
   - internal/containernode
   - internal/failer
   - internal/leafnodes
   - internal/remote
   - internal/spec
+  - internal/spec_iterator
   - internal/specrunner
   - internal/suite
   - internal/testingtproxy
   - internal/writer
   - reporters
   - reporters/stenographer
+  - reporters/stenographer/support/go-colorable
+  - reporters/stenographer/support/go-isatty
   - types
 - name: github.com/onsi/gomega
-  version: c90bd38f8da6e92f8b114953db2f0ad7361fb4b4
+  version: 334b8f472b3af5d541c5642701c1e29e2126f486
   subpackages:
   - format
   - gbytes
@@ -204,9 +206,9 @@ imports:
 - name: gopkg.in/inf.v0
   version: 3887ee99ecf07df5b447e9b00d9c0b2adaa9f3e4
 - name: gopkg.in/yaml.v2
-  version: 53feefa2559fb8dfa8d81baad31be332c97d6c77
+  version: a3f3340b5840cee44f372bddb5880fcbc419b46a
 - name: k8s.io/apimachinery
-  version: 75b8dd260ef0469d96d578705a87cffd0e09dab8
+  version: 22062ea7ff0c73d5114c07ad4a0875c15a8a9826
   subpackages:
   - pkg/apis/meta/v1
 - name: k8s.io/client-go

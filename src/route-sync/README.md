@@ -13,12 +13,10 @@ This repo should be imported as `route-sync` meaning your GOPATH should be set t
 ### Running the application
 
 ```
-cp .envrc.example .envrc
+cp route-sync.example.yml route-sync.yml 
 
 # modify the config for your enviornment
-$EDITOR .envrc
-
-direnv allow
+$EDITOR route-sync.yml 
 
 go build && ./route-sync
 ```
