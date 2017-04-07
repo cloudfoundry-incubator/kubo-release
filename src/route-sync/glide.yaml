@@ -12,8 +12,6 @@ import:
   - kubernetes
   - tools/clientcmd
 - package: code.cloudfoundry.org/lager
-- package: github.com/kelseyhightower/envconfig
-  version: ~1.3.0
 - package: code.cloudfoundry.org/uaa-go-client
 - package: code.cloudfoundry.org/multierror
 - package: code.cloudfoundry.org/clock
