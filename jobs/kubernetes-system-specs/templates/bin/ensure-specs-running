@@ -14,13 +14,14 @@ function specs_ready() {
   fi
 
   if [ "${pods_ready}" -ne "${expected_pods}" ]; then
-    echo "ensure-specs-running failure: Deployed pods that are 'Ready'"
+    echo "ensure-specs-running failure after $SECONDS seconds: Deployed pods that are 'Ready'"
     return 1
   fi
 
   return 0
 }
 
+SECONDS=0;
 until specs_ready; do
   sleep 2
 done
