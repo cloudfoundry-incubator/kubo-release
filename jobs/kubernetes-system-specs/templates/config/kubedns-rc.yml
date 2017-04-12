@@ -45,9 +45,8 @@ spec:
         operator: "Exists"
       volumes:
       - name: kube-dns-config
-        configMap:
-          name: kube-dns
-          optional: true
+        hostPath:
+          path: "/var/vcap/jobs/kubeconfig/config/"
       containers:
       - name: kubedns
         image: gcr.io/google_containers/k8s-dns-kube-dns-amd64:1.14.1
@@ -170,4 +169,3 @@ spec:
             memory: 20Mi
             cpu: 10m
       dnsPolicy: Default  # Don't use cluster DNS.
-      serviceAccountName: kube-dns
