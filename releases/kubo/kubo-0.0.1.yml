@@ -1,6 +1,6 @@
 name: kubo
-version: "1"
-commit_hash: 1f1959a
+version: 0.0.1
+commit_hash: 8899b499
 uncommitted_changes: false
 jobs:
 - name: flanneld
@@ -79,6 +79,6 @@ packages:
   sha1: b0ab6a4a8df78cbe3cfebe210176f4abd3c10eb7
   dependencies: []
 license:
-  version: 01d3b6fe4d9347d32f09bff84d7cb0057bd22605
-  fingerprint: 01d3b6fe4d9347d32f09bff84d7cb0057bd22605
-  sha1: b7a061d18cb157fb3b461c5f92ad084f4d5ef65a
+  version: 58fedea68ee32b832fc7ca1a78b2e9b4b7567e17
+  fingerprint: 58fedea68ee32b832fc7ca1a78b2e9b4b7567e17
+  sha1: d290aed6f0f80df3fcfc066d916de00ff4135620
