@@ -4,7 +4,7 @@ cni/cni-amd64-v0.5.2.tgz:
   sha: 71f411080245aa14d0cc06f6824e8039607dd9e9
 cni/util-linux_2.27.1-6ubuntu3_amd64.deb:
   size: 847730
-  object_id: e530cfb2-0d61-4da6-7ace-fa86a9e87d64
+  object_id: d838b9fd-3c7a-458f-551d-5e0ed832a20a
   sha: 568f62cb031608ab09ba1e3c2121e9e8b92dcae4
 container-images/gcr.io_google_containers_exechealthz-amd64:1.1.tgz:
   size: 2870256
