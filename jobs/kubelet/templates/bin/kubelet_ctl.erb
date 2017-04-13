@@ -28,7 +28,7 @@ send_process_stderr_to_logfile() {
 
 start_kubelet() {
 
-  ln -s /var/vcap/jobs/kubelet/packages/cni/bin/nsenter /usr/bin/nsenter
+  ln -s -f /var/vcap/jobs/kubelet/packages/cni/bin/nsenter /usr/bin/nsenter
 
   kubelet \
     --allow-privileged=true \
