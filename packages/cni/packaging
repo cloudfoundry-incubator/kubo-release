@@ -2,4 +2,11 @@ set -exu
 
 mkdir -p ${BOSH_INSTALL_TARGET}/bin
 tar -xzf cni-amd64*.tgz -C ${BOSH_INSTALL_TARGET}/bin/
-chmod +x "${BOSH_INSTALL_TARGET:?}/bin/*"
+
+mkdir -p utillocal
+tar -xzf util-linux*.deb -C utillocal
+tar -xzf utillocal/data.tar.xz -C utillocal
+
+cp utillocal/usr/bin/nsenter ${BOSH_INSTALL_TARGET}/bin
+
+chmod +x "${BOSH_INSTALL_TARGET}/bin/*"
