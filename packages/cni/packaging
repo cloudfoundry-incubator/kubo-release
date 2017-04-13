@@ -1,0 +1,5 @@
+set -exu
+
+mkdir -p ${BOSH_INSTALL_TARGET}/bin
+tar -xzf cni-amd64*.tgz -C ${BOSH_INSTALL_TARGET}/bin/
+chmod +x "${BOSH_INSTALL_TARGET:?}/bin/*"

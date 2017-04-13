@@ -1,0 +1,5 @@
+---
+name: cni
+
+files:
+- cni/*
