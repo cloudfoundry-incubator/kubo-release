@@ -7,7 +7,6 @@ import (
 	"route-sync/route"
 	"time"
 
-	"code.cloudfoundry.org/lager"
 	"code.cloudfoundry.org/lager/lagertest"
 
 	"route-sync/route/routefakes"
@@ -20,7 +19,7 @@ import (
 var _ = Describe("Time-based Pooler", func() {
 
 	var (
-		logger     lager.Logger
+		logger     *lagertest.TestLogger
 		pool       pooler.Pooler
 		src        *routefakes.FakeSource
 		router     *routefakes.FakeRouter
@@ -72,10 +71,10 @@ var _ = Describe("Time-based Pooler", func() {
 		Expect(httpRoutesRecieved).Should(Equal(httpRoutes))
 		Expect(tcpRoutesRecieved).Should(Equal(tcpRoutes))
 
-		Expect(logger).To(gbytes.Say("registered routes"))
-		Expect(logger).To(gbytes.Say("HTTP Frontend"))
-		Expect(logger).To(gbytes.Say("HTTP Backend"))
-		Expect(logger).To(gbytes.Say("TCP Backend"))
+		Eventually(logger.Buffer().Contents).Should(ContainSubstring("registered routes"))
+		Eventually(logger.Buffer().Contents).Should(ContainSubstring("HTTP Frontend"))
+		Eventually(logger.Buffer().Contents).Should(ContainSubstring("HTTP Backend"))
+		Eventually(logger.Buffer().Contents).Should(ContainSubstring("TCP Backend"))
 	})
 
 	Context("with a failing TCP source", func() {
