@@ -115,21 +115,27 @@ jq-linux64-1.5:
   sha: d8e36831c3c94bb58be34dd544f44a6c6cb88568
 kubernetes-1.6.1/kube-apiserver:
   size: 149384995
+  object_id: 2c4631a5-0214-464a-7c7e-7fa4a6588764
   sha: 27d770f1274ff206343ac47bf3ef06078ca2a476
 kubernetes-1.6.1/kube-controller-manager:
   size: 131606504
+  object_id: 7f689f08-cf41-4e67-55dc-9ad731813f1b
   sha: aba3db19807dccebb2fea32ef9821196b0d82cfe
 kubernetes-1.6.1/kube-proxy:
   size: 64016146
+  object_id: e6b29df0-bc30-4668-4a20-a91208d9689b
   sha: dc28561c8705a31ae47c918579be4cdbbb64f102
 kubernetes-1.6.1/kube-scheduler:
   size: 75637793
+  object_id: f8f943a6-d7f1-4811-49b2-af1ff0c1b8b3
   sha: 97fea7ce9f2e97a1974b1639a6e6917307e3426e
 kubernetes-1.6.1/kubectl:
   size: 70704507
+  object_id: 519fcada-14e6-4d0d-6628-ca8fd7a5da07
   sha: 65d27d731fbd25aa6beb6049691d58c5f09848c0
 kubernetes-1.6.1/kubelet:
   size: 138647424
+  object_id: c1b70b19-c92a-4bd4-6a79-6dabfd371231
   sha: cfec85b7844887525852991d91054039fba59156
 nginx/nginx-release-1.11.4.tar.gz:
   size: 987038
