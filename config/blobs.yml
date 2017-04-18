@@ -6,22 +6,22 @@ cni/util-linux_2.27.1-6ubuntu3_amd64.deb:
   size: 847730
   object_id: d838b9fd-3c7a-458f-551d-5e0ed832a20a
   sha: 568f62cb031608ab09ba1e3c2121e9e8b92dcae4
-container-images/gcr.io_google_containers_exechealthz-amd64:1.1.tgz:
-  size: 2870256
-  object_id: 5f81ba15-f408-4e6e-53f9-21bc98335601
-  sha: 94d3238f950dc5309e817a29ce9f4e459966ce95
 container-images/gcr.io_google_containers_heapster:v1.1.0.tgz:
   size: 32207205
   object_id: d992ea4a-698e-44b8-4098-ce3fbefacc20
   sha: 70c7b90bf79d9714a974aa0b422941b568264424
-container-images/gcr.io_google_containers_kube-dnsmasq-amd64:1.3.tgz:
-  size: 2476131
-  object_id: f2aa8c89-ad52-4c75-4978-61ab28169bd7
-  sha: 7d83271245ca292683b32841b7cfb27a3a259193
-container-images/gcr.io_google_containers_kubedns-amd64:1.7.tgz:
-  size: 11894000
-  object_id: e37d8b8a-2eae-4170-6216-596da69f26c6
-  sha: 9ce0ba73de89e615c7612814a0f06101f55625d5
+container-images/gcr.io_google_containers_k8s-dns-dnsmasq-nanny-amd64:1.14.1.tgz:
+  size: 11723976
+  object_id: 992ac5cd-f89b-483a-595f-201ed1072111
+  sha: 7cf6a49c9026fd32687673574279a45ba6e50239
+container-images/gcr.io_google_containers_k8s-dns-kube-dns-amd64:1.14.1.tgz:
+  size: 13033799
+  object_id: 3f07c79a-5553-4d17-669a-93dd89281264
+  sha: ee21cb9163915c21a3959b52909098a8683a694e
+container-images/gcr.io_google_containers_k8s-dns-sidecar-amd64:1.14.1.tgz:
+  size: 11348511
+  object_id: bc3c487e-1f0a-4afc-5733-a594783a414b
+  sha: 425533f7725e6c98a07c5b75ba907958582f4cbe
 container-images/gcr.io_google_containers_kubernetes-dashboard-amd64:v1.6.0.tgz:
   size: 29053901
   object_id: 25d6d4d9-457f-4d83-4e98-02cfa2021c3a
