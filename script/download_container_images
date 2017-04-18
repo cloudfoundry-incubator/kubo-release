@@ -1,7 +1,6 @@
 #!/bin/bash
 set -e
 
-
 main() {
     local images staging_dir
 
@@ -21,12 +20,29 @@ main() {
 
     pushd "$(dirname "${BASH_SOURCE[0]}")/.."
         for image in "${images[@]}"; do
-            output_file=$(echo "${image}" | sed 's/\//_/g').tgz
-            output_path="${staging_dir}/${output_file}"
-            download "${image}" "${output_path}"
-            add_blob "${output_path}" "${output_file}"
+            if blob_missing "$image"; then
+                output_file=${image//\//_}.tgz
+                output_path="${staging_dir}/${output_file}"
+                download "${image}" "${output_path}"
+                add_blob "${output_path}" "${output_file}"
+            else
+                echo "blob for $image already exists"
+            fi
         done
     popd
+}
+
+blob_missing() {
+    local image full_image_name
+    image="$1"
+
+    full_image_name="container-images/${image//\//_}"
+
+    if bosh-cli blobs | grep -q "$full_image_name" ; then
+        return 1
+    else
+        return 0
+    fi
 }
 
 download() {
