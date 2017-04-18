@@ -1,13 +1,12 @@
 #!/bin/bash
 set -e
 
-staging_dir=staging/container-images
 
 main() {
-    local images
+    local images staging_dir
 
     images=(
-      "gcr.io/google_containers/pause-amd64:3.0" 
+      "gcr.io/google_containers/pause-amd64:3.0"
       "gcr.io/google_containers/heapster:v1.1.0"
       "kubernetes/heapster_influxdb:v0.6"
       "gcr.io/google_containers/kubedns-amd64:1.7"
@@ -16,33 +15,34 @@ main() {
       "gcr.io/google_containers/kubernetes-dashboard-amd64:v1.6.0"
     )
 
+    staging_dir=$(mktemp -d)
 
-    pushd $(dirname $0)/..
-        mkdir -p ${staging_dir}
+    trap '{ cd - ; rm -rf "$staging_dir"; exit 255; }' SIGINT
 
-        for image in ${images[@]}; do
-            output_file=`echo ${image} | sed 's/\//_/g'`.tgz
-            output_path=${staging_dir}/${output_file}
-            download ${image} ${output_path}
-            add_blob ${output_path} ${output_file}
+    pushd "$(dirname "${BASH_SOURCE[0]}")/.."
+        for image in "${images[@]}"; do
+            output_file=$(echo "${image}" | sed 's/\//_/g').tgz
+            output_path="${staging_dir}/${output_file}"
+            download "${image}" "${output_path}"
+            add_blob "${output_path}" "${output_file}"
         done
     popd
 }
 
 download() {
     local image_name output_path
-    image_name=$1
-    output_path=$2
+    image_name="$1"
+    output_path="$2"
 
-    docker pull ${image_name}    
-    docker save ${image_name} | gzip > ${output_path}
+    docker pull "${image_name}"
+    docker save "${image_name}" | gzip > "${output_path}"
 
-    echo "saving to: ${output_path}" 
+    echo "saving to: ${output_path}"
 }
 
 add_blob() {
-    binary_path=$1
-    binary_name=$2
+    local binary_path="$1"
+    local binary_name="$2"
 
     bosh-cli add-blob "${binary_path}" "container-images/${binary_name}"
 }
