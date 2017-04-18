@@ -85,12 +85,7 @@ spec:
         - --dns-port=10053
         - --kubecfg-file=/var/vcap/jobs/kubeconfig/config/kubeconfig
         - --config-dir=/var/vcap/jobs/kubeconfig/config
-        # ^^ could it be /kube-dns-config? #
         - --v=2
-        # env:
-        # - name: PROMETHEUS_PORT
-        #   value: "10055"
-        # ^^ Maybe this is optional?
         ports:
         - containerPort: 10053
           name: dns-local
@@ -101,7 +96,6 @@ spec:
         volumeMounts:
         - name: kube-dns-config
           mountPath: /var/vcap/jobs/kubeconfig/config/
-          # ^^ What is this used for?
       - name: dnsmasq
         image: gcr.io/google_containers/k8s-dns-dnsmasq-nanny-amd64:1.14.1
         imagePullPolicy: IfNotPresent
@@ -118,7 +112,6 @@ spec:
         - -v=2
         - -logtostderr
         - -configDir=/etc/k8s/dns/dnsmasq-nanny
-        # ^^ Does this exist?
         - -restartDnsmasq=true
         - --
         - -k
@@ -168,4 +161,4 @@ spec:
           requests:
             memory: 20Mi
             cpu: 10m
-      dnsPolicy: Default  # Don't use cluster DNS.
+      dnsPolicy: Default  # Don't use cluster DNS. We want DNS resolved by worker node for now to be able to access cluster instances.
