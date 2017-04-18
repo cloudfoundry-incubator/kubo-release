@@ -9,12 +9,13 @@ import (
 
 	cfConfig "code.cloudfoundry.org/route-registrar/config"
 
+	"sync"
+
 	"code.cloudfoundry.org/lager"
 	"code.cloudfoundry.org/lager/lagertest"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"github.com/onsi/gomega/gbytes"
-	"sync"
 )
 
 var _ = Describe("Application", func() {
@@ -24,14 +25,13 @@ var _ = Describe("Application", func() {
 		sourceFake *routefakes.FakeSource
 		routerFake *routefakes.FakeRouter
 		cfg        = &config.Config{
-			RawNatsServers:            "[{\"Host\": \"host\",\"User\": \"user\", \"Password\": \"password\"}]",
 			NatsServers:               []cfConfig.MessageBusServer{{Host: "host", User: "user", Password: "password"}},
 			RoutingApiUrl:             "https://api.cf.example.org",
 			CloudFoundryAppDomainName: "apps.cf.example.org",
-			UAAApiURL:                 "https://uaa.cf.example.org",
-			RoutingAPIUsername:        "routeUser",
-			RoutingAPIClientSecret:    "aabbcc",
-			SkipTLSVerification:       true,
+			UaaApiUrl:                 "https://uaa.cf.example.org",
+			RoutingApiUsername:        "routeUser",
+			RoutingApiClientSecret:    "aabbcc",
+			SkipTlsVerification:       true,
 			KubeConfigPath:            "~/.config/kube",
 		}
 	)

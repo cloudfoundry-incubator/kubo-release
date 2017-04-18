@@ -5,7 +5,11 @@ import (
 	"route-sync/cloudfoundry/tcp"
 	tcpfakes "route-sync/cloudfoundry/tcp/fakes"
 	"route-sync/config"
+
 	cfConfig "code.cloudfoundry.org/route-registrar/config"
+
+	"route-sync/route"
+	"route-sync/route/routefakes"
 
 	"code.cloudfoundry.org/clock"
 	"code.cloudfoundry.org/lager"
@@ -17,8 +21,6 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"github.com/onsi/gomega/gbytes"
-	"route-sync/route"
-	"route-sync/route/routefakes"
 )
 
 var _ = Describe("CloudFoundryRouterBuilder", func() {
@@ -32,14 +34,13 @@ var _ = Describe("CloudFoundryRouterBuilder", func() {
 		fakeTcpRouter             tcp.Router
 		fakeMessageBus            *messagebusfakes.FakeMessageBus
 		cfg                       = &config.Config{
-			RawNatsServers:            "[{\"Host\": \"host\",\"User\": \"user\", \"Password\": \"password\"}]",
 			NatsServers:               []cfConfig.MessageBusServer{{Host: "host", User: "user", Password: "password"}},
 			RoutingApiUrl:             "https://api.cf.example.org",
 			CloudFoundryAppDomainName: "apps.cf.example.org",
-			UAAApiURL:                 "https://uaa.cf.example.org",
-			RoutingAPIUsername:        "routeUser",
-			RoutingAPIClientSecret:    "aabbcc",
-			SkipTLSVerification:       true,
+			UaaApiUrl:                 "https://uaa.cf.example.org",
+			RoutingApiUsername:        "routeUser",
+			RoutingApiClientSecret:    "aabbcc",
+			SkipTlsVerification:       true,
 			KubeConfigPath:            "~/.config/kube",
 		}
 	)

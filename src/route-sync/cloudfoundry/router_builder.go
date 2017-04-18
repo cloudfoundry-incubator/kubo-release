@@ -50,7 +50,7 @@ func (builder *RouterBuilder) createTCPRouter(cfg *config.Config, logger lager.L
 	if err != nil {
 		logger.Fatal("creating UAA client", err)
 	}
-	tcpRouter, err := builder.newTCPRouter(uaaClient, cfg.RoutingApiUrl, cfg.SkipTLSVerification)
+	tcpRouter, err := builder.newTCPRouter(uaaClient, cfg.RoutingApiUrl, cfg.SkipTlsVerification)
 	if err != nil {
 		logger.Fatal("creating TCP router", err)
 	}

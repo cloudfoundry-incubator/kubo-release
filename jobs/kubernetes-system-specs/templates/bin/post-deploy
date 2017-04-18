@@ -23,7 +23,7 @@ verify_specs() {
   then
     echo "all expected specs are running"
   else
-    echo "failed to start all system specs after $TIMEOUT"
+    echo "failed to start all system specs after $TIMEOUT with exit code $?"
     exit 1
   fi
 }

@@ -2,7 +2,6 @@ package tcp_test
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"net/http/httptest"
 	. "route-sync/cloudfoundry/tcp"
@@ -13,6 +12,7 @@ import (
 	uaaschema "code.cloudfoundry.org/uaa-go-client/schema"
 
 	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/ginkgo/extensions/table"
 	. "github.com/onsi/gomega"
 )
 
@@ -28,24 +28,15 @@ var _ = Describe("routing-api TCP router", func() {
 		}, nil)
 	})
 
-	It("requires UAA client and an API endpoint", func() {
-		var invalidCreations = []struct {
-			uaaClient uaa_go_client.Client
-			api       string
-		}{
-			{nil, ""},
-			{&fooClient, ""},
-			{nil, "bar"},
-		}
-
-		for _, t := range invalidCreations {
-			Context(fmt.Sprintf("uaaClient: %q, api: %s", t.uaaClient, t.api), func() {
-				router, err := NewRoutingApi(t.uaaClient, t.api, false)
-				Expect(router).To(BeNil())
-				Expect(err).NotTo(BeNil())
-			})
-		}
-	})
+	DescribeTable("requires UAA client and an API endpoint", func(uaaClient uaa_go_client.Client, api string) {
+		router, err := NewRoutingApi(uaaClient, api, false)
+		Expect(router).To(BeNil())
+		Expect(err).NotTo(BeNil())
+	},
+		Entry("", nil, ""),
+		Entry("", &fooClient, ""),
+		Entry("", nil, "bar"),
+	)
 
 	Context("With a valid UAA token", func() {
 		var (
