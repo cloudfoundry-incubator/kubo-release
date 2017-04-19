@@ -30,6 +30,8 @@ start_kubelet() {
 
   ln -s -f /var/vcap/jobs/kubelet/packages/cni/bin/nsenter /usr/bin/nsenter
 
+  node_name=$(hostname -I | awk '{print $1}')
+
   kubelet \
     --allow-privileged=true \
     --api-servers=<%= p("kubernetes-api-url") %> \
@@ -39,7 +41,7 @@ start_kubelet() {
     --container-runtime=docker \
     --docker="${DOCKER_SOCKET}" \
     --docker-endpoint="${DOCKER_SOCKET}" \
-    --hostname-override="<%= spec.id %>" \
+    --hostname-override="${node_name}" \
     --kubeconfig=/var/vcap/jobs/kubeconfig/config/kubeconfig \
     --non-masquerade-cidr 10.200.0.0/16 \
     --serialize-image-pulls=false \
