@@ -16,7 +16,7 @@ main() {
 
     staging_dir=$(mktemp -d)
 
-    trap '{ cd - ; rm -rf "$staging_dir"; exit 255; }' SIGINT
+    trap '{ rm -rf "$staging_dir"; }' EXIT
 
     pushd "$(dirname "${BASH_SOURCE[0]}")/.."
         for image in "${images[@]}"; do

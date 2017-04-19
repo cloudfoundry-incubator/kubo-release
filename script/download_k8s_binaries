@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
-
 set -e
 
-kubernetes_version=$1
-
 main() {
+  local staging_dir kubernetes_version
+  kubernetes_version=$1
+
   if [ $# -ne 1 ]; then
     echo "Usage: $(basename "$0") [KUBERNETES VERSION]"
     exit  1
@@ -12,7 +12,7 @@ main() {
 
   staging_dir=$(mktemp -d)
 
-  trap '{ cd - ; rm -rf "$staging_dir"; exit 255; }' SIGINT
+  trap '{ rm -rf "$staging_dir"; }' EXIT
 
   binaries=(
     "kube-apiserver"
@@ -26,23 +26,27 @@ main() {
   pushd "$(dirname "${BASH_SOURCE[0]}")/.."
 
     for binary in "${binaries[@]}"; do
-      download "${binary}"
-      add_blob "${binary}"
+      download "${binary}" "${staging_dir}" "${kubernetes_version}"
+      add_blob "${binary}" "${staging_dir}" "${kubernetes_version}"
     done
 
   popd
 }
 
 download() {
-  local binary_name
+  local binary_name staging_dir kubernetes_version
   binary_name="$1"
+  staging_dir="$2"
+  kubernetes_version="$3"
 
   wget -O "${staging_dir}/${binary_name}" "https://storage.googleapis.com/kubernetes-release/release/v${kubernetes_version}/bin/linux/amd64/${binary_name}"
 }
 
 add_blob() {
-  local binary_name blob_name
+  local binary_name blob_name staging_dir kubernetes_version
   binary_name="$1"
+  staging_dir="$2"
+  kubernetes_version="$3"
   blob_name=$(bosh-cli blobs | grep "$binary_name" | awk '{ print $1 }')
 
   bosh-cli remove-blob "$blob_name"
