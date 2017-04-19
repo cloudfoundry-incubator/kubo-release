@@ -80,7 +80,6 @@ spec:
           initialDelaySeconds: 3
           timeoutSeconds: 5
         args:
-        # command = "/kube-dns"
         - --domain=cluster.local.
         - --dns-port=10053
         - --kubecfg-file=/var/vcap/jobs/kubeconfig/config/kubeconfig
