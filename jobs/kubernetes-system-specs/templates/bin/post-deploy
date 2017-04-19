@@ -12,7 +12,7 @@ apply_spec() {
 
 deploy_specs() {
   apply_spec "kubedns-svc.yml"
-  apply_spec "kubedns-rc.yml"
+  apply_spec "kubedns-controller.yml"
   apply_spec "influxdb.yml"
   apply_spec "heapster.yml"
   apply_spec "kubernetes-dashboard.yml"
