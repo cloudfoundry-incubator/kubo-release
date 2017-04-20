@@ -14,7 +14,10 @@ node_name=<%= spec.id %>
 docker0_addr=$(route -n | grep docker0 | awk '{print $1}')
 docker0_gw=$(route -n | grep docker0 | awk '{print $2}')
 docker0_netmask=$(route -n | grep docker0 | awk '{print $3}')
-route del -net $docker0_addr gw $docker0_gw netmask $docker0_netmask dev docker0
+if [ "${docker0_addr}" != "" ]
+then
+  route del -net $docker0_addr gw $docker0_gw netmask $docker0_netmask dev docker0
+fi
 
 DOCKER_SOCKET=unix:///var/vcap/sys/run/docker/docker.sock
 CONTAINER_IMAGE_DIR=/var/vcap/packages/kubernetes/container-images
