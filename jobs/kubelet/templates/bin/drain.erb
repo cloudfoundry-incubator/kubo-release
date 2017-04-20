@@ -63,7 +63,7 @@ check_if_pidfile_exists() {
 }
 
 drain_kubelet() {
-  kubectl --kubeconfig /var/vcap/jobs/kubeconfig/config/kubeconfig drain <%= spec.address %> --grace-period 10 --force --delete-local-data
+  kubectl --kubeconfig /var/vcap/jobs/kubeconfig/config/kubeconfig drain <%= spec.ip %> --grace-period 10 --force --delete-local-data
 }
 
 kill_node() {
