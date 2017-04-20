@@ -3,7 +3,7 @@
 [ -z "$DEBUG" ] || set -x
 
 kubectl="/var/vcap/packages/kubernetes/bin/kubectl --kubeconfig=/var/vcap/jobs/kubeconfig/config/kubeconfig"
-node_name=<%= spec.id %>
+node_name=<%= spec.address %>
 
 # Wait for kubelet to become Ready before we move on to the next node.
 # Scheduling might not be enabled at this time.

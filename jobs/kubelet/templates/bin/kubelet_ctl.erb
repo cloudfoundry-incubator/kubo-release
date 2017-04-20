@@ -39,7 +39,7 @@ start_kubelet() {
     --container-runtime=docker \
     --docker="${DOCKER_SOCKET}" \
     --docker-endpoint="${DOCKER_SOCKET}" \
-    --hostname-override="<%= spec.id %>" \
+    --hostname-override="<%= spec.address %>" \
     --kubeconfig=/var/vcap/jobs/kubeconfig/config/kubeconfig \
     --non-masquerade-cidr 10.200.0.0/16 \
     --serialize-image-pulls=false \
