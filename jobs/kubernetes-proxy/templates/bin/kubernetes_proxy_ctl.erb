@@ -26,10 +26,9 @@ send_process_stderr_to_logfile() {
 
 start_kubernetes_proxy() {
 
-  node_name=$(hostname -I | awk '{print $1}') 
 
   kube-proxy \
-    --hostname-override="${node_name}" \
+    --hostname-override=<%= spec.address %> \
     --master=<%= p("kubernetes-api-url") %> \
     --kubeconfig=/var/vcap/jobs/kubeconfig/config/kubeconfig \
     --proxy-mode=iptables \
