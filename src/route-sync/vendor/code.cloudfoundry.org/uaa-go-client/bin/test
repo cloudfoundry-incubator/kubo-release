@@ -1,0 +1,7 @@
+#!/bin/bash
+
+set -e -u -x
+
+go install -v github.com/onsi/ginkgo/ginkgo
+
+ginkgo -r -failOnPending -randomizeAllSpecs -race "$@"

@@ -1,0 +1,48 @@
+---
+name: route-sync
+
+templates:
+  bin/route-sync-ctl.erb: bin/route-sync-ctl
+  config/route-sync.yml.erb: config/route-sync.yml
+
+packages:
+- route-sync
+- pid_utils
+
+properties:
+  cloud_foundry:
+    uaa_url:
+      description: "URL for UAA API"
+      example: http://uaa.cf.cf-app.com
+    routing_api_url:
+      description: "URL for Routing API"
+      example: http://api.cf.cf-app.com
+    routing_api_client_id:
+      description: "Routing API client id (UAA)"
+      example: tcp_router
+    routing_api_client_secret:
+      description: "Routing API client secret"
+    skip_tls_verification:
+      description: "Skip TLS verification of Cloud Foundry APIs (dev/test only)"
+      default: false
+    app_domain:
+      description: "Cloud Foundry apps domain"
+      example: app.cf.cf-app.com
+ 
+  nats.machines:
+    description: IPs of each NATS cluster member
+    example: |
+      - 192.168.50.123
+      - 192.168.52.123
+  nats.port:
+    description: TCP port of NATS servers
+    default: 4222
+  nats.user:
+    description: User name for NATS authentication
+    default: nats
+  nats.password:
+    description: Password for NATS authentication
+
+consumes:
+- name: kubernetes-workers
+  type: kubernetes-workers

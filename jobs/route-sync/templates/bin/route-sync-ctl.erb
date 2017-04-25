@@ -1,0 +1,51 @@
+#!/bin/bash -ex
+
+NAME="${0##*/}"
+
+RUN_DIR=/var/vcap/sys/run/route-sync
+PIDFILE=$RUN_DIR/route-sync.pid
+LOG_DIR=/var/vcap/sys/log/route-sync
+DATA_DIR=/var/vcap/store/route-sync
+
+# shellcheck disable=SC1091
+. /var/vcap/packages/pid_utils/pid_utils.sh
+
+setup_directories() {
+  mkdir -p "$RUN_DIR" "$LOG_DIR" "$DATA_DIR"
+  chown -R vcap:vcap "$RUN_DIR" "$LOG_DIR" "$DATA_DIR"
+}
+
+start_route_sync() {
+  pid_guard $PIDFILE route-sync
+  echo $$ > $PIDFILE
+
+  exec chpst -u vcap:vcap /var/vcap/packages/route-sync/bin/route-sync \
+    --configPath /var/vcap/jobs/route-sync/config/route-sync.yml \
+    1>> $LOG_DIR/route-sync.stdout.log \
+    2>> $LOG_DIR/route-sync.stderr.log
+}
+
+stop_registrar() {
+  kill_and_wait "$PIDFILE"
+}
+
+pid() {
+  head -1 "$PIDFILE"
+}
+
+case $1 in
+
+  start)
+    setup_directories
+    start_route_sync
+    ;;
+
+  stop)
+    stop_registrar
+    ;;
+
+  *)
+    echo "Usage: $0 {start|stop}"
+    ;;
+
+esac

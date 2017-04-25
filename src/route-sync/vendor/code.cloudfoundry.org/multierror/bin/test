@@ -1,0 +1,19 @@
+#!/bin/bash
+
+set -eux
+
+my_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+# This script expects that it lives one directory below the base directory.
+base_dir="$( cd "${my_dir}/.." && pwd )"
+
+pushd "${base_dir}" > /dev/null
+  ginkgo \
+    -p \
+    -r \
+    -race \
+    -randomizeAllSpecs \
+    -randomizeSuites \
+    -failOnPending \
+    "$@"
+popd > /dev/null

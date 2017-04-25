@@ -1,0 +1,24 @@
+package: route-sync
+import:
+- package: github.com/golang/protobuf
+  subpackages:
+  - proto
+- package: k8s.io/apimachinery
+  subpackages:
+  - pkg/apis/meta/v1
+- package: k8s.io/client-go
+  version: ^2.0.0-alpha.1
+  subpackages:
+  - kubernetes
+  - tools/clientcmd
+- package: code.cloudfoundry.org/lager
+- package: code.cloudfoundry.org/uaa-go-client
+- package: code.cloudfoundry.org/multierror
+- package: code.cloudfoundry.org/clock
+- package: code.cloudfoundry.org/trace-logger
+- package: github.com/dgrijalva/jwt-go
+  version: ^2.0.0
+- package: gopkg.in/yaml.v2
+testImport:
+- package: github.com/onsi/ginkgo
+- package: github.com/onsi/gomega

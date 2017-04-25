@@ -8,6 +8,7 @@ packages:
 - pid_utils
 - etcdctl
 - flanneld
+- cni
 
 properties: {}
 

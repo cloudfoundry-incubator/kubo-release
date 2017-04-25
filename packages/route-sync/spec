@@ -1,0 +1,7 @@
+---
+name: route-sync
+dependencies:
+  - golang
+files:
+  - route-sync/**/*
+

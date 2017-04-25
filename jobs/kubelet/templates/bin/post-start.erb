@@ -3,7 +3,21 @@
 [ -z "$DEBUG" ] || set -x
 
 kubectl="/var/vcap/packages/kubernetes/bin/kubectl --kubeconfig=/var/vcap/jobs/kubeconfig/config/kubeconfig"
-node_name=<%= spec.id %>
+node_name=<%= spec.ip %>
+
+# Deleting docker0 route as a workaround to a routing conflict
+# between the docker0 bridge and the CNI interface
+# TODO: remove this once an upstream docker release is available,
+#       which removes or overrides the docker bridge IP
+#       See: https://github.com/cloudfoundry-community/docker-boshrelease/pull/82
+#
+docker0_addr=$(route -n | grep docker0 | awk '{print $1}')
+docker0_gw=$(route -n | grep docker0 | awk '{print $2}')
+docker0_netmask=$(route -n | grep docker0 | awk '{print $3}')
+if [ "${docker0_addr}" != "" ]
+then
+  route del -net $docker0_addr gw $docker0_gw netmask $docker0_netmask dev docker0
+fi
 
 DOCKER_SOCKET=unix:///var/vcap/sys/run/docker/docker.sock
 CONTAINER_IMAGE_DIR=/var/vcap/packages/kubernetes/container-images
@@ -27,10 +41,10 @@ TIMEOUT=120
 
 if timeout "$TIMEOUT" /var/vcap/jobs/kubelet/bin/ensure_kubelet_up_and_running
 then
+  ${kubectl} uncordon ${node_name}
+  ${kubectl} get nodes ${node_name} | grep -e ' Ready '
   echo "kubelet post-start checks succeeded"
 else
   echo "kubelet failed post-start checks after $TIMEOUT seconds"
   exit 1
 fi
-
-${kubectl} uncordon ${node_name}

@@ -13,6 +13,7 @@ templates:
 packages:
 - pid_utils
 - kubernetes
+- cni
 
 properties:
   tls.kubelet:
