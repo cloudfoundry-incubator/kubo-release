@@ -14,4 +14,4 @@ properties: {}
 
 consumes:
 - name: etcd
-  type: etcd
+  type: etcd_service
