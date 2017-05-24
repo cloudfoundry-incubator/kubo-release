@@ -1,0 +1,10 @@
+#!/bin/bash -e
+
+KUBO_HOSTNAME="<%=p('external_kubo_hostname') %>"
+KUBO_PORT="<%=p('external_kubo_port') %>"
+
+/var/vcap/jobs/kubernetes-api-route-registrar/bin/announce_route
+
+echo curling announced route
+curl ${KUBO_HOSTNAME}:${KUBO_PORT}
+echo done curling announced route

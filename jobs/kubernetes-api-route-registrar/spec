@@ -5,6 +5,7 @@ templates:
   bin/announce_loop.erb: bin/announce_loop
   bin/announce_route.erb: bin/announce_route
   bin/kubernetes-api-route-registrar-ctl: bin/kubernetes-api-route-registrar-ctl
+  bin/post-start.erb: bin/post-start
 
 packages:
 - jq
@@ -35,3 +36,6 @@ properties:
   external_kubo_port:
     description: "Externally accessible port"
     example: 2749
+  external_kubo_hostname:
+    description: "hostname of the external TCP router"
+    example: "tcp.main.kubo.cf-app.com"
