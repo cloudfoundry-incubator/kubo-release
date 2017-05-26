@@ -27,4 +27,6 @@
   # http://www.rsyslog.com/doc/v7-stable/configuration/actions.html: @ = UDP, @@ = TCP
   *.* @@<%= p("syslog-endpoint") %>;CfLogTemplate
 
+  <%= p("syslog-custom-rule") %>
+
 <% end %>

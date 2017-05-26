@@ -11,3 +11,6 @@ properties:
   syslog-endpoint:
     description: "Syslog drain endpoint"
     example: "drain-host:port"
+  syslog-custom-rule:
+    description: "Custom rule for syslog forwarder"
+    default: ""
