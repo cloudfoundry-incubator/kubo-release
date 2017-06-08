@@ -31,11 +31,12 @@ properties:
       description: "Type of Cloud Provider to use"
       example: gce
     gce:
-      token-url:
-        description: "
-      token-body:
       project-id:
+        description: Google Cloud project id. Required when cloud-provider.type is gce
       network-name:
+        description: Google Cloud network name. Required when cloud-provider.type is gce
+      subnetwork-name:
+        description: Google Cloud subnetwork name. Required when cloud-provider.type is gce
 
 provides:
 - name: kubernetes-workers
