@@ -7,6 +7,7 @@ templates:
   bin/pre-start: bin/pre-start
   bin/post-start.erb: bin/post-start
   bin/ensure_kubelet_up_and_running.erb: bin/ensure_kubelet_up_and_running
+  config/gce.conf.erb: config/gce.conf
   config/kubelet.pem.erb: config/kubelet.pem
   config/kubelet-key.pem.erb: config/kubelet-key.pem
 
@@ -25,7 +26,16 @@ properties:
   kubernetes-api-url:
     description: The full URL for the load balancer in front of the masters
     example: https://api.sys.kubo.cf-app.com:8443
-
+  cloud-provider:
+    type:
+      description: "Type of Cloud Provider to use"
+      example: gce
+    gce:
+      token-url:
+        description: "
+      token-body:
+      project-id:
+      network-name:
 
 provides:
 - name: kubernetes-workers

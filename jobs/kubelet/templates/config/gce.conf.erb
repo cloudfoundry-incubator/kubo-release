@@ -1,0 +1,9 @@
+<% if_p("cloud-provider") do |cloud_provider| %>
+<% if cloud_provider.type == "gce" %>
+[Global]
+  token-url: <%= c%>
+  token-body: <%= %>
+  project-id: <%= %>
+  network-name: <%= %>
+  <% end %>
+<% end %>
