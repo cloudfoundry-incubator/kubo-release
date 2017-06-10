@@ -9,13 +9,11 @@ main() {
 }
 
 create_target_dir() {
-  mkdir -p "${BOSH_INSTALL_TARGET:?}/glusterfs-client"
   mkdir -p "${BOSH_INSTALL_TARGET:?}/container-images"
   mkdir -p "${BOSH_INSTALL_TARGET:?}/bin"
 }
 
 copy_depedencies_to_bosh() {
-  cp -a glusterfs-client/* "${BOSH_INSTALL_TARGET:?}/glusterfs-client"
   cp -a container-images/* "${BOSH_INSTALL_TARGET:?}/container-images"
   cp -a kubernetes-${KUBERNETES_VERSION}/* "${BOSH_INSTALL_TARGET:?}/bin"
 }

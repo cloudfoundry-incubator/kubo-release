@@ -46,66 +46,6 @@ flanneld:
   size: 21599816
   object_id: 2e653718-cede-4af5-73ea-d5774e7caad3
   sha: 63076521f1ba5605fa5f97016072a4538d66740f
-glusterfs-client/attr_1%3a2.4.47-1ubuntu1_amd64.deb:
-  size: 29346
-  object_id: 76ab7ea3-a349-44db-5b5a-60751d6b48a5
-  sha: effe5bf80d830d64ce27675b67b4e21c264197e8
-glusterfs-client/fuse_2.9.2-4ubuntu4.14.04.1_amd64.deb:
-  size: 25106
-  object_id: b7be3a5f-2995-4fb9-4cf1-19262d0b76d2
-  sha: d7dde526bc751b118fe296fd8e3d6a7e71251c3c
-glusterfs-client/glusterfs-client_3.8.8-ubuntu1~trusty1_amd64.deb:
-  size: 19482
-  object_id: ca96c193-02d9-48e0-64f8-e4e1d449da2f
-  sha: fdaa5cce3c312e79de29007035a83f2beb165fac
-glusterfs-client/glusterfs-common_3.8.8-ubuntu1~trusty1_amd64.deb:
-  size: 2890072
-  object_id: 19d0fa9f-4af4-4edb-76b4-4df9f9e890b5
-  sha: 98f73f56f40722b9090c630551d281a8bec9a70e
-glusterfs-client/libaio1_0.3.109-4_amd64.deb:
-  size: 6364
-  object_id: deabef39-1ae7-4ba7-7425-ac5c771a2abf
-  sha: 6ba128949ea62436fd917115d325cf3f2fa83e10
-glusterfs-client/libdevmapper-event1.02.1_2%3a1.02.77-6ubuntu2_amd64.deb:
-  size: 10812
-  object_id: 636118cb-d8cd-453b-670f-005fac9df848
-  sha: 2873ddde9dfa3897918fb48a470fdf6ba511e182
-glusterfs-client/libibverbs1_1.1.7-1ubuntu1.1_amd64.deb:
-  size: 23608
-  object_id: 717f94e9-f11a-4a66-4437-3380d53efb87
-  sha: 80c29a02fa10b669c21a67af480e12067691bb95
-glusterfs-client/liblvm2app2.2_2.02.98-6ubuntu2_amd64.deb:
-  size: 243236
-  object_id: 3d66f15f-0481-46e0-4a0f-58a5d26900f5
-  sha: 0c81bd2c10a3f2e9f59550a616cef8366ba33812
-glusterfs-client/libpython2.7-minimal_2.7.6-8ubuntu0.3_amd64.deb:
-  size: 306648
-  object_id: d0fdf82f-9e08-4f0b-54af-a840d80918d1
-  sha: 268fb6f9fffdab4ad34d018e0f39ade3ca83e61e
-glusterfs-client/libpython2.7-stdlib_2.7.6-8ubuntu0.3_amd64.deb:
-  size: 1873274
-  object_id: 332a9c18-c8fb-403e-45e1-dca91fe920b3
-  sha: 194436a60fb7e3256e5617cc84f5f03cc0c0f0ae
-glusterfs-client/libpython2.7_2.7.6-8ubuntu0.3_amd64.deb:
-  size: 1039462
-  object_id: a1d9bf05-0c07-42a9-7be3-754b9583ed89
-  sha: b74ef212062c7ce6a5f80576b59d914d6a5792cb
-glusterfs-client/librdmacm1_1.0.16-1_amd64.deb:
-  size: 36818
-  object_id: a59583c4-970b-431d-7fe3-08fa70047c27
-  sha: dd192678b7dbe686b7327ea7c0da2456c3a14d1e
-glusterfs-client/liburcu1_0.7.12-0ubuntu2_amd64.deb:
-  size: 34852
-  object_id: da787830-a18f-4f9f-4c36-0cdf23cb9a11
-  sha: 2ac3e285032f428b9f67c3993054ed463fb4e6ab
-glusterfs-client/python2.7-minimal_2.7.6-8ubuntu0.3_amd64.deb:
-  size: 1186768
-  object_id: e32fd4a1-4748-4dba-546f-a1a7375f5208
-  sha: fd4838f1f925eee66ef8a763a5995679c17a8dd3
-glusterfs-client/python2.7_2.7.6-8ubuntu0.3_amd64.deb:
-  size: 196592
-  object_id: c2533de0-05b1-4837-7a3d-e1df26c74018
-  sha: b86989eba577f2f998a802f653d2e8eeafdecf75
 go/go1.8.linux-amd64.tar.gz:
   size: 89803580
   object_id: be776520-f271-439d-511a-9a0f63013403

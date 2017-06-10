@@ -3,16 +3,11 @@
 CONF_DIR=/var/vcap/jobs/kubelet/config
 PKG_DIR=/var/vcap/packages/kubernetes
 
-install_gluster() {
-  sudo dpkg -i ${PKG_DIR}/glusterfs-client/*.deb
-}
-
 shutdown_rpcbind_if_its_running() {
   /etc/init.d/rpcbind stop || echo Already stopped.
 }
 
 main() {
-  install_gluster
   shutdown_rpcbind_if_its_running
 }
 
