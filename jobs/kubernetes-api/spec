@@ -31,3 +31,9 @@ consumes:
 provides:
 - name: kubernetes-api
   type: kubernetes-api
+
+# for ha-proxy tcp worker linking
+# the 'ssh_proxy' type must match the 'tcp_backend' link
+# see https://github.com/cloudfoundry-incubator/haproxy-boshrelease/blob/master/jobs/haproxy/spec
+- name: master_haproxy
+  type: ssh_proxy
