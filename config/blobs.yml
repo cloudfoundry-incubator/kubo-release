@@ -78,6 +78,30 @@ kubernetes-1.6.1/kubelet:
   size: 138647424
   object_id: e344e273-592e-428d-6191-140ac77fc0a0
   sha: cfec85b7844887525852991d91054039fba59156
+kubernetes-1.6.6/kube-apiserver:
+  size: 149384995
+  object_id: c07916bc-2379-442e-580e-a3d46e8498f1
+  sha: 27d770f1274ff206343ac47bf3ef06078ca2a476
+kubernetes-1.6.6/kube-controller-manager:
+  size: 131606504
+  object_id: 4e401027-650b-4440-445e-2c99e7448f37
+  sha: aba3db19807dccebb2fea32ef9821196b0d82cfe
+kubernetes-1.6.6/kube-proxy:
+  size: 64016146
+  object_id: 5fb77874-5370-4771-5f91-da135c65d002
+  sha: dc28561c8705a31ae47c918579be4cdbbb64f102
+kubernetes-1.6.6/kube-scheduler:
+  size: 75637793
+  object_id: 1c357c5e-313c-485d-6962-972bfca895c8
+  sha: 97fea7ce9f2e97a1974b1639a6e6917307e3426e
+kubernetes-1.6.6/kubectl:
+  size: 70704507
+  object_id: 517fc9c9-2b38-433c-5143-0330c9a798de
+  sha: 65d27d731fbd25aa6beb6049691d58c5f09848c0
+kubernetes-1.6.6/kubelet:
+  size: 138647424
+  object_id: f19de9ad-edd3-48f5-43d7-f48da1a277bd
+  sha: cfec85b7844887525852991d91054039fba59156
 nginx/nginx-release-1.11.4.tar.gz:
   size: 987038
   object_id: 2d682c25-37af-4bb7-66bf-a6b77f2475c1
