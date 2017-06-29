@@ -54,30 +54,6 @@ jq-linux64-1.5:
   size: 3027945
   object_id: 41eb1cd1-0377-4e08-5602-51e0af8b9b52
   sha: d8e36831c3c94bb58be34dd544f44a6c6cb88568
-kubernetes-1.6.1/kube-apiserver:
-  size: 149384995
-  object_id: b7d4eb5d-be65-4d33-4c72-1adf60af73d4
-  sha: 27d770f1274ff206343ac47bf3ef06078ca2a476
-kubernetes-1.6.1/kube-controller-manager:
-  size: 131606504
-  object_id: b54c36cb-f641-464c-6a99-66890f1aa871
-  sha: aba3db19807dccebb2fea32ef9821196b0d82cfe
-kubernetes-1.6.1/kube-proxy:
-  size: 64016146
-  object_id: 69105d7e-7265-44e2-70a2-abc73c931de8
-  sha: dc28561c8705a31ae47c918579be4cdbbb64f102
-kubernetes-1.6.1/kube-scheduler:
-  size: 75637793
-  object_id: b6ad6705-20b0-4a90-595f-b27496500698
-  sha: 97fea7ce9f2e97a1974b1639a6e6917307e3426e
-kubernetes-1.6.1/kubectl:
-  size: 70704507
-  object_id: 3839579e-ad77-42f4-76cd-979a64e1cd95
-  sha: 65d27d731fbd25aa6beb6049691d58c5f09848c0
-kubernetes-1.6.1/kubelet:
-  size: 138647424
-  object_id: e344e273-592e-428d-6191-140ac77fc0a0
-  sha: cfec85b7844887525852991d91054039fba59156
 kubernetes-1.6.6/kube-apiserver:
   size: 149384995
   object_id: c07916bc-2379-442e-580e-a3d46e8498f1
