@@ -10,18 +10,18 @@ container-images/gcr.io_google_containers_heapster:v1.1.0.tgz:
   size: 32207205
   object_id: d2bef095-4048-4d56-5a5c-a5bd759b23fd
   sha: 70c7b90bf79d9714a974aa0b422941b568264424
-container-images/gcr.io_google_containers_k8s-dns-dnsmasq-nanny-amd64:1.14.1.tgz:
-  size: 11723976
-  object_id: a1134b92-6b0c-4062-6f8b-d207ede67044
-  sha: 7cf6a49c9026fd32687673574279a45ba6e50239
-container-images/gcr.io_google_containers_k8s-dns-kube-dns-amd64:1.14.1.tgz:
-  size: 13033799
-  object_id: 43120b64-dee4-4128-6f97-a763b625be02
-  sha: ee21cb9163915c21a3959b52909098a8683a694e
-container-images/gcr.io_google_containers_k8s-dns-sidecar-amd64:1.14.1.tgz:
-  size: 11348511
-  object_id: 21a80da7-39e5-4073-5d13-fdf918e252e6
-  sha: 425533f7725e6c98a07c5b75ba907958582f4cbe
+container-images/gcr.io_google_containers_k8s-dns-dnsmasq-nanny-amd64:1.14.2.tgz:
+  size: 11722726
+  object_id: ba25ddd3-6e44-4a75-7479-8d033ad7976c
+  sha: ebfa2fd9576183264a6777a61efbc99241ca3f70
+container-images/gcr.io_google_containers_k8s-dns-kube-dns-amd64:1.14.2.tgz:
+  size: 13033720
+  object_id: 50ac49e3-ea55-4236-5978-a28146bbca1d
+  sha: ac64082dce92a872e094a09eb470b9cffbee43ac
+container-images/gcr.io_google_containers_k8s-dns-sidecar-amd64:1.14.2.tgz:
+  size: 11348468
+  object_id: 1d0d1d8b-c430-48d7-728d-775606dbc38f
+  sha: cd5abe6527d75ec91c1aed0d2faa2166cf3b5e49
 container-images/gcr.io_google_containers_kubernetes-dashboard-amd64:v1.6.0.tgz:
   size: 29053901
   object_id: 06c5638d-cec7-4087-610d-57e2e9f7bab5

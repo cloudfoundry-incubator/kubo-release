@@ -8,9 +8,9 @@ main() {
       "gcr.io/google_containers/pause-amd64:3.0"
       "gcr.io/google_containers/heapster:v1.1.0"
       "kubernetes/heapster_influxdb:v0.6"
-      "gcr.io/google_containers/k8s-dns-kube-dns-amd64:1.14.1"
-      "gcr.io/google_containers/k8s-dns-dnsmasq-nanny-amd64:1.14.1"
-      "gcr.io/google_containers/k8s-dns-sidecar-amd64:1.14.1"
+      "gcr.io/google_containers/k8s-dns-kube-dns-amd64:1.14.2"
+      "gcr.io/google_containers/k8s-dns-dnsmasq-nanny-amd64:1.14.2"
+      "gcr.io/google_containers/k8s-dns-sidecar-amd64:1.14.2"
       "gcr.io/google_containers/kubernetes-dashboard-amd64:v1.6.0"
     )
 
