@@ -49,7 +49,7 @@ spec:
           path: "/var/vcap/jobs/kubeconfig/config/"
       containers:
       - name: kubedns
-        image: gcr.io/google_containers/k8s-dns-kube-dns-amd64:1.14.1
+        image: gcr.io/google_containers/k8s-dns-kube-dns-amd64:1.14.2
         imagePullPolicy: IfNotPresent
         resources:
           # TODO: Set memory limits when we've profiled the container for large
@@ -96,7 +96,7 @@ spec:
         - name: kube-dns-config
           mountPath: /var/vcap/jobs/kubeconfig/config/
       - name: dnsmasq
-        image: gcr.io/google_containers/k8s-dns-dnsmasq-nanny-amd64:1.14.1
+        image: gcr.io/google_containers/k8s-dns-dnsmasq-nanny-amd64:1.14.2
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
@@ -137,7 +137,7 @@ spec:
         - name: kube-dns-config
           mountPath: /etc/k8s/dns/dnsmasq-nanny
       - name: sidecar
-        image: gcr.io/google_containers/k8s-dns-sidecar-amd64:1.14.1
+        image: gcr.io/google_containers/k8s-dns-sidecar-amd64:1.14.2
         livenessProbe:
           httpGet:
             path: /metrics
