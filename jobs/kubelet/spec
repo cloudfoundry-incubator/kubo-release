@@ -14,6 +14,7 @@ packages:
 - pid_utils
 - kubernetes
 - cni
+- socat
 
 properties:
   tls.kubelet:
