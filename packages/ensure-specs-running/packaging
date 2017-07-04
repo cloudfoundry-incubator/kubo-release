@@ -1,0 +1,10 @@
+set -exu
+
+export GOROOT=$(cd "/var/vcap/packages/golang" && pwd -P)
+export PATH=${GOROOT}/bin:${PATH}
+export GOPATH=${BOSH_INSTALL_TARGET}
+
+mkdir -p ${GOPATH}/src
+mv ${BOSH_COMPILE_TARGET}/ensure-specs-running ${GOPATH}/src
+go build -o ${GOPATH}/bin/ensure-specs-running ensure-specs-running
+rm -rf ${GOPATH}/src ${GOPATH}/pkg

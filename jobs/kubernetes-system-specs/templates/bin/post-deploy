@@ -19,7 +19,7 @@ deploy_specs() {
 }
 
 verify_specs() {
-  if timeout "$TIMEOUT" /var/vcap/jobs/kubernetes-system-specs/bin/ensure-specs-running
+  if timeout "$TIMEOUT" /var/vcap/packages/ensure-specs-running/bin/ensure-specs-running
   then
     echo "all expected specs are running"
   else
