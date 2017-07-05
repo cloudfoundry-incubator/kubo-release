@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
-[ -z "$DEBUG" ] || set -eux
+[ -z "$DEBUG" ] || set -x
+
+set -eu
 
 export PATH=/var/vcap/packages/kubernetes/bin:$PATH
 
