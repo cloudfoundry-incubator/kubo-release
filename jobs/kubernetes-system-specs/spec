@@ -10,7 +10,6 @@ templates:
   config/kubernetes-dashboard.yml: config/kubernetes-dashboard.yml
 
 packages:
-- jq
 - kubernetes
 - ensure-specs-running
 
