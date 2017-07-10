@@ -47,6 +47,9 @@ func main() {
 			log.Printf("failed extracting deployment name for pod %s\n", pod.ObjectMeta.Name)
 			log.Fatalln(err.Error())
 		} else {
+			if _, ok := actualDeployments[deploymentName]; !ok {
+				actualDeployments[deploymentName] = k8sdeploy.NewDeployment(0, []string{})
+			}
 			actualDeployments[deploymentName].AddPod(pod)
 		}
 	}
