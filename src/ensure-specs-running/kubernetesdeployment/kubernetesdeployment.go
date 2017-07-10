@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"sort"
 	"strings"
-	
+
 	corev1 "k8s.io/api/core/v1"
 )
 
@@ -33,14 +33,14 @@ type DeploymentSet map[string]*Deployment
 
 func Discrepancies(expected, actual DeploymentSet) []string {
 	discrepancies := []string{}
-	
+
 	for name, expectedDeployment := range expected {
 		if actualDeployment, ok := actual[name]; !ok {
 			discrepancies = append(discrepancies, fmt.Sprintf("unable to find any pods for %s", name))
 		} else {
 			if actualDeployment.replicas != expectedDeployment.replicas {
 				discrepancies = append(
-					discrepancies, 
+					discrepancies,
 					fmt.Sprintf(
 						"expected replica count for %s is %d, found %d",
 						name,
@@ -68,17 +68,17 @@ func Discrepancies(expected, actual DeploymentSet) []string {
 }
 
 func match(xs, ys []string) bool {
-    if len(xs) != len(ys) {
-        return false
-    }
+	if len(xs) != len(ys) {
+		return false
+	}
 
-    sort.Strings(xs)
-    sort.Strings(ys)
-    for i, x := range xs {
-        if x != ys[i] {
-            return false
-        }
-    }
+	sort.Strings(xs)
+	sort.Strings(ys)
+	for i, x := range xs {
+		if x != ys[i] {
+			return false
+		}
+	}
 
-    return true
+	return true
 }

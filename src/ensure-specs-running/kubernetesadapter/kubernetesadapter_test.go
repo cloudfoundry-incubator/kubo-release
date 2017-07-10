@@ -38,7 +38,7 @@ var _ = Describe("Kubernetesadapter", func() {
 				_, err := adapter.Pods()
 				Expect(err).To(MatchError("list-pods-error"))
 			})
-		})	
+		})
 
 		Context("when the kubernetes client gets pods", func() {
 			var pod1, pod2 corev1.Pod
@@ -49,7 +49,7 @@ var _ = Describe("Kubernetesadapter", func() {
 				fakeClientset.PrependReactor("list", "pods", func(_ k8stesting.Action) (bool, runtime.Object, error) {
 					return true, &corev1.PodList{Items: []corev1.Pod{pod1, pod2}}, nil
 				})
-	
+
 			})
 
 			It("returns pods", func() {
@@ -57,7 +57,7 @@ var _ = Describe("Kubernetesadapter", func() {
 				Expect(err).NotTo(HaveOccurred())
 				Expect(pods).To(ConsistOf(pod1, pod2))
 			})
-		})	
+		})
 	})
 
 	Describe("ExtractDeploymentName", func() {
@@ -101,13 +101,13 @@ var _ = Describe("Kubernetesadapter", func() {
 					_, err := adapter.ExtractDeploymentName(pod)
 					Expect(err).To(MatchError("get-replicaset-error"))
 				})
-			})	
+			})
 
 			Context("when the kubernetes client gets the owning replicaset, and its owning deployment, for the pod", func() {
 				BeforeEach(func() {
 					fakeClientset.PrependReactor("get", "replicasets", func(_ k8stesting.Action) (bool, runtime.Object, error) {
 						rs := extv1beta1.ReplicaSet{ObjectMeta: metav1.ObjectMeta{
-							Name: "owning-replica-set",
+							Name:            "owning-replica-set",
 							OwnerReferences: []metav1.OwnerReference{{Name: "owning-deployment"}},
 						}}
 						return true, &rs, nil
@@ -122,7 +122,7 @@ var _ = Describe("Kubernetesadapter", func() {
 					Expect(err).NotTo(HaveOccurred())
 					Expect(name).To(Equal("owning-deployment"))
 				})
-			})	
+			})
 		})
 	})
 })

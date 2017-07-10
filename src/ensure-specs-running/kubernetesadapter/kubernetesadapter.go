@@ -9,7 +9,7 @@ import (
 )
 
 type adapter struct {
-	client kubernetes.Interface
+	client    kubernetes.Interface
 	namespace string
 }
 
@@ -19,15 +19,15 @@ type Adapter interface {
 }
 
 func NewAdapter(client kubernetes.Interface, namespace string) *adapter {
-    return &adapter{client: client, namespace: namespace}
+	return &adapter{client: client, namespace: namespace}
 }
 
 func DefaultClient(configPath string) (kubernetes.Interface, error) {
 	if config, err := clientcmd.BuildConfigFromFlags("", configPath); err != nil {
 		return nil, err
 	} else {
-	    return kubernetes.NewForConfig(config)
-    }
+		return kubernetes.NewForConfig(config)
+	}
 }
 
 func (k *adapter) Pods() ([]corev1.Pod, error) {

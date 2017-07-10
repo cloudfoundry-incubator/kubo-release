@@ -76,14 +76,14 @@ var _ = Describe("Kubernetesdeployment", func() {
 				expected := k8sdeploy.DeploymentSet{
 					"missing-in-actual": k8sdeploy.NewDeployment(1, []string{"c0"}),
 					"multiple-problems": k8sdeploy.NewDeployment(33, []string{"c1", "c2"}),
-					"different-order": k8sdeploy.NewDeployment(55, []string{"c5", "c6"}),
-					"no-problems": k8sdeploy.NewDeployment(77, []string{"c7"}),
+					"different-order":   k8sdeploy.NewDeployment(55, []string{"c5", "c6"}),
+					"no-problems":       k8sdeploy.NewDeployment(77, []string{"c7"}),
 				}
 				actual := k8sdeploy.DeploymentSet{
 					"multiple-problems": k8sdeploy.NewDeployment(44, []string{"c3", "c4"}),
-					"different-order": k8sdeploy.NewDeployment(66, []string{"c6", "c5"}),
-					"no-problems": k8sdeploy.NewDeployment(77, []string{"c7"}),
-					"extra": k8sdeploy.NewDeployment(88, []string{"c8"}),
+					"different-order":   k8sdeploy.NewDeployment(66, []string{"c6", "c5"}),
+					"no-problems":       k8sdeploy.NewDeployment(77, []string{"c7"}),
+					"extra":             k8sdeploy.NewDeployment(88, []string{"c8"}),
 				}
 
 				Expect(k8sdeploy.Discrepancies(expected, actual)).To(ConsistOf(
@@ -96,7 +96,7 @@ var _ = Describe("Kubernetesdeployment", func() {
 		})
 	})
 
-	Describe("AddPod", func()	{
+	Describe("AddPod", func() {
 		var deployment *k8sdeploy.Deployment
 		var pod corev1.Pod
 		var expectDeploymentToMatch = func(expected *k8sdeploy.Deployment) {
@@ -115,16 +115,16 @@ var _ = Describe("Kubernetesdeployment", func() {
 			BeforeEach(func() {
 				deployment = k8sdeploy.NewDeployment(0, []string{})
 			})
-			
+
 			Context("when the pod has no containers", func() {
 				BeforeEach(func() {
 					pod = corev1.Pod{}
 				})
-				
+
 				It("increments the replica count only", func() {
 					expectDeploymentToMatch(k8sdeploy.NewDeployment(1, []string{}))
 				})
-			})	
+			})
 
 			Context("when the pod has containers but none are ready", func() {
 				BeforeEach(func() {
@@ -137,7 +137,7 @@ var _ = Describe("Kubernetesdeployment", func() {
 				It("increments the replica count only", func() {
 					expectDeploymentToMatch(k8sdeploy.NewDeployment(1, []string{}))
 				})
-			})	
+			})
 
 			Context("when the pod has containers and all are ready", func() {
 				BeforeEach(func() {
@@ -150,7 +150,7 @@ var _ = Describe("Kubernetesdeployment", func() {
 				It("increments the replica count and adds all containers", func() {
 					expectDeploymentToMatch(k8sdeploy.NewDeployment(1, []string{"some-container", "another-container"}))
 				})
-			})	
+			})
 
 			Context("when the pod has containers and only some are ready", func() {
 				BeforeEach(func() {
@@ -163,23 +163,23 @@ var _ = Describe("Kubernetesdeployment", func() {
 				It("increments the replica count and adds only the ready containers", func() {
 					expectDeploymentToMatch(k8sdeploy.NewDeployment(1, []string{"some-container"}))
 				})
-			})	
+			})
 		})
 
 		Context("when the deployment is non-empty", func() {
 			BeforeEach(func() {
 				deployment = k8sdeploy.NewDeployment(2, []string{"container-1a", "container-1b", "container-2a"})
 			})
-			
+
 			Context("when the pod has no containers", func() {
 				BeforeEach(func() {
 					pod = corev1.Pod{}
 				})
-				
+
 				It("increments the replica count only", func() {
 					expectDeploymentToMatch(k8sdeploy.NewDeployment(3, []string{"container-1a", "container-1b", "container-2a"}))
 				})
-			})	
+			})
 
 			Context("when the pod has containers but none are ready", func() {
 				BeforeEach(func() {
@@ -192,7 +192,7 @@ var _ = Describe("Kubernetesdeployment", func() {
 				It("increments the replica count only", func() {
 					expectDeploymentToMatch(k8sdeploy.NewDeployment(3, []string{"container-1a", "container-1b", "container-2a"}))
 				})
-			})	
+			})
 
 			Context("when the pod has containers and all are ready", func() {
 				BeforeEach(func() {
@@ -204,7 +204,7 @@ var _ = Describe("Kubernetesdeployment", func() {
 
 				It("increments the replica count and adds all containers", func() {
 					expectDeploymentToMatch(k8sdeploy.NewDeployment(
-						3, 
+						3,
 						[]string{
 							"some-container",
 							"another-container",
@@ -214,7 +214,7 @@ var _ = Describe("Kubernetesdeployment", func() {
 						},
 					))
 				})
-			})	
+			})
 
 			Context("when the pod has containers and only some are ready", func() {
 				BeforeEach(func() {
@@ -235,7 +235,7 @@ var _ = Describe("Kubernetesdeployment", func() {
 						},
 					))
 				})
-			})	
+			})
 
 			Context("when the pod has ready containers with the same name as in the deployment", func() {
 				BeforeEach(func() {
