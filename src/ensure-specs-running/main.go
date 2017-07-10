@@ -16,7 +16,7 @@ func main() {
 		dns       = "kube-dns"
 	)
 
-	expectedDeployments := map[string]k8sdeploy.Deployment{
+	expectedDeployments := k8sdeploy.DeploymentSet{
 		heapster:  k8sdeploy.NewDeployment(1, []string{"heapster"}),
 		influxdb:  k8sdeploy.NewDeployment(1, []string{"influxdb"}),
 		dashboard: k8sdeploy.NewDeployment(1, []string{"kubernetes-dashboard"}),
@@ -34,7 +34,7 @@ func main() {
 		log.Fatal(err.Error())
 	}
 
-	actualDeployments := map[string]k8sdeploy.Deployment{}
+	actualDeployments := k8sdeploy.DeploymentSet{}
 	for _, pod := range pods {
 		deploymentName, err := adapter.ExtractDeploymentName(pod)
 		if err != nil {
@@ -49,28 +49,8 @@ func main() {
 		}
 	}
 
-	heapsterProblems := k8sdeploy.DiscrepanciesForDeployment(
-		heapster,
-		expectedDeployments[heapster],
-		actualDeployments[heapster],
-	)
-	influxdbProblems := k8sdeploy.DiscrepanciesForDeployment(
-		influxdb,
-		expectedDeployments[influxdb],
-		actualDeployments[influxdb],
-	)
-	dashboardProblems := k8sdeploy.DiscrepanciesForDeployment(
-		dashboard,
-		expectedDeployments[dashboard],
-		actualDeployments[dashboard],
-	)
-	dnsProblems := k8sdeploy.DiscrepanciesForDeployment(
-		dns,
-		expectedDeployments[dns],
-		actualDeployments[dns],
-	)
-	problems := append(heapsterProblems, append(influxdbProblems, append(dashboardProblems, dnsProblems...)...)...)
-	if len(problems) != 0 {
-		log.Fatal("problems found:\n- " + strings.Join(problems, "\n- "))
+	discrepancies := k8sdeploy.Discrepancies(expectedDeployments, actualDeployments)
+	if len(discrepancies) != 0 {
+		log.Fatal("discrepancies found:\n- " + strings.Join(discrepancies, "\n- "))
 	}
 }
