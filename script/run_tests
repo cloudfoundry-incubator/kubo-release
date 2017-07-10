@@ -15,10 +15,10 @@ test_package() {
         go vet $(go list "./..." | grep -v "${package}/vendor/")
 
         echo "${package}: Running ginkgo"
-        ginkgo -r .
+        ginkgo -p -r .
 
         echo "${package}: Running ginkgo to check race conditions"
-        ginkgo -r -race .
+        ginkgo -p -r -race .
     popd > /dev/null
 }
 
