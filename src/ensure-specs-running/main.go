@@ -36,16 +36,10 @@ func main() {
 
 	actualDeployments := k8sdeploy.DeploymentSet{}
 	for _, pod := range pods {
-		deploymentName, err := adapter.ExtractDeploymentName(pod)
-		if err != nil {
+		if deploymentName, err := adapter.ExtractDeploymentName(pod); err != nil {
 			log.Fatal(err.Error())
-		}
-
-		switch deploymentName {
-		case heapster, influxdb, dashboard, dns:
+		} else {
 			actualDeployments[deploymentName].AddPod(pod)
-		default:
-			// ignore deployments not managed by this BOSH release
 		}
 	}
 

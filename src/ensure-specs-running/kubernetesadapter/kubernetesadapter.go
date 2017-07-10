@@ -13,6 +13,11 @@ type adapter struct {
 	namespace string
 }
 
+type Adapter interface {
+	Pods() ([]corev1.Pod, error)
+	ExtractDeploymentName(corev1.Pod) (string, error)
+}
+
 func NewAdapter(client kubernetes.Interface, namespace string) *adapter {
     return &adapter{client: client, namespace: namespace}
 }
