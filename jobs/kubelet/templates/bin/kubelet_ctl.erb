@@ -32,7 +32,6 @@ start_kubelet() {
 
   kubelet \
     --allow-privileged=true \
-    --api-servers=<%= p("kubernetes-api-url") %> \
     --cloud-provider= \
     --cluster-dns=10.100.200.10 \
     --cluster-domain=cluster.local \
