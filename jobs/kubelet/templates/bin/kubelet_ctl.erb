@@ -46,6 +46,7 @@ start_kubelet() {
     --tls-private-key-file=/var/vcap/jobs/kubelet/config/kubelet-key.pem \
     --network-plugin=cni \
     --network-plugin-dir=/var/vcap/jobs/kubelet/packages/cni/bin \
+    --require-kubeconfig=true \
     --v=2 \
   1>> $LOG_DIR/kubelet.stdout.log \
   2>> $LOG_DIR/kubelet.stderr.log
