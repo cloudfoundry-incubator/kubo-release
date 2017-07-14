@@ -21,6 +21,12 @@ properties:
     description: The password for the kubelet user
   tls.kubernetes:
     description: "Certificate and private key for the Kubernetes master"
+  backend_port:
+    example: 80
+    default: 1234
+  port:
+    example: 81
+    default: 1235
 
 consumes:
 - name: etcd
@@ -31,3 +37,12 @@ consumes:
 provides:
 - name: kubernetes-api
   type: kubernetes-api
+
+# for ha-proxy tcp worker linking
+# the 'ssh_proxy' type must match the 'tcp_backend' link
+# see https://github.com/cloudfoundry-incubator/haproxy-boshrelease/blob/master/jobs/haproxy/spec
+- name: master_haproxy
+  type: ssh_proxy
+  properties:
+  - backend_port
+  - port

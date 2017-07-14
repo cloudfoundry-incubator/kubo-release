@@ -2,6 +2,5 @@
 name: kubernetes
 
 files:
-- glusterfs-client/*
 - container-images/*
-- kubernetes-1.6.1/*
+- kubernetes-1.6.6/*
