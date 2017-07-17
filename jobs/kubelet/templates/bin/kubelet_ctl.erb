@@ -13,10 +13,7 @@ DOCKER_SOCKET=unix:///var/vcap/sys/run/docker/docker.sock
 node_name="<%= spec.ip %>"
 if [ "<%= p("cloud-provider.type") %>" == "gce" ]
 then
-  node_name="$(curl http://metadata.google.internal/computeMetadata/v1/instance/name -H "Bearer: $(cur
-l "http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/token" -H "Met
-adata-Flavor: Google" | jq '.access_token')" -H "Metadata-Flavor: Google").c.<%= p("cloud-provider.gce
-.project_id") %>.internal"
+  node_name="$(curl http://metadata.google.internal/computeMetadata/v1/instance/name -H "Bearer: $(curl "http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/token" -H "Metadata-Flavor: Google" | jq '.access_token')" -H "Metadata-Flavor: Google").c.<%= p("cloud-provider.gce.project-id") %>.internal"
 fi
 
 # shellcheck disable=SC1091

@@ -13,3 +13,10 @@ properties:
   kubernetes-api-url:
     description: The full URL for the load balancer in front of the masters
     example: https://api.sys.kubo.cf-app.com:8443
+  cloud-provider:
+    type:
+      description: "Type of Cloud Provider to use"
+      example: gce
+    gce:
+      project-id:
+        description: Google Cloud project id. Required when cloud-provider.type is gce
