@@ -1,8 +1,0 @@
-<% if_p("cloud-provider") do |cloud_provider| %>
-<% if <% p("cloud_provider.type") == "gce" %>
-[global]
-  project-id: <%= p("cloud_provider.gce.project-id") %>
-  network-name: <%= %p("cloud_provider.gce.network-name") %>
-  node-tags: <%= %p("cloud_provider.gce.node-tags") %>
-  <% end %>
-<% end %>

@@ -30,10 +30,17 @@ start_kubelet() {
 
   ln -s -f /var/vcap/jobs/kubelet/packages/cni/bin/nsenter /usr/bin/nsenter
 
+  cloud_config_file=""
+  if [ "<%= p("cloud-provider.type") %>" == "gce" ]
+  then
+    cloud_config_file="/var/vcap/jobs/kubelet/config/gce.gcfg"
+  fi
+
   kubelet \
     --allow-privileged=true \
     --api-servers=<%= p("kubernetes-api-url") %> \
-    --cloud-provider= \
+    --cloud-provider=<%= p("cloud-provider.type") %> \
+    --cloud-config=${cloud_config_file} \
     --cluster-dns=10.100.200.10 \
     --cluster-domain=cluster.local \
     --container-runtime=docker \

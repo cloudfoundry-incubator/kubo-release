@@ -7,7 +7,7 @@ templates:
   bin/pre-start: bin/pre-start
   bin/post-start.erb: bin/post-start
   bin/ensure_kubelet_up_and_running.erb: bin/ensure_kubelet_up_and_running
-  config/gce.conf.erb: config/gce.conf
+  config/gce.gcfg.erb: config/gce.gcfg
   config/kubelet.pem.erb: config/kubelet.pem
   config/kubelet-key.pem.erb: config/kubelet-key.pem
 
@@ -35,8 +35,6 @@ properties:
         description: Google Cloud project id. Required when cloud-provider.type is gce
       network-name:
         description: Google Cloud network name. Required when cloud-provider.type is gce
-      node-tags:
-        description: Google Cloud labels that uniquely identify worker nodes for this k8s cluster. Required when cloud-provider.type is gce
 
 provides:
 - name: kubernetes-workers

@@ -25,9 +25,17 @@ send_process_stderr_to_logfile() {
 }
 
 start_kubernetes_controller_manager() {
+  cloud_config_file=""
+  if [ "<%= p("cloud-provider.type") %>" == "gce" ]
+  then 
+    cloud_config_file="/var/vcap/jobs/kubernetes-controller-manager/config/gce.gcfg"
+  fi
+
   exec chpst -u vcap:vcap  \
     kube-controller-manager \
       --allocate-node-cidrs=true \
+      --cloud-provider=<%= p("cloud-provider.type") %> \
+      --cloud-config=${cloud_config_file} \
       --cluster-cidr=10.200.0.0/16 \
       --cluster-name=kubernetes \
       --leader-elect=true \

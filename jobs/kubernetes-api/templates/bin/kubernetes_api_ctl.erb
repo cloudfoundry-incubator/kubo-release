@@ -32,6 +32,12 @@ start_kubernetes_api_server() {
   api_server_count = link("kubernetes-api").instances.size
 %>
 
+  cloud_config_file=""
+  if [ "<%= p("cloud-provider.type") %>" == "gce" ]
+  then
+    cloud_config_file="/var/vcap/jobs/kubernetes-api/config/gce.gcfg"
+  fi
+
   exec chpst -u vcap:vcap  \
     kube-apiserver \
       --admission-control=NamespaceLifecycle,NamespaceExists,ServiceAccount,LimitRanger,ResourceQuota \
@@ -41,6 +47,8 @@ start_kubernetes_api_server() {
       --authorization-policy-file=/var/vcap/jobs/kubernetes-api/config/authorization_policy.jsonl \
       --bind-address=0.0.0.0 \
       --cert-dir=/var/vcap/sys/run/kubernetes/ \
+      --cloud-provider=<%= p("cloud-provider.type") %> \
+      --cloud-config=${cloud_config_file} \
       --enable-swagger-ui=true \
       --etcd-servers=<%= etcd_endpoints %> \
       --insecure-bind-address=127.0.0.1 \

@@ -3,9 +3,19 @@ name: kubernetes-controller-manager
 
 templates:
   bin/kubernetes_controller_manager_ctl: bin/kubernetes_controller_manager_ctl
+  config/gce.gcfg.erb: config/gce.gcfg
 
 packages:
 - pid_utils
 - kubernetes
 
-properties: {}
+properties:
+  cloud-provider:
+    type:
+      description: "Type of Cloud Provider to use"
+      example: gce
+    gce:
+      project-id:
+        description: Google Cloud project id. Required when cloud-provider.type is gce
+      network-name:
+        description: Google Cloud network name. Required when cloud-provider.type is gce
