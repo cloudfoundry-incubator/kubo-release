@@ -9,10 +9,9 @@ PIDFILE=$RUN_DIR/kubernetes_proxy.pid
 LOG_DIR=/var/vcap/sys/log/kubernetes-proxy
 
 node_name="<%= spec.ip %>"
-if [ "<%= p("cloud-provider.type") %>" == "gce" ]
-then
+<% if p("cloud-provider.type") == "gce" %>
   node_name="$(curl http://metadata.google.internal/computeMetadata/v1/instance/name -H "Bearer: $(curl "http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/token" -H "Metadata-Flavor: Google" | jq '.access_token')" -H "Metadata-Flavor: Google").c.<%= p("cloud-provider.gce.project-id") %>.internal"
-fi
+<% end %>
 
 # shellcheck disable=SC1091
 . /var/vcap/packages/pid_utils/pid_utils.sh

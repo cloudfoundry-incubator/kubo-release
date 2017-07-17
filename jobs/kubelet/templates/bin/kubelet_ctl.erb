@@ -11,10 +11,9 @@ DATA_DIR=/var/vcap/store/kubernetes
 DOCKER_SOCKET=unix:///var/vcap/sys/run/docker/docker.sock
 
 node_name="<%= spec.ip %>"
-if [ "<%= p("cloud-provider.type") %>" == "gce" ]
-then
+<% if p("cloud-provider.type") == "gce" %>
   node_name="$(curl http://metadata.google.internal/computeMetadata/v1/instance/name -H "Bearer: $(curl "http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/token" -H "Metadata-Flavor: Google" | jq '.access_token')" -H "Metadata-Flavor: Google").c.<%= p("cloud-provider.gce.project-id") %>.internal"
-fi
+<% end %>
 
 # shellcheck disable=SC1091
 . /var/vcap/packages/pid_utils/pid_utils.sh
