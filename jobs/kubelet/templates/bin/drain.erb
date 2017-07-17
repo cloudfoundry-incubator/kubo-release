@@ -11,6 +11,12 @@ PIDFILE=/var/vcap/sys/run/kubernetes/kubelet.pid
 exit_code=1
 trap ensure_safe_exit EXIT
 
+node_name="<%= spec.ip %>"
+if [ "<%= p("cloud-provider.type") %>" == "gce" ]
+then
+  node_name="$(curl http://metadata.google.internal/computeMetadata/v1/instance/name -H "Bearer: $(curl "http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/token" -H "Metadata-Flavor: Google" | jq '.access_token')" -H "Metadata-Flavor: Google").c.<%= p("cloud-provider.gce.project_id") %>.internal"
+fi
+
 main() {
   send_process_stdout_to_logfile_and_syslog
   send_process_stderr_to_logfile_and_syslog
@@ -63,7 +69,7 @@ check_if_pidfile_exists() {
 }
 
 drain_kubelet() {
-  kubectl --kubeconfig /var/vcap/jobs/kubeconfig/config/kubeconfig drain <%= spec.ip %> --grace-period 10 --force --delete-local-data
+  kubectl --kubeconfig /var/vcap/jobs/kubeconfig/config/kubeconfig drain "${node_name}" --grace-period 10 --force --delete-local-data
 }
 
 kill_node() {

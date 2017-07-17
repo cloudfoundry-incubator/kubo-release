@@ -10,6 +10,15 @@ LOG_DIR=/var/vcap/sys/log/kubelet
 DATA_DIR=/var/vcap/store/kubernetes
 DOCKER_SOCKET=unix:///var/vcap/sys/run/docker/docker.sock
 
+node_name="<%= spec.ip %>"
+if [ "<%= p("cloud-provider.type") %>" == "gce" ]
+then
+  node_name="$(curl http://metadata.google.internal/computeMetadata/v1/instance/name -H "Bearer: $(cur
+l "http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/token" -H "Met
+adata-Flavor: Google" | jq '.access_token')" -H "Metadata-Flavor: Google").c.<%= p("cloud-provider.gce
+.project_id") %>.internal"
+fi
+
 # shellcheck disable=SC1091
 . /var/vcap/packages/pid_utils/pid_utils.sh
 
@@ -46,7 +55,7 @@ start_kubelet() {
     --container-runtime=docker \
     --docker="${DOCKER_SOCKET}" \
     --docker-endpoint="${DOCKER_SOCKET}" \
-    --hostname-override="<%= spec.ip %>" \
+    --hostname-override="${node_name}" \
     --kubeconfig=/var/vcap/jobs/kubeconfig/config/kubeconfig \
     --non-masquerade-cidr 10.200.0.0/16 \
     --serialize-image-pulls=false \

@@ -8,6 +8,15 @@ RUN_DIR=/var/vcap/sys/run/kubernetes
 PIDFILE=$RUN_DIR/kubernetes_proxy.pid
 LOG_DIR=/var/vcap/sys/log/kubernetes-proxy
 
+node_name="<%= spec.ip %>"
+if [ "<%= p("cloud-provider.type") %>" == "gce" ]
+then
+  node_name="$(curl http://metadata.google.internal/computeMetadata/v1/instance/name -H "Bearer: $(cur
+l "http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/token" -H "Met
+adata-Flavor: Google" | jq '.access_token')" -H "Metadata-Flavor: Google").c.<%= p("cloud-provider.gce
+.project_id") %>.internal"
+fi
+
 # shellcheck disable=SC1091
 . /var/vcap/packages/pid_utils/pid_utils.sh
 
@@ -26,9 +35,8 @@ send_process_stderr_to_logfile() {
 
 start_kubernetes_proxy() {
 
-
   kube-proxy \
-    --hostname-override=<%= spec.ip %> \
+    --hostname-override="${node_name}" \
     --master=<%= p("kubernetes-api-url") %> \
     --kubeconfig=/var/vcap/jobs/kubeconfig/config/kubeconfig \
     --proxy-mode=iptables \

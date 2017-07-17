@@ -7,6 +7,7 @@ templates:
 packages:
 - pid_utils
 - kubernetes
+- jq
 
 properties:
   kubernetes-api-url:

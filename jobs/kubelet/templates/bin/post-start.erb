@@ -3,7 +3,14 @@
 [ -z "$DEBUG" ] || set -x
 
 kubectl="/var/vcap/packages/kubernetes/bin/kubectl --kubeconfig=/var/vcap/jobs/kubeconfig/config/kubeconfig"
-node_name=<%= spec.ip %>
+
+node_name="<%= spec.ip %>"
+if [ "<%= p("cloud-provider.type") %>" == "gce" ]
+then
+  node_name="$(curl http://metadata.google.internal/computeMetadata/v1/instance/name -H "Bearer: $(cur
+l "http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/token" -H "Met
+adata-Flavor: Google" | jq '.access_token')" -H "Metadata-Flavor: Google").c.<%= p("cloud-provider.gce.project_id") %>.internal"
+fi
 
 # Deleting docker0 route as a workaround to a routing conflict
 # between the docker0 bridge and the CNI interface
