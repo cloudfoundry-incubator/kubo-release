@@ -3,7 +3,6 @@ name: kubernetes-controller-manager
 
 templates:
   bin/kubernetes_controller_manager_ctl: bin/kubernetes_controller_manager_ctl
-  config/gce.gcfg.erb: config/gce.gcfg
 
 packages:
 - pid_utils

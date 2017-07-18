@@ -28,7 +28,7 @@ start_kubernetes_controller_manager() {
   cloud_config_file=""
   if [ "<%= p("cloud-provider.type") %>" == "gce" ]
   then 
-    cloud_config_file="/var/vcap/jobs/kubernetes-controller-manager/config/gce.gcfg"
+    cloud_config_file="/var/vcap/jobs/kubeconfig/config/gce.gcfg"
   fi
 
   exec chpst -u vcap:vcap  \

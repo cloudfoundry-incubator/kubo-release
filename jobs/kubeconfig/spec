@@ -4,6 +4,7 @@ name: kubeconfig
 templates:
   config/kubeconfig.erb: config/kubeconfig
   config/ca.pem.erb: config/ca.pem
+  config/gce.gcfg.erb: config/gce.gcfg
 
 
 packages: []
@@ -16,3 +17,12 @@ properties:
   kubernetes-api-url:
     description: The full URL for the load balancer in front of the masters
     example: https://api.sys.kubo.cf-app.com:8443
+  cloud-provider:
+    type:
+      description: "Type of Cloud Provider to use"
+      example: gce
+    gce:
+      project-id:
+        description: Google Cloud project id. Required when cloud-provider.type is gce
+      network-name:
+        description: Google Cloud network name. Required when cloud-provider.type is gce

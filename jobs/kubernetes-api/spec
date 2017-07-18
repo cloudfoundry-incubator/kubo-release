@@ -7,7 +7,6 @@ templates:
   config/authorization_policy.jsonl.erb: config/authorization_policy.jsonl
   config/kubernetes.pem.erb: config/kubernetes.pem
   config/kubernetes-key.pem.erb: config/kubernetes-key.pem
-  config/gce.gcfg.erb: config/gce.gcfg
 
 packages:
 - pid_utils

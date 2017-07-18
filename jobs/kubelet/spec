@@ -7,7 +7,6 @@ templates:
   bin/pre-start: bin/pre-start
   bin/post-start.erb: bin/post-start
   bin/ensure_kubelet_up_and_running.erb: bin/ensure_kubelet_up_and_running
-  config/gce.gcfg.erb: config/gce.gcfg
   config/kubelet.pem.erb: config/kubelet.pem
   config/kubelet-key.pem.erb: config/kubelet-key.pem
 

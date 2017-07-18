@@ -38,7 +38,7 @@ start_kubelet() {
   cloud_config_file=""
   if [ "<%= p("cloud-provider.type") %>" == "gce" ]
   then
-    cloud_config_file="/var/vcap/jobs/kubelet/config/gce.gcfg"
+    cloud_config_file="/var/vcap/jobs/kubeconfig/config/gce.gcfg"
   fi
 
   kubelet \
