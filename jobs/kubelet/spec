@@ -15,7 +15,6 @@ packages:
 - pid_utils
 - kubernetes
 - cni
-- jq
 
 properties:
   tls.kubelet:

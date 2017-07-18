@@ -6,7 +6,7 @@ kubectl="/var/vcap/packages/kubernetes/bin/kubectl --kubeconfig=/var/vcap/jobs/k
 
 node_name="<%= spec.ip %>"
 <% if p("cloud-provider.type") == "gce" %>
-  node_name="$(curl http://metadata.google.internal/computeMetadata/v1/instance/name -H "Bearer: $(curl "http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/token" -H "Metadata-Flavor: Google" | jq '.access_token')" -H "Metadata-Flavor: Google").c.<%= p("cloud-provider.gce.project-id") %>.internal"
+  node_name="$(curl http://metadata.google.internal/computeMetadata/v1/instance/name -H "Metadata-Flavor: Google").c.<%= p("cloud-provider.gce.project-id") %>.internal"
 <% end %>
 
 # Wait for kubelet to become Ready before we move on to the next node.
