@@ -4,10 +4,8 @@
 
 kubectl="/var/vcap/packages/kubernetes/bin/kubectl --kubeconfig=/var/vcap/jobs/kubeconfig/config/kubeconfig"
 
-node_name="<%= spec.ip %>"
-<% if p("cloud-provider.type") == "gce" %>
-  node_name="$(curl http://metadata.google.internal/computeMetadata/v1/instance/name -H "Metadata-Flavor: Google").c.<%= p("cloud-provider.gce.project-id") %>.internal"
-<% end %>
+. /var/vcap/jobs/cloud-config/bin/cloud-config_utils
+set_node_name
 
 # Deleting docker0 route as a workaround to a routing conflict
 # between the docker0 bridge and the CNI interface

@@ -11,10 +11,8 @@ PIDFILE=/var/vcap/sys/run/kubernetes/kubelet.pid
 exit_code=1
 trap ensure_safe_exit EXIT
 
-node_name="<%= spec.ip %>"
-<% if p("cloud-provider.type") == "gce" %>
-  node_name="$(curl http://metadata.google.internal/computeMetadata/v1/instance/name -H "Metadata-Flavor: Google").c.<%= p("cloud-provider.gce.project-id") %>.internal"
-<% end %>
+. /var/vcap/jobs/cloud-config/bin/cloud-config_utils
+set_node_name
 
 main() {
   send_process_stdout_to_logfile_and_syslog

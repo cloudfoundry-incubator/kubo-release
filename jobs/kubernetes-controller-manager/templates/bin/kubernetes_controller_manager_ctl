@@ -8,6 +8,9 @@ RUN_DIR=/var/vcap/sys/run/kubernetes
 PIDFILE=$RUN_DIR/kubernetes_controller_manager.pid
 LOG_DIR=/var/vcap/sys/log/kubernetes-controller-manager
 
+. /var/vcap/jobs/cloud-config/bin/cloud-config_utils
+set_node_name
+
 # shellcheck disable=SC1091
 . /var/vcap/packages/pid_utils/pid_utils.sh
 
@@ -25,17 +28,11 @@ send_process_stderr_to_logfile() {
 }
 
 start_kubernetes_controller_manager() {
-  cloud_config_file=""
-  if [ "<%= p("cloud-provider.type") %>" == "gce" ]
-  then 
-    cloud_config_file="/var/vcap/jobs/kubeconfig/config/gce.gcfg"
-  fi
-
   exec chpst -u vcap:vcap  \
     kube-controller-manager \
       --allocate-node-cidrs=true \
-      --cloud-provider=<%= p("cloud-provider.type") %> \
-      --cloud-config=${cloud_config_file} \
+      --cloud-provider=${cloud_provider} \
+      --cloud-config="/var/vcap/jobs/cloud-config/config/cloud-config.ini" \
       --cluster-cidr=10.200.0.0/16 \
       --cluster-name=kubernetes \
       --leader-elect=true \

@@ -8,13 +8,4 @@ packages:
 - pid_utils
 - kubernetes
 
-properties:
-  cloud-provider:
-    type:
-      description: "Type of Cloud Provider to use"
-      example: gce
-    gce:
-      project-id:
-        description: Google Cloud project id. Required when cloud-provider.type is gce
-      network-name:
-        description: Google Cloud network name. Required when cloud-provider.type is gce
+properties: {}
