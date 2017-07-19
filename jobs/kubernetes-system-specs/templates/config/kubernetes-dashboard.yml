@@ -56,10 +56,8 @@ metadata:
   name: kubernetes-dashboard
   namespace: kube-system
 spec:
-  type: NodePort
   ports:
   - port: 80
     targetPort: 9090
-    nodePort: 31000
   selector:
     k8s-app: kubernetes-dashboard

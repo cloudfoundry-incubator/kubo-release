@@ -27,13 +27,7 @@ properties:
     description: The full URL for the load balancer in front of the masters
     example: https://api.sys.kubo.cf-app.com:8443
 
-
 provides:
 - name: kubernetes-workers
   type: kubernetes-workers
 
-# for ha-proxy tcp worker linking
-# the 'ssh_proxy' type must match the 'tcp_backend' link
-# see https://github.com/cloudfoundry-incubator/haproxy-boshrelease/blob/master/jobs/haproxy/spec
-- name: haproxy
-  type: ssh_proxy
