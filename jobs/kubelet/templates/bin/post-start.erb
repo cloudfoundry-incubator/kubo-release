@@ -4,8 +4,12 @@
 
 kubectl="/var/vcap/packages/kubernetes/bin/kubectl --kubeconfig=/var/vcap/jobs/kubeconfig/config/kubeconfig"
 
-. /var/vcap/jobs/cloud-config/bin/cloud-config_utils
-set_node_name
+if [ -e /var/vcap/jobs/cloud-config/bin/cloud-config_utils ]; then
+  . /var/vcap/jobs/cloud-config/bin/cloud-config_utils
+  set_node_name
+else
+  node_name=<%= spec.ip %>
+fi
 
 # Deleting docker0 route as a workaround to a routing conflict
 # between the docker0 bridge and the CNI interface

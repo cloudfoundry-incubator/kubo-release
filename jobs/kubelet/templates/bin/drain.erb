@@ -11,8 +11,12 @@ PIDFILE=/var/vcap/sys/run/kubernetes/kubelet.pid
 exit_code=1
 trap ensure_safe_exit EXIT
 
-. /var/vcap/jobs/cloud-config/bin/cloud-config_utils
-set_node_name
+if [ -e /var/vcap/jobs/cloud-config/bin/cloud-config_utils ]; then
+  . /var/vcap/jobs/cloud-config/bin/cloud-config_utils
+  set_node_name
+else
+  node_name=<%= spec.ip %>
+fi
 
 main() {
   send_process_stdout_to_logfile_and_syslog

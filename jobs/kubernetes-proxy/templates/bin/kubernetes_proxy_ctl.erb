@@ -8,8 +8,12 @@ RUN_DIR=/var/vcap/sys/run/kubernetes
 PIDFILE=$RUN_DIR/kubernetes_proxy.pid
 LOG_DIR=/var/vcap/sys/log/kubernetes-proxy
 
-. /var/vcap/jobs/cloud-config/bin/cloud-config_utils
-set_node_name
+if [ -e /var/vcap/jobs/cloud-config/bin/cloud-config_utils ]; then
+  . /var/vcap/jobs/cloud-config/bin/cloud-config_utils
+  set_node_name
+else
+  node_name=<%= spec.ip %>
+fi
 
 # shellcheck disable=SC1091
 . /var/vcap/packages/pid_utils/pid_utils.sh

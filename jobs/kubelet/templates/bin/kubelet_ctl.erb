@@ -10,9 +10,16 @@ LOG_DIR=/var/vcap/sys/log/kubelet
 DATA_DIR=/var/vcap/store/kubernetes
 DOCKER_SOCKET=unix:///var/vcap/sys/run/docker/docker.sock
 
-. /var/vcap/jobs/cloud-config/bin/cloud-config_utils
-set_node_name
-set_cloud_provider
+if [ -e /var/vcap/jobs/cloud-config/bin/cloud-config_utils ]; then
+  . /var/vcap/jobs/cloud-config/bin/cloud-config_utils
+  set_node_name
+  set_cloud_provider
+  cloud_config="/var/vcap/jobs/cloud-config/config/cloud-config.ini"
+else
+  node_name=<%= spec.ip %>
+  cloud_config=""
+  cloud_provider=""
+fi
 
 # shellcheck disable=SC1091
 . /var/vcap/packages/pid_utils/pid_utils.sh
@@ -38,7 +45,7 @@ start_kubelet() {
     --allow-privileged=true \
     --api-servers=<%= p("kubernetes-api-url") %> \
     --cloud-provider=${cloud_provider} \
-    --cloud-config="/var/vcap/jobs/cloud-config/config/cloud-config.ini" \
+    --cloud-config="${cloud_config}" \
     --cluster-dns=10.100.200.10 \
     --cluster-domain=cluster.local \
     --container-runtime=docker \
