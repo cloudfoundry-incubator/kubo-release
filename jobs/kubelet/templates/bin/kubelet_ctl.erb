@@ -10,11 +10,11 @@ LOG_DIR=/var/vcap/sys/log/kubelet
 DATA_DIR=/var/vcap/store/kubernetes
 DOCKER_SOCKET=unix:///var/vcap/sys/run/docker/docker.sock
 
-if [ -e /var/vcap/jobs/cloud-config/bin/cloud-config_utils ]; then
-  . /var/vcap/jobs/cloud-config/bin/cloud-config_utils
+if [ -e /var/vcap/jobs/cloud-provider/bin/cloud-provider_utils ]; then
+  . /var/vcap/jobs/cloud-provider/bin/cloud-provider_utils
   set_node_name
   set_cloud_provider
-  cloud_config="/var/vcap/jobs/cloud-config/config/cloud-config.ini"
+  cloud_config="/var/vcap/jobs/cloud-provider/config/cloud-provider.ini"
 else
   node_name=<%= spec.ip %>
   cloud_config=""

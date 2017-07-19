@@ -4,8 +4,8 @@
 
 kubectl="/var/vcap/packages/kubernetes/bin/kubectl --kubeconfig=/var/vcap/jobs/kubeconfig/config/kubeconfig"
 
-if [ -e /var/vcap/jobs/cloud-config/bin/cloud-config_utils ]; then
-  . /var/vcap/jobs/cloud-config/bin/cloud-config_utils
+if [ -e /var/vcap/jobs/cloud-provider/bin/cloud-provider_utils ]; then
+  . /var/vcap/jobs/cloud-provider/bin/cloud-provider_utils
   set_node_name
 else
   node_name=<%= spec.ip %>

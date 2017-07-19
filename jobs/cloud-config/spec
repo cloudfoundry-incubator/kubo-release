@@ -1,9 +1,9 @@
 ---
-name: cloud-config
+name: cloud-provider
 
 templates:
-  config/cloud-config.ini.erb: config/cloud-config.ini
-  bin/cloud-config_utils.erb: bin/cloud-config_utils
+  config/cloud-provider.ini.erb: config/cloud-provider.ini
+  bin/cloud-provider_utils.erb: bin/cloud-provider_utils
 
 
 packages:

@@ -8,10 +8,10 @@ RUN_DIR=/var/vcap/sys/run/kubernetes
 PIDFILE=$RUN_DIR/kubernetes_controller_manager.pid
 LOG_DIR=/var/vcap/sys/log/kubernetes-controller-manager
 
-if [ -e /var/vcap/jobs/cloud-config/bin/cloud-config_utils ]; then
-  . /var/vcap/jobs/cloud-config/bin/cloud-config_utils
+if [ -e /var/vcap/jobs/cloud-provider/bin/cloud-provider_utils ]; then
+  . /var/vcap/jobs/cloud-provider/bin/cloud-provider_utils
   set_cloud_provider
-  cloud_config="/var/vcap/jobs/cloud-config/config/cloud-config.ini"
+  cloud_config="/var/vcap/jobs/cloud-provider/config/cloud-provider.ini"
 else
   cloud_provider=""
   cloud_config=""
