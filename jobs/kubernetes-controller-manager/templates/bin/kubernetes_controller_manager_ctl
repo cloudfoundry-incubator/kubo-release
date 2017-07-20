@@ -8,6 +8,15 @@ RUN_DIR=/var/vcap/sys/run/kubernetes
 PIDFILE=$RUN_DIR/kubernetes_controller_manager.pid
 LOG_DIR=/var/vcap/sys/log/kubernetes-controller-manager
 
+if [ -e /var/vcap/jobs/cloud-provider/bin/cloud-provider_utils ]; then
+  . /var/vcap/jobs/cloud-provider/bin/cloud-provider_utils
+  set_cloud_provider
+  cloud_config="/var/vcap/jobs/cloud-provider/config/cloud-provider.ini"
+else
+  cloud_provider=""
+  cloud_config=""
+fi
+
 # shellcheck disable=SC1091
 . /var/vcap/packages/pid_utils/pid_utils.sh
 
@@ -28,6 +37,8 @@ start_kubernetes_controller_manager() {
   exec chpst -u vcap:vcap  \
     kube-controller-manager \
       --allocate-node-cidrs=true \
+      --cloud-provider=${cloud_provider} \
+      --cloud-config="${cloud_config}" \
       --cluster-cidr=10.200.0.0/16 \
       --cluster-name=kubernetes \
       --leader-elect=true \
