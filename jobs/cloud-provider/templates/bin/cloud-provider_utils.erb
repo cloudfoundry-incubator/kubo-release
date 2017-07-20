@@ -1,13 +1,17 @@
 #!/bin/bash -ex
 
 set_node_name() {
-  <% if p("cloud-provider.type") == "gce" %>
-    node_name="$(curl http://metadata.google.internal/computeMetadata/v1/instance/name -H "Metadata-Flavor: Google").c.<%= p("cloud-provider.gce.project-id") %>.internal"
-  <% else %>
-    node_name="<%= spec.ip %>"
+  node_name="<%= spec.ip %>"
+<% if_p("cloud-provider.type") do | provider_type | %>
+  <% if provider_type == "gcp" %>
+  node_name="$(curl http://metadata.google.internal/computeMetadata/v1/instance/name -H "Metadata-Flavor: Google").c.<%= p("cloud-provider.gce.project-id") %>.internal"
   <% end %>
+<% end %>
 }
 
 set_cloud_provider() {
-  cloud_provider="<%= p("cloud-provider.type") %>"  
+  cloud_provider=""
+<% if_p("cloud-provider.type") do | provider_type | %>
+  cloud_provider="<%= provider_type %>"
+<% end %>
 }
