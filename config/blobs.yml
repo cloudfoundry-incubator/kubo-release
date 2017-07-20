@@ -88,4 +88,5 @@ nginx/pcre-8.39.tar.gz:
   sha: b3aec1f643d9701841e2f9d57ac121a7ff448fc8
 socat-1.7.3.2.tar.gz:
   size: 615818
+  object_id: a6f3dcb3-54a0-44a3-4100-f408932aaf8f
   sha: a2446f65fb9fe9703b85ac5664c8920089fe32d8
