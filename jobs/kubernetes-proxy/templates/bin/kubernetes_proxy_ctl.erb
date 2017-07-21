@@ -8,6 +8,13 @@ RUN_DIR=/var/vcap/sys/run/kubernetes
 PIDFILE=$RUN_DIR/kubernetes_proxy.pid
 LOG_DIR=/var/vcap/sys/log/kubernetes-proxy
 
+if [ -e /var/vcap/jobs/cloud-provider/bin/cloud-provider_utils ]; then
+  . /var/vcap/jobs/cloud-provider/bin/cloud-provider_utils
+  set_node_name
+else
+  node_name=<%= spec.ip %>
+fi
+
 # shellcheck disable=SC1091
 . /var/vcap/packages/pid_utils/pid_utils.sh
 
@@ -26,9 +33,8 @@ send_process_stderr_to_logfile() {
 
 start_kubernetes_proxy() {
 
-
   kube-proxy \
-    --hostname-override=<%= spec.ip %> \
+    --hostname-override="${node_name}" \
     --master=<%= p("kubernetes-api-url") %> \
     --kubeconfig=/var/vcap/jobs/kubeconfig/config/kubeconfig \
     --proxy-mode=iptables \
