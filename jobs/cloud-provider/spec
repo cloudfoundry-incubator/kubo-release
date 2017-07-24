@@ -19,3 +19,5 @@ properties:
         description: Google Cloud project id. Required when cloud-provider.type is gce
       network-name:
         description: Google Cloud network name. Required when cloud-provider.type is gce
+      worker-node-tag:
+        description: Google Cloud tag that identifies only worker nodes in this deployment.
