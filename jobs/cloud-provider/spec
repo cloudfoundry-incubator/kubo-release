@@ -1,0 +1,21 @@
+---
+name: cloud-provider
+
+templates:
+  config/cloud-provider.ini.erb: config/cloud-provider.ini
+  bin/cloud-provider_utils.erb: bin/cloud-provider_utils
+
+
+packages:
+- pid_utils
+
+properties:
+  cloud-provider:
+    type:
+      description: "Type of Cloud Provider to use"
+      example: gce
+    gce:
+      project-id:
+        description: Google Cloud project id. Required when cloud-provider.type is gce
+      network-name:
+        description: Google Cloud network name. Required when cloud-provider.type is gce
