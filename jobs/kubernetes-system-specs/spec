@@ -3,7 +3,6 @@ name: kubernetes-system-specs
 
 templates:
   bin/post-deploy: bin/post-deploy
-  bin/ensure-specs-running: bin/ensure-specs-running
   config/kubedns-svc.yml: config/kubedns-svc.yml
   config/kubedns-controller.yml: config/kubedns-controller.yml
   config/influxdb.yml: config/influxdb.yml
@@ -11,8 +10,8 @@ templates:
   config/kubernetes-dashboard.yml: config/kubernetes-dashboard.yml
 
 packages:
-- jq
 - kubernetes
+- ensure-specs-running
 
 properties:
   kubernetes-api-url:

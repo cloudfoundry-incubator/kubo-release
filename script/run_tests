@@ -1,23 +1,27 @@
-#!/bin/bash -e
-[ -z "$DEBUG" ] || set -x
+#!/bin/bash -eu
+[ -z ${DEBUG+x} ] || set -x
 
-project_root="$( cd "$( dirname "${BASH_SOURCE[0]}" )/../" && pwd )"
-
-test_route_sync() {
-  pushd "${project_root}/src/route-sync" > /dev/null
-    export GOPATH=${project_root}
-    echo "Running go vet"
-    go vet $(go list "./..." | grep -v "route-sync/vendor/")
-    echo "Running ginkgo"
-    ginkgo -r .
-    echo "Running ginkgo to check race conditions"
-    ginkgo -r -race .
-    echo "Compiling final binary"
-    go build
-  popd > /dev/null
+setup() {
+    GOPATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )/../" && pwd )"
 }
 
+test_package() {
+    local package=${1}
+    pushd "${GOPATH}/src/${package}" > /dev/null
+        echo "${package}: Installing ginkgo"
+        go install ./vendor/github.com/onsi/ginkgo/ginkgo
 
-test_route_sync
+        echo "${package}: Running go vet"
+        go vet $(go list "./..." | grep -v "${package}/vendor/")
 
-exit 0
+        echo "${package}: Running ginkgo"
+        ginkgo -p -r .
+
+        echo "${package}: Running ginkgo to check race conditions"
+        ginkgo -p -r -race .
+    popd > /dev/null
+}
+
+setup
+test_package "route-sync"
+test_package "ensure-specs-running"

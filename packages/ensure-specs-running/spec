@@ -1,0 +1,7 @@
+---
+name: ensure-specs-running
+dependencies:
+  - golang
+files:
+  - ensure-specs-running/**/*
+
