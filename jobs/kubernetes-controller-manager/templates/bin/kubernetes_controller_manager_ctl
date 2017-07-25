@@ -35,7 +35,7 @@ send_process_stderr_to_logfile() {
 
 start_kubernetes_controller_manager() {
 
-  chmod a+r /sys/devices/virtual/dmi/id/product_*
+  [ -f /sys/class/dmi/id/product_serial ] && chmod a+r /sys/class/dmi/id/product_serial
 
   exec chpst -u vcap:vcap  \
     kube-controller-manager \
