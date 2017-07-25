@@ -37,7 +37,7 @@ properties:
   cloud-provider.vsphere.datastore:
     description: Datastore to use for provisioning volumes using storage classes/dynamic provisioning
   cloud-provider.vsphere.working-dir:
-    description: Folder in which VMs are provisioned, can be null
+    description: Folder in which VMs are provisioned
   cloud-provider.vsphere.vm-uuid:
     description: VM Instance UUID of virtual machine which can be retrieved from instanceUuid property in VmConfigInfo, or also set as vc.uuid in VMX file. If empty, will be retrieved from sysfs (requires root)
   cloud-provider.vsphere.scsicontrollertype:
