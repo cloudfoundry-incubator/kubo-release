@@ -34,6 +34,9 @@ send_process_stderr_to_logfile() {
 }
 
 start_kubernetes_controller_manager() {
+
+  chmod a+r /sys/devices/virtual/dmi/id/product_*
+
   exec chpst -u vcap:vcap  \
     kube-controller-manager \
       --allocate-node-cidrs=true \
