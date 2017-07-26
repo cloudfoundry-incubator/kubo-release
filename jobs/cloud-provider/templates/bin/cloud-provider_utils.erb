@@ -4,7 +4,7 @@ set_node_name() {
   node_name="<%= spec.ip %>"
 <% if_p("cloud-provider.type") do | provider_type | %>
   <% if provider_type == "gce" %>
-  node_name="$(curl http://metadata.google.internal/computeMetadata/v1/instance/name -H "Metadata-Flavor: Google").c.<%= p("cloud-provider.gce.project-id") %>.internal"
+  node_name="$(curl http://metadata.google.internal/computeMetadata/v1/instance/name -H "Metadata-Flavor: Google")"
   <% end %>
 <% end %>
 }
