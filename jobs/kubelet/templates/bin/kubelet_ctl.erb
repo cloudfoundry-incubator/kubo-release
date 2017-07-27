@@ -39,6 +39,12 @@ start_kubelet() {
 
   ln -s -f /var/vcap/jobs/kubelet/packages/cni/bin/nsenter /usr/bin/nsenter
 
+  if [ "gce" == "$cloud_provider" ]; then
+    hostname_override=$(curl http://metadata.google.internal/computeMetadata/v1/instance/name -H "Metadata-Flavor: Google")
+  else
+    hostname_override=<%= spec.ip %>
+  fi
+
   kubelet \
     --allow-privileged=true \
     --api-servers=<%= p("kubernetes-api-url") %> \
@@ -49,7 +55,7 @@ start_kubelet() {
     --container-runtime=docker \
     --docker="${DOCKER_SOCKET}" \
     --docker-endpoint="${DOCKER_SOCKET}" \
-    --hostname-override="<%= spec.ip %>" \
+    --hostname-override=${hostname_override} \
     --kubeconfig=/var/vcap/jobs/kubeconfig/config/kubeconfig \
     --non-masquerade-cidr 10.200.0.0/16 \
     --serialize-image-pulls=false \
