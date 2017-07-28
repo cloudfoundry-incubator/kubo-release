@@ -64,6 +64,7 @@ start_kubelet() {
     --network-plugin=cni \
     --network-plugin-dir=/var/vcap/jobs/kubelet/packages/cni/bin \
     --v=2 \
+    --node-labels=spec.ip=<%= spec.ip %> \
   1>> $LOG_DIR/kubelet.stdout.log \
   2>> $LOG_DIR/kubelet.stderr.log
 }
