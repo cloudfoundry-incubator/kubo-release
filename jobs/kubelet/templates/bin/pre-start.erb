@@ -1,4 +1,6 @@
-#!/bin/bash -e
+#!/bin/bash
+
+set -exu -o pipefail
 
 CONF_DIR=/var/vcap/jobs/kubelet/config
 PKG_DIR=/var/vcap/packages/kubernetes
@@ -37,7 +39,9 @@ update_vsphere_vms() {
 main() {
   detect_cloud_config
   shutdown_rpcbind_if_its_running
-  [[ "vsphere" == "$cloud_provider" ]] && update_vsphere_vms
+  if [[ "vsphere" == "$cloud_provider" ]]; then
+       update_vsphere_vms
+  fi
 }
 
 main
