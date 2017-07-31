@@ -15,6 +15,7 @@ packages:
 - kubernetes
 - cni
 - socat
+- govc
 
 properties:
   tls.kubelet:
