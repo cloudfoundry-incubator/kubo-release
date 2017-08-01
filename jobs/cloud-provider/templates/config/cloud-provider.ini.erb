@@ -7,4 +7,18 @@ network-name=<%= p("cloud-provider.gce.network-name") %>
 node-tags=<%= p("cloud-provider.gce.worker-node-tag") %>
     <% end %>
   <% end %>
+  <% if provider_type == "vsphere" %>
+[Global]
+user=<%= p("cloud-provider.vsphere.user") %>
+password=<%= p("cloud-provider.vsphere.password") %>
+server=<%= p("cloud-provider.vsphere.server") %>
+port=<%= p("cloud-provider.vsphere.port") %>
+insecure-flag=<%= p("cloud-provider.vsphere.insecure-flag") %>
+datacenter=<%= p("cloud-provider.vsphere.datacenter") %>
+datastore=<%= p("cloud-provider.vsphere.datastore") %>
+working-dir=<%= p("cloud-provider.vsphere.working-dir") %>
+vm-uuid=<%= p("cloud-provider.vsphere.vm-uuid", "") %>
+[Disk]
+scsicontrollertype=<%= p("cloud-provider.vsphere.scsicontrollertype") %>
+  <% end %>
 <% end %>

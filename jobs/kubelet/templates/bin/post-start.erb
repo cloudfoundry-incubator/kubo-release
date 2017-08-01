@@ -4,13 +4,6 @@
 
 kubectl="/var/vcap/packages/kubernetes/bin/kubectl --kubeconfig=/var/vcap/jobs/kubeconfig/config/kubeconfig"
 
-if [ -e /var/vcap/jobs/cloud-provider/bin/cloud-provider_utils ]; then
-  . /var/vcap/jobs/cloud-provider/bin/cloud-provider_utils
-  set_node_name
-else
-  node_name=<%= spec.ip %>
-fi
-
 # Deleting docker0 route as a workaround to a routing conflict
 # between the docker0 bridge and the CNI interface
 # TODO: remove this once an upstream docker release is available,
@@ -44,6 +37,8 @@ load_cached_containers() {
 load_cached_containers
 
 TIMEOUT=120
+
+node_name=$($kubectl get nodes -o wide -L spec.ip | grep "<%= spec.ip %>" | awk '{print $1}')
 
 if timeout "$TIMEOUT" /var/vcap/jobs/kubelet/bin/ensure_kubelet_up_and_running
 then

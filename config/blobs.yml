@@ -50,6 +50,10 @@ go/go1.8.linux-amd64.tar.gz:
   size: 89803580
   object_id: be776520-f271-439d-511a-9a0f63013403
   sha: a93fe8fc245e3554f956bc823f30ef4eb23c2068
+govc_linux_amd64.gz:
+  size: 5941851
+  object_id: e7f1ebef-4ccf-48bb-6ba6-f46ec47ed4f3
+  sha: 79db9661d65b265856976b360ee4ce84de761fa9
 jq-linux64-1.5:
   size: 3027945
   object_id: 41eb1cd1-0377-4e08-5602-51e0af8b9b52

@@ -1,0 +1,5 @@
+---
+name: govc
+
+files:
+- govc_linux_amd64.gz
