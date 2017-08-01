@@ -25,7 +25,12 @@ load_container() {
     path=$1
 
     echo "loading cached container: ${path}"
-    sudo /var/vcap/jobs/kubelet/packages/docker/bin/docker -H ${DOCKER_SOCKET} load < ${path}
+    if sudo /var/vcap/jobs/kubelet/packages/docker/bin/docker -H ${DOCKER_SOCKET} load < "${path}"; then
+      echo "successfully loaded container: ${path}"
+    else
+      echo "failed to load container: ${path}"
+      exit 1
+    fi
 }
 
 load_cached_containers() {
