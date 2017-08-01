@@ -1,0 +1,12 @@
+set -e # exit immediately if a simple command exits with a non-zero status
+set -u # report the usage of uninitialized variables
+
+mkdir -p $BOSH_INSTALL_TARGET/bin
+tar xzf socat-1.7.3.2.tar.gz
+pushd socat-1.7.3.2
+  ./configure
+  make
+  cp socat ${BOSH_INSTALL_TARGET}/bin
+  chmod 755 ${BOSH_INSTALL_TARGET}/bin/socat
+popd
+chmod +x $BOSH_INSTALL_TARGET/bin/socat

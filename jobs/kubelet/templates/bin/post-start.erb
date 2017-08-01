@@ -3,7 +3,6 @@
 [ -z "$DEBUG" ] || set -x
 
 kubectl="/var/vcap/packages/kubernetes/bin/kubectl --kubeconfig=/var/vcap/jobs/kubeconfig/config/kubeconfig"
-node_name=<%= spec.ip %>
 
 # Deleting docker0 route as a workaround to a routing conflict
 # between the docker0 bridge and the CNI interface
@@ -38,6 +37,8 @@ load_cached_containers() {
 load_cached_containers
 
 TIMEOUT=120
+
+node_name=$($kubectl get nodes -o wide -L spec.ip | grep "<%= spec.ip %>" | awk '{print $1}')
 
 if timeout "$TIMEOUT" /var/vcap/jobs/kubelet/bin/ensure_kubelet_up_and_running
 then

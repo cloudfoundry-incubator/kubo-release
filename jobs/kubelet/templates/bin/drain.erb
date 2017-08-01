@@ -63,7 +63,8 @@ check_if_pidfile_exists() {
 }
 
 drain_kubelet() {
-  kubectl --kubeconfig /var/vcap/jobs/kubeconfig/config/kubeconfig drain <%= spec.ip %> --grace-period 10 --force --delete-local-data
+  local node_name=$(kubectl --kubeconfig /var/vcap/jobs/kubeconfig/config/kubeconfig get nodes -o wide -L spec.ip | grep "<%= spec.ip %>" | awk '{print $1}')
+  kubectl --kubeconfig /var/vcap/jobs/kubeconfig/config/kubeconfig drain "${node_name}" --grace-period 10 --force --delete-local-data
 }
 
 kill_node() {
