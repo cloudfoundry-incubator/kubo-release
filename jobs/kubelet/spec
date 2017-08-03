@@ -37,3 +37,6 @@ provides:
 # see https://github.com/cloudfoundry-incubator/haproxy-boshrelease/blob/master/jobs/haproxy/spec
 - name: worker_haproxy
   type: ssh_proxy
+  properties:
+  - backend_port
+  - port
