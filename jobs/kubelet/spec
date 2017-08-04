@@ -4,7 +4,7 @@ name: kubelet
 templates:
   bin/drain.erb: bin/drain
   bin/kubelet_ctl.erb: bin/kubelet_ctl
-  bin/pre-start: bin/pre-start
+  bin/pre-start.erb: bin/pre-start
   bin/post-start.erb: bin/post-start
   bin/ensure_kubelet_up_and_running.erb: bin/ensure_kubelet_up_and_running
   config/kubelet.pem.erb: config/kubelet.pem
@@ -14,6 +14,8 @@ packages:
 - pid_utils
 - kubernetes
 - cni
+- socat
+- govc
 
 properties:
   tls.kubelet:
@@ -25,7 +27,12 @@ properties:
   kubernetes-api-url:
     description: The full URL for the load balancer in front of the masters
     example: https://api.sys.kubo.cf-app.com:8443
-
+  backend_port:
+    example: 80
+    default: 6789
+  port:
+    example: 81
+    default: 4567
 
 provides:
 - name: kubernetes-workers
@@ -34,5 +41,8 @@ provides:
 # for ha-proxy tcp worker linking
 # the 'ssh_proxy' type must match the 'tcp_backend' link
 # see https://github.com/cloudfoundry-incubator/haproxy-boshrelease/blob/master/jobs/haproxy/spec
-- name: haproxy
+- name: worker_haproxy
   type: ssh_proxy
+  properties:
+  - backend_port
+  - port

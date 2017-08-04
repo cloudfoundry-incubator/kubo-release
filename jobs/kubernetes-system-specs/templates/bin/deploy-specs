@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+
+set -e
+
+spec_dir="/var/vcap/jobs/kubernetes-system-specs/config/"
+kubectl="/var/vcap/packages/kubernetes/bin/kubectl --kubeconfig=/var/vcap/jobs/kubeconfig/config/kubeconfig"
+
+apply_spec() {
+  local spec_file="${spec_dir}/${1}"
+  
+  ${kubectl} apply -f "${spec_file}" || echo "Spec file already applied: ${1}"
+}
+
+wait_for() {
+    ${kubectl} rollout status "deployments/${1}" -w --namespace=kube-system
+}
+
+main() {
+  apply_spec "kubedns-svc.yml"
+  apply_spec "kubedns-controller.yml"
+  wait_for kube-dns
+
+  apply_spec "heapster.yml"
+  wait_for heapster
+
+  apply_spec "influxdb.yml"
+  wait_for monitoring-influxdb
+
+  apply_spec "kubernetes-dashboard.yml"
+  wait_for kubernetes-dashboard
+}
+
+main

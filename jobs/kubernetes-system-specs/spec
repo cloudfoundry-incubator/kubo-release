@@ -3,7 +3,7 @@ name: kubernetes-system-specs
 
 templates:
   bin/post-deploy: bin/post-deploy
-  bin/ensure-specs-running: bin/ensure-specs-running
+  bin/deploy-specs: bin/deploy-specs
   config/kubedns-svc.yml: config/kubedns-svc.yml
   config/kubedns-controller.yml: config/kubedns-controller.yml
   config/influxdb.yml: config/influxdb.yml
