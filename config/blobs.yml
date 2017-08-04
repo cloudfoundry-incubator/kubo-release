@@ -82,14 +82,6 @@ kubernetes-1.7.1/kubelet:
   size: 145214752
   object_id: 85321692-b22d-44bb-548b-df70d0df4193
   sha: 8c5c57d6d3a644266c77362765427289d3d4860a
-nginx/nginx-release-1.11.4.tar.gz:
-  size: 987038
-  object_id: 2d682c25-37af-4bb7-66bf-a6b77f2475c1
-  sha: deecc5583de7f250c6f30e8028589d3b09a58a83
-nginx/pcre-8.39.tar.gz:
-  size: 2062258
-  object_id: a26fa434-4cd8-425d-628f-ae36acc24519
-  sha: b3aec1f643d9701841e2f9d57ac121a7ff448fc8
 socat-1.7.3.2.tar.gz:
   size: 615818
   object_id: a6f3dcb3-54a0-44a3-4100-f408932aaf8f
