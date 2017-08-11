@@ -47,7 +47,6 @@ start_kubelet() {
 
   kubelet \
     --allow-privileged=true \
-    --api-servers=<%= p("kubernetes-api-url") %> \
     --cloud-provider=${cloud_provider} \
     --cloud-config="${cloud_config}" \
     --cluster-dns=10.100.200.10 \
@@ -63,6 +62,7 @@ start_kubelet() {
     --tls-private-key-file=/var/vcap/jobs/kubelet/config/kubelet-key.pem \
     --network-plugin=cni \
     --network-plugin-dir=/var/vcap/jobs/kubelet/packages/cni/bin \
+    --require-kubeconfig=true \
     --v=2 \
     --node-labels=spec.ip=<%= spec.ip %> \
   1>> $LOG_DIR/kubelet.stdout.log \
