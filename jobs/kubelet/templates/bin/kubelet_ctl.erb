@@ -61,7 +61,6 @@ start_kubelet() {
     --tls-cert-file=/var/vcap/jobs/kubelet/config/kubelet.pem \
     --tls-private-key-file=/var/vcap/jobs/kubelet/config/kubelet-key.pem \
     --network-plugin=cni \
-    --cni-bin-dir=/var/vcap/jobs/kubelet/packages/cni/bin \
     --require-kubeconfig=true \
     --v=2 \
     --node-labels=spec.ip=<%= spec.ip %> \
