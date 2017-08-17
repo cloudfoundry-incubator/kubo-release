@@ -56,7 +56,6 @@ start_kubelet() {
     --docker-endpoint="${DOCKER_SOCKET}" \
     --hostname-override=${hostname_override} \
     --kubeconfig=/var/vcap/jobs/kubeconfig/config/kubeconfig \
-    --non-masquerade-cidr 10.200.0.0/16 \
     --serialize-image-pulls=false \
     --tls-cert-file=/var/vcap/jobs/kubelet/config/kubelet.pem \
     --tls-private-key-file=/var/vcap/jobs/kubelet/config/kubelet-key.pem \
