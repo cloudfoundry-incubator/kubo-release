@@ -10,6 +10,7 @@ templates:
   config/etcd-ca.crt.erb: config/etcd-ca.crt
   config/etcd-client.crt.erb: config/etcd-client.crt
   config/etcd-client.key.erb: config/etcd-client.key
+  config/oidc-ca.pem.erb: config/oidc-ca.pem
 
 packages:
 - pid_utils
@@ -43,6 +44,19 @@ properties:
   authorization-mode:
     description: The authorization mode for kubernetes-api. Should be 'abac' or 'rbac'
     default: rbac
+  oidc-issuer-url:
+    description: "URL of the provider which allows the API server to discover public signing keys"
+  oidc-client-id:
+    example: "kubernetes"
+    description: "A client id that all tokens must be issued for"
+  oidc-username-claim:
+    example: "sub"
+    description: "JWT claim to use as the user name"
+  oidc-groups-claim:
+    example: "groups"
+    description: "JWT claim to use as the user’s group"
+  oidc-ca:
+    description: "Certificate for the CA that signed your identity provider’s web certificate"
 
 consumes:
 - name: etcd
