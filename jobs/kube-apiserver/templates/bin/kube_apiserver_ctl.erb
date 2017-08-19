@@ -117,6 +117,25 @@ start_kube_apiserver() {
       <% end %>\
       --enable-aggregator-routing=true \
       --v=<%=p('logging-level') %> \
+      <% if_p("oidc.issuer-url", "oidc.client-id") do |oidc_issuer_url, oidc_client_id| %> \
+      --oidc-issuer-url="<%= oidc_issuer_url %>" \
+      --oidc-client-id="<%= oidc_client_id %>" \
+      <% if_p("oidc.username-claim") do |oidc_username_claim| %> \
+      --oidc-username-claim="<%= oidc_username_claim %>" \
+      <% end %> \
+      <% if_p("oidc.username-prefix") do |oidc_username_prefix| %> \
+        --oidc-username-prefix="<%= oidc_username_prefix %>" \
+      <% end %> \
+      <% if_p("oidc.groups-claim") do |oidc_groups_claim| %> \
+      --oidc-groups-claim="<%= oidc_groups_claim %>" \
+      <% end %> \
+      <% if_p("oidc.groups-prefix") do |oidc_groups_prefix| %> \
+        --oidc-groups-prefix="<%= oidc_groups_prefix %>" \
+      <% end %> \
+      <% if_p("oidc.ca") do %> \
+      --oidc-ca-file="/var/vcap/jobs/kube-apiserver/config/oidc-ca.pem" \
+      <% end %> \
+      <% end %> \
     1>> $LOG_DIR/kube_apiserver.stdout.log \
     2>> $LOG_DIR/kube_apiserver.stderr.log
 }
