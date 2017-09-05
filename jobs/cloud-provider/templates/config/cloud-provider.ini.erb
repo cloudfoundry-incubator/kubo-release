@@ -21,4 +21,23 @@ vm-uuid="<%= p('cloud-provider.vsphere.vm-uuid', '') %>"
 [Disk]
 scsicontrollertype="<%= p('cloud-provider.vsphere.scsicontrollertype') %>"
   <% end %>
+  <% if provider_type == "openstack" %>
+[Global]
+auth-url="<%= p('cloud-provider.openstack.auth-url') %>"
+username="<%= p('cloud-provider.openstack.user-id') %>"
+password="<%= p('cloud-provider.openstack.api-key') %>"
+region="<%= p('cloud-provider.openstack.region') %>"
+<% if_p('cloud-provider.openstack.domain-id') do |domain_id| %>
+domain-id="<%= domain_id %>"
+<% end %>
+<% if_p('cloud-provider.openstack.domain-name') do |domain_name| %>
+domain-name="<%= domain_name %>"
+<% end %>
+<% if_p('cloud-provider.openstack.tenant-id') do |tenant_id| %>
+tenant-id="<%= tenant_id %>"
+<% end %>
+<% if_p('cloud-provider.openstack.tenant-name') do |tenant_name| %>
+tenant-name="<%= tenant_name %>"
+<% end %>
+  <% end %>
 <% end %>

@@ -11,7 +11,7 @@ packages:
 properties:
   cloud-provider.type:
     description: "Type of Cloud Provider to use"
-    example: gce, vsphere
+    example: gce, vsphere, openstack
 
   # GCE specific properties
   cloud-provider.gce.project-id:
@@ -45,3 +45,24 @@ properties:
   cloud-provider.vsphere.scsicontrollertype:
     description: vSphere vSCSI adapter type name
     default: pvscsi
+
+  # Openstack specific properties
+  cloud-provider.openstack.auth-url:
+    description: The identity (Keystone) authentication URL. 
+  cloud-provider.openstack.user-id:
+    description: The User ID to login with.
+  cloud-provider.openstack.api-key:
+    description: The Password to login with.
+  cloud-provider.openstack.region:
+    description: The region of the OpenStack cloud to use.
+    default: RegionOne
+  # For the following one of 'id' or 'name' must be provided.
+  cloud-provider.openstack.domain-id:
+    description: The ID of the Domain to scope to (Identity v3).
+  cloud-provider.openstack.domain-name:
+    description: The Name of the Domain to scope to (Identity v3).
+  cloud-provider.openstack.tenant-id:
+    description: The ID of the Tenant (Identity v2) or Project (Identity v3) to login with.
+  cloud-provider.openstack.tenant-name:
+    description: The Name of the Tenant (Identity v2) or Project (Identity v3) to login with.
+  
