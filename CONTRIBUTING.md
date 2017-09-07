@@ -1,7 +1,7 @@
 # Contributing to Kubo
 
 ## Contributor License Agreement
-If you have not previously done so, please fill out and submit the [Contributor License Agreement](https://cla.pivotal.io/sign/pivotal). 
+If you have not previously done so, please fill out and submit an [Individual Contributor License Agreement](https://www.cloudfoundry.org/governance/cff_individual_cla/) or a [Corporate Contributor License Agreement](https://www.cloudfoundry.org/governance/cff_corporate_cla/).
 
 ## Developer Workflow
 1. Fork the project on [GitHub](https://github.com/cloudfoundry-incubator/kubo-release)
