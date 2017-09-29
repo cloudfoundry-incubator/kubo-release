@@ -30,7 +30,9 @@ start_flanneld() {
       "http://#{instance.address}:4001/"
     end.join(',')
   %>
-
+  
+  modprobe br_netfilter
+  
   mkdir -p /dev/net
   mknod /dev/net/tun c 10 200 || true
   echo 1 > /proc/sys/net/ipv4/ip_forward
