@@ -33,6 +33,13 @@ properties:
   port:
     example: 81
     default: 4567
+  labels:
+    description: Labels to give node
+    default: {}
+    example:
+      node-type: router
+      gpu: true
+    
 
 provides:
 - name: kubernetes-workers
