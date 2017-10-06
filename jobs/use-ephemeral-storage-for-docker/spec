@@ -1,0 +1,7 @@
+---
+name: use-ephemeral-storage-for-docker
+
+templates:
+  bin/pre-start: bin/pre-start
+
+properties: {}

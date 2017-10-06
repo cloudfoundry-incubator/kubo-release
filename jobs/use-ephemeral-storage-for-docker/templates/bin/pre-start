@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# This job only exists because there is no way in docker bosh release to store data in ephemeral disk
+
+if [ -z $(df | grep /var/vcap/store) ]
+then
+    echo "Persistent volume at /var/vcap/store does not exist, symlinking it to /var/vcap/data/weak-store in ephemeral volume"
+    mkdir -p /var/vcap/data/weak-store
+    [ -L /var/vcap/store ] || ln -s /var/vcap/store /var/vcap/data/weak-store
+fi
