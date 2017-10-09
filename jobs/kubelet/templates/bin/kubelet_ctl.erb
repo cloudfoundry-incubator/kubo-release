@@ -7,7 +7,7 @@ export PATH=/var/vcap/packages/kubernetes/bin/:/var/vcap/packages/docker/sbin/:/
 RUN_DIR=/var/vcap/sys/run/kubernetes
 PIDFILE=$RUN_DIR/kubelet.pid
 LOG_DIR=/var/vcap/sys/log/kubelet
-DATA_DIR=/var/vcap/data/kubernetes
+DATA_DIR=/var/vcap/store/kubernetes
 DOCKER_SOCKET=unix:///var/vcap/sys/run/docker/docker.sock
 
 if [ -e /var/vcap/jobs/cloud-provider/bin/cloud-provider_utils ]; then
