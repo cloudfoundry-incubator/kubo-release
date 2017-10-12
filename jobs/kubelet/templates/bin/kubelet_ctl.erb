@@ -61,6 +61,9 @@ start_kubelet() {
     --tls-private-key-file=/var/vcap/jobs/kubelet/config/kubelet-key.pem \
     --network-plugin=cni \
     --cni-bin-dir=/var/vcap/jobs/kubelet/packages/cni/bin \
+    <% if_p('kube-reserved') do |kube_reserved| %>--kube-reserved="<%= kube_reserved %>"<% end %> \
+    <% if_p('system-reserved') do |system_reserved| %>--system-reserved="<%= system_reserved %>"<% end %> \
+    <% if_p('eviction-hard') do |eviction_hard| %>--eviction-hard="<%= eviction_hard %>"<% end %> \
     --require-kubeconfig=true \
     --v=2 \
     --node-labels=spec.ip=<%= spec.ip %> \

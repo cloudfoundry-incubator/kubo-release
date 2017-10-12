@@ -33,6 +33,15 @@ properties:
   port:
     example: 81
     default: 4567
+  kube-reserved:
+    description: Resource reservations for kubernetes system daemons
+    example: "cpu=1,memory=2Gi,storage=1Gi"
+  system-reserved:
+    description: Resource reservations for OS system daemons
+    example: "cpu=500m,memory=1Gi,storage=1Gi"
+  eviction-hard:
+    description: Node eviction thresholds
+    example: "memory.available<500Mi,nodefs.available<10%"
 
 provides:
 - name: kubernetes-workers
