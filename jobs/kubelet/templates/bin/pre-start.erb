@@ -29,7 +29,7 @@ shutdown_rpcbind_if_its_running() {
 
 update_vsphere_vms() {
    export GOVC_URL="$(get_cloud_property "server"):$(get_cloud_property "port")"
-   export GOVC_USERNAME="$(get_cloud_property "user")"
+   export GOVC_USERNAME="$(get_cloud_property "user" | sed 's/\\\\/\\/g')"
    export GOVC_PASSWORD="$(get_cloud_property "password")"
    export GOVC_INSECURE="$(get_cloud_property "insecure-flag")"
 
