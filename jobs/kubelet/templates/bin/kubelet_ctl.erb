@@ -54,6 +54,7 @@ start_kubelet() {
     --container-runtime=docker \
     --docker="${DOCKER_SOCKET}" \
     --docker-endpoint="${DOCKER_SOCKET}" \
+    --fail-swap-on=false \
     --hostname-override=${hostname_override} \
     --kubeconfig=/var/vcap/jobs/kubeconfig/config/kubeconfig \
     --serialize-image-pulls=false \
