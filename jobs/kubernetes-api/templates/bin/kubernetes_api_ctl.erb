@@ -39,6 +39,20 @@ start_kubernetes_api_server() {
     "http://#{instance.address}:4001"
   end.join(',')
   api_server_count = link("kubernetes-api").instances.size
+  authorization_mode = p('authorization-mode').downcase
+
+  authorization_flags = if authorization_mode == 'abac'
+    <<-FLAGS
+      --authorization-mode=ABAC \\
+      --authorization-policy-file=/var/vcap/jobs/kubernetes-api/config/authorization_policy.jsonl \\
+    FLAGS
+  elsif authorization_mode == 'rbac'
+    <<-FLAGS
+      --authorization-mode=RBAC \\
+    FLAGS
+  else
+    raise "Unsupported authorization mode #{authorization_mode}. Supported modes: abac, rbac"
+  end
 %>
 
   exec chpst -u vcap:vcap  \
@@ -46,9 +60,7 @@ start_kubernetes_api_server() {
       --admission-control=NamespaceLifecycle,NamespaceExists,ServiceAccount,LimitRanger,ResourceQuota \
       --allow-privileged=true \
       --apiserver-count=<%= api_server_count %> \
-      --authorization-mode=ABAC \
-      --authorization-policy-file=/var/vcap/jobs/kubernetes-api/config/authorization_policy.jsonl \
-      --bind-address=0.0.0.0 \
+      <%= authorization_flags %>     --bind-address=0.0.0.0 \
       --cert-dir=/var/vcap/sys/run/kubernetes/ \
       --cloud-provider=${cloud_provider} \
       --cloud-config="${cloud_config}" \

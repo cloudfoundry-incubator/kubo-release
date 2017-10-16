@@ -16,6 +16,9 @@ wait_for() {
 }
 
 main() {
+<% if link('kubernetes-api').p('authorization-mode') == 'rbac' %>
+  apply_spec "rbac_policy.yml"
+<% end %>
   apply_spec "kubedns-svc.yml"
   apply_spec "kubedns-controller.yml"
   wait_for kube-dns
