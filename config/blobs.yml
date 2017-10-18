@@ -6,26 +6,26 @@ cni/util-linux_2.27.1-6ubuntu3_amd64.deb:
   size: 847730
   object_id: 27eb3ec3-220f-4a25-6c4f-ec219c37ac8d
   sha: 568f62cb031608ab09ba1e3c2121e9e8b92dcae4
+container-images/gcr.io_google-containers_kubernetes-dashboard-amd64:v1.7.1.tgz:
+  size: 41572347
+  object_id: 67787737-7998-48dc-603a-5d62cea2fad6
+  sha: fe689a7cd4cd47d5dc6ad248db344b1c6ea6c716
 container-images/gcr.io_google_containers_heapster:v1.1.0.tgz:
   size: 32207205
   object_id: d2bef095-4048-4d56-5a5c-a5bd759b23fd
   sha: 70c7b90bf79d9714a974aa0b422941b568264424
-container-images/gcr.io_google_containers_k8s-dns-dnsmasq-nanny-amd64:1.14.4.tgz:
-  size: 11312816
-  object_id: 02c5797d-f187-4267-5e18-ead0c963a9a3
-  sha: 7bd901c11e10b76459bfe24e02a00a291489c7e3
-container-images/gcr.io_google_containers_k8s-dns-kube-dns-amd64:1.14.4.tgz:
-  size: 13106474
-  object_id: b85062f0-2894-444b-58c7-c5a1c9e2ab53
-  sha: bbb4fcc61c4f4611b70cf78b6af4a0ef63548c6b
-container-images/gcr.io_google_containers_k8s-dns-sidecar-amd64:1.14.4.tgz:
-  size: 11338507
-  object_id: 3ed89f1a-e8f3-4aa7-595b-babcfd1394c5
-  sha: dad574f7b4200bdabae3333c105f2e5d66e3a815
-container-images/gcr.io_google_containers_kubernetes-dashboard-amd64:v1.6.1.tgz:
-  size: 37658880
-  object_id: 52d29c5a-4db6-40e6-73d4-18a31d9cae20
-  sha: 5320eb3434d4f53979bc82d86eb968468abe6cf3
+container-images/gcr.io_google_containers_k8s-dns-dnsmasq-nanny-amd64:1.14.6.tgz:
+  size: 10935501
+  object_id: 680e3d39-fc81-4431-743c-50578054b1f6
+  sha: a750f5f3073c62f510c7176e72271eb3758eac63
+container-images/gcr.io_google_containers_k8s-dns-kube-dns-amd64:1.14.6.tgz:
+  size: 13105460
+  object_id: 9806a090-2acf-498d-64d1-2cb720725d1b
+  sha: 89a4413f7537478ad9f0f7983fea75f2508cff60
+container-images/gcr.io_google_containers_k8s-dns-sidecar-amd64:1.14.6.tgz:
+  size: 11165833
+  object_id: 6df7bdf1-98ca-42fa-7800-629aca5f8dae
+  sha: 406f8c56c8b292c232cdf9043be67ec7ddfcc197
 container-images/gcr.io_google_containers_pause-amd64:3.0.tgz:
   size: 313309
   object_id: 7af46f58-b711-491a-4142-048930964b81
