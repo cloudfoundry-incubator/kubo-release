@@ -1,0 +1,9 @@
+---
+name: kubo-dns-aliases
+
+templates:
+  dns/aliases.json.erb: dns/aliases.json
+
+consumes:
+- name: kubernetes-api
+  type: kubernetes-api
