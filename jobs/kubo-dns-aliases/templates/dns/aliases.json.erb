@@ -1,4 +1,6 @@
 <%=
+# This file is required by the bosh-dns job which is applied through the runtime config
+
 def wildcard_name(name)
   name.split('.').collect!.with_index {|s, i| (i == 0) ? '*' : s}.join('.')
 end
