@@ -24,6 +24,7 @@ container-images/gcr.io_google_containers_k8s-dns-sidecar-amd64:1.14.6.tgz:
   sha: 406f8c56c8b292c232cdf9043be67ec7ddfcc197
 container-images/gcr.io_google_containers_kubernetes-dashboard-amd64:v1.7.1.tgz:
   size: 41572347
+  object_id: d0bafdd3-5466-41ce-7759-8c5014281871
   sha: 99153f3f9f42c960367e75c47ceb5913f5b81958
 container-images/gcr.io_google_containers_pause-amd64:3.0.tgz:
   size: 313309
