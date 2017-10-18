@@ -6,10 +6,6 @@ cni/util-linux_2.27.1-6ubuntu3_amd64.deb:
   size: 847730
   object_id: 27eb3ec3-220f-4a25-6c4f-ec219c37ac8d
   sha: 568f62cb031608ab09ba1e3c2121e9e8b92dcae4
-container-images/gcr.io_google-containers_kubernetes-dashboard-amd64:v1.7.1.tgz:
-  size: 41572347
-  object_id: 67787737-7998-48dc-603a-5d62cea2fad6
-  sha: fe689a7cd4cd47d5dc6ad248db344b1c6ea6c716
 container-images/gcr.io_google_containers_heapster:v1.1.0.tgz:
   size: 32207205
   object_id: d2bef095-4048-4d56-5a5c-a5bd759b23fd
@@ -26,6 +22,9 @@ container-images/gcr.io_google_containers_k8s-dns-sidecar-amd64:1.14.6.tgz:
   size: 11165833
   object_id: 6df7bdf1-98ca-42fa-7800-629aca5f8dae
   sha: 406f8c56c8b292c232cdf9043be67ec7ddfcc197
+container-images/gcr.io_google_containers_kubernetes-dashboard-amd64:v1.7.1.tgz:
+  size: 41572347
+  sha: 99153f3f9f42c960367e75c47ceb5913f5b81958
 container-images/gcr.io_google_containers_pause-amd64:3.0.tgz:
   size: 313309
   object_id: 7af46f58-b711-491a-4142-048930964b81
