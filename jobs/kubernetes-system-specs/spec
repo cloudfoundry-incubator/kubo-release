@@ -18,3 +18,10 @@ packages:
 consumes:
 - name: kubernetes-api
   type: kubernetes-api
+
+properties:
+  authorization-mode:
+    description: The authorization mode for kubernetes-api. Should be 'abac' or 'rbac'
+    default: abac
+  admin-username:
+    description: The admin username for the Kubernetes cluster
