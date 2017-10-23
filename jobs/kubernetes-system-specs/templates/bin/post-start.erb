@@ -4,7 +4,7 @@ set -e
 
 main() {
   local spec_dir="/var/vcap/jobs/kubernetes-system-specs/config/"
-  local kubectl="/var/vcap/packages/kubernetes/bin/kubectl --kubeconfig=/var/vcap/jobs/kubeconfig/config/kubeconfig"
+  local kubectl="/var/vcap/packages/kubernetes/bin/kubectl --token '<%= p('admin-password') %>'"
 
   ${kubectl} apply -f "${spec_dir}/rbac_policy.yml"
 }
