@@ -1,5 +1,5 @@
 hash: e6f59975c13a4afe92013073df86a61f7c9bf169c776c71a7cfb27be7aaa4858
-updated: 2017-04-07T14:09:51.31863337+01:00
+updated: 2017-10-25T14:01:47.146408192+01:00
 imports:
 - name: cloud.google.com/go
   version: 3b1ae45394a234c385be014e9a488f2bb6eef821
@@ -9,13 +9,14 @@ imports:
 - name: code.cloudfoundry.org/clock
   version: 2269160ae1757f96bbb8c6475e6fa36c805e73e0
 - name: code.cloudfoundry.org/lager
-  version: de8e9c6c6e474e5e3668aea1a9817bdb4ceeceb0
+  version: 0bfa98e49e7a976af91e918d47978f07c00b081f
   subpackages:
+  - lagerctx
   - lagertest
 - name: code.cloudfoundry.org/multierror
   version: dafed03eebc65cdf3de2928e3f94793bc893ede0
 - name: code.cloudfoundry.org/route-registrar
-  version: 10d145ad3f2fe8f31e78c44ae67e1001ddbc7fe7
+  version: d87b0fe5582ee9127bed594a23a81b6664c6da9c
   subpackages:
   - config
   - messagebus
@@ -23,7 +24,7 @@ imports:
 - name: code.cloudfoundry.org/trace-logger
   version: 107ef08a939d5be6092ce2b5f171a16aba149cb2
 - name: code.cloudfoundry.org/uaa-go-client
-  version: cf81a3f10c84f8c50094b58724492f30cfed240b
+  version: 0c176509a1f10639c9584a34d389f24d86e3215c
   subpackages:
   - config
   - fakes
@@ -98,16 +99,16 @@ imports:
   - jlexer
   - jwriter
 - name: github.com/nats-io/go-nats
-  version: 6949c8e06a246e4177961aab22940b5c411e48f0
+  version: 6f06d34c19fc8607adf14668b5bb2c9465d78348
   subpackages:
   - encoders/builtin
   - util
 - name: github.com/nats-io/nats
-  version: 6949c8e06a246e4177961aab22940b5c411e48f0
+  version: 6f06d34c19fc8607adf14668b5bb2c9465d78348
 - name: github.com/nats-io/nuid
   version: 3cf34f9fca4e88afa9da8eabd75e3326c9941b44
 - name: github.com/onsi/ginkgo
-  version: 77a8c1e5c40d6bb6c5eb4dd4bdce9763564f6298
+  version: 43e2af1f01ace55adbb6d7d0f30416476db1baae
   subpackages:
   - config
   - extensions/table
@@ -117,18 +118,15 @@ imports:
   - internal/leafnodes
   - internal/remote
   - internal/spec
-  - internal/spec_iterator
   - internal/specrunner
   - internal/suite
   - internal/testingtproxy
   - internal/writer
   - reporters
   - reporters/stenographer
-  - reporters/stenographer/support/go-colorable
-  - reporters/stenographer/support/go-isatty
   - types
 - name: github.com/onsi/gomega
-  version: 334b8f472b3af5d541c5642701c1e29e2126f486
+  version: c90bd38f8da6e92f8b114953db2f0ad7361fb4b4
   subpackages:
   - format
   - gbytes
@@ -206,9 +204,9 @@ imports:
 - name: gopkg.in/inf.v0
   version: 3887ee99ecf07df5b447e9b00d9c0b2adaa9f3e4
 - name: gopkg.in/yaml.v2
-  version: a3f3340b5840cee44f372bddb5880fcbc419b46a
+  version: eb3733d160e74a9c7e442f435eb3bea458e1d19f
 - name: k8s.io/apimachinery
-  version: 22062ea7ff0c73d5114c07ad4a0875c15a8a9826
+  version: e9a29eff7d472df0f7da9ead5ab59b74e74a07ec
   subpackages:
   - pkg/apis/meta/v1
 - name: k8s.io/client-go

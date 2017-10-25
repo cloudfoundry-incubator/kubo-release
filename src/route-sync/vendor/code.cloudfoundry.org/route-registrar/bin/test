@@ -11,6 +11,7 @@ pushd "${PROJECT_DIR}" > /dev/null
   ginkgo \
     -r \
     -p \
+    -race \
     -failOnPending \
     -randomizeAllSpecs \
     -randomizeSuites \

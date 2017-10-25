@@ -1,7 +1,7 @@
 language: go
 go_import_path: code.cloudfoundry.org/uaa-go-client
 go:
-  - 1.5.3
+  - 1.8
   - tip
 
 matrix:
