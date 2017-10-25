@@ -18,8 +18,9 @@ import (
 	"code.cloudfoundry.org/uaa-go-client/config"
 	"code.cloudfoundry.org/uaa-go-client/schema"
 
-	"code.cloudfoundry.org/lager"
 	"encoding/json"
+
+	"code.cloudfoundry.org/lager"
 	"github.com/onsi/gomega/gbytes"
 	"github.com/onsi/gomega/ghttp"
 )
@@ -31,8 +32,10 @@ func TestClient(t *testing.T) {
 
 const (
 	TokenKeyEndpoint            = "/token_key"
+	OpenIDConfigEndpoint        = "/.well-known/openid-configuration"
 	DefaultMaxNumberOfRetries   = 3
 	DefaultRetryInterval        = 15 * time.Second
+	DefaultRequestTimeout       = 1 * time.Second
 	DefaultExpirationBufferTime = 30
 	ValidPemPublicKey           = `-----BEGIN PUBLIC KEY-----\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDHFr+KICms+tuT1OXJwhCUmR2d\nKVy7psa8xzElSyzqx7oJyfJ1JZyOzToj9T5SfTIq396agbHJWVfYphNahvZ/7uMX\nqHxf+ZH9BL1gk9Y6kCnbM5R60gfwjyW1/dQPjOzn9N394zd2FJoFHwdq9Qs0wBug\nspULZVNRxq7veq/fzwIDAQAB\n-----END PUBLIC KEY-----`
 	InvalidPemPublicKey         = `-----BEGIN PUBLIC KEY-----\nMJGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDHFr+KICms+tuT1OXJwhCUmR2d\nKVy7psa8xzElSyzqx7oJyfJ1JZyOzToj9T5SfTIq396agbHJWVfYphNahvZ/7uMX\nqHxf+ZH9BL1gk9Y6kCnbM5R60gfwjyW1/dQPjOzn9N394zd2FJoFHwdq9Qs0wBug\nspULZVNRxq7veq/fzwIDAQAB\n-----END PUBLIC KEY-----`
@@ -67,7 +70,7 @@ var verifyLogs = func(reqMessage, resMessage string) {
 	Expect(logger).To(gbytes.Say(resMessage))
 }
 
-var getOauthHandlerFunc = func(status int, token *schema.Token) http.HandlerFunc {
+var getOauthHandlerFunc = func(status int, token *schema.Token, optionalHeader ...http.Header) http.HandlerFunc {
 	return ghttp.CombineHandlers(
 		ghttp.VerifyRequest("POST", "/oauth/token"),
 		ghttp.VerifyBasicAuth("client-name", "client-secret"),
@@ -76,7 +79,7 @@ var getOauthHandlerFunc = func(status int, token *schema.Token) http.HandlerFunc
 			"Accept": []string{"application/json; charset=utf-8"},
 		}),
 		verifyBody("grant_type=client_credentials"),
-		ghttp.RespondWithJSONEncoded(status, token),
+		ghttp.RespondWithJSONEncoded(status, token, optionalHeader...),
 	)
 }
 

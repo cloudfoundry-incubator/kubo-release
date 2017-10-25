@@ -4,7 +4,7 @@ package fakes
 import (
 	"sync"
 
-	"code.cloudfoundry.org/uaa-go-client"
+	uaa_go_client "code.cloudfoundry.org/uaa-go-client"
 	"code.cloudfoundry.org/uaa-go-client/schema"
 )
 
@@ -18,10 +18,18 @@ type FakeClient struct {
 		result1 *schema.Token
 		result2 error
 	}
+	fetchTokenReturnsOnCall map[int]struct {
+		result1 *schema.Token
+		result2 error
+	}
 	FetchKeyStub        func() (string, error)
 	fetchKeyMutex       sync.RWMutex
 	fetchKeyArgsForCall []struct{}
 	fetchKeyReturns     struct {
+		result1 string
+		result2 error
+	}
+	fetchKeyReturnsOnCall map[int]struct {
 		result1 string
 		result2 error
 	}
@@ -34,6 +42,9 @@ type FakeClient struct {
 	decodeTokenReturns struct {
 		result1 error
 	}
+	decodeTokenReturnsOnCall map[int]struct {
+		result1 error
+	}
 	RegisterOauthClientStub        func(*schema.OauthClient) (*schema.OauthClient, error)
 	registerOauthClientMutex       sync.RWMutex
 	registerOauthClientArgsForCall []struct {
@@ -43,12 +54,28 @@ type FakeClient struct {
 		result1 *schema.OauthClient
 		result2 error
 	}
+	registerOauthClientReturnsOnCall map[int]struct {
+		result1 *schema.OauthClient
+		result2 error
+	}
+	FetchIssuerStub        func() (string, error)
+	fetchIssuerMutex       sync.RWMutex
+	fetchIssuerArgsForCall []struct{}
+	fetchIssuerReturns     struct {
+		result1 string
+		result2 error
+	}
+	fetchIssuerReturnsOnCall map[int]struct {
+		result1 string
+		result2 error
+	}
 	invocations      map[string][][]interface{}
 	invocationsMutex sync.RWMutex
 }
 
 func (fake *FakeClient) FetchToken(forceUpdate bool) (*schema.Token, error) {
 	fake.fetchTokenMutex.Lock()
+	ret, specificReturn := fake.fetchTokenReturnsOnCall[len(fake.fetchTokenArgsForCall)]
 	fake.fetchTokenArgsForCall = append(fake.fetchTokenArgsForCall, struct {
 		forceUpdate bool
 	}{forceUpdate})
@@ -56,9 +83,11 @@ func (fake *FakeClient) FetchToken(forceUpdate bool) (*schema.Token, error) {
 	fake.fetchTokenMutex.Unlock()
 	if fake.FetchTokenStub != nil {
 		return fake.FetchTokenStub(forceUpdate)
-	} else {
-		return fake.fetchTokenReturns.result1, fake.fetchTokenReturns.result2
 	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	return fake.fetchTokenReturns.result1, fake.fetchTokenReturns.result2
 }
 
 func (fake *FakeClient) FetchTokenCallCount() int {
@@ -81,16 +110,33 @@ func (fake *FakeClient) FetchTokenReturns(result1 *schema.Token, result2 error) 
 	}{result1, result2}
 }
 
+func (fake *FakeClient) FetchTokenReturnsOnCall(i int, result1 *schema.Token, result2 error) {
+	fake.FetchTokenStub = nil
+	if fake.fetchTokenReturnsOnCall == nil {
+		fake.fetchTokenReturnsOnCall = make(map[int]struct {
+			result1 *schema.Token
+			result2 error
+		})
+	}
+	fake.fetchTokenReturnsOnCall[i] = struct {
+		result1 *schema.Token
+		result2 error
+	}{result1, result2}
+}
+
 func (fake *FakeClient) FetchKey() (string, error) {
 	fake.fetchKeyMutex.Lock()
+	ret, specificReturn := fake.fetchKeyReturnsOnCall[len(fake.fetchKeyArgsForCall)]
 	fake.fetchKeyArgsForCall = append(fake.fetchKeyArgsForCall, struct{}{})
 	fake.recordInvocation("FetchKey", []interface{}{})
 	fake.fetchKeyMutex.Unlock()
 	if fake.FetchKeyStub != nil {
 		return fake.FetchKeyStub()
-	} else {
-		return fake.fetchKeyReturns.result1, fake.fetchKeyReturns.result2
 	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	return fake.fetchKeyReturns.result1, fake.fetchKeyReturns.result2
 }
 
 func (fake *FakeClient) FetchKeyCallCount() int {
@@ -107,8 +153,23 @@ func (fake *FakeClient) FetchKeyReturns(result1 string, result2 error) {
 	}{result1, result2}
 }
 
+func (fake *FakeClient) FetchKeyReturnsOnCall(i int, result1 string, result2 error) {
+	fake.FetchKeyStub = nil
+	if fake.fetchKeyReturnsOnCall == nil {
+		fake.fetchKeyReturnsOnCall = make(map[int]struct {
+			result1 string
+			result2 error
+		})
+	}
+	fake.fetchKeyReturnsOnCall[i] = struct {
+		result1 string
+		result2 error
+	}{result1, result2}
+}
+
 func (fake *FakeClient) DecodeToken(uaaToken string, desiredPermissions ...string) error {
 	fake.decodeTokenMutex.Lock()
+	ret, specificReturn := fake.decodeTokenReturnsOnCall[len(fake.decodeTokenArgsForCall)]
 	fake.decodeTokenArgsForCall = append(fake.decodeTokenArgsForCall, struct {
 		uaaToken           string
 		desiredPermissions []string
@@ -117,9 +178,11 @@ func (fake *FakeClient) DecodeToken(uaaToken string, desiredPermissions ...strin
 	fake.decodeTokenMutex.Unlock()
 	if fake.DecodeTokenStub != nil {
 		return fake.DecodeTokenStub(uaaToken, desiredPermissions...)
-	} else {
-		return fake.decodeTokenReturns.result1
 	}
+	if specificReturn {
+		return ret.result1
+	}
+	return fake.decodeTokenReturns.result1
 }
 
 func (fake *FakeClient) DecodeTokenCallCount() int {
@@ -141,8 +204,21 @@ func (fake *FakeClient) DecodeTokenReturns(result1 error) {
 	}{result1}
 }
 
+func (fake *FakeClient) DecodeTokenReturnsOnCall(i int, result1 error) {
+	fake.DecodeTokenStub = nil
+	if fake.decodeTokenReturnsOnCall == nil {
+		fake.decodeTokenReturnsOnCall = make(map[int]struct {
+			result1 error
+		})
+	}
+	fake.decodeTokenReturnsOnCall[i] = struct {
+		result1 error
+	}{result1}
+}
+
 func (fake *FakeClient) RegisterOauthClient(arg1 *schema.OauthClient) (*schema.OauthClient, error) {
 	fake.registerOauthClientMutex.Lock()
+	ret, specificReturn := fake.registerOauthClientReturnsOnCall[len(fake.registerOauthClientArgsForCall)]
 	fake.registerOauthClientArgsForCall = append(fake.registerOauthClientArgsForCall, struct {
 		arg1 *schema.OauthClient
 	}{arg1})
@@ -150,9 +226,11 @@ func (fake *FakeClient) RegisterOauthClient(arg1 *schema.OauthClient) (*schema.O
 	fake.registerOauthClientMutex.Unlock()
 	if fake.RegisterOauthClientStub != nil {
 		return fake.RegisterOauthClientStub(arg1)
-	} else {
-		return fake.registerOauthClientReturns.result1, fake.registerOauthClientReturns.result2
 	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	return fake.registerOauthClientReturns.result1, fake.registerOauthClientReturns.result2
 }
 
 func (fake *FakeClient) RegisterOauthClientCallCount() int {
@@ -175,6 +253,63 @@ func (fake *FakeClient) RegisterOauthClientReturns(result1 *schema.OauthClient, 
 	}{result1, result2}
 }
 
+func (fake *FakeClient) RegisterOauthClientReturnsOnCall(i int, result1 *schema.OauthClient, result2 error) {
+	fake.RegisterOauthClientStub = nil
+	if fake.registerOauthClientReturnsOnCall == nil {
+		fake.registerOauthClientReturnsOnCall = make(map[int]struct {
+			result1 *schema.OauthClient
+			result2 error
+		})
+	}
+	fake.registerOauthClientReturnsOnCall[i] = struct {
+		result1 *schema.OauthClient
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeClient) FetchIssuer() (string, error) {
+	fake.fetchIssuerMutex.Lock()
+	ret, specificReturn := fake.fetchIssuerReturnsOnCall[len(fake.fetchIssuerArgsForCall)]
+	fake.fetchIssuerArgsForCall = append(fake.fetchIssuerArgsForCall, struct{}{})
+	fake.recordInvocation("FetchIssuer", []interface{}{})
+	fake.fetchIssuerMutex.Unlock()
+	if fake.FetchIssuerStub != nil {
+		return fake.FetchIssuerStub()
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	return fake.fetchIssuerReturns.result1, fake.fetchIssuerReturns.result2
+}
+
+func (fake *FakeClient) FetchIssuerCallCount() int {
+	fake.fetchIssuerMutex.RLock()
+	defer fake.fetchIssuerMutex.RUnlock()
+	return len(fake.fetchIssuerArgsForCall)
+}
+
+func (fake *FakeClient) FetchIssuerReturns(result1 string, result2 error) {
+	fake.FetchIssuerStub = nil
+	fake.fetchIssuerReturns = struct {
+		result1 string
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeClient) FetchIssuerReturnsOnCall(i int, result1 string, result2 error) {
+	fake.FetchIssuerStub = nil
+	if fake.fetchIssuerReturnsOnCall == nil {
+		fake.fetchIssuerReturnsOnCall = make(map[int]struct {
+			result1 string
+			result2 error
+		})
+	}
+	fake.fetchIssuerReturnsOnCall[i] = struct {
+		result1 string
+		result2 error
+	}{result1, result2}
+}
+
 func (fake *FakeClient) Invocations() map[string][][]interface{} {
 	fake.invocationsMutex.RLock()
 	defer fake.invocationsMutex.RUnlock()
@@ -186,6 +321,8 @@ func (fake *FakeClient) Invocations() map[string][][]interface{} {
 	defer fake.decodeTokenMutex.RUnlock()
 	fake.registerOauthClientMutex.RLock()
 	defer fake.registerOauthClientMutex.RUnlock()
+	fake.fetchIssuerMutex.RLock()
+	defer fake.fetchIssuerMutex.RUnlock()
 	return fake.invocations
 }
 

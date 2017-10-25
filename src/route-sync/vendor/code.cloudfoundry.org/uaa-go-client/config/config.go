@@ -8,6 +8,7 @@ import (
 
 const (
 	DefaultExpirationBufferInSec = 30
+	DefaultRequestTimeout        = 0 * time.Second
 )
 
 type Config struct {
@@ -20,6 +21,7 @@ type Config struct {
 	ExpirationBufferInSec         int64
 	SkipVerification              bool
 	InsecureAllowAnySigningMethod bool
+	RequestTimeout                time.Duration
 }
 
 func (c *Config) CheckEndpoint() (*url.URL, error) {

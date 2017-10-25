@@ -39,6 +39,7 @@ var _ = Describe("UAA Client", func() {
 				MaxNumberOfRetries:    DefaultMaxNumberOfRetries,
 				RetryInterval:         DefaultRetryInterval,
 				ExpirationBufferInSec: DefaultExpirationBufferTime,
+				RequestTimeout:        DefaultRequestTimeout,
 			}
 			server = ghttp.NewServer()
 
@@ -144,6 +145,7 @@ var _ = Describe("UAA Client", func() {
 							UaaEndpoint:           "http://some.url:80",
 							ClientName:            "client-name",
 							ClientSecret:          "client-secret",
+							RequestTimeout:        DefaultRequestTimeout,
 						}
 						client, err := uaa_go_client.NewClient(logger, config, clock)
 						Expect(err).NotTo(HaveOccurred())
@@ -173,6 +175,7 @@ var _ = Describe("UAA Client", func() {
 				MaxNumberOfRetries:    DefaultMaxNumberOfRetries,
 				RetryInterval:         DefaultRetryInterval,
 				ExpirationBufferInSec: DefaultExpirationBufferTime,
+				RequestTimeout:        DefaultRequestTimeout,
 			}
 
 			server = ghttp.NewServer()
@@ -189,6 +192,10 @@ var _ = Describe("UAA Client", func() {
 				ghttp.RespondWithJSONEncoded(
 					http.StatusOK,
 					uaaResponseStruct,
+				),
+				ghttp.CombineHandlers(
+					ghttp.VerifyRequest("GET", OpenIDConfigEndpoint),
+					ghttp.RespondWith(http.StatusOK, fmt.Sprintf("{\"issuer\":\"https://uaa.domain.com\"}")),
 				),
 			)
 
@@ -225,6 +232,122 @@ var _ = Describe("UAA Client", func() {
 		})
 	})
 
+	Describe("Fetch Issuer Metadata", func() {
+		var (
+			uaaClient    uaa_go_client.Client
+			publicKeyPEM []byte
+			privateKey   *rsa.PrivateKey
+		)
+		BeforeEach(func() {
+			var err error
+			var publicKey *rsa.PublicKey
+			privateKey, publicKey, err = generateRSAKeyPair()
+			Expect(err).NotTo(HaveOccurred())
+			publicKeyPEM, err = publicKeyToPEM(publicKey)
+			Expect(err).NotTo(HaveOccurred())
+
+			cfg = &config.Config{
+				MaxNumberOfRetries:    DefaultMaxNumberOfRetries,
+				RetryInterval:         DefaultRetryInterval,
+				ExpirationBufferInSec: DefaultExpirationBufferTime,
+				RequestTimeout:        DefaultRequestTimeout,
+			}
+
+			server = ghttp.NewServer()
+
+			url, err := url.Parse(server.URL())
+			Expect(err).ToNot(HaveOccurred())
+			cfg.UaaEndpoint = "http://" + url.Host
+
+			cfg.ClientName = "client-name"
+			cfg.ClientSecret = "client-secret"
+			clock = fakeclock.NewFakeClock(time.Now())
+			logger = lagertest.NewTestLogger("test")
+
+			uaaClient, err = uaa_go_client.NewClient(logger, cfg, clock)
+			Expect(err).NotTo(HaveOccurred())
+			Expect(uaaClient).NotTo(BeNil())
+		})
+
+		AfterEach(func() {
+			server.Close()
+		})
+
+		Context("when fetch issuer is already invoked", func() {
+			var privateKey *rsa.PrivateKey
+			BeforeEach(func() {
+
+				var err error
+				var publicKey *rsa.PublicKey
+				privateKey, publicKey, err = generateRSAKeyPair()
+				Expect(err).NotTo(HaveOccurred())
+				publicKeyPEM, err = publicKeyToPEM(publicKey)
+				Expect(err).NotTo(HaveOccurred())
+				var uaaResponseStruct = struct {
+					Alg   string `json:"alg"`
+					Value string `json:"value"`
+				}{"alg", string(publicKeyPEM)}
+				server.AppendHandlers(
+					ghttp.CombineHandlers(
+						ghttp.VerifyRequest("GET", OpenIDConfigEndpoint),
+						ghttp.RespondWith(http.StatusOK, fmt.Sprintf("{\"issuer\":\"https://uaa.domain.com\"}")),
+					),
+					ghttp.RespondWithJSONEncoded(
+						http.StatusOK,
+						uaaResponseStruct,
+					),
+				)
+				_, err = uaaClient.FetchIssuer()
+				Expect(err).ToNot(HaveOccurred())
+			})
+			It("does not call issuer endpoint again for decoding tokens", func() {
+				validToken, err := makeValidToken(privateKey)
+				Expect(err).NotTo(HaveOccurred())
+
+				err = uaaClient.DecodeToken(validToken, "some.scope")
+				Expect(err).ToNot(HaveOccurred())
+				Expect(len(server.ReceivedRequests())).To(Equal(2))
+			})
+		})
+
+		Context("when UAA server responds with valid metadata structure", func() {
+			BeforeEach(func() {
+				uaaResponse := `{"issuer":"https://uaa.domain.com"}`
+
+				server.AppendHandlers(
+					ghttp.RespondWith(
+						http.StatusOK,
+						uaaResponse,
+					),
+				)
+			})
+			It("successfully unmarshall the metadata info", func() {
+
+				issuer, err := uaaClient.FetchIssuer()
+				Expect(err).ToNot(HaveOccurred())
+				Expect(issuer).To(Equal("https://uaa.domain.com"))
+			})
+		})
+		Context("when UAA server responds with invalid metadata structure", func() {
+			BeforeEach(func() {
+				uaaResponse := `{"https://uaa.domain.com"}`
+
+				server.AppendHandlers(
+					ghttp.RespondWith(
+						http.StatusOK,
+						uaaResponse,
+					),
+				)
+			})
+			It("returns an error", func() {
+
+				issuer, err := uaaClient.FetchIssuer()
+				Expect(err).To(HaveOccurred())
+				Expect(err.Error()).To(ContainSubstring("invalid character"))
+				Expect(issuer).To(Equal(""))
+			})
+		})
+	})
 	Context("secure (TLS) client", func() {
 
 		var (
@@ -237,6 +360,7 @@ var _ = Describe("UAA Client", func() {
 				MaxNumberOfRetries:    DefaultMaxNumberOfRetries,
 				RetryInterval:         DefaultRetryInterval,
 				ExpirationBufferInSec: DefaultExpirationBufferTime,
+				RequestTimeout:        DefaultRequestTimeout,
 			}
 
 			listener, err := net.Listen("tcp", "127.0.0.1:0")
@@ -404,7 +528,8 @@ const tokenPayload = `{
     "some.scope"
   ],
   "iat": 1481253086,
-  "exp": 2491253686
+  "exp": 2491253686,
+	"iss": "https://uaa.domain.com"
 }`
 
 func makeValidToken(privateKey *rsa.PrivateKey) (string, error) {
