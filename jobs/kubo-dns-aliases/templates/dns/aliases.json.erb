@@ -5,7 +5,7 @@ def wildcard_name(name)
   name.split('.').collect!.with_index {|s, i| (i == 0) ? '*' : s}.join('.')
 end
 
-master_node_dns = link('kubernetes-api').instances.first.address
+master_node_dns = link('kubernetes-api').address
 aliases = { 'master.kubo' => [ wildcard_name(master_node_dns) ] }
 
 JSON.dump(aliases)
