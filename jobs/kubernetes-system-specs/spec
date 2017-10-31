@@ -3,14 +3,28 @@ name: kubernetes-system-specs
 
 templates:
   bin/post-deploy: bin/post-deploy
-  bin/deploy-specs: bin/deploy-specs
+  bin/post-start.erb: bin/post-start
+  bin/deploy-specs.erb: bin/deploy-specs
   config/kubedns-svc.yml: config/kubedns-svc.yml
   config/kubedns-controller.yml: config/kubedns-controller.yml
   config/influxdb.yml: config/influxdb.yml
   config/heapster.yml.erb: config/heapster.yml
   config/kubernetes-dashboard.yml: config/kubernetes-dashboard.yml
+  config/rbac_policy.yml.erb: config/rbac_policy.yml
 
 packages:
 - jq
 - kubernetes
 
+consumes:
+- name: kubernetes-api
+  type: kubernetes-api
+
+properties:
+  authorization-mode:
+    description: The authorization mode for kubernetes-api. Should be 'abac' or 'rbac'
+    default: abac
+  admin-username:
+    description: The admin username for the Kubernetes cluster
+  admin-password:
+    description: The admin password for the Kubernetes cluster
