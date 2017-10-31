@@ -30,6 +30,12 @@ properties:
   port:
     example: 81
     default: 4567
+  labels:
+    description: Labels to give node
+    default: {}
+    example:
+      node-type: router
+      gpu: true
   kube-reserved:
     description: Resource reservations for kubernetes system daemons
     example: "cpu=1,memory=2Gi,storage=1Gi"
