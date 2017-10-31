@@ -22,12 +22,15 @@ type LogFormat struct {
 	Message   string   `json:"message"`
 	LogLevel  LogLevel `json:"log_level"`
 	Data      Data     `json:"data"`
+	Error     error    `json:"-"`
 }
 
 func (log LogFormat) ToJSON() []byte {
 	content, err := json.Marshal(log)
 	if err != nil {
-		if _, ok := err.(*json.UnsupportedTypeError); ok {
+		_, ok1 := err.(*json.UnsupportedTypeError)
+		_, ok2 := err.(*json.MarshalerError)
+		if ok1 || ok2 {
 			log.Data = map[string]interface{}{"lager serialisation error": err.Error(), "data_dump": fmt.Sprintf("%#v", log.Data)}
 			content, err = json.Marshal(log)
 		}

@@ -81,6 +81,7 @@ var _ = Describe("DecodeToken", func() {
 			RetryInterval:                 DefaultRetryInterval,
 			ExpirationBufferInSec:         DefaultExpirationBufferTime,
 			InsecureAllowAnySigningMethod: true,
+			RequestTimeout:                DefaultRequestTimeout,
 		}
 		server = ghttp.NewServer()
 
@@ -109,6 +110,7 @@ var _ = Describe("DecodeToken", func() {
 				claims := map[string]interface{}{
 					"exp":   3404281214,
 					"scope": []string{"route.advertise"},
+					"iss":   "https://uaa.domain.com",
 				}
 				token.Claims = claims
 
@@ -117,6 +119,10 @@ var _ = Describe("DecodeToken", func() {
 
 				server.AppendHandlers(
 					getSuccessKeyFetchHandler(ValidPemPublicKey),
+					ghttp.CombineHandlers(
+						ghttp.VerifyRequest("GET", OpenIDConfigEndpoint),
+						ghttp.RespondWith(http.StatusOK, fmt.Sprintf("{\"issuer\":\"https://uaa.domain.com\"}")),
+					),
 					getSuccessKeyFetchHandler(ValidPemPublicKey),
 				)
 			})
@@ -127,7 +133,7 @@ var _ = Describe("DecodeToken", func() {
 				err = client.DecodeToken("bearer "+signedKey, "route.advertise")
 				Expect(err).NotTo(HaveOccurred())
 
-				Expect(len(server.ReceivedRequests())).To(Equal(1))
+				Expect(len(server.ReceivedRequests())).To(Equal(2))
 			})
 
 			It("does not return an error", func() {
@@ -177,6 +183,42 @@ var _ = Describe("DecodeToken", func() {
 			})
 		})
 
+		Context("when issuer is invalid", func() {
+			BeforeEach(func() {
+				fakeSigningMethod.VerifyReturns(errors.New("invalid signature"))
+
+				claims := map[string]interface{}{
+					"exp":   3404281214,
+					"scope": []string{"route.advertise"},
+					"iss":   "boom",
+				}
+				token.Claims = claims
+
+				signedKey, err = token.SignedString([]byte(UserPrivateKey))
+				Expect(err).NotTo(HaveOccurred())
+				signedKey = "bearer " + signedKey
+			})
+
+			Context("uaa returns token key", func() {
+				BeforeEach(func() {
+					server.AppendHandlers(
+						getSuccessKeyFetchHandler(ValidPemPublicKey),
+						ghttp.CombineHandlers(
+							ghttp.VerifyRequest("GET", OpenIDConfigEndpoint),
+							ghttp.RespondWith(http.StatusOK, `{"issuer":"https://uaa.domain.com"}`),
+						),
+					)
+				})
+				It("return invalid issuer error", func() {
+					err := client.DecodeToken(signedKey, "route.advertise")
+					Expect(err).To(HaveOccurred())
+
+					Expect(len(server.ReceivedRequests())).To(Equal(2))
+					Expect(err.Error()).To(ContainSubstring("invalid issuer"))
+				})
+			})
+		})
+
 		Context("when signature is invalid", func() {
 			BeforeEach(func() {
 				fakeSigningMethod.VerifyReturns(errors.New("invalid signature"))
@@ -184,6 +226,7 @@ var _ = Describe("DecodeToken", func() {
 				claims := map[string]interface{}{
 					"exp":   3404281214,
 					"scope": []string{"route.advertise"},
+					"iss":   "https://uaa.domain.com",
 				}
 				token.Claims = claims
 
@@ -196,6 +239,10 @@ var _ = Describe("DecodeToken", func() {
 				BeforeEach(func() {
 					server.AppendHandlers(
 						getSuccessKeyFetchHandler(ValidPemPublicKey),
+						ghttp.CombineHandlers(
+							ghttp.VerifyRequest("GET", OpenIDConfigEndpoint),
+							ghttp.RespondWith(http.StatusOK, `{"issuer":"https://uaa.domain.com"}`),
+						),
 						getSuccessKeyFetchHandler(ValidPemPublicKey),
 					)
 				})
@@ -203,7 +250,7 @@ var _ = Describe("DecodeToken", func() {
 					err := client.DecodeToken(signedKey, "route.advertise")
 					Expect(err).To(HaveOccurred())
 
-					Expect(len(server.ReceivedRequests())).To(Equal(2))
+					Expect(len(server.ReceivedRequests())).To(Equal(3))
 					verifyErrorType(err, jwt.ValidationErrorSignatureInvalid, "invalid signature")
 				})
 			})
@@ -212,6 +259,10 @@ var _ = Describe("DecodeToken", func() {
 				BeforeEach(func() {
 					server.AppendHandlers(
 						getSuccessKeyFetchHandler(ValidPemPublicKey),
+						ghttp.CombineHandlers(
+							ghttp.VerifyRequest("GET", OpenIDConfigEndpoint),
+							ghttp.RespondWith(http.StatusOK, `{"issuer":"https://uaa.domain.com"}`),
+						),
 						ghttp.CombineHandlers(
 							ghttp.VerifyRequest("GET", TokenKeyEndpoint),
 							ghttp.RespondWith(http.StatusGatewayTimeout, "booom"),
@@ -223,7 +274,7 @@ var _ = Describe("DecodeToken", func() {
 					err := client.DecodeToken(signedKey, "route.advertise")
 					Expect(err).To(HaveOccurred())
 					Expect(err.Error()).To(ContainSubstring("http error: status code: 504"))
-					Expect(len(server.ReceivedRequests())).To(Equal(2))
+					Expect(len(server.ReceivedRequests())).To(Equal(3))
 				})
 			})
 		})
@@ -244,6 +295,7 @@ var _ = Describe("DecodeToken", func() {
 				claims := map[string]interface{}{
 					"exp":   3404281214,
 					"scope": []string{"route.advertise"},
+					"iss":   "https://uaa.domain.com",
 				}
 				token.Claims = claims
 
@@ -256,6 +308,10 @@ var _ = Describe("DecodeToken", func() {
 				BeforeEach(func() {
 					server.AppendHandlers(
 						getSuccessKeyFetchHandler(InvalidPemPublicKey),
+						ghttp.CombineHandlers(
+							ghttp.VerifyRequest("GET", OpenIDConfigEndpoint),
+							ghttp.RespondWith(http.StatusOK, `{"issuer":"https://uaa.domain.com"}`),
+						),
 						getSuccessKeyFetchHandler(ValidPemPublicKey),
 					)
 				})
@@ -263,7 +319,7 @@ var _ = Describe("DecodeToken", func() {
 				It("fetches new key and then validates the token", func() {
 					err := client.DecodeToken(signedKey, "route.advertise")
 					Expect(err).NotTo(HaveOccurred())
-					Expect(len(server.ReceivedRequests())).To(Equal(2))
+					Expect(len(server.ReceivedRequests())).To(Equal(3))
 				})
 			})
 
@@ -271,6 +327,10 @@ var _ = Describe("DecodeToken", func() {
 				Context("when new key applies to all clients", func() {
 					BeforeEach(func() {
 						server.AppendHandlers(
+							ghttp.CombineHandlers(
+								ghttp.VerifyRequest("GET", OpenIDConfigEndpoint),
+								ghttp.RespondWith(http.StatusOK, `{"issuer":"https://uaa.domain.com"}`),
+							),
 							getSuccessKeyFetchHandler(ValidPemPublicKey),
 							getSuccessKeyFetchHandler(ValidPemPublicKey),
 						)
@@ -278,6 +338,8 @@ var _ = Describe("DecodeToken", func() {
 
 					It("fetches new key and then validates the token", func() {
 						wg := sync.WaitGroup{}
+						_, err := client.FetchIssuer()
+						Expect(err).NotTo(HaveOccurred())
 						for i := 0; i < 2; i++ {
 							wg.Add(1)
 							go func(wg *sync.WaitGroup) {
@@ -314,6 +376,10 @@ var _ = Describe("DecodeToken", func() {
 
 						server.AppendHandlers(
 							ghttp.CombineHandlers(
+								ghttp.VerifyRequest("GET", OpenIDConfigEndpoint),
+								ghttp.RespondWith(http.StatusOK, `{"issuer":"https://uaa.domain.com"}`),
+							),
+							ghttp.CombineHandlers(
 								failureHandler,
 							),
 							ghttp.CombineHandlers(
@@ -329,6 +395,8 @@ var _ = Describe("DecodeToken", func() {
 
 					It("fetches new key and validates the token", func() {
 						wg := sync.WaitGroup{}
+						_, err := client.FetchIssuer()
+						Expect(err).NotTo(HaveOccurred())
 						for i := 0; i < 2; i++ {
 							wg.Add(1)
 							go func(wg *sync.WaitGroup) {
@@ -355,7 +423,7 @@ var _ = Describe("DecodeToken", func() {
 						expectErrorChan <- false
 
 						wg.Wait()
-						Expect(len(server.ReceivedRequests())).To(Equal(2))
+						Expect(len(server.ReceivedRequests())).To(Equal(3))
 					})
 				})
 			})
@@ -365,6 +433,7 @@ var _ = Describe("DecodeToken", func() {
 			BeforeEach(func() {
 				claims := map[string]interface{}{
 					"exp": time.Now().Unix() - 5,
+					"iss": "https://uaa.domain.com",
 				}
 				token.Claims = claims
 
@@ -374,6 +443,10 @@ var _ = Describe("DecodeToken", func() {
 				signedKey = "bearer " + signedKey
 				server.AppendHandlers(
 					getSuccessKeyFetchHandler(ValidPemPublicKey),
+					ghttp.CombineHandlers(
+						ghttp.VerifyRequest("GET", OpenIDConfigEndpoint),
+						ghttp.RespondWith(http.StatusOK, `{"issuer":"https://uaa.domain.com"}`),
+					),
 				)
 			})
 
@@ -389,6 +462,7 @@ var _ = Describe("DecodeToken", func() {
 				claims := map[string]interface{}{
 					"exp":   time.Now().Unix() + 50000000,
 					"scope": []string{"route.foo"},
+					"iss":   "https://uaa.domain.com",
 				}
 				token.Claims = claims
 
@@ -398,6 +472,10 @@ var _ = Describe("DecodeToken", func() {
 				signedKey = "bearer " + signedKey
 				server.AppendHandlers(
 					getSuccessKeyFetchHandler(ValidPemPublicKey),
+					ghttp.CombineHandlers(
+						ghttp.VerifyRequest("GET", OpenIDConfigEndpoint),
+						ghttp.RespondWith(http.StatusOK, `{"issuer":"https://uaa.domain.com"}`),
+					),
 				)
 			})
 
