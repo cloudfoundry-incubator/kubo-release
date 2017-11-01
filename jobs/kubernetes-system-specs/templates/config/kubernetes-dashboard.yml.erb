@@ -1,17 +1,24 @@
+# Copyright 2017 The Kubernetes Authors.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+
+# Configuration to deploy release version of the Dashboard UI compatible with
+# Kubernetes 1.7.
+#
+# Example usage: kubectl create -f <this_file>
+
 <% if p('authorization-mode').downcase == 'rbac' %>
-
-# ------------------- Dashboard Secret ------------------- #
-
-apiVersion: v1
-kind: Secret
-metadata:
-  labels:
-    k8s-app: kubernetes-dashboard
-  name: kubernetes-dashboard-certs
-  namespace: kube-system
-type: Opaque
-
----
 # ------------------- Dashboard Service Account ------------------- #
 
 apiVersion: v1
@@ -23,6 +30,8 @@ metadata:
   namespace: kube-system
 
 ---
+# ------------------- Dashboard Role & Role Binding ------------------- #
+
 kind: Role
 apiVersion: rbac.authorization.k8s.io/v1beta1
 metadata:
@@ -35,14 +44,15 @@ rules:
   verbs: ["create", "watch"]
 - apiGroups: [""]
   resources: ["secrets"]
-  # Allow Dashboard to get, update and delete 'kubernetes-dashboard-key-holder' and 'kubernetes-dashboard-certs' secrets.
-  resourceNames: ["kubernetes-dashboard-key-holder", "kubernetes-dashboard-certs"]
+  # Allow Dashboard to get, update and delete 'kubernetes-dashboard-key-holder' secret.
+  resourceNames: ["kubernetes-dashboard-key-holder"]
   verbs: ["get", "update", "delete"]
   # Allow Dashboard to get metrics from heapster.
 - apiGroups: [""]
   resources: ["services"]
   resourceNames: ["heapster"]
   verbs: ["proxy"]
+
 ---
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: RoleBinding
@@ -57,19 +67,21 @@ subjects:
 - kind: ServiceAccount
   name: kubernetes-dashboard
   namespace: kube-system
+
 ---
 <% end %>
+# ------------------- Dashboard Deployment ------------------- #
+
 kind: Deployment
 apiVersion: extensions/v1beta1
 metadata:
   labels:
     k8s-app: kubernetes-dashboard
-    kubernetes.io/cluster-service: "true"
-    addonmanager.kubernetes.io/mode: Reconcile
   name: kubernetes-dashboard
   namespace: kube-system
 spec:
   replicas: 1
+  revisionHistoryLimit: 10
   selector:
     matchLabels:
       k8s-app: kubernetes-dashboard
@@ -77,46 +89,63 @@ spec:
     metadata:
       labels:
         k8s-app: kubernetes-dashboard
-      annotations:
-        scheduler.alpha.kubernetes.io/critical-pod: ''
     spec:
       containers:
       - name: kubernetes-dashboard
         image: gcr.io/google_containers/kubernetes-dashboard-amd64:v1.7.1
-        imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 9090
           protocol: TCP
         args:
-        - --kubeconfig=/var/vcap/jobs/kubeconfig/config/kubeconfig
-        - --heapster-host=http://heapster.kube-system.svc.cluster.local:80
+          - --heapster-host=http://heapster.kube-system.svc.cluster.local:80
+          # Uncomment the following line to manually specify Kubernetes API server Host
+          # If not specified, Dashboard will attempt to auto discover the API server and connect
+          # to it. Uncomment only if the default does not work.
+          # - --apiserver-host=http://my-address:port
+<% if p('authorization-mode').downcase != 'rbac' %>
+          - --kubeconfig=/var/vcap/jobs/kubeconfig/config/kubeconfig
         env:
-        - name: KUBECONFIG
-          value: /var/vcap/jobs/kubeconfig/config/kubeconfig
+          - name: KUBECONFIG
+            value: /var/vcap/jobs/kubeconfig/config/kubeconfig
+<% end %>
+        volumeMounts:
+          # Create on-disk volume to store exec logs
+        - mountPath: /tmp
+          name: tmp-volume
+<% if p('authorization-mode').downcase != 'rbac' %>
+        - mountPath: /var/vcap/jobs/kubeconfig/config/
+          name: config
+<% end %>
         livenessProbe:
           httpGet:
             path: /
             port: 9090
           initialDelaySeconds: 30
           timeoutSeconds: 30
-        volumeMounts:
-        - name: config
-          mountPath: /var/vcap/jobs/kubeconfig/config/
       volumes:
+      - name: tmp-volume
+        emptyDir: {}
+<% if p('authorization-mode').downcase != 'rbac' %>
       - name: config
         hostPath:
-          path: "/var/vcap/jobs/kubeconfig/config/"
-      <% if p('authorization-mode').downcase == 'rbac' %>
-      serviceAccount: kubernetes-dashboard
-      <% end %>
+          path: "/var/vcap/jobs/kubeconfig/config"
+<% end %>
+<% if p('authorization-mode').downcase == 'rbac' %>
+      serviceAccountName: kubernetes-dashboard
+<% end %>
+      # Comment the following tolerations if Dashboard must not be deployed on master
+      #tolerations:
+      #- key: node-role.kubernetes.io/master
+      #  effect: NoSchedule
+
 ---
+# ------------------- Dashboard Service ------------------- #
+
 kind: Service
 apiVersion: v1
 metadata:
   labels:
     k8s-app: kubernetes-dashboard
-    kubernetes.io/cluster-service: "true"
-    addonmanager.kubernetes.io/mode: Reconcile
   name: kubernetes-dashboard
   namespace: kube-system
 spec:
