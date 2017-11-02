@@ -96,7 +96,9 @@ spec:
         args:
         - --domain=cluster.local.
         - --dns-port=10053
-        - --kubecfg-file=/var/vcap/jobs/kubeconfig/config/kubeconfig
+        <% if p('authorization-mode').downcase != 'rbac' %>
+        - --kubecfg-file=/var/vcap/jobs/kubeconfig/config/kubeconfig-kubelet
+        <% end %>
         - --config-dir=/var/vcap/jobs/kubeconfig/config
         - --v=2
         ports:

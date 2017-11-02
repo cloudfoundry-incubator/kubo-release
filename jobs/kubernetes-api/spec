@@ -19,6 +19,8 @@ properties:
     description: The password for the admin account
   kubelet-password:
     description: The password for the kubelet user
+  kube-proxy-password:
+    description: The password for the kube-proxy user
   tls.kubernetes:
     description: "Certificate and private key for the Kubernetes master"
   backend_port:
@@ -29,7 +31,7 @@ properties:
     default: 1235
   authorization-mode:
     description: The authorization mode for kubernetes-api. Should be 'abac' or 'rbac'
-    default: abac
+    default: rbac
 
 consumes:
 - name: etcd

@@ -30,7 +30,7 @@ start_kubernetes_proxy() {
     --hostname-override=<%= spec.ip %> \
     --master=https://master.kubo:8443 \
     --cluster-cidr=10.200.0.0/16 \
-    --kubeconfig=/var/vcap/jobs/kubeconfig/config/kubeconfig \
+    --kubeconfig=/var/vcap/jobs/kubeconfig/config/kubeconfig-kube-proxy \
     --proxy-mode=iptables \
     --v=2 \
   1>> $LOG_DIR/kubernetes_proxy.stdout.log \

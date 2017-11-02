@@ -2,7 +2,8 @@
 name: kubeconfig
 
 templates:
-  config/kubeconfig.erb: config/kubeconfig
+  config/kubeconfig-kubelet.erb: config/kubeconfig-kubelet
+  config/kubeconfig-kube-proxy.erb: config/kubeconfig-kube-proxy
   config/ca.pem.erb: config/ca.pem
 
 
@@ -11,5 +12,7 @@ packages: []
 properties:
   kubelet-password:
     description: The password for the kubelet user
+  kube-proxy-password:
+    description: The password for the kube-proxy user
   tls.kubernetes:
     description: "Certificate and private key for the Kubernetes master"

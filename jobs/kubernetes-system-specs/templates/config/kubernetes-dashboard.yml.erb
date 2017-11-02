@@ -103,10 +103,10 @@ spec:
           # to it. Uncomment only if the default does not work.
           # - --apiserver-host=http://my-address:port
 <% if p('authorization-mode').downcase != 'rbac' %>
-          - --kubeconfig=/var/vcap/jobs/kubeconfig/config/kubeconfig
+          - --kubeconfig=/var/vcap/jobs/kubeconfig/config/kubeconfig-kubelet
         env:
           - name: KUBECONFIG
-            value: /var/vcap/jobs/kubeconfig/config/kubeconfig
+            value: /var/vcap/jobs/kubeconfig/config/kubeconfig-kubelet
 <% end %>
         volumeMounts:
           # Create on-disk volume to store exec logs

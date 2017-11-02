@@ -23,7 +23,7 @@ consumes:
 properties:
   authorization-mode:
     description: The authorization mode for kubernetes-api. Should be 'abac' or 'rbac'
-    default: abac
+    default: rbac
   admin-username:
     description: The admin username for the Kubernetes cluster
   admin-password:

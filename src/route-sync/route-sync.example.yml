@@ -9,4 +9,4 @@ uaa_api_url: https://uaa.cf.your-domain.com
 routing_api_username: admin
 routing_api_client_secret: foobar123
 skip_tls_verification: false
-kube_config_path: /var/vcap/jobs/kubeconfig/config/kubeconfig
+kube_config_path: /var/vcap/jobs/kubeconfig/config/kubeconfig-kubelet
