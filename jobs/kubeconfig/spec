@@ -4,6 +4,7 @@ name: kubeconfig
 templates:
   config/kubeconfig-kubelet.erb: config/kubeconfig-kubelet
   config/kubeconfig-kube-proxy.erb: config/kubeconfig-kube-proxy
+  config/kubeconfig-kube-scheduler.erb: config/kubeconfig-kube-scheduler
   config/ca.pem.erb: config/ca.pem
 
 
@@ -14,5 +15,7 @@ properties:
     description: The password for the kubelet user
   kube-proxy-password:
     description: The password for the kube-proxy user
+  kube-scheduler-password:
+    description: The password for the kube-scheduler user
   tls.kubernetes:
     description: "Certificate and private key for the Kubernetes master"

@@ -21,6 +21,8 @@ properties:
     description: The password for the kubelet user
   kube-proxy-password:
     description: The password for the kube-proxy user
+  kube-scheduler-password:
+    description: The password for the kube-scheduler user
   tls.kubernetes:
     description: "Certificate and private key for the Kubernetes master"
   backend_port:
