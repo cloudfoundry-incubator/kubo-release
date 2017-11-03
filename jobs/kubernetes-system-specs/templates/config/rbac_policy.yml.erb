@@ -1,3 +1,4 @@
+# ------------------- Cluster Admin Role Binding ------------------- #
 kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
@@ -11,6 +12,7 @@ roleRef:
   name: cluster-admin
   apiGroup: rbac.authorization.k8s.io
 ---
+# ------------------- Kubelet Role Binding ------------------- #
 kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
@@ -24,6 +26,7 @@ roleRef:
   name: system:node
   apiGroup: rbac.authorization.k8s.io
 ---
+# ------------------- Kube Proxy Role Binding ------------------- #
 kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
@@ -31,6 +34,35 @@ metadata:
 subjects:
 - kind: User
   name: kube-proxy
+  apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: ClusterRole
+  name: system:node-proxier
+  apiGroup: rbac.authorization.k8s.io
+---
+# ------------------- Route Sync Role & Role Binding ------------------- #
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: kubo:route-sync
+rules:
+- apiGroups: [""]
+  resources: ["services"]
+  verbs: ["list"]
+- apiGroups: [""]
+  resources: ["namespaces"]
+  verbs: ["list"]
+- apiGroups: [""]
+  resources: ["nodes"]
+  verbs: ["list"]
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: kubo:internal:route-sync
+subjects:
+- kind: User
+  name: route-sync
   apiGroup: rbac.authorization.k8s.io
 roleRef:
   kind: ClusterRole
