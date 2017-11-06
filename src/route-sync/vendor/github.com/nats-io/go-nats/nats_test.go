@@ -191,7 +191,7 @@ var testServers = []string{
 }
 
 func TestServersRandomize(t *testing.T) {
-	opts := DefaultOptions
+	opts := GetDefaultOptions()
 	opts.Servers = testServers
 	nc := &Conn{Opts: opts}
 	if err := nc.setupServerPool(); err != nil {
@@ -208,7 +208,7 @@ func TestServersRandomize(t *testing.T) {
 	}
 
 	// Now test that we do not randomize if proper flag is set.
-	opts = DefaultOptions
+	opts = GetDefaultOptions()
 	opts.Servers = testServers
 	opts.NoRandomize = true
 	nc = &Conn{Opts: opts}
@@ -228,7 +228,7 @@ func TestServersRandomize(t *testing.T) {
 	// set, Opts.Servers is not (and vice versa), the behavior
 	// is that Opts.Url is always first, even when randomization
 	// is enabled. So make sure that this is still the case.
-	opts = DefaultOptions
+	opts = GetDefaultOptions()
 	opts.Url = DefaultURL
 	opts.Servers = testServers
 	nc = &Conn{Opts: opts}
@@ -250,7 +250,7 @@ func TestServersRandomize(t *testing.T) {
 }
 
 func TestSelectNextServer(t *testing.T) {
-	opts := DefaultOptions
+	opts := GetDefaultOptions()
 	opts.Servers = testServers
 	opts.NoRandomize = true
 	nc := &Conn{Opts: opts}
@@ -832,7 +832,7 @@ func TestNormalizeError(t *testing.T) {
 }
 
 func TestAsyncINFO(t *testing.T) {
-	opts := DefaultOptions
+	opts := GetDefaultOptions()
 	c := &Conn{Opts: opts}
 
 	c.ps = &parseState{}
@@ -1097,7 +1097,7 @@ func TestAsyncINFO(t *testing.T) {
 }
 
 func TestConnServers(t *testing.T) {
-	opts := DefaultOptions
+	opts := GetDefaultOptions()
 	c := &Conn{Opts: opts}
 	c.ps = &parseState{}
 	c.setupServerPool()
@@ -1145,4 +1145,33 @@ func TestConnServers(t *testing.T) {
 	c.setupServerPool()
 
 	validateURLs(c.Servers(), "nats://localhost:4333", "nats://localhost:4444")
+}
+
+func TestProcessErrAuthorizationError(t *testing.T) {
+	ach := make(chan asyncCB, 1)
+	called := make(chan error, 1)
+	c := &Conn{
+		ach: ach,
+		Opts: Options{
+			AsyncErrorCB: func(nc *Conn, sub *Subscription, err error) {
+				called <- err
+			},
+		},
+	}
+	c.processErr("Authorization Violation")
+	select {
+	case cb := <-ach:
+		cb()
+	default:
+		t.Fatal("Expected callback on channel")
+	}
+
+	select {
+	case err := <-called:
+		if err != ErrAuthorization {
+			t.Fatalf("Expected ErrAuthorization, got: %v", err)
+		}
+	default:
+		t.Fatal("Expected error on channel")
+	}
 }

@@ -24,15 +24,18 @@ properties:
     parameters:
       key_length: 4096
       duration: 365
-  kubernetes-api-url:
-    description: The full URL for the load balancer in front of the masters
-    example: https://api.sys.kubo.cf-app.com:8443
   backend_port:
     example: 80
     default: 6789
   port:
     example: 81
     default: 4567
+  labels:
+    description: Labels to give node
+    default: {}
+    example:
+      node-type: router
+      gpu: true
   kube-reserved:
     description: Resource reservations for kubernetes system daemons
     example: "cpu=1,memory=2Gi,storage=1Gi"

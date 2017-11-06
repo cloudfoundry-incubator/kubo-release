@@ -2,24 +2,22 @@ package test
 
 import (
 	"fmt"
+	"strings"
 	"sync/atomic"
 	"testing"
 	"time"
 
-	"github.com/nats-io/gnatsd/auth"
+	"github.com/nats-io/gnatsd/server"
+	"github.com/nats-io/gnatsd/test"
 	"github.com/nats-io/go-nats"
 )
 
 func TestAuth(t *testing.T) {
-	s := RunServerOnPort(8232)
-
-	// Auth is pluggable, so need to set here..
-	auth := &auth.Plain{
-		Username: "derek",
-		Password: "foo",
-	}
-	s.SetClientAuthMethod(auth)
-
+	opts := test.DefaultTestOptions
+	opts.Port = 8232
+	opts.Username = "derek"
+	opts.Password = "foo"
+	s := RunServerWithOptions(opts)
 	defer s.Shutdown()
 
 	_, err := nats.Connect("nats://localhost:8232")
@@ -54,18 +52,14 @@ func TestAuth(t *testing.T) {
 }
 
 func TestAuthFailNoDisconnectCB(t *testing.T) {
-	s := RunServerOnPort(8232)
-
-	// Auth is pluggable, so need to set here..
-	auth := &auth.Plain{
-		Username: "derek",
-		Password: "foo",
-	}
-	s.SetClientAuthMethod(auth)
-
+	opts := test.DefaultTestOptions
+	opts.Port = 8232
+	opts.Username = "derek"
+	opts.Password = "foo"
+	s := RunServerWithOptions(opts)
 	defer s.Shutdown()
 
-	copts := nats.DefaultOptions
+	copts := nats.GetDefaultOptions()
 	copts.Url = "nats://localhost:8232"
 	receivedDisconnectCB := int32(0)
 	copts.DisconnectedCB = func(nc *nats.Conn) {
@@ -91,13 +85,11 @@ func TestAuthFailAllowReconnect(t *testing.T) {
 		"nats://localhost:23234",
 	}
 
-	ts2 := RunServerOnPort(23233)
-	// Auth is pluggable, so need to set here..
-	auth := &auth.Plain{
-		Username: "ivan",
-		Password: "foo",
-	}
-	ts2.SetClientAuthMethod(auth)
+	ots2 := test.DefaultTestOptions
+	ots2.Port = 23233
+	ots2.Username = "ivan"
+	ots2.Password = "foo"
+	ts2 := RunServerWithOptions(ots2)
 	defer ts2.Shutdown()
 
 	ts3 := RunServerOnPort(23234)
@@ -105,7 +97,7 @@ func TestAuthFailAllowReconnect(t *testing.T) {
 
 	reconnectch := make(chan bool)
 
-	opts := nats.DefaultOptions
+	opts := nats.GetDefaultOptions()
 	opts.Servers = servers
 	opts.AllowReconnect = true
 	opts.NoRandomize = true
@@ -144,13 +136,11 @@ func TestAuthFailAllowReconnect(t *testing.T) {
 }
 
 func TestTokenAuth(t *testing.T) {
-	s := RunServerOnPort(8232)
-
+	opts := test.DefaultTestOptions
+	opts.Port = 8232
 	secret := "S3Cr3T0k3n!"
-	// Auth is pluggable, so need to set here..
-	auth := &auth.Token{Token: secret}
-	s.SetClientAuthMethod(auth)
-
+	opts.Authorization = secret
+	s := RunServerWithOptions(opts)
 	defer s.Shutdown()
 
 	_, err := nats.Connect("nats://localhost:8232")
@@ -177,4 +167,57 @@ func TestTokenAuth(t *testing.T) {
 		t.Fatalf("Should have connected successfully: %v", err)
 	}
 	nc.Close()
+}
+
+func TestPermViolation(t *testing.T) {
+	opts := test.DefaultTestOptions
+	opts.Port = 8232
+	opts.Users = []*server.User{
+		&server.User{
+			Username: "ivan",
+			Password: "pwd",
+			Permissions: &server.Permissions{
+				Publish:   []string{"foo"},
+				Subscribe: []string{"bar"},
+			},
+		},
+	}
+	s := RunServerWithOptions(opts)
+	defer s.Shutdown()
+
+	errCh := make(chan error, 2)
+	errCB := func(_ *nats.Conn, _ *nats.Subscription, err error) {
+		errCh <- err
+	}
+	nc, err := nats.Connect(
+		fmt.Sprintf("nats://ivan:pwd@localhost:%d", opts.Port),
+		nats.ErrorHandler(errCB))
+	if err != nil {
+		t.Fatalf("Error on connect: %v", err)
+	}
+	defer nc.Close()
+
+	// Cause a publish error
+	nc.Publish("bar", []byte("fail"))
+	// Cause a subscribe error
+	nc.Subscribe("foo", func(_ *nats.Msg) {})
+
+	expectedErrorTypes := []string{"publish", "subscription"}
+	for _, expectedErr := range expectedErrorTypes {
+		select {
+		case e := <-errCh:
+			if !strings.Contains(e.Error(), nats.PERMISSIONS_ERR) {
+				t.Fatalf("Did not receive error about permissions")
+			}
+			if !strings.Contains(e.Error(), expectedErr) {
+				t.Fatalf("Did not receive error about %q, got %v", expectedErr, e.Error())
+			}
+		case <-time.After(2 * time.Second):
+			t.Fatalf("Did not get the permission error")
+		}
+	}
+	// Make sure connection has not been closed
+	if nc.IsClosed() {
+		t.Fatal("Connection should be not be closed")
+	}
 }

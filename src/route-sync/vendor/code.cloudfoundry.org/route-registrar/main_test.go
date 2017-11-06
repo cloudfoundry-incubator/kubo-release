@@ -12,6 +12,7 @@ import (
 
 	"gopkg.in/yaml.v2"
 
+	"code.cloudfoundry.org/localip"
 	"code.cloudfoundry.org/route-registrar/config"
 	"code.cloudfoundry.org/route-registrar/messagebus"
 	"github.com/nats-io/nats"
@@ -242,8 +243,15 @@ host: "127.0.0.1"
 	})
 })
 
+func nextAvailPort() uint16 {
+	port, err := localip.LocalPort()
+	Expect(err).ToNot(HaveOccurred())
+
+	return port
+}
+
 func initConfig() {
-	natsPort = 42222 + GinkgoParallelNode()
+	natsPort = int(nextAvailPort())
 
 	aPort := 12345
 

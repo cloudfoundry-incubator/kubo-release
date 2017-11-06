@@ -2,6 +2,7 @@
 A [BOSH](http://bosh.io/) release for [Kubernetes](http://kubernetes.io).
 
 **Slack**: #kubo on https://slack.cloudfoundry.org
+**Pivotal Tracker**: https://www.pivotaltracker.com/n/projects/2093412
 
 ## Deploying Kubo
 Deployment instructions, scripts, and manifests are located in [kubo-deployment](https://github.com/cloudfoundry-incubator/kubo-deployment).

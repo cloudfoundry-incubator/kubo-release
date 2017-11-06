@@ -16,12 +16,36 @@ limitations under the License.
 
 package unstructured
 
-import "testing"
+import (
+	"io/ioutil"
+	"sync"
+	"testing"
+
+	"github.com/stretchr/testify/assert"
+)
+
+// TestCodecOfUnstructuredList tests that there are no data races in Encode().
+// i.e. that it does not mutate the object being encoded.
+func TestCodecOfUnstructuredList(t *testing.T) {
+	var wg sync.WaitGroup
+	concurrency := 10
+	list := UnstructuredList{
+		Object: map[string]interface{}{},
+	}
+	wg.Add(concurrency)
+	for i := 0; i < concurrency; i++ {
+		go func() {
+			defer wg.Done()
+			assert.NoError(t, UnstructuredJSONScheme.Encode(&list, ioutil.Discard))
+		}()
+	}
+	wg.Wait()
+}
 
 func TestUnstructuredList(t *testing.T) {
 	list := &UnstructuredList{
 		Object: map[string]interface{}{"kind": "List", "apiVersion": "v1"},
-		Items: []*Unstructured{
+		Items: []Unstructured{
 			{Object: map[string]interface{}{"kind": "Pod", "apiVersion": "v1", "metadata": map[string]interface{}{"name": "test"}}},
 		},
 	}
@@ -32,5 +56,23 @@ func TestUnstructuredList(t *testing.T) {
 	}
 	if getNestedField(items[0].(map[string]interface{}), "metadata", "name") != "test" {
 		t.Fatalf("unexpected fields: %#v", items[0])
+	}
+}
+
+func TestNilDeletionTimestamp(t *testing.T) {
+	var u Unstructured
+	del := u.GetDeletionTimestamp()
+	if del != nil {
+		t.Errorf("unexpected non-nil deletion timestamp: %v", del)
+	}
+	u.SetDeletionTimestamp(u.GetDeletionTimestamp())
+	del = u.GetDeletionTimestamp()
+	if del != nil {
+		t.Errorf("unexpected non-nil deletion timestamp: %v", del)
+	}
+	metadata := u.Object["metadata"].(map[string]interface{})
+	deletionTimestamp := metadata["deletionTimestamp"]
+	if deletionTimestamp != nil {
+		t.Errorf("unexpected deletion timestamp field: %q", deletionTimestamp)
 	}
 }

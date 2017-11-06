@@ -33,6 +33,7 @@ var _ = Describe("Fetch Key", func() {
 			cfg = &config.Config{
 				MaxNumberOfRetries:    DefaultMaxNumberOfRetries,
 				RetryInterval:         DefaultRetryInterval,
+				RequestTimeout:        DefaultRequestTimeout,
 				ExpirationBufferInSec: DefaultExpirationBufferTime,
 			}
 			server = ghttp.NewServer()

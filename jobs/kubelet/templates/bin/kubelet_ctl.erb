@@ -19,6 +19,13 @@ else
   cloud_provider=""
 fi
 
+<%
+  labels = ""
+  if ! p("labels").empty?
+    labels = "," + p("labels").map {|k,v| "#{k}=#{v}"}.join(",") 
+  end
+%>
+
 # shellcheck disable=SC1091
 . /var/vcap/packages/pid_utils/pid_utils.sh
 
@@ -54,6 +61,7 @@ start_kubelet() {
     --container-runtime=docker \
     --docker="${DOCKER_SOCKET}" \
     --docker-endpoint="${DOCKER_SOCKET}" \
+    --fail-swap-on=false \
     --hostname-override=${hostname_override} \
     --kubeconfig=/var/vcap/jobs/kubeconfig/config/kubeconfig \
     --serialize-image-pulls=false \
@@ -66,7 +74,7 @@ start_kubelet() {
     <% if_p('eviction-hard') do |eviction_hard| %>--eviction-hard="<%= eviction_hard %>"<% end %> \
     --require-kubeconfig=true \
     --v=2 \
-    --node-labels=spec.ip=<%= spec.ip %> \
+    --node-labels=spec.ip=<%= spec.ip %><%= labels %> \
   1>> $LOG_DIR/kubelet.stdout.log \
   2>> $LOG_DIR/kubelet.stderr.log
 }

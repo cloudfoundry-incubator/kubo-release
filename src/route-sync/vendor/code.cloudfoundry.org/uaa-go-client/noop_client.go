@@ -18,6 +18,9 @@ func (c *NoOpUaaClient) DecodeToken(uaaToken string, desiredPermissions ...strin
 func (c *NoOpUaaClient) FetchKey() (string, error) {
 	return "", nil
 }
+func (c *NoOpUaaClient) FetchIssuer() (string, error) {
+	return "", nil
+}
 func (c *NoOpUaaClient) RegisterOauthClient(oauthClient *schema.OauthClient) (*schema.OauthClient, error) {
 	return oauthClient, nil
 }
