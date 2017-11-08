@@ -13,6 +13,3 @@ properties:
     description: The password for the kubelet user
   tls.kubernetes:
     description: "Certificate and private key for the Kubernetes master"
-  kubernetes-api-url:
-    description: The full URL for the load balancer in front of the masters
-    example: https://api.sys.kubo.cf-app.com:8443

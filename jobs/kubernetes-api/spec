@@ -27,6 +27,9 @@ properties:
   port:
     example: 81
     default: 1235
+  authorization-mode:
+    description: The authorization mode for kubernetes-api. Should be 'abac' or 'rbac'
+    default: abac
 
 consumes:
 - name: etcd

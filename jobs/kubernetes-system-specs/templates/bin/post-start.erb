@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+set -e
+
+main() {
+  local spec_dir="/var/vcap/jobs/kubernetes-system-specs/config/"
+  local kubectl="/var/vcap/packages/kubernetes/bin/kubectl --token '<%= p('admin-password') %>'"
+
+  ${kubectl} apply -f "${spec_dir}/rbac_policy.yml"
+}
+
+echo 'Authorization mode is <%= p('authorization-mode') %>'
+<% if p('authorization-mode').downcase == 'rbac' %>
+echo 'Applying the RBAC policy'
+main
+<% else %>
+echo 'Not applying the RBAC policy.'
+<% end %>

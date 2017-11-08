@@ -18,7 +18,7 @@ spec:
         imagePullPolicy: IfNotPresent
         command:
         - /heapster
-        - --source=kubernetes:<%= p("kubernetes-api-url") %>?useServiceAccount=true
+        - --source=kubernetes:https://master.kubo:8443?useServiceAccount=true
         - --sink=influxdb:http://monitoring-influxdb:8086
         - --vmodule=*=5
 

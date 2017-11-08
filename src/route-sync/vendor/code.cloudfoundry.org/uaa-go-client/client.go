@@ -31,11 +31,13 @@ type uaaKey struct {
 	Value string `json:"value"`
 }
 
+//go:generate counterfeiter -o fakes/fake_client.go . Client
 type Client interface {
 	FetchToken(forceUpdate bool) (*schema.Token, error)
 	FetchKey() (string, error)
 	DecodeToken(uaaToken string, desiredPermissions ...string) error
 	RegisterOauthClient(*schema.OauthClient) (*schema.OauthClient, error)
+	FetchIssuer() (string, error)
 }
 
 type UaaClient struct {
@@ -48,6 +50,11 @@ type UaaClient struct {
 	logger           lager.Logger
 	uaaPublicKey     string
 	rwlock           sync.RWMutex
+	issuer           string
+}
+
+type OpenIDConfig struct {
+	Issuer string `json:"issuer"`
 }
 
 func NewClient(logger lager.Logger, cfg *config.Config, clock clock.Clock) (Client, error) {
@@ -75,6 +82,17 @@ func NewClient(logger lager.Logger, cfg *config.Config, clock clock.Clock) (Clie
 	} else {
 		client = &http.Client{}
 	}
+
+	client.CheckRedirect = func(req *http.Request, via []*http.Request) error {
+		return http.ErrUseLastResponse
+	}
+
+	if cfg.RequestTimeout < 0 {
+		client.Timeout = config.DefaultRequestTimeout
+	} else {
+		client.Timeout = cfg.RequestTimeout
+	}
+	logger.Debug("HTTP Request timeout in seconds", lager.Data{"value": client.Timeout.Seconds()})
 
 	if cfg.ExpirationBufferInSec < 0 {
 		cfg.ExpirationBufferInSec = config.DefaultExpirationBufferInSec
@@ -111,6 +129,45 @@ func newSecureClient(cfg *config.Config) (*http.Client, error) {
 
 	client := &http.Client{Transport: tr}
 	return client, nil
+}
+
+func (u *UaaClient) FetchIssuer() (string, error) {
+	logger := u.logger.Session("uaa-client")
+	fetchOpenIdURL := fmt.Sprintf("%s/.well-known/openid-configuration", u.config.UaaEndpoint)
+	logger.Info("started-fetching-openId-metadata", lager.Data{"endpoint": fetchOpenIdURL})
+
+	request, err := http.NewRequest("GET", fetchOpenIdURL, nil)
+	if err != nil {
+		return "", err
+	}
+	trace.DumpRequest(request)
+	resp, err := u.client.Do(request)
+	if err != nil {
+		return "", err
+	}
+	defer resp.Body.Close()
+
+	trace.DumpResponse(resp)
+	logger.Info("finished-fetching-openId-metatdata", lager.Data{"status-code": resp.StatusCode})
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return "", err
+	}
+
+	if resp.StatusCode != http.StatusOK {
+		return "", errors.New(fmt.Sprintf("status code: %d, body: %s", resp.StatusCode, body))
+	}
+
+	data := &OpenIDConfig{}
+	err = json.Unmarshal(body, data)
+	if err != nil {
+		return "", err
+	}
+
+	logger.Info("successfully-received-issuer")
+	u.updateIssuer(data.Issuer)
+	return data.Issuer, nil
 }
 
 func (u *UaaClient) FetchToken(forceUpdate bool) (*schema.Token, error) {
@@ -265,6 +322,9 @@ func (u *UaaClient) DecodeToken(uaaToken string, desiredPermissions ...string) e
 				if !u.isValidSigningMethod(t) {
 					return nil, errors.New("invalid signing method")
 				}
+				if !u.isValidIssuer(t) {
+					return nil, errors.New("invalid issuer")
+				}
 				return []byte(uaaKey), nil
 			})
 
@@ -304,6 +364,19 @@ func (u *UaaClient) DecodeToken(uaaToken string, desiredPermissions ...string) e
 	}
 
 	return nil
+}
+
+func (u *UaaClient) isValidIssuer(token *jwt.Token) bool {
+	if u.issuer == "" {
+		_, err := u.FetchIssuer()
+		if err != nil {
+			return false
+		}
+	}
+	if value, ok := token.Claims["iss"]; ok {
+		return value == u.issuer
+	}
+	return false
 }
 
 func (u *UaaClient) isValidSigningMethod(token *jwt.Token) bool {
@@ -379,6 +452,10 @@ func checkPublicKey(key string) error {
 		return errors.New("Public uaa token must be PEM encoded")
 	}
 	return nil
+}
+
+func (u *UaaClient) updateIssuer(issuer string) {
+	u.issuer = issuer
 }
 
 func checkTokenFormat(token string) (string, error) {
