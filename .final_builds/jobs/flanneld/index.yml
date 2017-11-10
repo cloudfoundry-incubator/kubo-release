@@ -1,4 +1,8 @@
 builds:
+  55fc530e8da205e004b34242bd5297e741bc08e3:
+    version: 55fc530e8da205e004b34242bd5297e741bc08e3
+    blobstore_id: 07ca96ce-ed1d-4ab1-7e4c-1e01a162f130
+    sha1: e6e2f84906b8fac539a86f4b6ecee4e8f47c413e
   70ef3837fcece879c9c1d56493d7aa70bc3b0eb7:
     version: 70ef3837fcece879c9c1d56493d7aa70bc3b0eb7
     blobstore_id: 327a81b7-adf0-4670-7464-fd907e08d3fb
