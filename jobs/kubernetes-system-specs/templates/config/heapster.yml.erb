@@ -1,3 +1,26 @@
+<% if p('authorization-mode').downcase == 'rbac' %>
+
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: heapster
+  namespace: kube-system
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: heapster
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: system:heapster
+subjects:
+- kind: ServiceAccount
+  name: heapster
+  namespace: kube-system
+---
+<% end %>
+
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
@@ -21,7 +44,9 @@ spec:
         - --source=kubernetes:https://master.kubo:8443?useServiceAccount=true
         - --sink=influxdb:http://monitoring-influxdb:8086
         - --vmodule=*=5
-
+      <% if p('authorization-mode').downcase == 'rbac' %>
+      serviceAccountName: heapster
+      <% end %>
 ---
 
 apiVersion: v1

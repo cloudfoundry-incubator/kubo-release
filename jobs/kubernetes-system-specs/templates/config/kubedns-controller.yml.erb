@@ -12,6 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+<% if p('authorization-mode').downcase == 'rbac' %>
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: kube-dns
+  namespace: kube-system
+  labels:
+    kubernetes.io/cluster-service: "true"
+    addonmanager.kubernetes.io/mode: Reconcile
+---
+<% end %>
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
@@ -40,6 +51,9 @@ spec:
       annotations:
         scheduler.alpha.kubernetes.io/critical-pod: ''
     spec:
+      <% if p('authorization-mode').downcase == 'rbac' %>
+      serviceAccountName: kube-dns
+      <% end %>
       tolerations:
       - key: "CriticalAddonsOnly"
         operator: "Exists"
@@ -82,7 +96,9 @@ spec:
         args:
         - --domain=cluster.local.
         - --dns-port=10053
-        - --kubecfg-file=/var/vcap/jobs/kubeconfig/config/kubeconfig
+        <% if p('authorization-mode').downcase != 'rbac' %>
+        - --kubecfg-file=/var/vcap/jobs/kubeconfig/config/kubeconfig-kubelet
+        <% end %>
         - --config-dir=/var/vcap/jobs/kubeconfig/config
         - --v=2
         ports:
