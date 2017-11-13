@@ -7,7 +7,7 @@ spec_dir="/var/vcap/jobs/kubernetes-system-specs/config/"
 <% if p('authorization-mode').downcase == 'rbac' %>
 kubectl="/var/vcap/packages/kubernetes/bin/kubectl --token '<%= p('admin-password') %>'"
 <% else %>
-kubectl="/var/vcap/packages/kubernetes/bin/kubectl --kubeconfig=/var/vcap/jobs/kubeconfig/config/kubeconfig"
+kubectl="/var/vcap/packages/kubernetes/bin/kubectl --kubeconfig=/var/vcap/jobs/kubeconfig/config/kubeconfig-kubelet"
 <% end %>
 
 apply_spec() {

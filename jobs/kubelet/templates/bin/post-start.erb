@@ -2,7 +2,7 @@
 
 [ -z "$DEBUG" ] || set -x
 
-kubectl="/var/vcap/packages/kubernetes/bin/kubectl --kubeconfig=/var/vcap/jobs/kubeconfig/config/kubeconfig"
+kubectl="/var/vcap/packages/kubernetes/bin/kubectl --kubeconfig=/var/vcap/jobs/kubeconfig/config/kubeconfig-kubelet"
 
 # Deleting docker0 route as a workaround to a routing conflict
 # between the docker0 bridge and the CNI interface

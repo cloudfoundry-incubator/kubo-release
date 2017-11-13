@@ -58,30 +58,30 @@ jq-linux64-1.5:
   size: 3027945
   object_id: 41eb1cd1-0377-4e08-5602-51e0af8b9b52
   sha: d8e36831c3c94bb58be34dd544f44a6c6cb88568
-kubernetes-1.8.1/kube-apiserver:
-  size: 192911402
-  object_id: 4f5e4727-dbd5-4bbe-66de-4d98af1b1d29
-  sha: 42acb735bc258093d7898b57f792074b35ab4247
-kubernetes-1.8.1/kube-controller-manager:
-  size: 128087389
-  object_id: e474e2df-990f-439e-641b-bd3042420166
-  sha: 46d0fef6c0fa8dec631d7c5d047c637dcbffdf1a
-kubernetes-1.8.1/kube-proxy:
-  size: 47866320
-  object_id: a99f3ef6-1a3c-43fe-4a39-0026d2a67bcc
-  sha: 4a2f329268ace776600107cd30561cfa008532dd
-kubernetes-1.8.1/kube-scheduler:
-  size: 53754721
-  object_id: 1ec8ce9f-000c-4392-6e81-91f343015911
-  sha: d7eb26829e0ab236dc492a36c222752a0d5840b6
-kubernetes-1.8.1/kubectl:
-  size: 52274414
-  object_id: 4b228f46-6823-4445-6270-b4e172227d3f
-  sha: e3e5d59be033ea6b46cfb65d6f8a0861e5c6322a
-kubernetes-1.8.1/kubelet:
-  size: 137505064
-  object_id: 26dee34d-4a75-48a0-7c82-cd80f2456179
-  sha: e27fd6b32b8fa60b19508995af58171017fdd07a
+kubernetes-1.8.2/kube-apiserver:
+  size: 192911011
+  object_id: 1cc3fb98-94d4-4e06-638b-88d07c330906
+  sha: 13a3abac90f5f06d02d6ee06fe0f1052ee4f3dba
+kubernetes-1.8.2/kube-controller-manager:
+  size: 128086608
+  object_id: 5f76fbdd-8ba1-487b-42cd-d553419e27db
+  sha: b7e9eef818acde6745a84278cad906cae06201a3
+kubernetes-1.8.2/kube-proxy:
+  size: 47861443
+  object_id: 76b0c6a4-6942-41ee-73d2-b777b5a01c2c
+  sha: ec845b88b375ae79c94011f9b9ff58d6822f0699
+kubernetes-1.8.2/kube-scheduler:
+  size: 53774121
+  object_id: 4e4b8b04-b565-40f5-5fac-03720c0f9b9c
+  sha: 76f6d2983fea987809213d22d9cc529f6ac55ae4
+kubernetes-1.8.2/kubectl:
+  size: 52269537
+  object_id: 244b8b88-57b6-46bc-6089-860bd24c2c5f
+  sha: 20f145a084a7afc80569f5852cc1bcd377e0e562
+kubernetes-1.8.2/kubelet:
+  size: 137501952
+  object_id: 062b93c3-537e-4dc3-7bcc-03989a929def
+  sha: 2f6ec469e61125a837ad447cab012600ef08f0b2
 socat-1.7.3.2.tar.gz:
   size: 615818
   object_id: a6f3dcb3-54a0-44a3-4100-f408932aaf8f
