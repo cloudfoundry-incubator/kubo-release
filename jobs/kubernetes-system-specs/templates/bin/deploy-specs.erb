@@ -33,6 +33,14 @@ main() {
 
   apply_spec "kubernetes-dashboard.yml"
   wait_for kubernetes-dashboard
+
+  <% if p('addons-spec') != "" %>
+  tail -n +2 <% p('addons-spec')%> > ${spec_dir}/addon-spec-tmp.yml
+
+  apply_spec addon-spec-tmp.yml
+
+  rm ${spec_dir}/addon-spec-tmp.yml
+  <% end %>
 }
 
 main

@@ -28,3 +28,6 @@ properties:
     description: The admin username for the Kubernetes cluster
   admin-password:
     description: The admin password for the Kubernetes cluster
+  addons-spec:
+    description: The specs for addons specified in addons_spec_path in director.yml
+    default: ""
