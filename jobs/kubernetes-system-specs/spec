@@ -28,3 +28,4 @@ properties:
     description: The admin username for the Kubernetes cluster
   admin-password:
     description: The admin password for the Kubernetes cluster
+

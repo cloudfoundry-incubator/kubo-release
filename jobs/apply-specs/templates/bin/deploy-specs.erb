@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+set -e
+
+spec_dir="/var/vcap/jobs/apply-specs/specs/"
+
+<% if p('authorization-mode').downcase == 'rbac' %>
+kubectl="/var/vcap/packages/kubernetes/bin/kubectl --token '<%= p('admin-password') %>'"
+<% else %>
+kubectl="/var/vcap/packages/kubernetes/bin/kubectl --kubeconfig=/var/vcap/jobs/kubeconfig/config/kubeconfig-kubelet"
+<% end %>
+
+apply_spec() {
+  ${kubectl} apply -f "${1}" || echo "Spec file already applied: ${1}"
+}
+
+wait_for() {
+    ${kubectl} rollout status "deployments/${1}" -w --namespace=kube-system
+}
+
+main() {
+
+  <% if p('addons-spec') != "" %>
+  apply_spec ${spec_dir}/addon-spec.yml
+  <% end %>
+}
+
+main

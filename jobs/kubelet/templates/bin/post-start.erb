@@ -4,20 +4,6 @@
 
 kubectl="/var/vcap/packages/kubernetes/bin/kubectl --kubeconfig=/var/vcap/jobs/kubeconfig/config/kubeconfig-kubelet"
 
-# Deleting docker0 route as a workaround to a routing conflict
-# between the docker0 bridge and the CNI interface
-# TODO: remove this once an upstream docker release is available,
-#       which removes or overrides the docker bridge IP
-#       See: https://github.com/cloudfoundry-community/docker-boshrelease/pull/82
-#
-docker0_addr=$(route -n | grep docker0 | awk '{print $1}')
-docker0_gw=$(route -n | grep docker0 | awk '{print $2}')
-docker0_netmask=$(route -n | grep docker0 | awk '{print $3}')
-if [ "${docker0_addr}" != "" ]
-then
-  route del -net $docker0_addr gw $docker0_gw netmask $docker0_netmask dev docker0
-fi
-
 DOCKER_SOCKET=unix:///var/vcap/sys/run/docker/docker.sock
 CONTAINER_IMAGE_DIR=/var/vcap/packages/kubernetes/container-images
 
