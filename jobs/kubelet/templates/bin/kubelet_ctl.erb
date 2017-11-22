@@ -52,6 +52,14 @@ start_kubelet() {
     hostname_override=<%= spec.ip %>
   fi
 
+<% if_p('http_proxy') do |http_proxy| %>
+export http_proxy=<%= http_proxy %>
+<% end %>
+
+<% if_p('no_proxy') do |no_proxy| %>
+export no_proxy=<%= no_proxy %>
+<% end %>
+
   kubelet \
     --allow-privileged=true \
     --cloud-provider=${cloud_provider} \
