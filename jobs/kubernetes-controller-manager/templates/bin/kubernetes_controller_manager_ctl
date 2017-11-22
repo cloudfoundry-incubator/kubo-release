@@ -39,12 +39,12 @@ start_kubernetes_controller_manager() {
     chmod a+r /sys/class/dmi/id/product_serial
   fi
 
-<% if_p('http_proxy') do %>
-export http_proxy=<% p('http_proxy') %>
+<% if_p('http_proxy') do |http_proxy| %>
+export http_proxy=<%= http_proxy %>
 <% end %>
 
-<% if_p('no_proxy') do %>
-export no_proxy=<% p('no_proxy') %>
+<% if_p('no_proxy') do |no_proxy| %>
+export no_proxy=<%= no_proxy %>
 <% end %>
 
   exec chpst -u vcap:vcap  \
