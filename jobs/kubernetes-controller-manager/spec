@@ -8,4 +8,8 @@ packages:
 - pid_utils
 - kubernetes
 
-properties: {}
+properties:
+  http_proxy:
+    description: http_proxy env var for the kubernetes-api binary (i.e. for cloud provider interactions)
+  no_proxy:
+    description: no_proxy env var for the kubernetes-api binary (i.e. for cloud provider interactions)

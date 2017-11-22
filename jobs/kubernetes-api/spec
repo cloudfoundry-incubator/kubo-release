@@ -36,6 +36,10 @@ properties:
   authorization-mode:
     description: The authorization mode for kubernetes-api. Should be 'abac' or 'rbac'
     default: rbac
+  http_proxy:
+    description: http_proxy env var for the kubernetes-api binary (i.e. for cloud provider interactions)
+  no_proxy:
+    description: no_proxy env var for the kubernetes-api binary (i.e. for cloud provider interactions)
 
 consumes:
 - name: etcd
