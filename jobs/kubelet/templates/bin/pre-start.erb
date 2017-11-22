@@ -33,6 +33,14 @@ update_vsphere_vms() {
    export GOVC_PASSWORD="$(get_cloud_property "password")"
    export GOVC_INSECURE="$(get_cloud_property "insecure-flag")"
 
+<% if_p('http_proxy') do |http_proxy| %>
+  export http_proxy=<%= http_proxy %>
+<% end %>
+
+<% if_p('no_proxy') do |no_proxy| %>
+  export no_proxy=<%= no_proxy %>
+<% end %>
+
    /var/vcap/packages/govc/bin/govc vm.change -e 'disk.enableUUID=1' -vm.ip=<%= spec.ip %>
 }
 

@@ -45,6 +45,10 @@ properties:
   eviction-hard:
     description: Node eviction thresholds
     example: "memory.available<500Mi,nodefs.available<10%"
+  http_proxy:
+    description: http_proxy env var for the govc binary (i.e. for cloud provider interactions)
+  no_proxy:
+    description: no_proxy env var for the govc binary (i.e. for cloud provider interactions)
 
 provides:
 - name: kubernetes-workers
