@@ -10,6 +10,6 @@ packages:
 
 properties:
   http_proxy:
-    description: http_proxy env var for the kubernetes-api binary (i.e. for cloud provider interactions)
+    description: http_proxy env var for the kubernetes-controller-manager binary (i.e. for cloud provider interactions)
   no_proxy:
-    description: no_proxy env var for the kubernetes-api binary (i.e. for cloud provider interactions)
+    description: no_proxy env var for the kubernetes-controller-manager binary (i.e. for cloud provider interactions)
