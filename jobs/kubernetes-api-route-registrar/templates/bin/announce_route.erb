@@ -15,6 +15,9 @@ BACKEND_PORT="<%=p('backend_port') %>"
 BACKEND_IP="<%= spec.ip %>"
 KUBO_PORT="<%=p('external_kubo_port') %>"
 
+# Check the credentials. Print errors to logs.
+curl --max-time 10 -s -k -X POST ${UAA_API_URL}/oauth/token --data "client_id=${UAA_CLIENT_ID}&client_secret=${UAA_CLIENT_SECRET}&grant_type=client_credentials&response_type=token"
+
 # Fetch UAA token
 UAA_REQUEST=$(curl --fail --max-time 10 -s -k -X POST ${UAA_API_URL}/oauth/token --data "client_id=${UAA_CLIENT_ID}&client_secret=${UAA_CLIENT_SECRET}&grant_type=client_credentials&response_type=token")
 UAA_TOKEN=$(echo ${UAA_REQUEST} | jq -r .access_token)
