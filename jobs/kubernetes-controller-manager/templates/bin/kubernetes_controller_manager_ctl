@@ -45,6 +45,8 @@ export http_proxy=<%= http_proxy %>
 
 <% if_p('no_proxy') do |no_proxy| %>
 export no_proxy=<%= no_proxy %>
+# also use NO_PROXY since this fix is not in k8s we use yet: https://github.com/kubernetes/kubernetes/commit/92350f336b7aec303ba502c785d13f0cab1ad7f8#diff-1cb1608abe317a2c9acd24f738bc4837
+export NO_PROXY=<%= no_proxy %>
 <% end %>
 
   exec chpst -u vcap:vcap  \
