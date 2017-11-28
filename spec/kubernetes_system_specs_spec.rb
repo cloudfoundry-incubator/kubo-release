@@ -55,4 +55,18 @@ describe 'kubernetes-system-specs' do
     end
   end
 
+  context 'on non-GCE' do
+    let(:link_spec) do
+      {
+          'cloud-provider' => {
+              'instances' => [],
+              'properties' => {}
+          }
+      }
+    end
+
+    it 'does not apply the standard storage class' do
+      expect(rendered_template).to_not include('apply_spec "storage-class-gce.yml"')
+    end
+  end
 end
