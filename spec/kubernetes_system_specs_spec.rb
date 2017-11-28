@@ -1,12 +1,11 @@
 require 'rspec'
 require 'spec_helper'
 
-
 describe 'kubernetes-system-specs' do
-  let(:link_spec) {{}}
+  let(:link_spec) { {} }
   let(:rendered_template) do
     properties = {
-        'admin-password' => '1234',
+      'admin-password' => '1234'
     }
     links = link_spec
 
@@ -14,20 +13,20 @@ describe 'kubernetes-system-specs' do
   end
 
   it 'does not apply the standard storage class by default' do
-      expect(rendered_template).to_not include('apply_spec "storage-class-gce.yml"')
+    expect(rendered_template).to_not include('apply_spec "storage-class-gce.yml"')
   end
 
   context 'on GCE' do
     let(:link_spec) do
       {
-          'cloud-provider' => {
-              'instances' => [],
-              'properties' => {
-                  'cloud-provider' => {
-                      'type' => 'gce'
-                  }
-              }
+        'cloud-provider' => {
+          'instances' => [],
+          'properties' => {
+            'cloud-provider' => {
+              'type' => 'gce'
+            }
           }
+        }
       }
     end
 
@@ -39,14 +38,14 @@ describe 'kubernetes-system-specs' do
   context 'on non-GCE' do
     let(:link_spec) do
       {
-          'cloud-provider' => {
-              'instances' => [],
-              'properties' => {
-                  'cloud-provider' => {
-                      'type' => 'anything'
-                  }
-              }
+        'cloud-provider' => {
+          'instances' => [],
+          'properties' => {
+            'cloud-provider' => {
+              'type' => 'anything'
+            }
           }
+        }
       }
     end
 
@@ -58,10 +57,10 @@ describe 'kubernetes-system-specs' do
   context 'on non-GCE' do
     let(:link_spec) do
       {
-          'cloud-provider' => {
-              'instances' => [],
-              'properties' => {}
-          }
+        'cloud-provider' => {
+          'instances' => [],
+          'properties' => {}
+        }
       }
     end
 
