@@ -54,7 +54,7 @@ describe 'kubernetes-system-specs' do
     end
   end
 
-  context 'on non-GCE' do
+  context 'on unspecified cloud-provider' do
     let(:link_spec) do
       {
         'cloud-provider' => {
