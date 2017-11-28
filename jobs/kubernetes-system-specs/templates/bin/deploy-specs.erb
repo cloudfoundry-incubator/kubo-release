@@ -33,6 +33,12 @@ main() {
 
   apply_spec "kubernetes-dashboard.yml"
   wait_for kubernetes-dashboard
+
+  <% if_link('cloud-provider') do |link| %>
+    <% if link.p('cloud-provider.type') == 'gce' %>
+        apply_spec "storage-class-gce.yml"
+    <% end %>
+  <% end %>
 }
 
 main

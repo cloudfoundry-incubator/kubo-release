@@ -11,6 +11,7 @@ templates:
   config/heapster.yml.erb: config/heapster.yml
   config/kubernetes-dashboard.yml.erb: config/kubernetes-dashboard.yml
   config/rbac_policy.yml.erb: config/rbac_policy.yml
+  config/storage-class-gce.yml: config/storage-class-gce.yml 
 
 packages:
 - jq
@@ -19,6 +20,9 @@ packages:
 consumes:
 - name: kubernetes-api
   type: kubernetes-api
+- name: cloud-provider
+  type: cloud-provider
+  optional: true
 
 properties:
   authorization-mode:
