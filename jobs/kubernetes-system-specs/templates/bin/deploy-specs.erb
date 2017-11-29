@@ -12,7 +12,6 @@ kubectl="/var/vcap/packages/kubernetes/bin/kubectl --kubeconfig=/var/vcap/jobs/k
 
 apply_spec() {
   local spec_file="${spec_dir}/${1}"
-  
   ${kubectl} apply -f "${spec_file}" || echo "Spec file already applied: ${1}"
 }
 

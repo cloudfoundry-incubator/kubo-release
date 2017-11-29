@@ -9,6 +9,7 @@ templates:
   bin/ensure_kubelet_up_and_running.erb: bin/ensure_kubelet_up_and_running
   config/kubelet.pem.erb: config/kubelet.pem
   config/kubelet-key.pem.erb: config/kubelet-key.pem
+  config/kubeconfig.erb: config/kubeconfig
 
 packages:
 - pid_utils
@@ -45,7 +46,8 @@ properties:
   eviction-hard:
     description: Node eviction thresholds
     example: "memory.available<500Mi,nodefs.available<10%"
-
+  kubelet-password:
+    description: The password for the kubelet user
 provides:
 - name: kubernetes-workers
   type: kubernetes-workers
