@@ -2,4 +2,6 @@
 "<%= p("kubelet-password") %>",kubelet,kubelet
 "<%= p("kube-proxy-password") %>",kube-proxy,kube-proxy
 "<%= p("kube-scheduler-password") %>",kube-scheduler,kube-scheduler
+<% if_p("route-sync-password") do %>
 "<%= p("route-sync-password") %>",route-sync,route-sync
+<% end %>
