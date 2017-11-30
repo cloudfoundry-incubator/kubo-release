@@ -49,8 +49,8 @@ properties:
   eviction-hard:
     description: Node eviction thresholds
     example: "memory.available<500Mi,nodefs.available<10%"
-  kubelet-password:
-    description: The password for the kubelet user
+  api-token:
+      description: The token to access Kubernetes API
 
 provides:
 - name: kubernetes-workers

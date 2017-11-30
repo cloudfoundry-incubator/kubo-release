@@ -19,7 +19,7 @@ properties:
     description: Password of the admin user
   addons-spec:
     description: Spec of the addons to be deployed into the Kubernetes cluster
-  kubelet-password:
-    description: The password for the kubelet
+  api-token:
+    description: The token to access Kubernetes API
   tls.kubernetes:
       description: "Certificate and private key for the Kubernetes master"
