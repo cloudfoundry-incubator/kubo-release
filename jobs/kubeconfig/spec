@@ -1,15 +1,8 @@
 ---
 name: kubeconfig
 
-templates:
-  config/kubeconfig-route-sync.erb: config/kubeconfig-route-sync
-  config/ca.pem.erb: config/ca.pem
-
+templates: {}
 
 packages: []
 
-properties:
-  route-sync-password:
-    description: The password for the route-sync user
-  tls.kubernetes:
-    description: "Certificate and private key for the Kubernetes master"
+properties: {}
