@@ -8,6 +8,12 @@ templates:
 packages:
 - pid_utils
 
+provides:
+- name: cloud-provider
+  type: cloud-provider
+  properties:
+  - cloud-provider.type
+
 properties:
   cloud-provider.type:
     description: "Type of Cloud Provider to use"

@@ -28,7 +28,7 @@ properties:
     app_domain:
       description: "Cloud Foundry apps domain"
       example: app.cf.cf-app.com
- 
+
   nats.machines:
     description: IPs of each NATS cluster member
     example: |
@@ -36,13 +36,16 @@ properties:
       - 192.168.52.123
   nats.port:
     description: TCP port of NATS servers
-    default: 4222
+    example: 4222
   nats.user:
     description: User name for NATS authentication
-    default: nats
+    example: nats
   nats.password:
     description: Password for NATS authentication
 
 consumes:
 - name: kubernetes-workers
   type: kubernetes-workers
+- name: nats
+  type: nats
+  optional: true

@@ -11,6 +11,9 @@ templates:
   config/heapster.yml.erb: config/heapster.yml
   config/kubernetes-dashboard.yml.erb: config/kubernetes-dashboard.yml
   config/rbac_policy.yml.erb: config/rbac_policy.yml
+  config/storage-class-gce.yml: config/storage-class-gce.yml
+  config/kubeconfig.erb: config/kubeconfig
+  config/ca.pem.erb: config/ca.pem
 
 packages:
 - jq
@@ -19,6 +22,9 @@ packages:
 consumes:
 - name: kubernetes-api
   type: kubernetes-api
+- name: cloud-provider
+  type: cloud-provider
+  optional: true
 
 properties:
   authorization-mode:
@@ -28,3 +34,7 @@ properties:
     description: The admin username for the Kubernetes cluster
   admin-password:
     description: The admin password for the Kubernetes cluster
+  kubelet-password:
+    description: The password for the kubelet user
+  tls.kubernetes:
+    description: "Certificate and private key for the Kubernetes master"

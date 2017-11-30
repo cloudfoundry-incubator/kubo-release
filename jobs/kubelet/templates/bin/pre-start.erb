@@ -41,7 +41,9 @@ update_vsphere_vms() {
   export no_proxy=<%= no_proxy %>
 <% end %>
 
-   /var/vcap/packages/govc/bin/govc vm.change -e 'disk.enableUUID=1' -vm.ip=<%= spec.ip %>
+   # how to get the vm uuid and why we need this is described in https://kubernetes.io/docs/getting-started-guides/vsphere/#enable-vsphere-cloud-provider
+   local vm_uuid=$(cat /sys/class/dmi/id/product_serial | sed -e 's/^VMware-//' -e 's/-/ /' | awk '{ print tolower($1$2$3$4 "-" $5$6 "-" $7$8 "-" $9$10 "-" $11$12$13$14$15$16) }')
+   /var/vcap/packages/govc/bin/govc vm.change -e 'disk.enableUUID=1' -vm.uuid=$vm_uuid
 }
 
 main() {

@@ -73,7 +73,7 @@ export NO_PROXY=<%= no_proxy %>
     --docker-endpoint="${DOCKER_SOCKET}" \
     --fail-swap-on=false \
     --hostname-override=${hostname_override} \
-    --kubeconfig=/var/vcap/jobs/kubeconfig/config/kubeconfig-kubelet \
+    --kubeconfig=/var/vcap/jobs/kubelet/config/kubeconfig \
     --serialize-image-pulls=false \
     --tls-cert-file=/var/vcap/jobs/kubelet/config/kubelet.pem \
     --tls-private-key-file=/var/vcap/jobs/kubelet/config/kubelet-key.pem \

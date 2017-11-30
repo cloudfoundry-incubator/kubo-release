@@ -2,7 +2,6 @@
 name: kubeconfig
 
 templates:
-  config/kubeconfig-kubelet.erb: config/kubeconfig-kubelet
   config/kubeconfig-kube-proxy.erb: config/kubeconfig-kube-proxy
   config/kubeconfig-kube-scheduler.erb: config/kubeconfig-kube-scheduler
   config/kubeconfig-route-sync.erb: config/kubeconfig-route-sync
@@ -12,8 +11,6 @@ templates:
 packages: []
 
 properties:
-  kubelet-password:
-    description: The password for the kubelet user
   kube-proxy-password:
     description: The password for the kube-proxy user
   kube-scheduler-password:

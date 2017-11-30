@@ -9,6 +9,8 @@ templates:
   bin/ensure_kubelet_up_and_running.erb: bin/ensure_kubelet_up_and_running
   config/kubelet.pem.erb: config/kubelet.pem
   config/kubelet-key.pem.erb: config/kubelet-key.pem
+  config/kubeconfig.erb: config/kubeconfig
+  config/ca.pem.erb: config/ca.pem
 
 packages:
 - pid_utils
@@ -18,6 +20,8 @@ packages:
 - govc
 
 properties:
+  tls.kubernetes:
+      description: "Certificate and private key for the Kubernetes master"
   tls.kubelet:
     description: "Certificate and private key for the Kubernetes worker"
     type: certificate
@@ -49,16 +53,9 @@ properties:
     description: http_proxy env var for cloud provider interactions, i.e. for the kubelet and govc binary
   no_proxy:
     description: no_proxy env var for cloud provider interactions, i.e. for the kubelet and govc binary
+  kubelet-password:
+    description: The password for the kubelet user
 
 provides:
 - name: kubernetes-workers
   type: kubernetes-workers
-
-# for ha-proxy tcp worker linking
-# the 'ssh_proxy' type must match the 'tcp_backend' link
-# see https://github.com/cloudfoundry-incubator/haproxy-boshrelease/blob/master/jobs/haproxy/spec
-- name: worker_haproxy
-  type: ssh_proxy
-  properties:
-  - backend_port
-  - port
