@@ -10,5 +10,5 @@ packages:
 - kubernetes
 
 properties:
-  kube-scheduler-password:
-    description: The password for the kube-scheduler user
+  api-token:
+    description: The token to access kubernetes API

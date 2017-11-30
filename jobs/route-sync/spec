@@ -44,8 +44,8 @@ properties:
     example: nats
   nats.password:
     description: Password for NATS authentication
-  route-sync-password:
-      description: The password for the route-sync user
+  api-token:
+      description: The token to access kubernetes API
   tls.kubernetes:
     description: "Certificate and private key for the Kubernetes master"
 
