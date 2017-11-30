@@ -3,9 +3,12 @@ name: kubernetes-scheduler
 
 templates:
   bin/kubernetes_scheduler_ctl: bin/kubernetes_scheduler_ctl
+  config/kubeconfig.erb: config/kubeconfig
 
 packages:
 - pid_utils
 - kubernetes
 
-properties: {}
+properties:
+  kube-scheduler-password:
+    description: The password for the kube-scheduler user

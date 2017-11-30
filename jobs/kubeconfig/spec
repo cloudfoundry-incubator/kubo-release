@@ -2,7 +2,6 @@
 name: kubeconfig
 
 templates:
-  config/kubeconfig-kube-scheduler.erb: config/kubeconfig-kube-scheduler
   config/kubeconfig-route-sync.erb: config/kubeconfig-route-sync
   config/ca.pem.erb: config/ca.pem
 
@@ -10,8 +9,6 @@ templates:
 packages: []
 
 properties:
-  kube-scheduler-password:
-    description: The password for the kube-scheduler user
   route-sync-password:
     description: The password for the route-sync user
   tls.kubernetes:
