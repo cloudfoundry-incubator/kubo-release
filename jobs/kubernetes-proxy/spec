@@ -13,5 +13,5 @@ packages:
 properties:
   tls.kubernetes:
     description: "Certificate and private key for the Kubernetes master"
-  kube-proxy-password:
+  api-token:
       description: The password for the kube-proxy user
