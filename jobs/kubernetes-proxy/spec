@@ -3,8 +3,15 @@ name: kubernetes-proxy
 
 templates:
   bin/kubernetes_proxy_ctl.erb: bin/kubernetes_proxy_ctl
+  config/kubeconfig.erb: config/kubeconfig
+  config/ca.pem.erb: config/ca.pem
 
 packages:
 - pid_utils
 - kubernetes
 
+properties:
+  tls.kubernetes:
+    description: "Certificate and private key for the Kubernetes master"
+  api-token:
+      description: The password for the kube-proxy user

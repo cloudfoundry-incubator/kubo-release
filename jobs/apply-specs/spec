@@ -4,6 +4,9 @@ templates:
   bin/deploy-specs.erb: bin/deploy-specs
   bin/run: bin/run
   specs/addon-spec.yml.erb: specs/addon-spec.yml
+  config/kubeconfig.erb: config/kubeconfig
+  config/ca.pem.erb: config/ca.pem
+
 
 packages:
 - kubernetes
@@ -16,3 +19,7 @@ properties:
     description: Password of the admin user
   addons-spec:
     description: Spec of the addons to be deployed into the Kubernetes cluster
+  api-token:
+    description: The token to access Kubernetes API
+  tls.kubernetes:
+      description: "Certificate and private key for the Kubernetes master"
