@@ -10,6 +10,7 @@ templates:
   config/kubelet.pem.erb: config/kubelet.pem
   config/kubelet-key.pem.erb: config/kubelet-key.pem
   config/kubeconfig.erb: config/kubeconfig
+  config/ca.pem.erb: config/ca.pem
 
 packages:
 - pid_utils
@@ -19,6 +20,8 @@ packages:
 - govc
 
 properties:
+  tls.kubernetes:
+      description: "Certificate and private key for the Kubernetes master"
   tls.kubelet:
     description: "Certificate and private key for the Kubernetes worker"
     type: certificate
@@ -48,6 +51,7 @@ properties:
     example: "memory.available<500Mi,nodefs.available<10%"
   kubelet-password:
     description: The password for the kubelet user
+
 provides:
 - name: kubernetes-workers
   type: kubernetes-workers
