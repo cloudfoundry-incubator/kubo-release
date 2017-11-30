@@ -7,12 +7,11 @@ spec_dir="/var/vcap/jobs/kubernetes-system-specs/config/"
 <% if p('authorization-mode').downcase == 'rbac' %>
 kubectl="/var/vcap/packages/kubernetes/bin/kubectl --token '<%= p('admin-password') %>'"
 <% else %>
-kubectl="/var/vcap/packages/kubernetes/bin/kubectl --kubeconfig=/var/vcap/jobs/kubeconfig/config/kubeconfig-kubelet"
+kubectl="/var/vcap/packages/kubernetes/bin/kubectl --kubeconfig=/var/vcap/jobs/kubernetes-system-specs/config/kubeconfig"
 <% end %>
 
 apply_spec() {
   local spec_file="${spec_dir}/${1}"
-  
   ${kubectl} apply -f "${spec_file}" || echo "Spec file already applied: ${1}"
 }
 

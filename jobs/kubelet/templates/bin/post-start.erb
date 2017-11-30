@@ -2,7 +2,7 @@
 
 [ -z "$DEBUG" ] || set -x
 
-kubectl="/var/vcap/packages/kubernetes/bin/kubectl --kubeconfig=/var/vcap/jobs/kubeconfig/config/kubeconfig-kubelet"
+kubectl="/var/vcap/packages/kubernetes/bin/kubectl --kubeconfig=/var/vcap/jobs/kubelet/config/kubeconfig"
 
 DOCKER_SOCKET=unix:///var/vcap/sys/run/docker/docker.sock
 CONTAINER_IMAGE_DIR=/var/vcap/packages/kubernetes/container-images
