@@ -6,5 +6,5 @@ set -u # report the usage of uninitialized variables
 GO_VERSION=1.9.2
 tar xzvf "${BOSH_COMPILE_TARGET}/go/go${GO_VERSION}.linux-amd64.tar.gz"
 
-cp -a "${BOSH_COMPILE_TARGET}/go/*" "${BOSH_INSTALL_TARGET}"
+cp -a ${BOSH_COMPILE_TARGET}/go/* "${BOSH_INSTALL_TARGET}"
 
