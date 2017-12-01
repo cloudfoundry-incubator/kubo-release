@@ -3,6 +3,7 @@ name: cloud-provider
 
 templates:
   config/cloud-provider.ini.erb: config/cloud-provider.ini
+  config/service_key.json.erb: config/service_key.json
   bin/cloud-provider_utils.erb: bin/cloud-provider_utils
 
 packages:
@@ -26,6 +27,8 @@ properties:
     description: Google Cloud network name. Required when cloud-provider.type is gce
   cloud-provider.gce.worker-node-tag:
     description: Google Cloud tag that identifies only worker nodes in this deployment.
+  cloud-provider.gce.service_key:
+    description: Google Cloud service key that is used by cloud-provider.
 
   # vSphere specific properties
   cloud-provider.vsphere.user:
