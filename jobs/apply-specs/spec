@@ -12,14 +12,9 @@ packages:
 - kubernetes
 
 properties:
-  authorization-mode:
-    description: The authorization mode for kubernetes-api. Should be 'abac' or 'rbac'
-    default: rbac
-  admin-password:
-    description: Password of the admin user
   addons-spec:
     description: Spec of the addons to be deployed into the Kubernetes cluster
-  api-token:
-    description: The token to access Kubernetes API
-  tls.kubernetes:
-      description: "Certificate and private key for the Kubernetes master"
+
+consumes:
+- name: kubernetes-api
+  type: kubernetes-api

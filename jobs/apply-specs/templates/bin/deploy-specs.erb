@@ -4,11 +4,7 @@ set -e
 
 spec_dir="/var/vcap/jobs/apply-specs/specs/"
 
-<% if p('authorization-mode').downcase == 'rbac' %>
-kubectl="/var/vcap/packages/kubernetes/bin/kubectl --token '<%= p('admin-password') %>'"
-<% else %>
 kubectl="/var/vcap/packages/kubernetes/bin/kubectl --kubeconfig=/var/vcap/jobs/apply-specs/config/kubeconfig"
-<% end %>
 
 apply_spec() {
   ${kubectl} apply -f "${1}" || echo "Spec file already applied: ${1}"

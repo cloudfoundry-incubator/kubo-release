@@ -46,3 +46,9 @@ consumes:
 provides:
 - name: kubernetes-api
   type: kubernetes-api
+  properties:
+  - admin-username
+  - admin-password
+  - tls.kubernetes.ca
+  - port
+
