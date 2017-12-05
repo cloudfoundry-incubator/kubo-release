@@ -29,7 +29,7 @@ var _ = Describe("Time-based Pooler", func() {
 
 	BeforeEach(func() {
 		logger = lagertest.NewTestLogger("")
-		pool = pooler.ByTime(time.Duration(0), logger)
+		pool = pooler.ByTime(time.Duration(1), logger)
 		src = &routefakes.FakeSource{}
 
 		tcpRoutes = []*route.TCP{
