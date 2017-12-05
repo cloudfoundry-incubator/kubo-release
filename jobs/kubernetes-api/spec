@@ -49,6 +49,4 @@ provides:
   properties:
   - admin-username
   - admin-password
-  - tls.kubernetes.ca
-  - port
-
+  - tls.kubernetes
