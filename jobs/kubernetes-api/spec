@@ -25,8 +25,12 @@ properties:
     description: The password for the kube-scheduler user
   route-sync-password:
     description: The password for the route-sync user
-  tls.kubernetes:
-    description: "Certificate and private key for the Kubernetes master"
+  tls.kubernetes.ca:
+    description: "CA Certificate for the Kubernetes master"
+  tls.kubernetes.certificate:
+    description: "Certificate for the Kubernetes master"
+  tls.kubernetes.private_key:
+      description: "Private key for the Kubernetes master"
   backend_port:
     example: 80
     default: 1234
@@ -49,4 +53,4 @@ provides:
   properties:
   - admin-username
   - admin-password
-  - tls.kubernetes
+  - tls.kubernetes.ca
