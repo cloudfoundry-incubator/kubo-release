@@ -6,3 +6,7 @@ set_cloud_provider() {
   cloud_provider="<%= provider_type %>"
 <% end %>
 }
+
+<% if_p("cloud-provider.gce.service_key") do | v | %>
+  export GOOGLE_APPLICATION_CREDENTIALS=/var/vcap/jobs/cloud-provider/config/service_key.json
+<% end %>

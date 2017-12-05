@@ -98,6 +98,7 @@ export NO_PROXY=<%= no_proxy %>
       --requestheader-group-headers=X-Remote-Group \
       --requestheader-username-headers=X-Remote-User \
       <% end %>\
+      --enable-aggregator-routing=true \
       --v=2 \
     1>> $LOG_DIR/kubernetes_api.stdout.log \
     2>> $LOG_DIR/kubernetes_api.stderr.log

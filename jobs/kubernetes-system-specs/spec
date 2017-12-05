@@ -34,7 +34,7 @@ properties:
     description: The admin username for the Kubernetes cluster
   admin-password:
     description: The admin password for the Kubernetes cluster
-  kubelet-password:
-    description: The password for the kubelet user
+  api-token:
+    description: The token to access Kubernetes API
   tls.kubernetes:
     description: "Certificate and private key for the Kubernetes master"

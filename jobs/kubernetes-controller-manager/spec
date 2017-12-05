@@ -3,6 +3,7 @@ name: kubernetes-controller-manager
 
 templates:
   bin/kubernetes_controller_manager_ctl: bin/kubernetes_controller_manager_ctl
+  config/ca.pem.erb: config/ca.pem
 
 packages:
 - pid_utils
@@ -13,3 +14,5 @@ properties:
     description: http_proxy env var for the kubernetes-controller-manager binary (i.e. for cloud provider interactions)
   no_proxy:
     description: no_proxy env var for the kubernetes-controller-manager binary (i.e. for cloud provider interactions)
+  tls.kubernetes:
+    description: "Certificate and private key for the Kubernetes master"

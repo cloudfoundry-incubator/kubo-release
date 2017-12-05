@@ -46,10 +46,10 @@ flanneld:
   size: 21599816
   object_id: 2e653718-cede-4af5-73ea-d5774e7caad3
   sha: 63076521f1ba5605fa5f97016072a4538d66740f
-go/go1.8.linux-amd64.tar.gz:
-  size: 89803580
-  object_id: be776520-f271-439d-511a-9a0f63013403
-  sha: a93fe8fc245e3554f956bc823f30ef4eb23c2068
+go/go1.9.2.linux-amd64.tar.gz:
+  size: 104247844
+  object_id: 9dd1786f-8cda-4ce4-4a95-6fe98ed237d5
+  sha: 94c889e039e3d2e94ed95e8f8cb747c5bc1c2b58
 govc_linux_amd64.gz:
   size: 5941851
   object_id: e7f1ebef-4ccf-48bb-6ba6-f46ec47ed4f3
