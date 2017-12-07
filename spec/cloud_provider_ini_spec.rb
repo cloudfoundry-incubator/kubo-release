@@ -21,9 +21,9 @@ describe 'cloud-provider-ini' do
     end
 
     it 'renders the correct template for gce' do
-      expect(rendered_template).to include('project-id="fake-project-id"')
-      expect(rendered_template).to include('network-name="fake-network-name"')
-      expect(rendered_template).to include('node-tags="fake-worker-node-tag"')
+      expect(rendered_template).to include('project-id=fake-project-id')
+      expect(rendered_template).to include('network-name=fake-network-name')
+      expect(rendered_template).to include('node-tags=fake-worker-node-tag')
     end
 
     it 'sets token-url to nil if service_key is set' do
@@ -38,7 +38,6 @@ describe 'cloud-provider-ini' do
                 'gce' => {
                     'project-id' => 'fake-project-id',
                     'network-name' => 'fake-network-name',
-                    'service_key' => '',
                     'worker-node-tag' => 'fake-worker-node-tag'
                 }
             }
@@ -76,16 +75,16 @@ describe 'cloud-provider-ini' do
     end
 
     it 'renders the correct template for vsphere' do
-      expect(rendered_template).to include('user="fake-user"')
-      expect(rendered_template).to include('password="fake-password"')
-      expect(rendered_template).to include('server="fake-server"')
-      expect(rendered_template).to include('port="fake-port"')
-      expect(rendered_template).to include('insecure-flag="fake-insecure-flag"')
-      expect(rendered_template).to include('datacenter="fake-datacenter"')
-      expect(rendered_template).to include('datastore="fake-datastore"')
-      expect(rendered_template).to include('working-dir="fake-working-dir"')
-      expect(rendered_template).to include('vm-uuid="fake-vm-uuid"')
-      expect(rendered_template).to include('scsicontrollertype="fake-scsicontrollertype"')
+      expect(rendered_template).to include('user=fake-user')
+      expect(rendered_template).to include('password=fake-password')
+      expect(rendered_template).to include('server=fake-server')
+      expect(rendered_template).to include('port=fake-port')
+      expect(rendered_template).to include('insecure-flag=fake-insecure-flag')
+      expect(rendered_template).to include('datacenter=fake-datacenter')
+      expect(rendered_template).to include('datastore=fake-datastore')
+      expect(rendered_template).to include('working-dir=fake-working-dir')
+      expect(rendered_template).to include('vm-uuid=fake-vm-uuid')
+      expect(rendered_template).to include('scsicontrollertype=fake-scsicontrollertype')
     end
   end
 end

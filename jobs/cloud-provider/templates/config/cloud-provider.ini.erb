@@ -1,27 +1,35 @@
-<% if_p("cloud-provider.type") do | provider_type | %>
-  <% if provider_type == "gce" %>
+<%
+  cloud_config_string = ""
+  disk_config_string = ""
+  cloud_config = {}
+  disk_config = {}
+
+  if_p('cloud-provider.type') do |provider_type|
+    if provider_type == 'gce'
+      cloud_config['project-id'] = p('cloud-provider.gce.project-id')
+      cloud_config['network-name'] = p('cloud-provider.gce.network-name')
+      if_p('cloud-provider.gce.service_key') { cloud_config['token-url'] = 'nil' }
+      if_p('cloud-provider.gce.worker-node-tag') { |tag| cloud_config['node-tags'] = tag  }
+    elsif provider_type == 'vsphere'
+      cloud_config['user'] = p('cloud-provider.vsphere.user')
+      cloud_config['password'] = p('cloud-provider.vsphere.password')
+      cloud_config['server'] = p('cloud-provider.vsphere.server')
+      cloud_config['port'] = p('cloud-provider.vsphere.port')
+      cloud_config['insecure-flag'] = p('cloud-provider.vsphere.insecure-flag')
+      cloud_config['datacenter'] = p('cloud-provider.vsphere.datacenter')
+      cloud_config['datastore'] = p('cloud-provider.vsphere.datastore')
+      cloud_config['working-dir'] = p('cloud-provider.vsphere.working-dir')
+      cloud_config['vm-uuid'] = p('cloud-provider.vsphere.vm-uuid', '')
+      disk_config['scsicontrollertype'] = p('cloud-provider.vsphere.scsicontrollertype')
+    else
+      raise "Unknown provider type #{provider_type}"
+    end
+  end
+
+  cloud_config.each { |key, prop| cloud_config_string = cloud_config_string + "#{key}=#{prop}\n" }
+  disk_config.each { |key, prop| disk_config_string = disk_config_string + "#{key}=#{prop}\n" }
+%>
 [Global]
-project-id="<%= p('cloud-provider.gce.project-id') %>"
-network-name="<%= p('cloud-provider.gce.network-name') %>"
-<% if p("cloud-provider.gce.service_key") != "" %>
-    token-url=nil
-<% end %>
-    <% if_p("cloud-provider.gce.worker-node-tag") do | worker_node_tag | %>
-node-tags="<%= p('cloud-provider.gce.worker-node-tag') %>"
-    <% end %>
-  <% end %>
-  <% if provider_type == "vsphere" %>
-[Global]
-user="<%= p('cloud-provider.vsphere.user') %>"
-password="<%= p('cloud-provider.vsphere.password') %>"
-server="<%= p('cloud-provider.vsphere.server') %>"
-port="<%= p('cloud-provider.vsphere.port') %>"
-insecure-flag="<%= p('cloud-provider.vsphere.insecure-flag') %>"
-datacenter="<%= p('cloud-provider.vsphere.datacenter') %>"
-datastore="<%= p('cloud-provider.vsphere.datastore') %>"
-working-dir="<%= p('cloud-provider.vsphere.working-dir') %>"
-vm-uuid="<%= p('cloud-provider.vsphere.vm-uuid', '') %>"
+<%= cloud_config_string %>
 [Disk]
-scsicontrollertype="<%= p('cloud-provider.vsphere.scsicontrollertype') %>"
-  <% end %>
-<% end %>
+<%= disk_config_string %>
