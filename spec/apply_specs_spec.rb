@@ -46,6 +46,6 @@ describe 'apply-specs' do
   end
 
   it 'constructs the URL using the kubernetes-api link' do
-    expect(rendered_kubeconfig['clusters'][0]['cluster']['server']).to eq('https://master.kubo:2034')
+    expect(rendered_kubeconfig['clusters'][0]['cluster']['server']).to eq('https://master.kubo:8443')
   end
 end
