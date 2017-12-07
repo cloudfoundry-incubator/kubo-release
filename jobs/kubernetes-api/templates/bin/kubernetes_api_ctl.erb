@@ -38,7 +38,6 @@ start_kubernetes_api_server() {
   etcd_endpoints = link("etcd").instances.map do |instance|
     "http://#{instance.address}:4001"
   end.join(',')
-  api_server_count = link("kubernetes-api").instances.size
   authorization_mode = p('authorization-mode').downcase
 
   authorization_flags = if authorization_mode == 'abac'
@@ -60,7 +59,6 @@ start_kubernetes_api_server() {
     kube-apiserver \
       --admission-control=NamespaceLifecycle,NamespaceExists,ServiceAccount,LimitRanger,ResourceQuota \
       --allow-privileged=true \
-      --apiserver-count=<%= api_server_count %> \
       <%= authorization_flags %>     --bind-address=0.0.0.0 \
       --cert-dir=/var/vcap/sys/run/kubernetes/ \
       --cloud-provider=${cloud_provider} \
