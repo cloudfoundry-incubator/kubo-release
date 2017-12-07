@@ -2,23 +2,11 @@ require 'rspec'
 require 'spec_helper'
 
 describe 'cloud-provider-ini' do
-
+  let(:rendered_template) { compiled_template('cloud-provider', 'config/cloud-provider.ini', properties) }
 
   context 'if cloud provider is gce' do
-    let(:rendered_template) do
-      properties = {
-          'cloud-provider' => {
-              'type' => 'gce',
-              'gce' => {
-                  'project-id' => 'fake-project-id',
-                  'network-name' => 'fake-network-name',
-                  'service_key' => 'foo',
-                  'worker-node-tag' => 'fake-worker-node-tag'
-              }
-          }
-      }
-      compiled_template('cloud-provider', 'config/cloud-provider.ini', properties)
-    end
+    let(:properties) { {'cloud-provider' => { 'type' => 'gce', 'gce' => gce_config }} }
+    let(:gce_config) { {'project-id' => 'fake-project-id', 'network-name' => 'fake-network-name', 'service_key' => 'foo', 'worker-node-tag' => 'fake-worker-node-tag'} }
 
     it 'renders the correct template for gce' do
       expect(rendered_template).to include('project-id=fake-project-id')
@@ -30,20 +18,8 @@ describe 'cloud-provider-ini' do
       expect(rendered_template).to include('token-url=nil')
     end
 
-    context 'if gce service key is empty' do
-      let(:rendered_template) do
-        properties = {
-            'cloud-provider' => {
-                'type' => 'gce',
-                'gce' => {
-                    'project-id' => 'fake-project-id',
-                    'network-name' => 'fake-network-name',
-                    'worker-node-tag' => 'fake-worker-node-tag'
-                }
-            }
-        }
-        compiled_template('cloud-provider', 'config/cloud-provider.ini', properties)
-      end
+    context 'if gce service key not defined' do
+      let(:gce_config) { {'project-id' => 'fake-project-id', 'network-name' => 'fake-network-name', 'worker-node-tag' => 'fake-worker-node-tag'} }
 
       it 'does not set token-url to nil' do
         expect(rendered_template).not_to include('token-url=nil')
@@ -52,26 +28,20 @@ describe 'cloud-provider-ini' do
   end
 
   context 'if cloud provider is vsphere' do
-    let(:rendered_template) do
-      properties = {
-          'cloud-provider' => {
-              'type' => 'vsphere',
-              'vsphere' => {
-                  'user' => 'fake-user',
-                  'password' => 'fake-password',
-                  'server' => 'fake-server',
-                  'port' => 'fake-port',
-                  'insecure-flag' => 'fake-insecure-flag',
-                  'datacenter' => 'fake-datacenter',
-                  'datastore' => 'fake-datastore',
-                  'working-dir' => 'fake-working-dir',
-                  'vm-uuid' => 'fake-vm-uuid',
-                  'scsicontrollertype' => 'fake-scsicontrollertype'
-              }
-          }
+    let(:properties) { {'cloud-provider' => { 'type' => 'vsphere', 'vsphere' => vsphere_config }} }
+    let(:vsphere_config) do
+      {
+         'user' => 'fake-user',
+         'password' => 'fake-password',
+         'server' => 'fake-server',
+         'port' => 'fake-port',
+         'insecure-flag' => 'fake-insecure-flag',
+         'datacenter' => 'fake-datacenter',
+         'datastore' => 'fake-datastore',
+         'working-dir' => 'fake-working-dir',
+         'vm-uuid' => 'fake-vm-uuid',
+         'scsicontrollertype' => 'fake-scsicontrollertype'
       }
-
-      compiled_template('cloud-provider', 'config/cloud-provider.ini', properties)
     end
 
     it 'renders the correct template for vsphere' do
