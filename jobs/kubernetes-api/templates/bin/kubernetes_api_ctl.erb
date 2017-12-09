@@ -66,6 +66,7 @@ start_kubernetes_api_server() {
       --cloud-provider=${cloud_provider} \
       --cloud-config="${cloud_config}" \
       --enable-swagger-ui=true \
+      --etcd-quorum-read=true \
       --etcd-servers=<%= etcd_endpoints %> \
       --insecure-bind-address=127.0.0.1 \
       --kubelet-https=true \
