@@ -3,6 +3,9 @@ name: flanneld
 
 templates:
   bin/flanneld_ctl.erb: bin/flanneld_ctl
+  config/etcd-ca.erb: config/etcd-ca
+  config/etcd-client-cert.erb: config/etcd-client-cert
+  config/etcd-client-key.erb: config/etcd-client-key
 
 packages:
 - pid_utils
@@ -10,7 +13,13 @@ packages:
 - flanneld
 - cni
 
-properties: {}
+properties:
+  etcd-ca:
+    description: the client CA
+  etcd-client-cert:
+    description: the client cert for communicating using mutual TLS
+  etcd-client-key:
+    description: the client key for communicating using mutual TLS
 
 consumes:
 - name: etcd

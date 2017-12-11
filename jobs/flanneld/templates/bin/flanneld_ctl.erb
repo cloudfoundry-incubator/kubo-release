@@ -27,20 +27,29 @@ send_process_stderr_to_logfile() {
 start_flanneld() {
   <%
     etcd_endpoints = link("etcd").instances.map do |instance|
-      "http://#{instance.address}:4001/"
+      "https://#{instance.address}:4001/"
     end.join(',')
   %>
-  
+
   modprobe br_netfilter
-  
+
   mkdir -p /dev/net
   mknod /dev/net/tun c 10 200 || true
   echo 1 > /proc/sys/net/ipv4/ip_forward
   mkdir -p /etc/cni/net.d
   echo '{"name":"flannel-network","type":"flannel","delegate":{"isDefaultGateway": true}}' > /etc/cni/net.d/10-flannel.conf
 
-  /var/vcap/packages/etcdctl/etcdctl --endpoints <%= etcd_endpoints %> set /coreos.com/network/config '{"Network":"10.200.0.0/16","Backend":{"Type":"vxlan"}}'
+  /var/vcap/packages/etcdctl/etcdctl \
+    --endpoints <%= etcd_endpoints %> \
+    --cert=/var/vcap/jobs/flanneld/config/etcd-client-cert \
+    --key=/var/vcap/jobs/flanneld/config/etcd-client-key \
+    --cacert=/var/vcap/jobs/flanneld/config/etcd-ca \
+    set /coreos.com/network/config '{"Network":"10.200.0.0/16","Backend":{"Type":"vxlan"}}'
+
   flanneld -etcd-endpoints="<%= etcd_endpoints %>" \
+    --etcd-certfile=/var/vcap/jobs/flanneld/config/etcd-client-cert \
+    --etcd-keyfile=/var/vcap/jobs/flanneld/config/etcd-client-key \
+    --etcd-cafile=/var/vcap/jobs/flanneld/config/etcd-ca \
     1>> $LOG_DIR/flanneld.stdout.log \
     2>> $LOG_DIR/flanneld.stderr.log
 }
