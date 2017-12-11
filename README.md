@@ -1,7 +1,7 @@
 # kubo-release
 A [BOSH](http://bosh.io/) release for [Kubernetes](http://kubernetes.io).
 
-**Slack**: #kubo on https://slack.cloudfoundry.org
+**Slack**: #cfcr on https://slack.cloudfoundry.org
 **Pivotal Tracker**: https://www.pivotaltracker.com/n/projects/2093412
 
 ## Deploying Kubo
