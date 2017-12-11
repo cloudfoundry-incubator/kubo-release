@@ -25,8 +25,12 @@ properties:
     description: The password for the kube-scheduler user
   route-sync-password:
     description: The password for the route-sync user
-  tls.kubernetes:
-    description: "Certificate and private key for the Kubernetes master"
+  tls.kubernetes.ca:
+    description: "CA Certificate for the Kubernetes master"
+  tls.kubernetes.certificate:
+    description: "Certificate for the Kubernetes master"
+  tls.kubernetes.private_key:
+      description: "Private key for the Kubernetes master"
   backend_port:
     example: 80
     default: 1234
@@ -46,12 +50,7 @@ consumes:
 provides:
 - name: kubernetes-api
   type: kubernetes-api
-
-# for ha-proxy tcp worker linking
-# the 'ssh_proxy' type must match the 'tcp_backend' link
-# see https://github.com/cloudfoundry-incubator/haproxy-boshrelease/blob/master/jobs/haproxy/spec
-- name: master_haproxy
-  type: ssh_proxy
   properties:
-  - backend_port
-  - port
+  - admin-username
+  - admin-password
+  - tls.kubernetes.ca

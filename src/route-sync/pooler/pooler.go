@@ -52,15 +52,17 @@ func (tb *timeBased) tick(src route.Source, router route.Router) {
 }
 
 func (tb *timeBased) Run(ctx context.Context, src route.Source, router route.Router) {
-	timer := time.Tick(1)
+	ticker := time.NewTicker(tb.interval)
+	defer ticker.Stop()
+
+	tb.tick(src, router)
 
 	for {
 		select {
 		case <-ctx.Done():
 			return
-		case <-timer:
+		case <-ticker.C:
 			tb.tick(src, router)
-			timer = time.Tick(tb.interval)
 		}
 	}
 }

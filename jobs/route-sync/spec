@@ -4,6 +4,8 @@ name: route-sync
 templates:
   bin/route-sync-ctl.erb: bin/route-sync-ctl
   config/route-sync.yml.erb: config/route-sync.yml
+  config/kubeconfig.erb: config/kubeconfig
+  config/ca.pem.erb: config/ca.pem
 
 packages:
 - route-sync
@@ -28,7 +30,7 @@ properties:
     app_domain:
       description: "Cloud Foundry apps domain"
       example: app.cf.cf-app.com
- 
+
   nats.machines:
     description: IPs of each NATS cluster member
     example: |
@@ -36,13 +38,20 @@ properties:
       - 192.168.52.123
   nats.port:
     description: TCP port of NATS servers
-    default: 4222
+    example: 4222
   nats.user:
     description: User name for NATS authentication
-    default: nats
+    example: nats
   nats.password:
     description: Password for NATS authentication
+  api-token:
+      description: The token to access kubernetes API
+  tls.kubernetes:
+    description: "Certificate and private key for the Kubernetes master"
 
 consumes:
 - name: kubernetes-workers
   type: kubernetes-workers
+- name: nats
+  type: nats
+  optional: true

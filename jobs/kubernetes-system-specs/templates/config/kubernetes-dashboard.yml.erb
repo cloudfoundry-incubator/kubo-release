@@ -119,17 +119,17 @@ spec:
           # to it. Uncomment only if the default does not work.
           # - --apiserver-host=http://my-address:port
 <% if p('authorization-mode').downcase != 'rbac' %>
-          - --kubeconfig=/var/vcap/jobs/kubeconfig/config/kubeconfig-kubelet
+          - --kubeconfig=/var/vcap/jobs/kubelet/config/kubeconfig
         env:
           - name: KUBECONFIG
-            value: /var/vcap/jobs/kubeconfig/config/kubeconfig-kubelet
+            value: /var/vcap/jobs/kubelet/config/kubeconfig
 <% end %>
         volumeMounts:
           # Create on-disk volume to store exec logs
         - mountPath: /tmp
           name: tmp-volume
 <% if p('authorization-mode').downcase != 'rbac' %>
-        - mountPath: /var/vcap/jobs/kubeconfig/config/
+        - mountPath: /var/vcap/jobs/kubelet/config/
           name: config
 <% end %>
         livenessProbe:
@@ -144,7 +144,7 @@ spec:
 <% if p('authorization-mode').downcase != 'rbac' %>
       - name: config
         hostPath:
-          path: "/var/vcap/jobs/kubeconfig/config"
+          path: "/var/vcap/jobs/kubelet/config"
 <% end %>
 <% if p('authorization-mode').downcase == 'rbac' %>
       serviceAccountName: kubernetes-dashboard

@@ -60,7 +60,7 @@ spec:
       volumes:
       - name: kube-dns-config
         hostPath:
-          path: "/var/vcap/jobs/kubeconfig/config/"
+          path: "/var/vcap/jobs/kubelet/config/"
       containers:
       - name: kubedns
         image: gcr.io/google_containers/k8s-dns-kube-dns-amd64:1.14.6
@@ -97,9 +97,9 @@ spec:
         - --domain=cluster.local.
         - --dns-port=10053
         <% if p('authorization-mode').downcase != 'rbac' %>
-        - --kubecfg-file=/var/vcap/jobs/kubeconfig/config/kubeconfig-kubelet
+        - --kubecfg-file=/var/vcap/jobs/kubelet/config/kubeconfig
         <% end %>
-        - --config-dir=/var/vcap/jobs/kubeconfig/config
+        - --config-dir=/var/vcap/jobs/kubelet/config
         - --v=2
         ports:
         - containerPort: 10053
@@ -110,7 +110,7 @@ spec:
           protocol: TCP
         volumeMounts:
         - name: kube-dns-config
-          mountPath: /var/vcap/jobs/kubeconfig/config/
+          mountPath: /var/vcap/jobs/kubelet/config/
       - name: dnsmasq
         image: gcr.io/google_containers/k8s-dns-dnsmasq-nanny-amd64:1.14.6
         imagePullPolicy: IfNotPresent
