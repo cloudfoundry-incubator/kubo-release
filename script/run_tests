@@ -19,12 +19,13 @@ test_route_sync() {
 
 test_release_specs() {
   pushd "${project_root}" > /dev/null
-    bundle "install"
-    bundle exec rspec "spec/*_spec.rb"
+    bundle install
+    bundle exec rspec spec/*_spec.rb
   popd > /dev/null
 
 }
 
 test_route_sync
+test_release_specs
 
 exit 0
