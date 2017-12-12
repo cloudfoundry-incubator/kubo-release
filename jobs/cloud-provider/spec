@@ -18,7 +18,7 @@ provides:
 properties:
   cloud-provider.type:
     description: "Type of Cloud Provider to use"
-    example: gce, vsphere
+    example: gce, vsphere, aws
 
   # GCE specific properties
   cloud-provider.gce.project-id:
@@ -82,3 +82,12 @@ properties:
   cloud-provider.openstack.ca-file:
     description: CA file to connect to your OpenStack cluster (Optional).
     default: ''
+
+  # AWS specific properties
+  cloud-provider.aws.disable-security-group-ingress:
+    description: |
+      Kubernetes amends the ingress rules on security groups bound to workers to allow access to ELBs.
+      This has scaling limits with number of rules allowed in a Security Group. If you set this you will need to make sure you open up your workers' security group from ELBs via another means.
+
+      This can also be used as workaround to bugs such as - https://github.com/kubernetes/kubernetes/issues/17626
+    default: false

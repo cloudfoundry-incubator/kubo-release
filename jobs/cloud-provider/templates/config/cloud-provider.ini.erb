@@ -38,6 +38,9 @@
       cloud_config['domain-name'] = p('cloud-provider.openstack.domain-name')
       cloud_config['region'] = p('cloud-provider.openstack.region')
       cloud_config['ca-file'] = p('cloud-provider.openstack.ca-file')
+    elsif provider_type == 'aws'
+      cloud_config_string = "[Global]\n"
+      cloud_config['disable-security-group-ingress'] = p('cloud-provider.aws.disable-security-group-ingress')
     end
 
     cloud_config.each { |key, prop| cloud_config_string = cloud_config_string + "#{key}=#{prop}\n" }
