@@ -14,7 +14,7 @@
       if_p('cloud-provider.gce.worker-node-tag') { |tag| cloud_config['node-tags'] = tag  }
     elsif provider_type == 'vsphere'
       cloud_config_string = "[Global]\n"
-      cloud_config['user'] = p('cloud-provider.vsphere.user')
+      cloud_config['user'] = p('cloud-provider.vsphere.user').gsub('\\','\\\\\\') 
       cloud_config['password'] = p('cloud-provider.vsphere.password')
       cloud_config['server'] = p('cloud-provider.vsphere.server')
       cloud_config['port'] = p('cloud-provider.vsphere.port')
