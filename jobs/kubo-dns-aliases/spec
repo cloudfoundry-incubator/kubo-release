@@ -7,3 +7,5 @@ templates:
 consumes:
 - name: kubernetes-api
   type: kubernetes-api
+- name: etcd
+  type: etcd_service

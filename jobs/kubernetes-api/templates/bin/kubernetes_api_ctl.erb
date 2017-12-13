@@ -66,7 +66,10 @@ start_kubernetes_api_server() {
       --cloud-provider=${cloud_provider} \
       --cloud-config="${cloud_config}" \
       --enable-swagger-ui=true \
-      --etcd-servers=<%= etcd_endpoints %> \
+      --etcd-servers=https://etcd.service.cf.internal:4001 \
+      --etcd-cafile=/var/vcap/jobs/kubernetes-api/config/etcd-ca \
+      --etcd-certfile=/var/vcap/jobs/kubernetes-api/config/etcd-client-cert \
+      --etcd-keyfile=/var/vcap/jobs/kubernetes-api/config/etcd-client-key \
       --insecure-bind-address=127.0.0.1 \
       --kubelet-https=true \
       --secure-port=8443 \

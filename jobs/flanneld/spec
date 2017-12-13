@@ -13,13 +13,7 @@ packages:
 - flanneld
 - cni
 
-properties:
-  etcd-ca:
-    description: the client CA
-  etcd-client-cert:
-    description: the client cert for communicating using mutual TLS
-  etcd-client-key:
-    description: the client key for communicating using mutual TLS
+properties: {}
 
 consumes:
 - name: etcd

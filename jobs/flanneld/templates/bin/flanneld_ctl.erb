@@ -40,13 +40,13 @@ start_flanneld() {
   echo '{"name":"flannel-network","type":"flannel","delegate":{"isDefaultGateway": true}}' > /etc/cni/net.d/10-flannel.conf
 
   /var/vcap/packages/etcdctl/etcdctl \
-    --endpoints <%= etcd_endpoints %> \
-    --cert=/var/vcap/jobs/flanneld/config/etcd-client-cert \
-    --key=/var/vcap/jobs/flanneld/config/etcd-client-key \
-    --cacert=/var/vcap/jobs/flanneld/config/etcd-ca \
+    --endpoints https://etcd.service.cf.internal:4001 \
+    --cert-file /var/vcap/jobs/flanneld/config/etcd-client-cert \
+    --key-file /var/vcap/jobs/flanneld/config/etcd-client-key \
+    --ca-file /var/vcap/jobs/flanneld/config/etcd-ca \
     set /coreos.com/network/config '{"Network":"10.200.0.0/16","Backend":{"Type":"vxlan"}}'
 
-  flanneld -etcd-endpoints="<%= etcd_endpoints %>" \
+  flanneld -etcd-endpoints=https://etcd.service.cf.internal:4001 \
     --etcd-certfile=/var/vcap/jobs/flanneld/config/etcd-client-cert \
     --etcd-keyfile=/var/vcap/jobs/flanneld/config/etcd-client-key \
     --etcd-cafile=/var/vcap/jobs/flanneld/config/etcd-ca \
