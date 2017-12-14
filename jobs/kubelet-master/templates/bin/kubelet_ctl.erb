@@ -4,10 +4,10 @@ NAME="${0##*/}"
 
 export PATH=/var/vcap/packages/kubernetes/bin/:/var/vcap/packages/docker/sbin/:/var/vcap/packages/socat/bin/:$PATH
 
-RUN_DIR=/var/vcap/sys/run/kubernetes
-PIDFILE=$RUN_DIR/kubelet.pid
-LOG_DIR=/var/vcap/sys/log/kubelet
-DATA_DIR=/var/vcap/store/kubernetes
+RUN_DIR=/var/vcap/sys/run/kubelet-master
+PIDFILE=$RUN_DIR/kubelet-master.pid
+LOG_DIR=/var/vcap/sys/log/kubelet-master
+DATA_DIR=/var/vcap/store/kubelet-master
 DOCKER_SOCKET=unix:///var/vcap/sys/run/docker/docker.sock
 
 if [ -e /var/vcap/jobs/cloud-provider/bin/cloud-provider_utils ]; then
@@ -22,7 +22,7 @@ fi
 <%
   labels = ""
   if ! p("labels").empty?
-    labels = "," + p("labels").map {|k,v| "#{k}=#{v}"}.join(",") 
+    labels = "," + p("labels").map {|k,v| "#{k}=#{v}"}.join(",")
   end
 %>
 
@@ -44,39 +44,40 @@ send_process_stderr_to_logfile() {
 
 start_kubelet() {
 
-  ln -s -f /var/vcap/jobs/kubelet/packages/cni/bin/nsenter /usr/bin/nsenter
+  ln -s -f /var/vcap/jobs/kubelet-master/packages/cni/bin/nsenter /usr/bin/nsenter
 
   if [ "gce" == "$cloud_provider" ]; then
     hostname_override=$(curl http://metadata.google.internal/computeMetadata/v1/instance/name -H "Metadata-Flavor: Google")
   else
-    hostname_override=<%= spec.ip %>
+    hostname_override=<%= spec.id %>
   fi
 
   kubelet \
     --allow-privileged=true \
-    --cloud-provider=${cloud_provider} \
     --cloud-config="${cloud_config}" \
+    --cloud-provider=${cloud_provider} \
     --cluster-dns=10.100.200.10 \
     --cluster-domain=cluster.local \
+    --cni-bin-dir=/var/vcap/jobs/kubelet-master/packages/cni/bin \
     --container-runtime=docker \
-    --docker="${DOCKER_SOCKET}" \
     --docker-endpoint="${DOCKER_SOCKET}" \
+    --docker="${DOCKER_SOCKET}" \
     --fail-swap-on=false \
     --hostname-override=${hostname_override} \
-    --kubeconfig=/var/vcap/jobs/kubelet/config/kubeconfig \
-    --serialize-image-pulls=false \
-    --tls-cert-file=/var/vcap/jobs/kubelet/config/kubelet.pem \
-    --tls-private-key-file=/var/vcap/jobs/kubelet/config/kubelet-key.pem \
+    --kubeconfig=/var/vcap/jobs/kubelet-master/config/kubeconfig \
     --network-plugin=cni \
-    --cni-bin-dir=/var/vcap/jobs/kubelet/packages/cni/bin \
-    <% if_p('kube-reserved') do |kube_reserved| %>--kube-reserved="<%= kube_reserved %>"<% end %> \
-    <% if_p('system-reserved') do |system_reserved| %>--system-reserved="<%= system_reserved %>"<% end %> \
-    <% if_p('eviction-hard') do |eviction_hard| %>--eviction-hard="<%= eviction_hard %>"<% end %> \
-    --require-kubeconfig=true \
+    --node-labels=spec.ip=<%= spec.ip %><%= labels %>,node-role.kubernetes.io/master="" \
+    --pod-manifest-path=/var/vcap/jobs/kubelet-master/manifests/ \
+    --register-with-taints=node-role.kubernetes.io/master=true:NoSchedule \
+    --serialize-image-pulls=false \
+    --tls-cert-file=/var/vcap/jobs/kubelet-master/config/kubernetes.pem \
+    --tls-private-key-file=/var/vcap/jobs/kubelet-master/config/kubernetes-key.pem \
     --v=2 \
-    --node-labels=spec.ip=<%= spec.ip %><%= labels %>,node-role.kubernetes.io/node="" \
-  1>> $LOG_DIR/kubelet.stdout.log \
-  2>> $LOG_DIR/kubelet.stderr.log
+    <% if_p('eviction-hard') do |eviction_hard| %>--eviction-hard="<%= eviction_hard %>" \<% end -%>
+    <% if_p('kube-reserved') do |kube_reserved| %>--kube-reserved="<%= kube_reserved %>" \<% end -%>
+    <% if_p('system-reserved') do |system_reserved| %>--system-reserved="<%= system_reserved %>" \<% end -%>
+  1>> $LOG_DIR/kubelet-master.stdout.log \
+  2>> $LOG_DIR/kubelet-master.stderr.log
 }
 
 stop_kubelet() {
@@ -105,7 +106,7 @@ case $1 in
     send_process_stdout_to_logfile
     send_process_stderr_to_logfile
 
-    pid_guard "$PIDFILE" "Kubelet"
+    pid_guard "$PIDFILE" "Kubelet Master"
 
     echo $$ > $PIDFILE
     start_kubelet

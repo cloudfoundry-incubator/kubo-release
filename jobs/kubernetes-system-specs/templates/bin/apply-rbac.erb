@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+set -e
+[ -z "$DEBUG" ] || set -x
+
+spec_dir="/var/vcap/jobs/kubernetes-system-specs/config/"
+kubectl="/var/vcap/packages/kubernetes/bin/kubectl --token '<%= p('admin-password') %>'"
+
+until ${kubectl} apply -f "${spec_dir}/rbac_policy.yml"; do
+ sleep 2
+done
+

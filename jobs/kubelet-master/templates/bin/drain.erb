@@ -1,0 +1,77 @@
+#!/usr/bin/env bash
+
+[ -z "$DEBUG" ] || set -x
+
+set -eu
+
+export PATH=/var/vcap/packages/kubernetes/bin:$PATH
+
+NAME="${0##*/}"
+LOG_DIR=/var/vcap/sys/log/kubelet-master
+PIDFILE=/var/vcap/sys/run/kubelet-master/kubelet-master.pid
+
+exit_code=1
+trap ensure_safe_exit EXIT
+
+main() {
+  send_process_stdout_to_logfile_and_syslog
+  send_process_stderr_to_logfile_and_syslog
+  check_if_pidfile_exists
+  check_if_pid_is_running
+  drain_kubelet
+  exit_with_code 0
+}
+
+exit_with_code() {
+  exit_code=$1
+  exit
+}
+
+ensure_safe_exit() {
+  exec 1>&3 2>&4
+  echo $exit_code
+  exit $exit_code
+}
+
+send_process_stdout_to_logfile_and_syslog() {
+  exec 3>&1
+  exec 1>> "$LOG_DIR/$NAME.stdout.log"
+}
+
+send_process_stderr_to_logfile_and_syslog() {
+  exec 4>&2
+  exec 2>> "$LOG_DIR/$NAME.stderr.log"
+}
+
+check_if_pid_is_running() {
+  local pid
+  pid=$(head -1 "$PIDFILE")
+  if ! pid_is_running? "${pid}"; then
+    echo "$(date) -- Process from pidfile not running, so not attempting to drain."
+    exit_with_code 0
+  fi
+}
+
+pid_is_running?() {
+  declare pid="$1"
+  ps -p "${pid}" >/dev/null 2>&1
+}
+
+check_if_pidfile_exists() {
+  if [ ! -e $PIDFILE ]; then
+    echo "$(date) -- Pidfile not found, so not attempting to drain."
+    exit_with_code 0
+  fi
+}
+
+drain_kubelet() {
+  local node_name=$(kubectl --kubeconfig /var/vcap/jobs/kubelet-master/config/kubeconfig get nodes -o wide -L spec.ip | grep "<%= spec.ip %>" | awk '{print $1}')
+  kubectl --kubeconfig /var/vcap/jobs/kubelet-master/config/kubeconfig drain "${node_name}" --grace-period 10 --force --delete-local-data  --ignore-daemonsets
+}
+
+kill_node() {
+  kill -9 $(head -1 "$PIDFILE")
+  rm -f $PIDFILE
+}
+
+main

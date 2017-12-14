@@ -1,0 +1,73 @@
+---
+name: kubelet-master
+
+templates:
+  bin/drain.erb: bin/drain
+  bin/ensure_kubelet_up_and_running.erb: bin/ensure_kubelet_up_and_running
+  bin/kubelet_ctl.erb: bin/kubelet_ctl
+  bin/post-start.erb: bin/post-start
+  bin/pre-start.erb: bin/pre-start
+  config/authorization_policy.jsonl.erb: config/authorization_policy.jsonl
+  config/ca.pem.erb: config/ca.pem
+  config/kubeconfig.erb: config/kubeconfig
+  config/kubeconfig-scheduler.erb: config/kubeconfig-scheduler
+  config/kubernetes-key.pem.erb: config/kubernetes-key.pem
+  config/kubernetes.pem.erb: config/kubernetes.pem
+  config/tokens.csv.erb: config/tokens.csv
+  manifests/kube-apiserver.yaml.erb: manifests/kube-apiserver.yaml
+  manifests/kube-controller-manager.yaml.erb: manifests/kube-controller-manager.yaml
+  manifests/kube-scheduler.yaml.erb: manifests/kube-scheduler.yaml
+
+packages:
+- cni
+- govc
+- kubernetes
+- pid_utils
+- socat
+
+properties:
+  admin-username:
+    description: The admin username for the Kubernetes cluster
+  admin-password:
+    description: The password for the admin account
+  authorization-mode:
+    description: The authorization mode for kubernetes-api. Should be 'abac' or 'rbac'
+    default: rbac
+  backend_port:
+    example: 80
+    default: 1234
+  kubelet-password:
+    description: The password for the kubelet user
+  kube-proxy-password:
+    description: The password for the kube-proxy user
+  kube-scheduler-password:
+    description: The password for the kube-scheduler user
+  labels:
+    description: Labels to give node
+    default: {}
+    example:
+      node-type: router
+      gpu: true
+  port:
+    example: 81
+    default: 1235
+  route-sync-password:
+    description: The password for the route-sync user
+  tls.kubernetes.ca:
+    description: "CA Certificate for the Kubernetes master"
+  tls.kubernetes.certificate:
+    description: "Certificate for the Kubernetes master"
+  tls.kubernetes.private_key:
+      description: "Private key for the Kubernetes master"
+
+consumes:
+- name: kubelet-master
+  type: kubelet-master
+- name: etcd
+  type: etcd_service
+- name: cloud-provider
+  type: cloud-provider
+
+provides:
+- name: kubelet-master
+  type: kubelet-master

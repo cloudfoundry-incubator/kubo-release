@@ -1,0 +1,64 @@
+#!/bin/bash
+
+set -exu -o pipefail
+
+CONF_DIR=/var/vcap/jobs/kubelet-master/config
+PKG_DIR=/var/vcap/packages/kubernetes
+
+get_cloud_property() {
+  local property_name="${1}="
+  local prefix_length=$(echo "${property_name}" | wc -c | tr -d ' ')
+  grep "${property_name}" "${cloud_config}" | tr -d '"' | cut -c${prefix_length}-
+}
+
+detect_cloud_config() {
+  if [ -e /var/vcap/jobs/cloud-provider/bin/cloud-provider_utils ]; then
+    source /var/vcap/jobs/cloud-provider/bin/cloud-provider_utils
+    set_cloud_provider
+    cloud_config="/var/vcap/jobs/cloud-provider/config/cloud-provider.ini"
+  else
+    cloud_config=""
+    cloud_provider=""
+  fi
+}
+
+shutdown_rpcbind_if_its_running() {
+  /etc/init.d/rpcbind stop || echo Already stopped.
+}
+
+update_vsphere_vms() {
+   export GOVC_URL="$(get_cloud_property "server"):$(get_cloud_property "port")"
+   export GOVC_USERNAME="$(get_cloud_property "user")"
+   export GOVC_PASSWORD="$(get_cloud_property "password")"
+   export GOVC_INSECURE="$(get_cloud_property "insecure-flag")"
+
+   # how to get the vm uuid and why we need this is described in https://kubernetes.io/docs/getting-started-guides/vsphere/#enable-vsphere-cloud-provider
+   local vm_uuid=$(cat /sys/class/dmi/id/product_serial | sed -e 's/^VMware-//' -e 's/-/ /' | awk '{ print tolower($1$2$3$4 "-" $5$6 "-" $7$8 "-" $9$10 "-" $11$12$13$14$15$16) }')
+   /var/vcap/packages/govc/bin/govc vm.change -e 'disk.enableUUID=1' -vm.uuid=$vm_uuid
+}
+
+# Touch logfiles so that Docker mounts a file instead of a dir
+touch_log_files() {
+    mkdir -p /var/vcap/sys/log/kubernetes-api/
+    touch /var/vcap/sys/log/kubernetes-api/kubernetes_api.stderr.log
+    touch /var/vcap/sys/log/kubernetes-api/kubernetes_api.stdout.log
+
+    mkdir -p /var/vcap/sys/log/kubernetes-controller-manager/
+    touch /var/vcap/sys/log/kubernetes-controller-manager/kubernetes_controller_manager.stderr.log
+    touch /var/vcap/sys/log/kubernetes-controller-manager/kubernetes_controller_manager.stdout.log
+
+    mkdir -p /var/vcap/sys/log/kubernetes-scheduler
+    touch /var/vcap/sys/log/kubernetes-scheduler/kubernetes_scheduler.stderr.log
+    touch /var/vcap/sys/log/kubernetes-scheduler/kubernetes_scheduler.stdout.log
+}
+
+main() {
+  detect_cloud_config
+  shutdown_rpcbind_if_its_running
+  if [[ "vsphere" == "$cloud_provider" ]]; then
+       update_vsphere_vms
+  fi
+  touch_log_files
+}
+
+main

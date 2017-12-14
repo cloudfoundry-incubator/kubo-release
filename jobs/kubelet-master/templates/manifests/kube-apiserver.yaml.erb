@@ -1,0 +1,138 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: kube-apiserver
+  namespace: kube-system
+spec:
+  hostNetwork: true
+  containers:
+  - name: kube-apiserver
+    image: gcr.io/google_containers/kube-apiserver:v1.8.4
+    command:
+    - /bin/sh
+    - -c
+    - |
+      /usr/local/bin/kube-apiserver \
+      --admission-control=NamespaceLifecycle,LimitRanger,SecurityContextDeny,ServiceAccount,ResourceQuota,NodeRestriction \
+      --allow-privileged=True \
+      --apiserver-count=<%= link("kubelet-master").instances.size %> \
+      --bind-address=0.0.0.0 \
+      --cloud-provider=<%=  link("cloud-provider").p("cloud-provider.type") %> \
+      --cloud-config=/srv/cloudprovider/config/cloud-provider.ini \
+      --enable-aggregator-routing=true \
+      --enable-swagger-ui=true \
+      --etcd-servers=<%= link("etcd").instances.map { |instance| "http://#{instance.address}:4001" }.join(',') %> \
+      <% if_p("cloud-provider.gce.service_key") do -%>
+      --google-json-key=/srv/cloudprovider/config/service_account.json \
+      <% end -%>
+      --insecure-bind-address=127.0.0.1 \
+      --insecure-port=8080 \
+      --kubelet-https=true \
+      --secure-port=8443 \
+      --service-account-key-file=/srv/kubernetes/config/kubernetes-key.pem \
+      --service-account-lookup \
+      --service-cluster-ip-range=10.100.200.0/24 \
+      --service-node-port-range=30000-32767 \
+      --tls-cert-file=/srv/kubernetes/config/kubernetes.pem \
+      --tls-private-key-file=/srv/kubernetes/config/kubernetes-key.pem \
+      --token-auth-file=/srv/kubernetes/config/tokens.csv \
+      --storage-media-type=application/json \
+      --v=2 \
+      <% if p("authorization-mode") == 'rbac' -%>
+      --authorization-mode=RBAC \
+      --runtime-config=api/v1,rbac.authorization.k8s.io/v1alpha1 \
+      --client-ca-file=/srv/kubernetes/config/kubernetes.pem \
+      --proxy-client-cert-file=/srv/kubernetes/config/kubernetes.pem \
+      --proxy-client-key-file=/srv/kubernetes/config/kubernetes-key.pem \
+      --requestheader-allowed-names=aggregator \
+      --requestheader-client-ca-file=/srv/kubernetes/config/kubernetes.pem \
+      --requestheader-extra-headers-prefix=X-Remote-Extra- \
+      --requestheader-group-headers=X-Remote-Group \
+      --requestheader-username-headers=X-Remote-User \
+      <% else -%>
+      --authorization-mode=ABAC \
+      --authorization-policy-file=/srv/kubernetes/config/authorization_policy.jsonl \
+      <% end -%>
+      1>>/var/log/kubernetes_api.stdout.log \
+      2>>/var/log/kubernetes_api.stderr.log
+    ports:
+    - containerPort: 8443
+      hostPort: 8443
+      name: https
+    - containerPort: 7080
+      hostPort: 7080
+      name: http
+    - containerPort: 8080
+      hostPort: 8080
+      name: local
+    volumeMounts:
+    - mountPath: /srv/kubernetes
+      name: srvkube
+      readOnly: true
+    - mountPath: /var/log/kubernetes_api.stdout.log
+      name: stdoutlogfile
+    - mountPath: /var/log/kubernetes_api.stderr.log
+      name: stderrlogfile
+    - mountPath: /srv/cloudprovider
+      name: cloudprovider
+    - mountPath: /etc/ssl
+      name: etcssl
+      readOnly: true
+    - mountPath: /usr/share/ssl
+      name: usrsharessl
+      readOnly: true
+    - mountPath: /var/ssl
+      name: varssl
+      readOnly: true
+    - mountPath: /usr/ssl
+      name: usrssl
+      readOnly: true
+    - mountPath: /usr/lib/ssl
+      name: usrlibssl
+      readOnly: true
+    - mountPath: /usr/local/openssl
+      name: usrlocalopenssl
+      readOnly: true
+    - mountPath: /etc/openssl
+      name: etcopenssl
+      readOnly: true
+    - mountPath: /etc/pki/tls
+      name: etcpkitls
+      readOnly: true
+  volumes:
+  - hostPath:
+      path: /var/vcap/jobs/kubelet-master
+    name: srvkube
+  - hostPath:
+      path: /var/vcap/sys/log/kubernetes-api/kubernetes_api.stdout.log
+    name: stdoutlogfile
+  - hostPath:
+      path: /var/vcap/sys/log/kubernetes-api/kubernetes_api.stderr.log
+    name: stderrlogfile
+  - hostPath:
+      path: /var/vcap/jobs/cloud-provider/
+    name: cloudprovider
+  - hostPath:
+      path: /etc/ssl
+    name: etcssl
+  - hostPath:
+      path: /usr/share/ssl
+    name: usrsharessl
+  - hostPath:
+      path: /var/ssl
+    name: varssl
+  - hostPath:
+      path: /usr/ssl
+    name: usrssl
+  - hostPath:
+      path: /usr/lib/ssl
+    name: usrlibssl
+  - hostPath:
+      path: /usr/local/openssl
+    name: usrlocalopenssl
+  - hostPath:
+      path: /etc/openssl
+    name: etcopenssl
+  - hostPath:
+      path: /etc/pki/tls
+    name: etcpkitls

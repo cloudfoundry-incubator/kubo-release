@@ -1,18 +1,18 @@
 #!/usr/bin/env bash
 
 set -e
-
-main() {
-  local spec_dir="/var/vcap/jobs/kubernetes-system-specs/config/"
-  local kubectl="/var/vcap/packages/kubernetes/bin/kubectl --token '<%= p('admin-password') %>'"
-
-  ${kubectl} apply -f "${spec_dir}/rbac_policy.yml"
-}
+set -x
 
 echo 'Authorization mode is <%= p('authorization-mode') %>'
 <% if p('authorization-mode').downcase == 'rbac' %>
 echo 'Applying the RBAC policy'
-main
+TIMEOUT=120
+if timeout "$TIMEOUT" /var/vcap/jobs/kubernetes-system-specs/bin/apply-rbac; then
+  echo "Applied the RBAC policy"
+else
+  echo "Failed to apply the RBAC policy after $TIMEOUT with exit code $?"
+  exit 1
+fi
 <% else %>
 echo 'Not applying the RBAC policy.'
 <% end %>

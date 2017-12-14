@@ -1,0 +1,42 @@
+#!/bin/bash -e
+
+[ -z "$DEBUG" ] || set -x
+set -x
+
+kubectl="/var/vcap/packages/kubernetes/bin/kubectl --token '<%= p('admin-password') %>'"
+
+DOCKER_SOCKET=unix:///var/vcap/sys/run/docker/docker.sock
+CONTAINER_IMAGE_DIR=/var/vcap/packages/kubernetes/container-images
+
+load_container() {
+    path=$1
+
+    echo "loading cached container: ${path}"
+    if sudo /var/vcap/jobs/kubelet-master/packages/docker/bin/docker -H ${DOCKER_SOCKET} load < "${path}"; then
+      echo "successfully loaded container: ${path}"
+    else
+      echo "failed to load container: ${path}"
+      exit 1
+    fi
+}
+
+load_cached_containers() {
+    for img in ${CONTAINER_IMAGE_DIR}/*.tgz; do
+        load_container ${img}
+    done
+}
+
+load_cached_containers
+
+TIMEOUT=120
+
+if timeout "$TIMEOUT" /var/vcap/jobs/kubelet-master/bin/ensure_kubelet_up_and_running
+then
+  node_name=$($kubectl get nodes -o wide -L spec.ip | grep "<%= spec.ip %>$" | awk '{print $1}')
+  ${kubectl} uncordon ${node_name}
+  ${kubectl} get nodes ${node_name} | grep -e ' Ready '
+  echo "kubelet post-start checks succeeded"
+else
+  echo "kubelet failed post-start checks after $TIMEOUT seconds"
+  exit 1
+fi

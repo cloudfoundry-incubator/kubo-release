@@ -1,0 +1,6 @@
+check process kubelet-master
+  with pidfile /var/vcap/sys/run/kubelet-master/kubelet-master.pid
+  start program "/var/vcap/jobs/kubelet-master/bin/kubelet_ctl start"
+  stop program "/var/vcap/jobs/kubelet-master/bin/kubelet_ctl stop"
+  group vcap
+  depends on docker

@@ -5,5 +5,5 @@ templates:
   dns/aliases.json.erb: dns/aliases.json
 
 consumes:
-- name: kubernetes-api
-  type: kubernetes-api
+- name: kubelet-master
+  type: kubelet-master

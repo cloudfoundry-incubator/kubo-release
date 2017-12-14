@@ -4,6 +4,7 @@ name: kubernetes-system-specs
 templates:
   bin/post-deploy: bin/post-deploy
   bin/post-start.erb: bin/post-start
+  bin/apply-rbac.erb: bin/apply-rbac
   bin/deploy-specs.erb: bin/deploy-specs
   config/kubedns-svc.yml: config/kubedns-svc.yml
   config/kubedns-controller.yml.erb: config/kubedns-controller.yml
@@ -20,8 +21,8 @@ packages:
 - kubernetes
 
 consumes:
-- name: kubernetes-api
-  type: kubernetes-api
+- name: kubelet-master
+  type: kubelet-master
 - name: cloud-provider
   type: cloud-provider
   optional: true

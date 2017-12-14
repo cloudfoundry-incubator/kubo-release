@@ -1,0 +1,45 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: kube-scheduler
+  namespace: kube-system
+spec:
+  hostNetwork: true
+  containers:
+  - name: kube-scheduler
+    image: gcr.io/google_containers/kube-scheduler:v1.8.4
+    command:
+    - /bin/sh
+    - -c
+    - |
+      /usr/local/bin/kube-scheduler \
+      --kubeconfig=/srv/kubernetes/config/kubeconfig-scheduler \
+      --leader-elect=true \
+      --master=127.0.0.1:8080 \
+      --v=2 \
+      1>>/var/log/kubernetes_scheduler.stdout.log \
+      2>>/var/log/kubernetes_scheduler.stderr.log
+    livenessProbe:
+      httpGet:
+        path: /healthz
+        port: 10251
+      initialDelaySeconds: 15
+      timeoutSeconds: 1
+    volumeMounts:
+    - mountPath: /srv/kubernetes
+      name: srvkube
+      readOnly: true
+    - mountPath: /var/log/kubernetes_scheduler.stdout.log
+      name: stdoutlogfile
+    - mountPath: /var/log/kubernetes_scheduler.stderr.log
+      name: stderrlogfile
+  volumes:
+  - hostPath:
+      path: /var/vcap/jobs/kubelet-master
+    name: srvkube
+  - hostPath:
+      path: /var/vcap/sys/log/kubernetes-scheduler/kubernetes_scheduler.stdout.log
+    name: stdoutlogfile
+  - hostPath:
+      path: /var/vcap/sys/log/kubernetes-scheduler/kubernetes_scheduler.stderr.log
+    name: stderrlogfile
