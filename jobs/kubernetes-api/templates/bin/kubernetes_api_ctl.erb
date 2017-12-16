@@ -69,6 +69,7 @@ start_kubernetes_api_server() {
       --cloud-provider=${cloud_provider} \
       --cloud-config="${cloud_config}" \
       --enable-swagger-ui=true \
+      --etcd-quorum-read=true \
       --etcd-servers=<%= etcd_endpoints %> \
       --etcd-cafile=/var/vcap/jobs/kubernetes-api/config/etcd-ca.crt \
       --etcd-certfile=/var/vcap/jobs/kubernetes-api/config/etcd-client.crt \
