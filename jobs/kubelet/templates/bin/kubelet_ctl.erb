@@ -47,6 +47,7 @@ start_kubelet() {
   ln -s -f /var/vcap/jobs/kubelet/packages/cni/bin/nsenter /usr/bin/nsenter
 
   if [ "gce" == "$cloud_provider" ]; then
+    # The hostname needs to be set to the instance name so the gce cloud provider can manage the instance
     hostname_override=$(curl http://metadata.google.internal/computeMetadata/v1/instance/name -H "Metadata-Flavor: Google")
   else
     hostname_override=<%= spec.ip %>
@@ -82,7 +83,6 @@ export NO_PROXY=<%= no_proxy %>
     <% if_p('kube-reserved') do |kube_reserved| %>--kube-reserved="<%= kube_reserved %>"<% end %> \
     <% if_p('system-reserved') do |system_reserved| %>--system-reserved="<%= system_reserved %>"<% end %> \
     <% if_p('eviction-hard') do |eviction_hard| %>--eviction-hard="<%= eviction_hard %>"<% end %> \
-    --require-kubeconfig=true \
     --v=2 \
     --node-labels=spec.ip=<%= spec.ip %><%= labels %> \
   1>> $LOG_DIR/kubelet.stdout.log \

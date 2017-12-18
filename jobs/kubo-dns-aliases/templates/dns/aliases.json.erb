@@ -5,8 +5,22 @@ def wildcard_name(name)
   name.split('.').collect!.with_index {|s, i| (i == 0) ? '*' : s}.join('.')
 end
 
+def node_name(instance)
+  # As specified in kubo-etcd https://github.com/pivotal-cf-experimental/kubo-etcd/blob/8cc5af9c47e15b6c9eebb0712b0fa50a8c700241/src/etcdfab/config/config.go#L106-L111
+  "#{instance.name.gsub('_','-')}-#{instance.index}"
+end
+
 master_node_dns = link('kubernetes-api').address
 aliases = { 'master.kubo' => [ wildcard_name(master_node_dns) ] }
+
+etcd_advertise_urls_dns_suffix = link('etcd').p('etcd.advertise_urls_dns_suffix')
+etcd_addresses = link('etcd').instances.map { |instance| instance.address }
+aliases.merge!({ etcd_advertise_urls_dns_suffix => etcd_addresses })
+
+link('etcd').instances.each do |instance|
+  etcd_alias = "#{node_name(instance)}.#{etcd_advertise_urls_dns_suffix}"
+  aliases.merge!({ etcd_alias => [instance.address] })
+end
 
 JSON.dump(aliases)
 %>

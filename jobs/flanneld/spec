@@ -3,6 +3,9 @@ name: flanneld
 
 templates:
   bin/flanneld_ctl.erb: bin/flanneld_ctl
+  config/etcd-ca.crt.erb: config/etcd-ca.crt
+  config/etcd-client.crt.erb: config/etcd-client.crt
+  config/etcd-client.key.erb: config/etcd-client.key
 
 packages:
 - pid_utils

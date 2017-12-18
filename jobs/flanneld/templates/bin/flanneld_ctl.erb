@@ -27,20 +27,32 @@ send_process_stderr_to_logfile() {
 start_flanneld() {
   <%
     etcd_endpoints = link("etcd").instances.map do |instance|
-      "http://#{instance.address}:4001/"
+      # See kubo-dns-aliases/dns/aliases.json
+      node_name = "#{instance.name.gsub('_','-')}-#{instance.index}"
+      etcd_advertise_urls_dns_suffix = link('etcd').p('etcd.advertise_urls_dns_suffix')
+      "https://#{node_name}.#{etcd_advertise_urls_dns_suffix}:4001"
     end.join(',')
   %>
-  
+
   modprobe br_netfilter
-  
+
   mkdir -p /dev/net
   mknod /dev/net/tun c 10 200 || true
   echo 1 > /proc/sys/net/ipv4/ip_forward
   mkdir -p /etc/cni/net.d
   echo '{"name":"flannel-network","type":"flannel","delegate":{"isDefaultGateway": true}}' > /etc/cni/net.d/10-flannel.conf
 
-  /var/vcap/packages/etcdctl/etcdctl --endpoints <%= etcd_endpoints %> set /coreos.com/network/config '{"Network":"10.200.0.0/16","Backend":{"Type":"vxlan"}}'
-  flanneld -etcd-endpoints="<%= etcd_endpoints %>" \
+  /var/vcap/packages/etcdctl/etcdctl \
+    --endpoints <%= etcd_endpoints %> \
+    --cert-file /var/vcap/jobs/flanneld/config/etcd-client.crt \
+    --key-file /var/vcap/jobs/flanneld/config/etcd-client.key \
+    --ca-file /var/vcap/jobs/flanneld/config/etcd-ca.crt \
+    set /coreos.com/network/config '{"Network":"10.200.0.0/16","Backend":{"Type":"vxlan"}}'
+
+  flanneld -etcd-endpoints=<%= etcd_endpoints %> \
+    --etcd-certfile=/var/vcap/jobs/flanneld/config/etcd-client.crt \
+    --etcd-keyfile=/var/vcap/jobs/flanneld/config/etcd-client.key \
+    --etcd-cafile=/var/vcap/jobs/flanneld/config/etcd-ca.crt \
     1>> $LOG_DIR/flanneld.stdout.log \
     2>> $LOG_DIR/flanneld.stderr.log
 }
