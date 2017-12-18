@@ -45,16 +45,50 @@ describe 'cloud-provider-ini' do
     end
 
     it 'renders the correct template for vsphere' do
-      expect(rendered_template).to include('user=fake-user')
-      expect(rendered_template).to include('password=fake-password')
-      expect(rendered_template).to include('server=fake-server')
-      expect(rendered_template).to include('port=fake-port')
-      expect(rendered_template).to include('insecure-flag=fake-insecure-flag')
-      expect(rendered_template).to include('datacenter=fake-datacenter')
-      expect(rendered_template).to include('datastore=fake-datastore')
-      expect(rendered_template).to include('working-dir=fake-working-dir')
-      expect(rendered_template).to include('vm-uuid=fake-vm-uuid')
-      expect(rendered_template).to include('scsicontrollertype=fake-scsicontrollertype')
+      vsphere_config.each { |k,v| expect(rendered_template).to include("#{k}=#{v}") }
+    end
+  end
+
+  context 'if cloud provider is openstack' do
+    let(:properties) { {'cloud-provider' => { 'type' => 'openstack', 'openstack' => openstack_config }} }
+    let(:required_openstack_config) { { 'auth-url' => 'fake-url', 'username' => 'fake-username', 'password' => 'fake-password', 'tenant-id' => 'fake-tenant-id' } }
+    let(:optional_openstack_config) do
+      {
+         'tenant-name' => 'fake-tenant-name',
+         'trust-id' => 'fake-trust-id',
+         'domain-id' => 'fake-domain-id',
+         'domain-name' => 'fake-domain-name',
+         'region' => 'fake-region',
+         'ca-file' => 'fake-ca-file'
+      }
+    end
+
+    context 'required properties' do
+      let(:openstack_config) { required_openstack_config }
+      it 'renders the correct template for openstack' do
+        openstack_config.each { |k,v| expect(rendered_template).to include("#{k}=#{v}") }
+        optional_openstack_config.each { |k,v| expect(rendered_template).to_not include("#{k}=#{v}") }
+      end
+
+      context 'error handling' do
+        let(:openstack_config) { required_openstack_config.delete 'auth-url' }
+        it 'errors if a required property is not specified' do
+          expect{rendered_template}.to raise_error(Bosh::Template::UnknownProperty, /Can't find property/ )
+        end
+      end
+    end
+
+    context 'optional properties' do
+      let(:openstack_config) { required_openstack_config.merge optional_openstack_config }
+      it 'renders the correct template for openstack' do
+        openstack_config.each { |k,v| expect(rendered_template).to include("#{k}=#{v}") }
+      end
+
+      context 'error handling' do
+        it 'does not error if an optional property is not specified' do
+          expect{rendered_template}.to_not raise_error
+        end
+      end
     end
   end
 end

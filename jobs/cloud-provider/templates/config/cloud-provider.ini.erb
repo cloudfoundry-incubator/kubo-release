@@ -14,7 +14,7 @@
       if_p('cloud-provider.gce.worker-node-tag') { |tag| cloud_config['node-tags'] = tag  }
     elsif provider_type == 'vsphere'
       cloud_config_string = "[Global]\n"
-      cloud_config['user'] = p('cloud-provider.vsphere.user').gsub('\\','\\\\\\') 
+      cloud_config['user'] = p('cloud-provider.vsphere.user').gsub('\\','\\\\\\')
       cloud_config['password'] = p('cloud-provider.vsphere.password')
       cloud_config['server'] = p('cloud-provider.vsphere.server')
       cloud_config['port'] = p('cloud-provider.vsphere.port')
@@ -26,6 +26,18 @@
 
       disk_config_string="[Disk]\n"
       disk_config['scsicontrollertype'] = p('cloud-provider.vsphere.scsicontrollertype')
+    elsif provider_type == 'openstack'
+      cloud_config_string = "[Global]\n"
+      cloud_config['auth-url'] = p('cloud-provider.openstack.auth-url')
+      cloud_config['username'] = p('cloud-provider.openstack.username')
+      cloud_config['password'] = p('cloud-provider.openstack.password')
+      cloud_config['tenant-id'] = p('cloud-provider.openstack.tenant-id')
+      cloud_config['tenant-name'] = p('cloud-provider.openstack.tenant-name')
+      cloud_config['trust-id'] = p('cloud-provider.openstack.trust-id')
+      cloud_config['domain-id'] = p('cloud-provider.openstack.domain-id')
+      cloud_config['domain-name'] = p('cloud-provider.openstack.domain-name')
+      cloud_config['region'] = p('cloud-provider.openstack.region')
+      cloud_config['ca-file'] = p('cloud-provider.openstack.ca-file')
     end
 
     cloud_config.each { |key, prop| cloud_config_string = cloud_config_string + "#{key}=#{prop}\n" }

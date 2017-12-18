@@ -54,3 +54,31 @@ properties:
   cloud-provider.vsphere.scsicontrollertype:
     description: vSphere vSCSI adapter type name
     default: pvscsi
+
+  # OpenStack specific properties
+  cloud-provider.openstack.auth-url:
+    description: The URL of the keystone API used to authenticate.
+  cloud-provider.openstack.username:
+    description: Refers to the username of a valid user set in keystone.
+  cloud-provider.openstack.password:
+    description: Refers to the password of a valid user set in keystone.
+  cloud-provider.openstack.tenant-id:
+    description: Used to specify the id of the project where you want to create your resources.
+  cloud-provider.openstack.tenant-name:
+    description: Used to specify the name of the project where you want to create your resources (Optional).
+    default: ''
+  cloud-provider.openstack.trust-id:
+    description: Used to specify the identifier of the trust to use for authorization (Optional).
+    default: ''
+  cloud-provider.openstack.domain-id:
+    description: Used to specify the id of the domain your user belongs to (Optional).
+    default: ''
+  cloud-provider.openstack.domain-name:
+    description: Used to specify the name of the domain your user belongs to (Optional).
+    default: ''
+  cloud-provider.openstack.region:
+    description: Used to specify the identifier of the region to use when running on a multi-region OpenStack cloud (Optional).
+    default: ''
+  cloud-provider.openstack.ca-file:
+    description: CA file to connect to your OpenStack cluster (Optional).
+    default: ''
