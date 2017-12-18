@@ -41,7 +41,6 @@ start_kubernetes_api_server() {
     etcd_advertise_urls_dns_suffix = link('etcd').p('etcd.advertise_urls_dns_suffix')
     "https://#{node_name}.#{etcd_advertise_urls_dns_suffix}:4001"
   end.join(',')
-  api_server_count = link("kubernetes-api").instances.size
   authorization_mode = p('authorization-mode').downcase
 
   authorization_flags = if authorization_mode == 'abac'
@@ -63,7 +62,6 @@ start_kubernetes_api_server() {
     kube-apiserver \
       --admission-control=NamespaceLifecycle,NamespaceExists,ServiceAccount,LimitRanger,ResourceQuota \
       --allow-privileged=true \
-      --apiserver-count=<%= api_server_count %> \
       <%= authorization_flags %>     --bind-address=0.0.0.0 \
       --cert-dir=/var/vcap/sys/run/kubernetes/ \
       --cloud-provider=${cloud_provider} \
