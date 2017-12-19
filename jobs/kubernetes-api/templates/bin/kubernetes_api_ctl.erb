@@ -61,7 +61,7 @@ start_kubernetes_api_server() {
 
   exec chpst -u vcap:vcap  \
     kube-apiserver \
-      --admission-control=NamespaceLifecycle,NamespaceExists,ServiceAccount,LimitRanger,ResourceQuota \
+      --admission-control=DenyEscalatingExec,LimitRanger,NamespaceExists,NamespaceLifecycle,ResourceQuota,ServiceAccount \
       --anonymous-auth=false \
       --allow-privileged=true \
       --apiserver-count=<%= api_server_count %> \
