@@ -2,6 +2,7 @@
 name: kubernetes-system-specs
 
 templates:
+  bin/apply_rbac.erb: bin/apply_rbac
   bin/post-deploy: bin/post-deploy
   bin/post-start.erb: bin/post-start
   bin/deploy-specs.erb: bin/deploy-specs
