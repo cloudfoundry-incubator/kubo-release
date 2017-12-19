@@ -76,6 +76,19 @@ start_kubernetes_api_server() {
       --etcd-keyfile=/var/vcap/jobs/kubernetes-api/config/etcd-client.key \
       --insecure-bind-address=127.0.0.1 \
       --kubelet-https=true \
+      <% if_p("oidc-issuer-url", "oidc-client-id") do |oidc_issuer_url, oidc_client_id| %> \
+      --oidc-issuer-url="<%= oidc_issuer_url %>" \
+      --oidc-client-id="<%= oidc_client_id %>" \
+      <% if_p("oidc-username-claim") do |oidc_username_claim| %> \
+      --oidc-username-claim="<%= oidc_username_claim %>" \
+      <% end %> \
+      <% if_p("oidc-groups-claim") do |oidc_groups_claim| %> \
+      --oidc-groups-claim="<%= oidc_groups_claim %>" \
+      <% end %> \
+      <% if_p("oidc-ca") do %> \
+      --oidc-ca-file="/var/vcap/jobs/kubernetes-api/config/oidc-ca.pem" \
+      <% end %> \
+      <% end %> \
       --secure-port=8443 \
       --service-account-key-file=/var/vcap/jobs/kubernetes-api/config/kubernetes-key.pem \
       --service-account-lookup \
