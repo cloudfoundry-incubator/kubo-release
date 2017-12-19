@@ -49,6 +49,12 @@ properties:
   eviction-hard:
     description: Node eviction thresholds
     example: "memory.available<500Mi,nodefs.available<10%"
+  http_proxy:
+    description: http_proxy env var for cloud provider interactions, i.e. for the kubelet and govc binary
+  no_proxy:
+    description: no_proxy env var for cloud provider interactions, i.e. for the kubelet and govc binary
+  kubelet-password:
+    description: The password for the kubelet user
   api-token:
       description: The token to access Kubernetes API
 
