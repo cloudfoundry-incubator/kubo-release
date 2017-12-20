@@ -24,8 +24,10 @@ properties:
     description: The password for the kubelet user
   kube-proxy-password:
     description: The password for the kube-proxy user
+  kube-controller-manager-password:
+    description: The password for the system:kube-controller-manager user
   kube-scheduler-password:
-    description: The password for the kube-scheduler user
+    description: The password for the system:kube-scheduler user
   route-sync-password:
     description: The password for the route-sync user
   tls.kubernetes.ca:

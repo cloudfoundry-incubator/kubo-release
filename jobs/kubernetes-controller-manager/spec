@@ -4,11 +4,14 @@ name: kubernetes-controller-manager
 templates:
   bin/kubernetes_controller_manager_ctl: bin/kubernetes_controller_manager_ctl
   config/ca.pem.erb: config/ca.pem
+  config/kubeconfig.erb: config/kubeconfig
 
 packages:
 - pid_utils
 - kubernetes
 
 properties:
+  api-token:
+    description: "API Token for the system:kube-controller-manager user"
   tls.kubernetes:
     description: "Certificate and private key for the Kubernetes master"

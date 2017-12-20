@@ -42,12 +42,12 @@ start_kubernetes_controller_manager() {
   exec chpst -u vcap:vcap  \
     kube-controller-manager \
       --allocate-node-cidrs=true \
-      --cloud-provider=${cloud_provider} \
       --cloud-config="${cloud_config}" \
+      --cloud-provider=${cloud_provider} \
       --cluster-cidr=10.200.0.0/16 \
       --cluster-name=kubernetes \
+      --kubeconfig="/var/vcap/jobs/kubernetes-controller-manager/config/kubeconfig" \
       --leader-elect=true \
-      --master=http://localhost:8080 \
       --root-ca-file=/var/vcap/jobs/kubernetes-controller-manager/config/ca.pem \
       --service-account-private-key-file=/var/vcap/jobs/kubernetes-api/config/kubernetes-key.pem \
       --service-cluster-ip-range=10.100.200.0/24 \
