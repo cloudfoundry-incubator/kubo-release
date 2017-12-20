@@ -78,7 +78,7 @@ start_kubernetes_api_server() {
       --kubelet-https=true \
       --secure-port=8443 \
       --service-account-key-file=/var/vcap/jobs/kubernetes-api/config/kubernetes-key.pem \
-      --service-account-lookup \
+      --service-account-lookup=true \
       --service-cluster-ip-range=10.100.200.0/24 \
       --service-node-port-range=30000-32767 \
       --tls-cert-file=/var/vcap/jobs/kubernetes-api/config/kubernetes.pem \
