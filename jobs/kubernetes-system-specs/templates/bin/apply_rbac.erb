@@ -3,9 +3,9 @@
 set -e
 [ -z "$DEBUG" ] || set -x
 
-spec_dir="/var/vcap/jobs/kubernetes-system-specs/config/"
-kubectl="/var/vcap/packages/kubernetes/bin/kubectl --token '<%= p('admin-password') %>'"
+config_dir="/var/vcap/jobs/kubernetes-system-specs/config/"
+kubectl="/var/vcap/packages/kubernetes/bin/kubectl --kubeconfig=${config_dir}/kubeconfig"
 
-until ${kubectl} apply -f "${spec_dir}/rbac_policy.yml"; do
+until ${kubectl} apply -f "${config_dir}/rbac_policy.yml"; do
  sleep 2
 done

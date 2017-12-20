@@ -3,6 +3,7 @@
 set -e
 
 echo 'Authorization mode is <%= p('authorization-mode') %>'
+
 <% if p('authorization-mode').downcase == 'rbac' %>
 echo 'Applying the RBAC policy'
 TIMEOUT=120
