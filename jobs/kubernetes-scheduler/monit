@@ -1,5 +1,0 @@
-check process kubernetes-scheduler
-  with pidfile /var/vcap/sys/run/kubernetes/kubernetes-scheduler.pid
-  start program "/var/vcap/jobs/kubernetes-scheduler/bin/kubernetes_scheduler_ctl start"
-  stop program "/var/vcap/jobs/kubernetes-scheduler/bin/kubernetes_scheduler_ctl stop"
-  group vcap

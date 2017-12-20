@@ -5,8 +5,8 @@ templates:
   dns/aliases.json.erb: dns/aliases.json
 
 consumes:
-- name: kubernetes-api
-  type: kubernetes-api
+- name: kube-apiserver
+  type: kube-apiserver
 - name: etcd
   type: etcd_service
 

@@ -1,5 +1,0 @@
-check process kubernetes-controller-manager
-  with pidfile /var/vcap/sys/run/kubernetes/kubernetes_controller_manager.pid
-  start program "/var/vcap/jobs/kubernetes-controller-manager/bin/kubernetes_controller_manager_ctl start"
-  stop program "/var/vcap/jobs/kubernetes-controller-manager/bin/kubernetes_controller_manager_ctl stop"
-  group vcap

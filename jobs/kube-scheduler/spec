@@ -1,0 +1,17 @@
+---
+name: kube-scheduler
+
+templates:
+  bin/kube_scheduler_ctl.erb: bin/kube_scheduler_ctl
+  config/kubeconfig.erb: config/kubeconfig
+  config/ca.pem.erb: config/ca.pem
+
+packages:
+- pid_utils
+- kubernetes
+
+properties:
+  api-token:
+    description: The token to access kubernetes API
+  tls.kubernetes:
+    description: "Certificate and private key for the Kubernetes master"

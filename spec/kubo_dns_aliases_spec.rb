@@ -4,7 +4,7 @@ require 'spec_helper'
 describe 'kubo-dns-aliases' do
   let(:link_spec) do
       {
-        'kubernetes-api' => {
+        'kube-apiserver' => {
           'address' => 'fake.kube-api-address',
           'instances' => []
         },

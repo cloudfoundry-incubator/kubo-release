@@ -21,15 +21,15 @@ packages:
 - kubernetes
 
 consumes:
-- name: kubernetes-api
-  type: kubernetes-api
+- name: kube-apiserver
+  type: kube-apiserver
 - name: cloud-provider
   type: cloud-provider
   optional: true
 
 properties:
   authorization-mode:
-    description: The authorization mode for kubernetes-api. Should be 'abac' or 'rbac'
+    description: The authorization mode for kube-apiserver. Should be 'abac' or 'rbac'
     default: rbac
   admin-username:
     description: The admin username for the Kubernetes cluster

@@ -16,5 +16,5 @@ properties:
     description: Spec of the addons to be deployed into the Kubernetes cluster
 
 consumes:
-- name: kubernetes-api
-  type: kubernetes-api
+- name: kube-apiserver
+  type: kube-apiserver
