@@ -66,7 +66,6 @@ start_kubernetes_api_server() {
       --allow-privileged=true \
       --apiserver-count=<%= api_server_count %> \
       <%= authorization_flags %>     --bind-address=0.0.0.0 \
-      --cert-dir=/var/vcap/sys/run/kubernetes/ \
       --cloud-provider=${cloud_provider} \
       --cloud-config="${cloud_config}" \
       --enable-swagger-ui=true \
@@ -74,7 +73,7 @@ start_kubernetes_api_server() {
       --etcd-cafile=/var/vcap/jobs/kubernetes-api/config/etcd-ca.crt \
       --etcd-certfile=/var/vcap/jobs/kubernetes-api/config/etcd-client.crt \
       --etcd-keyfile=/var/vcap/jobs/kubernetes-api/config/etcd-client.key \
-      --insecure-bind-address=127.0.0.1 \
+      --insecure-port=0 \
       --kubelet-https=true \
       --secure-port=8443 \
       --service-account-key-file=/var/vcap/jobs/kubernetes-api/config/kubernetes-key.pem \
