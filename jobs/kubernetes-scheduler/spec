@@ -4,6 +4,7 @@ name: kubernetes-scheduler
 templates:
   bin/kubernetes_scheduler_ctl: bin/kubernetes_scheduler_ctl
   config/kubeconfig.erb: config/kubeconfig
+  config/ca.pem.erb: config/ca.pem
 
 packages:
 - pid_utils
@@ -12,3 +13,5 @@ packages:
 properties:
   api-token:
     description: The token to access kubernetes API
+  tls.kubernetes:
+    description: "Certificate and private key for the Kubernetes master"
