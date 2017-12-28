@@ -38,10 +38,10 @@
       if_p('cloud-provider.openstack.domain-id') { cloud_config['domain-id'] = p('cloud-provider.openstack.domain-id') }
       if_p('cloud-provider.openstack.domain-name') { cloud_config['domain-name'] = p('cloud-provider.openstack.domain-name') }
 
-      disk_config_string="[Disk]\n"
-      if_p('cloud-provider.openstack.bs-version') { cloud_config['bs-version'] = p('cloud-provider.openstack.bs-version') }
-      if_p('cloud-provider.openstack.trust-device-path') { cloud_config['trust-device-path'] = p('cloud-provider.openstack.trust-device-path') }
-      if_p('cloud-provider.openstack.ignore-volume-az') { cloud_config['ignore-volume-az'] = p('cloud-provider.openstack.ignore-volume-az') }
+      disk_config_string="[BlockStorage]\n"
+      if_p('cloud-provider.openstack.bs-version') { disk_config['bs-version'] = p('cloud-provider.openstack.bs-version') }
+      if_p('cloud-provider.openstack.trust-device-path') { disk_config['trust-device-path'] = p('cloud-provider.openstack.trust-device-path') }
+      #if_p('cloud-provider.openstack.ignore-volume-az') { disk_config['ignore-volume-az'] = p('cloud-provider.openstack.ignore-volume-az') }
     end
 
     cloud_config.each { |key, prop| cloud_config_string = cloud_config_string + "#{key}=#{prop}\n" }
