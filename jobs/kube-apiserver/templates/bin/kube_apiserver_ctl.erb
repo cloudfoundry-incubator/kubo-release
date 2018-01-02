@@ -63,7 +63,7 @@ start_kube_apiserver() {
     kube-apiserver \
       --admission-control=DenyEscalatingExec,LimitRanger,NamespaceExists,NamespaceLifecycle,ResourceQuota,ServiceAccount \
       --anonymous-auth=false \
-      --allow-privileged=true \
+      --allow-privileged=<%= p('allow_privileged') %> \
       --apiserver-count=<%= api_server_count %> \
       <%= authorization_flags %>     --bind-address=0.0.0.0 \
       --cloud-provider=${cloud_provider} \

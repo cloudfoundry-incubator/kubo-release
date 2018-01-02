@@ -20,14 +20,26 @@ properties:
     description: The admin username for the Kubernetes cluster
   admin-password:
     description: The password for the admin account
+  allow_privileged:
+    description: Allows privileged containers for the Kubernetes cluster
+    default: false
+  authorization-mode:
+    description: The authorization mode for kube-apiserver. Should be 'abac' or 'rbac'
+    default: rbac
+  backend_port:
+    example: 80
+    default: 1234
+  kube-controller-manager-password:
+    description: The password for the system:kube-controller-manager user
   kubelet-password:
     description: The password for the kubelet user
   kube-proxy-password:
     description: The password for the kube-proxy user
-  kube-controller-manager-password:
-    description: The password for the system:kube-controller-manager user
   kube-scheduler-password:
     description: The password for the system:kube-scheduler user
+  port:
+    example: 81
+    default: 1235
   route-sync-password:
     description: The password for the route-sync user
   tls.kubernetes.ca:
@@ -35,16 +47,7 @@ properties:
   tls.kubernetes.certificate:
     description: "Certificate for the Kubernetes master"
   tls.kubernetes.private_key:
-      description: "Private key for the Kubernetes master"
-  backend_port:
-    example: 80
-    default: 1234
-  port:
-    example: 81
-    default: 1235
-  authorization-mode:
-    description: The authorization mode for kube-apiserver. Should be 'abac' or 'rbac'
-    default: rbac
+    description: "Private key for the Kubernetes master"
 
 consumes:
 - name: etcd
