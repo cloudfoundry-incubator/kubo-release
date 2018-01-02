@@ -11,7 +11,7 @@
       cloud_config['project-id'] = p('cloud-provider.gce.project-id')
       cloud_config['network-name'] = p('cloud-provider.gce.network-name')
       if_p('cloud-provider.gce.service_key') { cloud_config['token-url'] = 'nil' }
-      if_p('cloud-provider.gce.worker-node-tag') { |tag| cloud_config['node-tags'] = tag  }
+      if_p('cloud-provider.gce.worker-node-tag') { |tag| cloud_config['node-tags'] = tag }
     elsif provider_type == 'vsphere'
       cloud_config_string = "[Global]\n"
       cloud_config['user'] = p('cloud-provider.vsphere.user').gsub('\\','\\\\\\')
@@ -40,7 +40,13 @@
       cloud_config['ca-file'] = p('cloud-provider.openstack.ca-file')
     elsif provider_type == 'aws'
       cloud_config_string = "[Global]\n"
-      cloud_config['DisableSecurityGroupIngress'] = p('cloud-provider.aws.disable-security-group-ingress')
+      if_p('cloud-provider.aws.vpc') { |vpc| cloud_config['VPC'] = vpc }
+      if_p('cloud-provider.aws.subnet-id') { |id| cloud_config['SubnetID'] = id }
+      if_p('cloud-provider.aws.route-table-id') { |id| cloud_config['RouteTableID'] = id }
+      if_p('cloud-provider.aws.kubernetes-cluster-tag') { |tag| cloud_config['KubernetesClusterTag'] = tag }
+      if_p('cloud-provider.aws.kubernetes-cluster-id') { |id| cloud_config['KubernetesClusterID'] = id }
+      if_p('cloud-provider.aws.disable-security-group-ingress') { |disable_sec_group_ingress| cloud_config['DisableSecurityGroupIngress'] = disable_sec_group_ingress }
+      if_p('cloud-provider.aws.elb-security-group') { |elb_sec_group| cloud_config['ElbSecurityGroup'] = elb_sec_group }
     end
 
     cloud_config.each { |key, prop| cloud_config_string = cloud_config_string + "#{key}=#{prop}\n" }

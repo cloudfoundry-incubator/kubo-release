@@ -84,6 +84,19 @@ properties:
     default: ''
 
   # AWS specific properties
+  cloud-provider.aws.vpc:
+    description: |
+      The AWS VPC flag enables the possibility to run the master components
+      on a different aws account, on a different cloud provider or on-premises.
+      If this is set cloud-provider.aws.kubernetes-cluster-tag must be provided
+  cloud-provider.aws.subnet-id:
+    description: Enables using a specific subnet to use for ELB's
+  cloud-provider.aws.route-table-id:
+    description: Enables using a specific RouteTable
+  cloud-provider.aws.kubernetes-cluster-tag:
+    description: the legacy cluster id we'll use to identify our cluster resources
+  cloud-provider.aws.kubernetes-cluster-id:
+    description: the cluster id we'll use to identify our cluster resourcess
   cloud-provider.aws.disable-security-group-ingress:
     description: |
       Kubernetes amends the ingress rules on security groups bound to workers to allow access to ELBs.
@@ -91,3 +104,8 @@ properties:
 
       This can also be used as workaround to bugs such as - https://github.com/kubernetes/kubernetes/issues/17626
     default: false
+  cloud-provider.aws.elb-security-group:
+    description: |
+      AWS has a hard limit of 500 security groups. For large clusters creating a security group for each ELB
+      can cause the max number of security groups to be reached. If this is set instead of creating a new
+      Security group for each ELB this security group will be used instead.
