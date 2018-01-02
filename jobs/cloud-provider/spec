@@ -18,7 +18,7 @@ provides:
 properties:
   cloud-provider.type:
     description: "Type of Cloud Provider to use"
-    example: gce, vsphere
+    example: gce, vsphere, openstack
 
   # GCE specific properties
   cloud-provider.gce.project-id:
@@ -54,3 +54,32 @@ properties:
   cloud-provider.vsphere.scsicontrollertype:
     description: vSphere vSCSI adapter type name
     default: pvscsi
+
+# Openstack specific properties
+  cloud-provider.openstack.username:
+    description:  Refers to the username of a valid user set in keystone
+  cloud-provider.openstack.password:
+    description: Refers to the password of a valid user set in keystone
+  cloud-provider.openstack.auth-url:
+    description: The URL of the keystone API used to authenticate. On OpenStack control panels, this can be found at Access and Security > API Access > Credentials.
+  cloud-provider.openstack.region:
+    description: Used to specify the identifier of the region to use when running on a multi-region OpenStack cloud (Optional)
+  cloud-provider.openstack.tenant-id:
+    description: Used to specify the id of the project where you want to create your resources
+  cloud-provider.openstack.tenant-name:
+    description: Used to specify the name of the project where you want to create your resources (Optional)
+  cloud-provider.openstack.trust-id:
+    description: Used to specify the identifier of the trust to use for authorization.  Available trusts are found under the /v3/OS-TRUST/trusts endpoint of the Keystone API.(Optional)
+  cloud-provider.openstack.domain-id:
+    description: Used to specify the id of the domain your user belongs to (Optional)
+  cloud-provider.openstack.domain-name:
+    description: Used to specify the name of the domain your user belongs to (Optional)
+  cloud-provider.openstack.bs-version:
+    description: Block-storage version. Valid values are v1, v2, v3 and auto
+    default: auto
+  cloud-provider.openstack.trust-device-path:
+    description: By default block device names provided by Cinder (e.g. /dev/vda) can not be trusted. True toggle this behavior
+    default: false
+  cloud-provider.openstack.ignore-volume-az:
+    description:  When Nova and Cinder have different availability zones, this should be set to true.
+    default: false
