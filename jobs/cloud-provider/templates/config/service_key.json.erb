@@ -1,1 +1,3 @@
-<%= if_p('cloud-provider.gce.service_key') { |service_key| break service_key } %>
+<% if_p('cloud-provider.gce.service_key') do |service_key| -%>
+<%= service_key %>
+<% end -%>
