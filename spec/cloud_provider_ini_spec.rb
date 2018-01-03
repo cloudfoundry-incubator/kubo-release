@@ -91,4 +91,46 @@ describe 'cloud-provider-ini' do
       end
     end
   end
+
+  context 'if cloud provider is aws' do
+    let(:properties) { {'cloud-provider' => { 'type' => 'aws', 'aws' => aws_config }} }
+
+    context 'optional properties provided' do
+      let(:aws_config) do
+        {
+          'vpc' => 'fake-vpc',
+          'subnet-id' => 'fake-subnet-id',
+          'route-table-id' => 'fake-route-table-id',
+          'kubernetes-cluster-tag' => 'fake-kubernetes-cluster-tag',
+          'kubernetes-cluster-id' => 'fake-kubernetes-cluster-id',
+          'disable-security-group-ingress' => true,
+          'elb-security-group' => 'fake-elb-security-group'
+        }
+      end
+
+      let(:key_map) do
+        {
+          'vpc' => 'VPC',
+          'subnet-id' => 'SubnetID',
+          'route-table-id' => 'RouteTableID',
+          'kubernetes-cluster-tag' => 'KubernetesClusterTag',
+          'kubernetes-cluster-id' => 'KubernetesClusterID',
+          'disable-security-group-ingress' => 'DisableSecurityGroupIngress',
+          'elb-security-group' => 'ElbSecurityGroup'
+        }
+      end
+
+      it 'renders the correct template for aws' do
+        aws_config.each { |k,v| expect(rendered_template).to include("#{key_map[k]}=#{v}") }
+      end
+    end
+
+    context 'optional properties not provided' do
+      let(:aws_config) {{}}
+
+      it 'renders the correct template for aws' do
+        expect(rendered_template).to eq("\n[Global]\nDisableSecurityGroupIngress=false\n\n\n")
+      end
+    end
+  end
 end
