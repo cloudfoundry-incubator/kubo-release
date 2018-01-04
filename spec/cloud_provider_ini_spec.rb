@@ -59,7 +59,9 @@ describe 'cloud-provider-ini' do
          'domain-id' => 'fake-domain-id',
          'domain-name' => 'fake-domain-name',
          'region' => 'fake-region',
-         'ca-file' => 'fake-ca-file'
+         'ca-file' => 'fake-ca-file',
+         'bs-version' => 'fake-bs-version',
+         'trust-device-path' => 'fake-trust-device-path'
       }
     end
 
