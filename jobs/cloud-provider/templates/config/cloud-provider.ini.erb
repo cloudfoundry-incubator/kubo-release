@@ -38,6 +38,11 @@
       cloud_config['domain-name'] = p('cloud-provider.openstack.domain-name')
       cloud_config['region'] = p('cloud-provider.openstack.region')
       cloud_config['ca-file'] = p('cloud-provider.openstack.ca-file')
+
+      disk_config_string="[BlockStorage]\n"
+      disk_config['bs-version'] = p('cloud-provider.openstack.bs-version')
+      disk_config['trust-device-path'] = p('cloud-provider.openstack.trust-device-path')
+
     end
 
     cloud_config.each { |key, prop| cloud_config_string = cloud_config_string + "#{key}=#{prop}\n" }

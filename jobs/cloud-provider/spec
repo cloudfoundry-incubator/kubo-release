@@ -18,7 +18,7 @@ provides:
 properties:
   cloud-provider.type:
     description: "Type of Cloud Provider to use"
-    example: gce, vsphere
+    example: gce, vsphere, openstack
 
   # GCE specific properties
   cloud-provider.gce.project-id:
@@ -82,3 +82,9 @@ properties:
   cloud-provider.openstack.ca-file:
     description: CA file to connect to your OpenStack cluster (Optional).
     default: ''
+  cloud-provider.openstack.bs-version:
+    description: Block-storage version. Valid values are v1, v2, v3 and auto. Default to auto (Optional).
+    default: auto
+  cloud-provider.openstack.trust-device-path:
+    description: By default block device names provided by Cinder (e.g. /dev/vda) can not be trusted. True toggle this behavior (Optional).
+    default: false
