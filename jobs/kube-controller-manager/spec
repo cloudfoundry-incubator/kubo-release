@@ -15,3 +15,6 @@ properties:
     description: "API Token for the system:kube-controller-manager user"
   tls.kubernetes:
     description: "Certificate and private key for the Kubernetes master"
+  logging-level:
+    description: "V-leveled logging at the specified level. See https://github.com/golang/glog"
+    default: 2

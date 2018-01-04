@@ -95,7 +95,7 @@ start_kube_apiserver() {
       --requestheader-username-headers=X-Remote-User \
       <% end %>\
       --enable-aggregator-routing=true \
-      --v=2 \
+      --v=<%=p('logging-level') %> \
     1>> $LOG_DIR/kube_apiserver.stdout.log \
     2>> $LOG_DIR/kube_apiserver.stderr.log
 }

@@ -50,7 +50,10 @@ properties:
     description: Node eviction thresholds
     example: "memory.available<500Mi,nodefs.available<10%"
   api-token:
-      description: The token to access Kubernetes API
+    description: The token to access Kubernetes API
+  logging-level:
+    description: "V-leveled logging at the specified level. See https://github.com/golang/glog"
+    default: 2
 
 provides:
 - name: kubernetes-workers

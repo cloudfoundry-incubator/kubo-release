@@ -28,8 +28,8 @@ start_kubernetes_scheduler() {
   exec chpst -u vcap:vcap  \
     kube-scheduler \
       --leader-elect=true \
-      --kubeconfig=/var/vcap/jobs/kube-scheduler/config/kubeconfig
-      --v=2 \
+      --kubeconfig=/var/vcap/jobs/kube-scheduler/config/kubeconfig \
+      --v=<%=p('logging-level') %> \
     1>> $LOG_DIR/kube_scheduler.stdout.log \
     2>> $LOG_DIR/kube_scheduler.stderr.log
 }
