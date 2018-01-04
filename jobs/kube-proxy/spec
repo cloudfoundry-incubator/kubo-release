@@ -14,4 +14,7 @@ properties:
   tls.kubernetes:
     description: "Certificate and private key for the Kubernetes master"
   api-token:
-      description: The password for the kube-proxy user
+    description: The password for the kube-proxy user
+  logging-level:
+    description: "V-leveled logging at the specified level. See https://github.com/golang/glog"
+    default: 2

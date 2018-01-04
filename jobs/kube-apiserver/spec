@@ -48,6 +48,9 @@ properties:
     description: "Certificate for the Kubernetes master"
   tls.kubernetes.private_key:
     description: "Private key for the Kubernetes master"
+  logging-level:
+    description: "V-leveled logging at the specified level. See https://github.com/golang/glog"
+    default: 2
 
 consumes:
 - name: etcd
