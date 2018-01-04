@@ -15,9 +15,10 @@ wait_for() {
 }
 
 main() {
-
-  <% if p('addons-spec') != "" %>
+  <% if !p('addons-spec').empty? and p('addons-spec') != "nil" %>
   apply_spec ${spec_dir}/addon-spec.yml
+  <% else %>
+  echo "No addons to apply."
   <% end %>
 }
 
