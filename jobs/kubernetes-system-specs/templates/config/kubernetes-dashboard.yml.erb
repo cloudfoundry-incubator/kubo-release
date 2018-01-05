@@ -56,6 +56,7 @@ rules:
   # Allow Dashboard to get, update and delete Dashboard exclusive secrets.
 - apiGroups: [""]
   resources: ["secrets"]
+  # Allow Dashboard to get, update and delete 'kubernetes-dashboard-key-holder' secret.
   resourceNames: ["kubernetes-dashboard-key-holder", "kubernetes-dashboard-certs"]
   verbs: ["get", "update", "delete"]
   # Allow Dashboard to get and update 'kubernetes-dashboard-settings' config map.
@@ -113,7 +114,9 @@ spec:
         - containerPort: 8443
           protocol: TCP
         args:
-          - --auto-generate-certificates
+          - --heapster-host=http://heapster.kube-system.svc.cluster.local:80
+          - --tls-cert-file=/certs/kubernetes-dashboard-cert
+          - --tls-key-file=/certs/kubernetes-dashboard-key
           # Uncomment the following line to manually specify Kubernetes API server Host
           # If not specified, Dashboard will attempt to auto discover the API server and connect
           # to it. Uncomment only if the default does not work.
@@ -130,6 +133,9 @@ spec:
           # Create on-disk volume to store exec logs
         - mountPath: /tmp
           name: tmp-volume
+        - mountPath: /certs
+          name: kubernetes-dashboard-certs
+          readOnly: true
 <% if p('authorization-mode').downcase != 'rbac' %>
         - mountPath: /var/vcap/jobs/kubelet/config/
           name: config
@@ -147,6 +153,9 @@ spec:
           secretName: kubernetes-dashboard-certs
       - name: tmp-volume
         emptyDir: {}
+      - name: kubernetes-dashboard-certs
+        secret:
+          secretName: kubernetes-dashboard-certs
 <% if p('authorization-mode').downcase != 'rbac' %>
       - name: config
         hostPath:
@@ -171,8 +180,9 @@ metadata:
   name: kubernetes-dashboard
   namespace: kube-system
 spec:
+  type: NodePort
   ports:
-    - port: 443
-      targetPort: 8443
+  - port: 443
+    targetPort: 8443
   selector:
     k8s-app: kubernetes-dashboard
