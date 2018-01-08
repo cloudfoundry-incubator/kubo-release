@@ -60,21 +60,27 @@ jq-linux64-1.5:
   sha: d8e36831c3c94bb58be34dd544f44a6c6cb88568
 kubernetes-1.8.6/kube-apiserver:
   size: 193255148
+  object_id: c3cc7595-fa12-4ae8-69e3-a31d908525aa
   sha: f086b92732aa22de57ef526bc33615b5f39a45ca
 kubernetes-1.8.6/kube-controller-manager:
   size: 128193868
+  object_id: 7394defb-948a-44ff-4a49-56c98111560f
   sha: 8c9c392918e02d28502f19c63ebddb0fea4bc1c7
 kubernetes-1.8.6/kube-proxy:
   size: 47938976
+  object_id: 76424b2a-538f-41bf-68a5-0c998e77d7b3
   sha: 13c82f613ed04fbbf23e279cc9fef60d2e97ddce
 kubernetes-1.8.6/kube-scheduler:
   size: 53860096
+  object_id: 1763b9f4-3f7a-40ec-7f2a-de767cc7c77d
   sha: 39f13aadc06bd7eb192c875c29cdc28001feb8d9
 kubernetes-1.8.6/kubectl:
   size: 52334123
+  object_id: 75e65e70-1723-478f-7267-860069b94ceb
   sha: 59f138a5144224cb0c8ed440d3a0a0e91ef01271
 kubernetes-1.8.6/kubelet:
   size: 137780552
+  object_id: dd65e38f-feaf-4130-4487-86cd3972ff1a
   sha: 96c23396f0bb67fae0da843cc5765d0e8411e552
 socat-1.7.3.2.tar.gz:
   size: 615818
