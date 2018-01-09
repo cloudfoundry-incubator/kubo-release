@@ -5,6 +5,7 @@ templates:
   config/cloud-provider.ini.erb: config/cloud-provider.ini
   config/service_key.json.erb: config/service_key.json
   bin/cloud-provider_utils.erb: bin/cloud-provider_utils
+  config/openstack-ca.crt.erb: config/openstack-ca.crt
 
 packages:
 - pid_utils
@@ -81,7 +82,6 @@ properties:
     default: ''
   cloud-provider.openstack.ca-file:
     description: CA file to connect to your OpenStack cluster (Optional).
-    default: ''
   cloud-provider.openstack.bs-version:
     description: Block-storage version. Valid values are v1, v2, v3 and auto. Default to auto (Optional).
     default: auto
