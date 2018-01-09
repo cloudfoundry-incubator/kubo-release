@@ -4,4 +4,4 @@ name: flanneld
 dependencies:
 
 files:
-- flanneld
+- flanneld-0.6.1
