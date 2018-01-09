@@ -38,7 +38,7 @@ container-images/kubernetes_heapster_influxdb:v0.6.tgz:
   size: 105081408
   object_id: ede99e38-9127-45e3-65a5-6b572c881930
   sha: cc33af2580eead375bb1ebf5d2cacf6dc71477a8
-etcdctl:
+etcdctl-3.0.7:
   size: 18427584
   object_id: 32221476-5c3d-4ec7-5869-44c989cc3077
   sha: 11f0462cc86bf85332399a2fa584d5bb46d0cb2a
