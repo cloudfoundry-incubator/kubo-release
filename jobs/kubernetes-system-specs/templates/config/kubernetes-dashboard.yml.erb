@@ -17,17 +17,6 @@
 #
 # Example usage: kubectl create -f <this_file>
 
-# ------------------- Dashboard Secret ------------------- #
-
-apiVersion: v1
-kind: Secret
-metadata:
-  labels:
-    k8s-app: kubernetes-dashboard
-  name: kubernetes-dashboard-certs
-  namespace: kube-system
-type: Opaque
-
 ---
 <% if p('authorization-mode').downcase == 'rbac' %>
 # ------------------- Dashboard Service Account ------------------- #
@@ -128,8 +117,6 @@ spec:
             value: /var/vcap/jobs/kubelet/config/kubeconfig
 <% end %>
         volumeMounts:
-        - name: kubernetes-dashboard-certs
-          mountPath: /certs
           # Create on-disk volume to store exec logs
         - mountPath: /tmp
           name: tmp-volume
@@ -153,9 +140,6 @@ spec:
           secretName: kubernetes-dashboard-certs
       - name: tmp-volume
         emptyDir: {}
-      - name: kubernetes-dashboard-certs
-        secret:
-          secretName: kubernetes-dashboard-certs
 <% if p('authorization-mode').downcase != 'rbac' %>
       - name: config
         hostPath:
