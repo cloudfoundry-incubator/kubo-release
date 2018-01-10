@@ -20,6 +20,9 @@ packages:
 - govc
 
 properties:
+  allow_privileged:
+    description: Allows privileged containers for the Kubernetes cluster
+    default: false
   tls.kubernetes:
       description: "Certificate and private key for the Kubernetes master"
   tls.kubelet:
