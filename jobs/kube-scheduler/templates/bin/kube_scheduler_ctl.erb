@@ -29,6 +29,7 @@ start_kubernetes_scheduler() {
     kube-scheduler \
       --leader-elect=true \
       --kubeconfig=/var/vcap/jobs/kube-scheduler/config/kubeconfig \
+      --profiling=false \
       --v=<%=p('logging-level') %> \
     1>> $LOG_DIR/kube_scheduler.stdout.log \
     2>> $LOG_DIR/kube_scheduler.stderr.log

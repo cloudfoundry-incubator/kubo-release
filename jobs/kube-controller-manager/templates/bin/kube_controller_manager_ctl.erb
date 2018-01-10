@@ -48,6 +48,7 @@ start_kube_controller_manager() {
       --cluster-name=kubernetes \
       --kubeconfig=/var/vcap/jobs/kube-controller-manager/config/kubeconfig \
       --leader-elect=true \
+      --profiling=false \
       --root-ca-file=/var/vcap/jobs/kube-controller-manager/config/ca.pem \
       --service-account-private-key-file=/var/vcap/jobs/kube-apiserver/config/kubernetes-key.pem \
       --service-cluster-ip-range=10.100.200.0/24 \
