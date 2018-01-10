@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-TIMEOUT=120
+TIMEOUT=600
 
 main() {
   if timeout "$TIMEOUT" /var/vcap/jobs/kubernetes-system-specs/bin/deploy-specs
