@@ -36,11 +36,11 @@ describe 'kubo-dns-aliases' do
 
   context 'master node' do
     it 'generates an alias for the master node' do
-      expect(aliases.has_key?('master.kubo')).to be(true)
+      expect(aliases.has_key?('master.cfcr.internal')).to be(true)
     end
 
     it 'sets the master node alias to be the wildcard dns name' do
-      expect(aliases.fetch('master.kubo')).to eq(['*.kube-api-address'])
+      expect(aliases.fetch('master.cfcr.internal')).to eq(['*.kube-api-address'])
     end
   end
 

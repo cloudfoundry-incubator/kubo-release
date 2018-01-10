@@ -12,12 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 # Configuration to deploy release version of the Dashboard UI compatible with
-# Kubernetes 1.7.
+# Kubernetes 1.8.
 #
 # Example usage: kubectl create -f <this_file>
 
+---
 <% if p('authorization-mode').downcase == 'rbac' %>
 # ------------------- Dashboard Service Account ------------------- #
 
@@ -33,20 +33,26 @@ metadata:
 # ------------------- Dashboard Role & Role Binding ------------------- #
 
 kind: Role
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: kubernetes-dashboard-minimal
   namespace: kube-system
 rules:
-  # Allow Dashboard to create and watch for changes of 'kubernetes-dashboard-key-holder' secret.
+  # Allow Dashboard to create 'kubernetes-dashboard-key-holder' secret.
 - apiGroups: [""]
   resources: ["secrets"]
-  verbs: ["create", "watch"]
+  verbs: ["create"]
+  # Allow Dashboard to get, update and delete Dashboard exclusive secrets.
 - apiGroups: [""]
   resources: ["secrets"]
   # Allow Dashboard to get, update and delete 'kubernetes-dashboard-key-holder' secret.
-  resourceNames: ["kubernetes-dashboard-key-holder"]
+  resourceNames: ["kubernetes-dashboard-key-holder", "kubernetes-dashboard-certs"]
   verbs: ["get", "update", "delete"]
+  # Allow Dashboard to get and update 'kubernetes-dashboard-settings' config map.
+- apiGroups: [""]
+  resources: ["configmaps"]
+  resourceNames: ["kubernetes-dashboard-settings"]
+  verbs: ["get", "update"]
   # Allow Dashboard to get metrics from heapster.
 - apiGroups: [""]
   resources: ["services"]
@@ -54,7 +60,7 @@ rules:
   verbs: ["proxy"]
 
 ---
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: kubernetes-dashboard-minimal
@@ -69,27 +75,11 @@ subjects:
   namespace: kube-system
 
 ---
-apiVersion: rbac.authorization.k8s.io/v1beta1
-kind: ClusterRoleBinding
-metadata:
-  name: kubernetes-dashboard
-  labels:
-    k8s-app: kubernetes-dashboard
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: cluster-admin
-subjects:
-- kind: ServiceAccount
-  name: kubernetes-dashboard
-  namespace: kube-system
-
----
 <% end %>
 # ------------------- Dashboard Deployment ------------------- #
 
 kind: Deployment
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1beta2
 metadata:
   labels:
     k8s-app: kubernetes-dashboard
@@ -108,12 +98,15 @@ spec:
     spec:
       containers:
       - name: kubernetes-dashboard
-        image: gcr.io/google_containers/kubernetes-dashboard-amd64:v1.7.1
+        image: gcr.io/google_containers/kubernetes-dashboard-amd64:v1.8.0
         ports:
-        - containerPort: 9090
+        - containerPort: 8443
           protocol: TCP
         args:
           - --heapster-host=http://heapster.kube-system.svc.cluster.local:80
+          - --default-cert-dir=/certs
+          - --tls-cert-file=kubernetes-dashboard-cert
+          - --tls-key-file=kubernetes-dashboard-key
           # Uncomment the following line to manually specify Kubernetes API server Host
           # If not specified, Dashboard will attempt to auto discover the API server and connect
           # to it. Uncomment only if the default does not work.
@@ -128,17 +121,24 @@ spec:
           # Create on-disk volume to store exec logs
         - mountPath: /tmp
           name: tmp-volume
+        - mountPath: /certs
+          name: kubernetes-dashboard-certs
+          readOnly: true
 <% if p('authorization-mode').downcase != 'rbac' %>
         - mountPath: /var/vcap/jobs/kubelet/config/
           name: config
 <% end %>
         livenessProbe:
           httpGet:
+            scheme: HTTPS
             path: /
-            port: 9090
+            port: 8443
           initialDelaySeconds: 30
           timeoutSeconds: 30
       volumes:
+      - name: kubernetes-dashboard-certs
+        secret:
+          secretName: kubernetes-dashboard-certs
       - name: tmp-volume
         emptyDir: {}
 <% if p('authorization-mode').downcase != 'rbac' %>
@@ -150,8 +150,8 @@ spec:
       serviceAccountName: kubernetes-dashboard
 <% end %>
       # Comment the following tolerations if Dashboard must not be deployed on master
-      #tolerations:
-      #- key: node-role.kubernetes.io/master
+      # tolerations:
+      # - key: node-role.kubernetes.io/master
       #  effect: NoSchedule
 
 ---
@@ -165,8 +165,9 @@ metadata:
   name: kubernetes-dashboard
   namespace: kube-system
 spec:
+  type: NodePort
   ports:
-  - port: 80
-    targetPort: 9090
+  - port: 443
+    targetPort: 8443
   selector:
     k8s-app: kubernetes-dashboard

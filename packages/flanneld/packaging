@@ -1,12 +1,14 @@
 set -e
 
+FLANNELD_VERSION="0.6.1"
+
 main() {
   copy_binary
   make_executable
 }
 
 copy_binary() {
-  cp -a flanneld "${BOSH_INSTALL_TARGET:?}/flanneld"
+  cp -a flanneld-${FLANNELD_VERSION} "${BOSH_INSTALL_TARGET:?}/flanneld"
 }
 
 make_executable() {

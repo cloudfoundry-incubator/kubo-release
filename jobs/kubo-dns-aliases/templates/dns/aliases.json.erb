@@ -11,7 +11,7 @@ def node_name(instance)
 end
 
 master_node_dns = link('kube-apiserver').address
-aliases = { 'master.kubo' => [ wildcard_name(master_node_dns) ] }
+aliases = { 'master.cfcr.internal' => [ wildcard_name(master_node_dns) ] }
 
 etcd_advertise_urls_dns_suffix = link('etcd').p('etcd.advertise_urls_dns_suffix')
 etcd_addresses = link('etcd').instances.map { |instance| instance.address }
