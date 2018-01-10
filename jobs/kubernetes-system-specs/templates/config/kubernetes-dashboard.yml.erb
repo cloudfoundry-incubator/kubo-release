@@ -104,8 +104,9 @@ spec:
           protocol: TCP
         args:
           - --heapster-host=http://heapster.kube-system.svc.cluster.local:80
-          - --tls-cert-file=/certs/kubernetes-dashboard-cert
-          - --tls-key-file=/certs/kubernetes-dashboard-key
+          - --default-cert-dir=/certs
+          - --tls-cert-file=kubernetes-dashboard-cert
+          - --tls-key-file=kubernetes-dashboard-key
           # Uncomment the following line to manually specify Kubernetes API server Host
           # If not specified, Dashboard will attempt to auto discover the API server and connect
           # to it. Uncomment only if the default does not work.
