@@ -38,7 +38,7 @@ blob_missing() {
 
     full_image_name="container-images/${image//\//_}"
 
-    if bosh-cli blobs | grep -q "$full_image_name" ; then
+    if bosh blobs | grep -q "$full_image_name" ; then
         return 1
     else
         return 0
@@ -60,7 +60,7 @@ add_blob() {
     local binary_path="$1"
     local binary_name="$2"
 
-    bosh-cli add-blob "${binary_path}" "container-images/${binary_name}"
+    bosh add-blob "${binary_path}" "container-images/${binary_name}"
 }
 
 main
