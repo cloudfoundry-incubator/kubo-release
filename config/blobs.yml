@@ -22,10 +22,10 @@ container-images/gcr.io_google_containers_k8s-dns-sidecar-amd64:1.14.6.tgz:
   size: 11165833
   object_id: 6df7bdf1-98ca-42fa-7800-629aca5f8dae
   sha: 406f8c56c8b292c232cdf9043be67ec7ddfcc197
-container-images/gcr.io_google_containers_kubernetes-dashboard-amd64:v1.7.1.tgz:
-  size: 41572347
-  object_id: d0bafdd3-5466-41ce-7759-8c5014281871
-  sha: 99153f3f9f42c960367e75c47ceb5913f5b81958
+container-images/gcr.io_google_containers_kubernetes-dashboard-amd64:v1.8.0.tgz:
+  size: 39925235
+  object_id: a8f2ef80-372b-4565-6b9a-30e64dd25f4d
+  sha: 0d9f120e97e90b8de389d571bf032d3a3f9b9604
 container-images/gcr.io_google_containers_pause-amd64:3.0.tgz:
   size: 313309
   object_id: 7af46f58-b711-491a-4142-048930964b81
@@ -38,11 +38,11 @@ container-images/kubernetes_heapster_influxdb:v0.6.tgz:
   size: 105081408
   object_id: ede99e38-9127-45e3-65a5-6b572c881930
   sha: cc33af2580eead375bb1ebf5d2cacf6dc71477a8
-etcdctl:
+etcdctl-3.0.7:
   size: 18427584
   object_id: 32221476-5c3d-4ec7-5869-44c989cc3077
   sha: 11f0462cc86bf85332399a2fa584d5bb46d0cb2a
-flanneld:
+flanneld-0.6.1:
   size: 21599816
   object_id: 2e653718-cede-4af5-73ea-d5774e7caad3
   sha: 63076521f1ba5605fa5f97016072a4538d66740f

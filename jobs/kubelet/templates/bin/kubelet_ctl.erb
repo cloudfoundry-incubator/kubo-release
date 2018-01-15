@@ -54,9 +54,9 @@ start_kubelet() {
   fi
 
   kubelet \
-    --allow-privileged=true \
+    --allow-privileged=<%= p('allow_privileged') %> \
     --cloud-provider=${cloud_provider} \
-    --cloud-config="${cloud_config}" \
+    --cloud-config=${cloud_config} \
     --cluster-dns=10.100.200.10 \
     --cluster-domain=cluster.local \
     --container-runtime=docker \

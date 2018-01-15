@@ -15,6 +15,8 @@ templates:
   config/storage-class-gce.yml: config/storage-class-gce.yml
   config/kubeconfig.erb: config/kubeconfig
   config/ca.pem.erb: config/ca.pem
+  config/kubernetes-dashboard/kubernetes-dashboard.crt.erb: config/kubernetes-dashboard/kubernetes-dashboard.crt
+  config/kubernetes-dashboard/kubernetes-dashboard.key.erb: config/kubernetes-dashboard/kubernetes-dashboard.key
 
 packages:
 - jq
@@ -39,3 +41,5 @@ properties:
     description: The token to access Kubernetes API
   tls.kubernetes:
     description: "Certificate and private key for the Kubernetes master"
+  tls.kubernetes-dashboard:
+    description: "Certificate and private key for the Kubernetes dashboard"

@@ -75,6 +75,7 @@ start_kube_apiserver() {
       --etcd-keyfile=/var/vcap/jobs/kube-apiserver/config/etcd-client.key \
       --insecure-port=0 \
       --kubelet-https=true \
+      --profiling=false \
       --secure-port=8443 \
       --service-account-key-file=/var/vcap/jobs/kube-apiserver/config/kubernetes-key.pem \
       --service-account-lookup=true \

@@ -47,10 +47,10 @@ add_blob() {
   binary_name="$1"
   staging_dir="$2"
   kubernetes_version="$3"
-  blob_name=$(bosh-cli blobs --column path | grep "$binary_name" )
+  blob_name=$(bosh blobs --column path | grep "$binary_name" )
 
-  bosh-cli remove-blob "$blob_name"
-  bosh-cli add-blob "${staging_dir}/${binary_name}" "kubernetes-${kubernetes_version}/$binary_name"
+  bosh remove-blob "$blob_name"
+  bosh add-blob "${staging_dir}/${binary_name}" "kubernetes-${kubernetes_version}/$binary_name"
 }
 
 main "$@"
