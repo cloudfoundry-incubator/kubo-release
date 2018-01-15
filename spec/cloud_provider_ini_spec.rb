@@ -56,14 +56,14 @@ describe 'cloud-provider-ini' do
     let(:required_openstack_config) { { 'auth-url' => 'fake-url', 'username' => 'fake-username', 'password' => 'fake-password', 'tenant-id' => 'fake-tenant-id' } }
     let(:optional_openstack_config) do
       {
-         'tenant-name' => 'fake-tenant-name',
-         'trust-id' => 'fake-trust-id',
-         'domain-id' => 'fake-domain-id',
-         'domain-name' => 'fake-domain-name',
-         'region' => 'fake-region',
-         'ca-file' => 'fake-perm-file',
-         'bs-version' => 'fake-bs-version',
-         'trust-device-path' => 'fake-trust-device-path'
+        'tenant-name' => 'fake-tenant-name',
+        'trust-id' => 'fake-trust-id',
+        'domain-id' => 'fake-domain-id',
+        'domain-name' => 'fake-domain-name',
+        'region' => 'fake-region',
+        'ca-file' => 'fake-perm-file',
+        'bs-version' => 'fake-bs-version',
+        'trust-device-path' => 'fake-trust-device-path'
       }
     end
 
@@ -86,7 +86,7 @@ describe 'cloud-provider-ini' do
       let(:openstack_config) { required_openstack_config.merge optional_openstack_config }
       it 'renders the correct template for openstack' do
         openstack_config['ca-file'] = '/var/vcap/jobs/cloud-provider/config/openstack-ca.crt'
-        openstack_config.each { |k,v| expect(rendered_template).to include("#{k}=#{v}")}
+        openstack_config.each { |k, v| expect(rendered_template).to include("#{k}=#{v}") }
       end
 
       context 'error handling' do
