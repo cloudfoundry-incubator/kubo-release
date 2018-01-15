@@ -1,0 +1,28 @@
+#!/bin/bash -e
+
+[ -z "$DEBUG" ] || set -x
+
+apiserver="https://master.cfcr.internal:8443"
+token="<%= p("admin-password") %>"
+cert=/var/vcap/jobs/kube-apiserver/config/kubernetes.pem
+
+wait_to_be_ready() {
+
+  local period="120"
+  local interval="2"
+
+  for ((i=0; i<$period; i+=$interval)); do
+     sleep "$interval"
+     curlTest=$(curl -X GET -s -o /dev/null -I -w "%{http_code}" ${apiserver}/healthz --header "Authorization: Bearer ${token}" --cacert ${cert})
+     if [ "${curlTest}" == "200" ]; then
+       echo "Kubernetes api is healthy"
+       return 0
+     fi
+  done
+
+  echo "Waited for ${period}s, but kubernetes api is returning {curlTest}"
+  return 1
+
+}
+
+wait_to_be_ready
