@@ -3,6 +3,7 @@ name: kube-apiserver
 
 templates:
   bin/kube_apiserver_ctl.erb: bin/kube_apiserver_ctl
+  bin/post-start.erb: bin/post-start
   config/tokens.csv.erb: config/tokens.csv
   config/authorization_policy.jsonl.erb: config/authorization_policy.jsonl
   config/audit_policy.yml: config/audit_policy.yml
