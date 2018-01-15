@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rspec'
 require 'spec_helper'
 require 'yaml'
@@ -5,19 +7,19 @@ require 'yaml'
 describe 'apply-specs' do
   let(:links) do
     {
-        'kube-apiserver' => {
-            'instances' => [],
-            'properties' => {
-                'tls' => {
-                    'kubernetes' => {
-                        'ca' => 'All scabbards desire scurvy, misty krakens.'
-                    }
-                },
-                'admin-username' => 'meatloaf',
-                'admin-password' => 'madagascar-TEST',
-                'port' => '2034'
+      'kube-apiserver' => {
+        'instances' => [],
+        'properties' => {
+          'tls' => {
+            'kubernetes' => {
+              'ca' => 'All scabbards desire scurvy, misty krakens.'
             }
+          },
+          'admin-username' => 'meatloaf',
+          'admin-password' => 'madagascar-TEST',
+          'port' => '2034'
         }
+      }
     }
   end
 
@@ -26,11 +28,10 @@ describe 'apply-specs' do
   end
 
   let(:rendered_kubeconfig) do
-    YAML.load(compiled_template('apply-specs', 'config/kubeconfig', {}, links))
+    YAML.safe_load(compiled_template('apply-specs', 'config/kubeconfig', {}, links))
   end
 
   let(:kubeconfig_user) { rendered_kubeconfig['users'][0] }
-
 
   it 'uses the CA from the kube-apiserver link' do
     expect(rendered_ca).to eq('All scabbards desire scurvy, misty krakens.')

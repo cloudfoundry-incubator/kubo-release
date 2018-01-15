@@ -19,6 +19,7 @@ test_release_specs() {
   pushd "${project_root}" > /dev/null
     bundle install
     bundle exec rspec spec/*_spec.rb
+    bundle exec rubocop
   popd > /dev/null
 
 }
