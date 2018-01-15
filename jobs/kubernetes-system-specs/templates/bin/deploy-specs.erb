@@ -11,9 +11,36 @@ apply_spec() {
   ${kubectl} apply -f "${spec_file}" || echo "Spec file already applied: ${1}"
 }
 
-wait_for() {
-    ${kubectl} rollout status "deployments/${1}" -w --namespace=kube-system
+wait_for(){
+  local period="<%= p('wait-until-ready') %>"
+  local interval="<%= p('wait-until-ready-int') %>"
+  local selector="${1}"
+
+  echo "Waiting for pods to be ready for ${period}s (interval: ${interval}s, selector: ${selector:-''})"
+  # Kubernetes template
+  local template='{{range .items}}{{if not .metadata.deletionTimestamp}}{{.metadata.name}}{{range .status.conditions}}{{if eq .type "Ready"}} {{.status}}{{end}}{{end}}{{"\n"}}{{end}}{{end}}'
+  local statuses not_ready ready
+
+  for ((i=0; i<$period; i+=$interval)); do
+    sleep "$interval"
+
+    statuses="$($kubectl  get po --namespace=kube-system --selector=$selector -o template --template="$template")"
+    not_ready="$(echo "$statuses" | grep -c "False" ||:)"
+    ready="$(echo "$statuses" | grep -c "True" ||:)"
+
+    echo "Waiting for pods to be ready... ($ready/$(($not_ready + $ready)))"
+
+    if [[ "$not_ready" -eq 0 ]]; then
+      return 0
+    fi
+  done
+
+  echo "Waited for ${period}s, but the following pods are not ready yet."
+  echo "$statuses" | awk '{if ($2 == "False") print "- " $1}'
+  return 1
+
 }
+
 
 create_dashboard_secrets() {
   local secret_name=kubernetes-dashboard-certs

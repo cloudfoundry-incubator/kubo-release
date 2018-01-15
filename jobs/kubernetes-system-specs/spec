@@ -39,6 +39,12 @@ properties:
     description: The admin password for the Kubernetes cluster
   api-token:
     description: The token to access Kubernetes API
+  wait-until-ready:
+    description: Max time to wait in sec until pods is ready.
+    default: 30
+  wait-until-ready-int:
+    description: Interval in sec. to check if a pod is ready
+    default: 2
   tls.kubernetes:
     description: "Certificate and private key for the Kubernetes master"
   tls.kubernetes-dashboard:
