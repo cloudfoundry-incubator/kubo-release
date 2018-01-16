@@ -1,0 +1,24 @@
+#!/bin/bash
+
+set -exu -o pipefail
+
+detect_cloud_config() {
+  if [ -e /var/vcap/jobs/cloud-provider/bin/cloud-provider_utils ]; then
+    source /var/vcap/jobs/cloud-provider/bin/cloud-provider_utils
+    set_cloud_provider
+    cloud_config="/var/vcap/jobs/cloud-provider/config/cloud-provider.ini"
+  else
+    cloud_config=""
+    cloud_provider=""
+  fi
+}
+
+main() {
+  detect_cloud_config
+
+  if [ "${cloud_provider}" != "" ] && [ -f /sys/class/dmi/id/product_serial ]; then
+    chmod a+r /sys/class/dmi/id/product_serial
+  fi
+}
+
+main
