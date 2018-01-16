@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'bosh/template/renderer'
 require 'yaml'
 
@@ -24,9 +26,9 @@ module TemplateHelpers
     effective_properties = recursive_merge(default_property_values, manifest_properties)
 
     {
-        'properties' => effective_properties,
-        'networks' => network_properties,
-        'links' => links
+      'properties' => effective_properties,
+      'networks' => network_properties,
+      'links' => links
     }.to_json
   end
 
