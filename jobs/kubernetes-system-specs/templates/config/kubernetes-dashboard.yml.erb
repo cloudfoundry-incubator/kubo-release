@@ -103,7 +103,7 @@ spec:
         - containerPort: 8443
           protocol: TCP
         args:
-          - --heapster-host=http://heapster.kube-system.svc.cluster.local:80
+          - --heapster-host=https://heapster.kube-system.svc.cluster.local:8443
           - --default-cert-dir=/certs
           - --tls-cert-file=kubernetes-dashboard-cert
           - --tls-key-file=kubernetes-dashboard-key
@@ -124,6 +124,9 @@ spec:
         - mountPath: /certs
           name: kubernetes-dashboard-certs
           readOnly: true
+        - mountPath: /etc/ssl/certs/ca-certificates.crt
+          name: kubo-ca
+          readOnly: true
 <% if p('authorization-mode').downcase != 'rbac' %>
         - mountPath: /var/vcap/jobs/kubelet/config/
           name: config
@@ -141,6 +144,9 @@ spec:
           secretName: kubernetes-dashboard-certs
       - name: tmp-volume
         emptyDir: {}
+      - name: kubo-ca
+        hostPath:
+          path: "/var/vcap/jobs/kubelet/config/ca.pem"
 <% if p('authorization-mode').downcase != 'rbac' %>
       - name: config
         hostPath:
