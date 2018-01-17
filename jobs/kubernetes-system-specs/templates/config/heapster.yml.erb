@@ -33,17 +33,28 @@ spec:
       labels:
         task: monitoring
         k8s-app: heapster
-        version: v6
     spec:
+      serviceAccountName: heapster
       containers:
       - name: heapster
-        image: gcr.io/google_containers/heapster:v1.1.0
+        image: k8s.gcr.io/heapster-amd64:v1.4.2
         imagePullPolicy: IfNotPresent
         command:
         - /heapster
         - --source=kubernetes:https://master.cfcr.internal:8443?useServiceAccount=true
-        - --sink=influxdb:http://monitoring-influxdb:8086
+        - --sink=influxdb:https://monitoring-influxdb:8086?secure=true&insecuressl=true
+        - --tls_cert=/certs/heapster-cert
+        - --tls_key=/certs/heapster-key
+        - --tls_client_ca=/certs/ca
         - --vmodule=*=5
+        volumeMounts:
+        - mountPath: /certs
+          name: heapster-certs
+          readOnly: true
+      volumes:
+      - name: heapster-certs
+        secret:
+          secretName: heapster-certs
       <% if p('authorization-mode').downcase == 'rbac' %>
       serviceAccountName: heapster
       <% end %>
@@ -62,7 +73,8 @@ metadata:
   namespace: kube-system
 spec:
   ports:
-  - port: 80
+  - port: 8443
     targetPort: 8082
   selector:
     k8s-app: heapster
+

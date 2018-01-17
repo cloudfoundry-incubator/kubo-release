@@ -103,7 +103,7 @@ spec:
         - containerPort: 8443
           protocol: TCP
         args:
-          - --heapster-host=http://heapster.kube-system.svc.cluster.local:80
+          - --heapster-host=https://heapster.kube-system.svc.cluster.local:8443
           - --default-cert-dir=/certs
           - --tls-cert-file=kubernetes-dashboard-cert
           - --tls-key-file=kubernetes-dashboard-key
