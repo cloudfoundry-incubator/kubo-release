@@ -5,17 +5,38 @@ require 'spec_helper'
 
 describe 'kubernetes-system-specs' do
   let(:link_spec) { {} }
-  let(:rendered_template) do
-    properties = {
+  let(:default_properties) do
+    {
       'admin-password' => '1234'
     }
-    links = link_spec
+  end
+  let(:rendered_deploy_specs) do
+    compiled_template('kubernetes-system-specs', 'bin/deploy-specs', default_properties, link_spec)
+  end
 
-    compiled_template('kubernetes-system-specs', 'bin/deploy-specs', properties, links)
+  let(:rendered_post_deploy) do
+    compiled_template('kubernetes-system-specs', 'bin/post-deploy', default_properties, link_spec)
+  end
+
+  it 'sets the post-deploy timeout to 1200 by default' do
+    expect(rendered_post_deploy).to include('TIMEOUT=1200')
+  end
+
+  context 'when post-deploy timeout is re-configured' do
+    let(:default_properties) do
+    {
+      'admin-password' => '1234',
+      'timeout-sec' => '1122'
+    }
+    end
+
+    it 'overrides the default timeout' do
+      expect(rendered_post_deploy).to include('TIMEOUT=1122')
+    end
   end
 
   it 'does not apply the standard storage class by default' do
-    expect(rendered_template).to_not include('apply_spec "storage-class-gce.yml"')
+    expect(rendered_deploy_specs).to_not include('apply_spec "storage-class-gce.yml"')
   end
 
   context 'on GCE' do
@@ -33,7 +54,7 @@ describe 'kubernetes-system-specs' do
     end
 
     it 'applies the standard storage class' do
-      expect(rendered_template).to include('apply_spec "storage-class-gce.yml"')
+      expect(rendered_deploy_specs).to include('apply_spec "storage-class-gce.yml"')
     end
   end
 
@@ -52,7 +73,7 @@ describe 'kubernetes-system-specs' do
     end
 
     it 'does not apply the standard storage class' do
-      expect(rendered_template).to_not include('apply_spec "storage-class-gce.yml"')
+      expect(rendered_deploy_specs).to_not include('apply_spec "storage-class-gce.yml"')
     end
   end
 
@@ -67,7 +88,7 @@ describe 'kubernetes-system-specs' do
     end
 
     it 'does not apply the standard storage class' do
-      expect(rendered_template).to_not include('apply_spec "storage-class-gce.yml"')
+      expect(rendered_deploy_specs).to_not include('apply_spec "storage-class-gce.yml"')
     end
   end
 
