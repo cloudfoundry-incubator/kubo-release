@@ -24,10 +24,10 @@ describe 'kubernetes-system-specs' do
 
   context 'when post-deploy timeout is re-configured' do
     let(:default_properties) do
-    {
-      'admin-password' => '1234',
-      'timeout-sec' => '1122'
-    }
+      {
+        'admin-password' => '1234',
+        'timeout-sec' => '1122'
+      }
     end
 
     it 'overrides the default timeout' do
