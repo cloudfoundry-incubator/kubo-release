@@ -8,17 +8,9 @@ RUN_DIR=/var/vcap/sys/run/kubernetes
 PIDFILE=$RUN_DIR/kube-apiserver.pid
 LOG_DIR=/var/vcap/sys/log/kube-apiserver
 
-if [ -e /var/vcap/jobs/cloud-provider/bin/cloud-provider_utils ]; then
-  . /var/vcap/jobs/cloud-provider/bin/cloud-provider_utils
-  set_cloud_provider
-  cloud_config="/var/vcap/jobs/cloud-provider/config/cloud-provider.ini"
-else
-  cloud_provider=""
-  cloud_config=""
-fi
-
 # shellcheck disable=SC1091
 . /var/vcap/packages/pid_utils/pid_utils.sh
+.  /var/vcap/packages/kubo-common/utils.sh
 
 setup_directories() {
   mkdir -p "$RUN_DIR" "$LOG_DIR"
@@ -34,6 +26,9 @@ send_process_stderr_to_logfile() {
 }
 
 start_kube_apiserver() {
+  detect_cloud_config
+  check_and_chmod_product_serial $cloud_provider
+
 <%
   etcd_endpoints = link("etcd").instances.map do |instance|
     # See kubo-dns-aliases/dns/aliases.json

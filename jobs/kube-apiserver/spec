@@ -3,7 +3,6 @@ name: kube-apiserver
 
 templates:
   bin/kube_apiserver_ctl.erb: bin/kube_apiserver_ctl
-  bin/pre-start.erb: bin/pre-start
   config/tokens.csv.erb: config/tokens.csv
   config/authorization_policy.jsonl.erb: config/authorization_policy.jsonl
   config/kubernetes.pem.erb: config/kubernetes.pem
