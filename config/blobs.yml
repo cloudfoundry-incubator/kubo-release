@@ -6,26 +6,22 @@ cni/util-linux_2.27.1-6ubuntu3_amd64.deb:
   size: 847730
   object_id: 27eb3ec3-220f-4a25-6c4f-ec219c37ac8d
   sha: 568f62cb031608ab09ba1e3c2121e9e8b92dcae4
-container-images/gcr.io_google_containers_heapster:v1.1.0.tgz:
-  size: 32207205
-  object_id: d2bef095-4048-4d56-5a5c-a5bd759b23fd
-  sha: 70c7b90bf79d9714a974aa0b422941b568264424
-container-images/gcr.io_google_containers_k8s-dns-dnsmasq-nanny-amd64:1.14.6.tgz:
-  size: 10935501
-  object_id: 680e3d39-fc81-4431-743c-50578054b1f6
-  sha: a750f5f3073c62f510c7176e72271eb3758eac63
-container-images/gcr.io_google_containers_k8s-dns-kube-dns-amd64:1.14.6.tgz:
-  size: 13105460
-  object_id: 9806a090-2acf-498d-64d1-2cb720725d1b
-  sha: 89a4413f7537478ad9f0f7983fea75f2508cff60
-container-images/gcr.io_google_containers_k8s-dns-sidecar-amd64:1.14.6.tgz:
-  size: 11165833
-  object_id: 6df7bdf1-98ca-42fa-7800-629aca5f8dae
-  sha: 406f8c56c8b292c232cdf9043be67ec7ddfcc197
-container-images/gcr.io_google_containers_kubernetes-dashboard-amd64:v1.8.0.tgz:
-  size: 39925235
-  object_id: a8f2ef80-372b-4565-6b9a-30e64dd25f4d
-  sha: 0d9f120e97e90b8de389d571bf032d3a3f9b9604
+container-images/gcr.io_google_containers_k8s-dns-dnsmasq-nanny-amd64:1.14.8.tgz:
+  size: 10940805
+  object_id: 97a35aca-59c0-4e22-7d05-cc0de22f1e08
+  sha: fdec9e001af4290f638e30ae381cda27b6e964f5
+container-images/gcr.io_google_containers_k8s-dns-kube-dns-amd64:1.14.8.tgz:
+  size: 13181223
+  object_id: 730ad60c-29ed-4bf4-52e2-3f82bf5d281e
+  sha: 4f3058395927070aac9bf6085bd638cbf4236cbb
+container-images/gcr.io_google_containers_k8s-dns-sidecar-amd64:1.14.8.tgz:
+  size: 11240942
+  object_id: 7b67f40e-6428-4441-459b-858ef4151389
+  sha: 71f699220f8685114493ac82428835294eaea869
+container-images/gcr.io_google_containers_kubernetes-dashboard-amd64:v1.8.2.tgz:
+  size: 37217815
+  object_id: c3b9d396-8537-498d-403a-3afc628ee3c7
+  sha: de1fc537fa30c9547087a64ceb36e415b38f37ae
 container-images/gcr.io_google_containers_pause-amd64:3.0.tgz:
   size: 313309
   object_id: 7af46f58-b711-491a-4142-048930964b81
@@ -34,10 +30,14 @@ container-images/gcr.io_google_containers_pause.tgz:
   size: 71680
   object_id: 018df5e0-9afe-4f68-4552-c08a692a991e
   sha: 7b82730258d143602b85efa7ec2da5bc754f3a93
-container-images/kubernetes_heapster_influxdb:v0.6.tgz:
-  size: 105081408
-  object_id: ede99e38-9127-45e3-65a5-6b572c881930
-  sha: cc33af2580eead375bb1ebf5d2cacf6dc71477a8
+container-images/k8s.gcr.io_heapster-amd64:v1.4.2.tgz:
+  size: 19345304
+  object_id: 51b545ee-a55a-42d7-5ba5-9b5a9e975892
+  sha: 22c01482bbedc50e786cef44d55184e4b8475329
+container-images/k8s.gcr.io_heapster-influxdb-amd64:v1.3.3.tgz:
+  size: 4751608
+  object_id: 72e0b4f1-269e-4174-4e47-e1598bf0e8cb
+  sha: d116fc1985e78f7fa116a10a538ada383d867da8
 etcdctl-3.0.7:
   size: 18427584
   object_id: 32221476-5c3d-4ec7-5869-44c989cc3077
@@ -58,30 +58,30 @@ jq-linux64-1.5:
   size: 3027945
   object_id: 41eb1cd1-0377-4e08-5602-51e0af8b9b52
   sha: d8e36831c3c94bb58be34dd544f44a6c6cb88568
-kubernetes-1.8.6/kube-apiserver:
-  size: 193255148
-  object_id: c3cc7595-fa12-4ae8-69e3-a31d908525aa
-  sha: f086b92732aa22de57ef526bc33615b5f39a45ca
-kubernetes-1.8.6/kube-controller-manager:
-  size: 128193868
-  object_id: 7394defb-948a-44ff-4a49-56c98111560f
-  sha: 8c9c392918e02d28502f19c63ebddb0fea4bc1c7
-kubernetes-1.8.6/kube-proxy:
-  size: 47938976
-  object_id: 76424b2a-538f-41bf-68a5-0c998e77d7b3
-  sha: 13c82f613ed04fbbf23e279cc9fef60d2e97ddce
-kubernetes-1.8.6/kube-scheduler:
-  size: 53860096
-  object_id: 1763b9f4-3f7a-40ec-7f2a-de767cc7c77d
-  sha: 39f13aadc06bd7eb192c875c29cdc28001feb8d9
-kubernetes-1.8.6/kubectl:
-  size: 52334123
-  object_id: 75e65e70-1723-478f-7267-860069b94ceb
-  sha: 59f138a5144224cb0c8ed440d3a0a0e91ef01271
-kubernetes-1.8.6/kubelet:
-  size: 137780552
-  object_id: dd65e38f-feaf-4130-4487-86cd3972ff1a
-  sha: 96c23396f0bb67fae0da843cc5765d0e8411e552
+kubernetes-1.9.2/kube-apiserver:
+  size: 209287758
+  object_id: 8646b9e0-9928-4ca6-711f-014419af3d72
+  sha: 9f8a5dea18a6ca2692bc64878f11b11c7366ef42
+kubernetes-1.9.2/kube-controller-manager:
+  size: 136677128
+  object_id: 97c0469f-3f53-4d0c-442f-803bd77b9c6a
+  sha: ff488fe3c3cddc807ac432768faeb61c8d9e09a3
+kubernetes-1.9.2/kube-proxy:
+  size: 63378954
+  object_id: cede02bb-72ec-4619-52c3-a5de7976c37e
+  sha: b91546351f53b58c91be6a80d72906689ebd49eb
+kubernetes-1.9.2/kube-scheduler:
+  size: 61566971
+  object_id: f3b4119b-0f80-436e-4718-7296d079c3d4
+  sha: 30586723a885bbbfbfc0cce0551563d95f885d25
+kubernetes-1.9.2/kubectl:
+  size: 67390556
+  object_id: 2d181352-6075-47f5-58ec-d805fbbe58db
+  sha: 144534762b792c18f8d93c809b60c42f0826dd03
+kubernetes-1.9.2/kubelet:
+  size: 147795024
+  object_id: 131e7e0e-7667-4484-76a4-872fbed12b19
+  sha: b27e42094c102fa0e053b69916b754746904bc8e
 socat-1.7.3.2.tar.gz:
   size: 615818
   object_id: a6f3dcb3-54a0-44a3-4100-f408932aaf8f

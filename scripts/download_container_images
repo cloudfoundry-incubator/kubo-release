@@ -6,12 +6,12 @@ main() {
 
     images=(
       "gcr.io/google_containers/pause-amd64:3.0"
-      "gcr.io/google_containers/heapster:v1.1.0"
-      "kubernetes/heapster_influxdb:v0.6"
-      "gcr.io/google_containers/k8s-dns-kube-dns-amd64:1.14.6"
-      "gcr.io/google_containers/k8s-dns-dnsmasq-nanny-amd64:1.14.6"
-      "gcr.io/google_containers/k8s-dns-sidecar-amd64:1.14.6"
-      "gcr.io/google_containers/kubernetes-dashboard-amd64:v1.8.0"
+      "k8s.gcr.io/heapster-amd64:v1.4.2"
+      "k8s.gcr.io/heapster-influxdb-amd64:v1.3.3"
+      "gcr.io/google_containers/k8s-dns-kube-dns-amd64:1.14.8"
+      "gcr.io/google_containers/k8s-dns-dnsmasq-nanny-amd64:1.14.8"
+      "gcr.io/google_containers/k8s-dns-sidecar-amd64:1.14.8"
+      "gcr.io/google_containers/kubernetes-dashboard-amd64:v1.8.2"
     )
 
     staging_dir=$(mktemp -d)
