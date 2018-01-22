@@ -2,5 +2,9 @@
 
 set -euxo pipefail
 
-chown root:vcap /var/vcap
-chmod 0750 /var/vcap
+for job in apply-specs cloud-provider flanneld kube-apiserver kube-controller-manager kube-proxy kube-scheduler kubelet kubernetes-api-route-registrar kubernetes-system-specs route-sync kubo-dns-aliases; do
+  if [[ -d "/var/vcap/jobs/${job}" ]]; then
+    chown root:vcap "/var/vcap/jobs/${job}"
+    chmod 0750 "/var/vcap/jobs/${job}"
+  fi
+done
