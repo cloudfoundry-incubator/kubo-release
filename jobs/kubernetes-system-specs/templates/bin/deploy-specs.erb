@@ -8,7 +8,8 @@ kubectl="/var/vcap/packages/kubernetes/bin/kubectl --kubeconfig=/var/vcap/jobs/k
 
 apply_spec() {
   local spec_file="${config_dir}/${1}"
-  ${kubectl} apply -f "${spec_file}" || echo "Spec file already applied: ${1}"
+  echo "Deploying $spec_file"
+  ${kubectl} apply -f "${spec_file}"
 }
 
 wait_for() {
