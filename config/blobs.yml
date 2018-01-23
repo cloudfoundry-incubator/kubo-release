@@ -42,6 +42,9 @@ etcdctl-3.0.7:
   size: 18427584
   object_id: 32221476-5c3d-4ec7-5869-44c989cc3077
   sha: 11f0462cc86bf85332399a2fa584d5bb46d0cb2a
+flannel-v0.9.1-linux-amd64.tar.gz:
+  size: 9084492
+  sha: 9d92bf991341163a16a6b9c1a54d45466826a658
 flanneld-0.6.1:
   size: 21599816
   object_id: 2e653718-cede-4af5-73ea-d5774e7caad3
