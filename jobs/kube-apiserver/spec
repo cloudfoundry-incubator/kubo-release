@@ -12,6 +12,7 @@ templates:
   config/etcd-client.key.erb: config/etcd-client.key
 
 packages:
+- kubo-common
 - pid_utils
 - kubernetes
 
