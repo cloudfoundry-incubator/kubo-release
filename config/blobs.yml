@@ -30,10 +30,10 @@ container-images/gcr.io_google_containers_pause.tgz:
   size: 71680
   object_id: 018df5e0-9afe-4f68-4552-c08a692a991e
   sha: 7b82730258d143602b85efa7ec2da5bc754f3a93
-container-images/k8s.gcr.io_heapster-amd64:v1.4.2.tgz:
-  size: 19345304
-  object_id: 51b545ee-a55a-42d7-5ba5-9b5a9e975892
-  sha: 22c01482bbedc50e786cef44d55184e4b8475329
+container-images/k8s.gcr.io_heapster-amd64:v1.5.0.tgz:
+  size: 19853400
+  object_id: 3fd4b0ad-3e1b-4ba7-7d71-d600dc8283ea
+  sha: 0698cdc1e91d7d57e0bccf86a7a7e13dc02fe3c0
 container-images/k8s.gcr.io_heapster-influxdb-amd64:v1.3.3.tgz:
   size: 4751608
   object_id: 72e0b4f1-269e-4174-4e47-e1598bf0e8cb
