@@ -7,6 +7,7 @@ templates:
   config/authorization_policy.jsonl.erb: config/authorization_policy.jsonl
   config/kubernetes.pem.erb: config/kubernetes.pem
   config/kubernetes-key.pem.erb: config/kubernetes-key.pem
+  config/service-account-public-key.pem.erb: config/service-account-public-key.pem
   config/etcd-ca.crt.erb: config/etcd-ca.crt
   config/etcd-client.crt.erb: config/etcd-client.crt
   config/etcd-client.key.erb: config/etcd-client.key
@@ -48,6 +49,8 @@ properties:
     description: "Certificate for the Kubernetes master"
   tls.kubernetes.private_key:
     description: "Private key for the Kubernetes master"
+  service-account-public-key:
+    description: "Public key used to verify service account tokens"
   logging-level:
     description: "V-leveled logging at the specified level. See https://github.com/golang/glog"
     default: 2

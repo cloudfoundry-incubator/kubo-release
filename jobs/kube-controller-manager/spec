@@ -4,6 +4,7 @@ name: kube-controller-manager
 templates:
   bin/kube_controller_manager_ctl.erb: bin/kube_controller_manager_ctl
   config/ca.pem.erb: config/ca.pem
+  config/service-account-private-key.pem.erb: config/service-account-private-key.pem
   config/kubeconfig.erb: config/kubeconfig
 
 packages:
@@ -15,6 +16,8 @@ properties:
     description: "API Token for the system:kube-controller-manager user"
   tls.kubernetes:
     description: "Certificate and private key for the Kubernetes master"
+  service-account-private-key:
+    description: "Private key used to sign generated tokens"
   logging-level:
     description: "V-leveled logging at the specified level. See https://github.com/golang/glog"
     default: 2
