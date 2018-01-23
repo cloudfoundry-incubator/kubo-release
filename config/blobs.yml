@@ -44,11 +44,8 @@ etcdctl-3.0.7:
   sha: 11f0462cc86bf85332399a2fa584d5bb46d0cb2a
 flannel-v0.9.1-linux-amd64.tar.gz:
   size: 9084492
+  object_id: 0672c984-dd38-4db1-5efd-0515a0ace8ee
   sha: 9d92bf991341163a16a6b9c1a54d45466826a658
-flanneld-0.6.1:
-  size: 21599816
-  object_id: 2e653718-cede-4af5-73ea-d5774e7caad3
-  sha: 63076521f1ba5605fa5f97016072a4538d66740f
 go/go1.9.2.linux-amd64.tar.gz:
   size: 104247844
   object_id: 9dd1786f-8cda-4ce4-4a95-6fe98ed237d5
