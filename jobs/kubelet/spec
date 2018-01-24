@@ -13,6 +13,7 @@ templates:
   config/ca.pem.erb: config/ca.pem
 
 packages:
+- kubo-common
 - pid_utils
 - kubernetes
 - cni

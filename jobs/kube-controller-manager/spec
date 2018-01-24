@@ -10,6 +10,7 @@ templates:
 packages:
 - pid_utils
 - kubernetes
+- kubo-common
 
 properties:
   api-token:
