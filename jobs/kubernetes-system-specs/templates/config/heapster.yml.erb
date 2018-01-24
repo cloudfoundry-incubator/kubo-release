@@ -34,7 +34,6 @@ spec:
         task: monitoring
         k8s-app: heapster
     spec:
-      serviceAccountName: heapster
       containers:
       - name: heapster
         image: k8s.gcr.io/heapster-amd64:v1.5.0
