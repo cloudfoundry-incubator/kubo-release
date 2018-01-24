@@ -20,10 +20,12 @@ else
 fi
 
 <%
-  labels = ""
+  labels = "spec.ip=\"#{spec.ip}\""
   if ! p("labels").empty?
-    labels = "," + p("labels").map {|k,v| "#{k}=#{v}"}.join(",")
+    labels += "," + p("labels").map {|k,v| "#{k}=#{v}"}.join(",")
   end
+
+  labels += ",failure-domain.beta.kubernetes.io/zone=\"#{spec.az}\""
 %>
 
 # shellcheck disable=SC1091
@@ -76,7 +78,7 @@ start_kubelet() {
     <% if_p('system-reserved') do |system_reserved| %>--system-reserved="<%= system_reserved %>"<% end %> \
     <% if_p('eviction-hard') do |eviction_hard| %>--eviction-hard="<%= eviction_hard %>"<% end %> \
     --v=<%=p('logging-level') %> \
-    --node-labels=spec.ip=<%= spec.ip %><%= labels %> \
+    --node-labels=<%= labels %> \
   1>> $LOG_DIR/kubelet.stdout.log \
   2>> $LOG_DIR/kubelet.stderr.log
 }

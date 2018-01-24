@@ -16,6 +16,10 @@ provides:
   properties:
   - cloud-provider.type
 
+consumes:
+- name: cloud-provider
+  type: cloud-provider
+
 properties:
   cloud-provider.type:
     description: "Type of Cloud Provider to use"

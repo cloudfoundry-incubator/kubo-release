@@ -12,6 +12,10 @@
       cloud_config['network-name'] = p('cloud-provider.gce.network-name')
       if_p('cloud-provider.gce.service_key') { cloud_config['token-url'] = 'nil' }
       if_p('cloud-provider.gce.worker-node-tag') { |tag| cloud_config['node-tags'] = tag  }
+
+      if link("cloud-provider").instances.map { |instance| instance.az }.uniq.length > 1
+        cloud_config['multizone'] = true
+      end
     elsif provider_type == 'vsphere'
       cloud_config_string = "[Global]\n"
       cloud_config['user'] = p('cloud-provider.vsphere.user').gsub('\\','\\\\\\')
