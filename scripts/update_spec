@@ -1,0 +1,38 @@
+#!/bin/bash
+
+main() {
+  if [ $# -ne 3 ]; then
+    echo "Update spec file from version X.X to version Y.Y"
+    echo "Usage: $(basename "$0") <spec file> <link to original spec file> <link to new spec file>"
+    echo "e.g "$0" ./jobs/kubernetes-system-specs/templates/config/kubernetes-dashboard.yml.erb \\
+      https://raw.githubusercontent.com/kubernetes/dashboard/v1.8.0/src/deploy/recommended/kubernetes-dashboard.yaml \\
+      https://raw.githubusercontent.com/kubernetes/dashboard/v1.8.2/src/deploy/recommended/kubernetes-dashboard.yaml"
+    exit  1
+  fi
+
+  local spec_to_update="${1}"
+  local link_to_original="${2}"
+  local link_to_new="${3}"
+
+  local original_file="$(mktemp)"
+  local new_file="$(mktemp)"
+  local patch_file="$(mktemp)"
+
+  echo "Downloading original file ${link_to_original} to ${original_file}..."
+  #readit from the Based on line
+  wget "${link_to_original}" -O "${original_file}"
+  echo "Downloading new file ${link_to_new} to ${new_file}..."
+  wget "${link_to_new}" -O "${new_file}"
+
+  echo "Creating patch file at ${patch_file}..."
+  diff -u "${original_file}" <(cat "${spec_to_update}" | grep -v "Based on") \
+    > "${patch_file}"
+
+  echo "Patching ${spec_to_update}..."
+  patch "${new_file}" "${patch_file}" -o "${spec_to_update}"
+
+  echo "# Based on ${link_to_new}" >> "${spec_to_update}"
+
+}
+
+main ${@}

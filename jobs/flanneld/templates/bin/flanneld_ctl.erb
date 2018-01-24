@@ -34,7 +34,7 @@ start_flanneld() {
     end.join(',')
   %>
 
-  modprobe br_netfilter
+  modprobe br_netfilter || true
 
   mkdir -p /dev/net
   mknod /dev/net/tun c 10 200 || true

@@ -27,12 +27,7 @@ send_process_stderr_to_logfile() {
 start_kubernetes_proxy() {
 
   kube-proxy \
-    --hostname-override=<%= spec.ip %> \
-    --cluster-cidr=10.200.0.0/16 \
-    --kubeconfig=/var/vcap/jobs/kube-proxy/config/kubeconfig \
-    --proxy-mode=iptables \
-    --profiling=false \
-    --v=<%=p('logging-level') %> \
+  --config /var/vcap/jobs/kube-proxy/config/config.yml \
   1>> $LOG_DIR/kube_proxy.stdout.log \
   2>> $LOG_DIR/kube_proxy.stderr.log
 }

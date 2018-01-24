@@ -56,7 +56,7 @@ start_kube_apiserver() {
 
   exec chpst -u vcap:vcap  \
     kube-apiserver \
-      --admission-control=DenyEscalatingExec,LimitRanger,NamespaceExists,NamespaceLifecycle,ResourceQuota,ServiceAccount \
+      --admission-control=DenyEscalatingExec,LimitRanger,NamespaceExists,NamespaceLifecycle,ResourceQuota,ServiceAccount,DefaultStorageClass \
       --anonymous-auth=false \
       --allow-privileged=<%= p('allow_privileged') %> \
       --apiserver-count=<%= api_server_count %> \
@@ -72,7 +72,7 @@ start_kube_apiserver() {
       --kubelet-https=true \
       --profiling=false \
       --secure-port=8443 \
-      --service-account-key-file=/var/vcap/jobs/kube-apiserver/config/kubernetes-key.pem \
+      --service-account-key-file=/var/vcap/jobs/kube-apiserver/config/service-account-public-key.pem \
       --service-account-lookup=true \
       --service-cluster-ip-range=10.100.200.0/24 \
       --service-node-port-range=30000-32767 \

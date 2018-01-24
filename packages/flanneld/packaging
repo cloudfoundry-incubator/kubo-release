@@ -1,18 +1,6 @@
 set -e
 
-FLANNELD_VERSION="0.6.1"
-
-main() {
-  copy_binary
-  make_executable
-}
-
-copy_binary() {
-  cp -a flanneld-${FLANNELD_VERSION} "${BOSH_INSTALL_TARGET:?}/flanneld"
-}
-
-make_executable() {
-  chmod +x "${BOSH_INSTALL_TARGET:?}/flanneld"
-}
-
-main
+FLANNELD_VERSION="0.9.1"
+tar xvf flannel-v${FLANNELD_VERSION}-linux-amd64.tar.gz
+cp -a flanneld "${BOSH_INSTALL_TARGET:?}/flanneld"
+chmod +x "${BOSH_INSTALL_TARGET:?}/flanneld"

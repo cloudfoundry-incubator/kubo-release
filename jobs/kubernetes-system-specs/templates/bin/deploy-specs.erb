@@ -8,11 +8,41 @@ kubectl="/var/vcap/packages/kubernetes/bin/kubectl --kubeconfig=/var/vcap/jobs/k
 
 apply_spec() {
   local spec_file="${config_dir}/${1}"
-  ${kubectl} apply -f "${spec_file}" || echo "Spec file already applied: ${1}"
+  echo "Deploying $spec_file"
+  ${kubectl} apply -f "${spec_file}"
 }
 
 wait_for() {
     ${kubectl} rollout status "deployments/${1}" -w --namespace=kube-system
+}
+
+create_heapster_secrets() {
+  local secret_name=heapster-certs
+  local namespace=kube-system
+
+  if ${kubectl} get secret ${secret_name} -n ${namespace}; then
+    ${kubectl} delete secret ${secret_name} -n ${namespace}
+  fi
+
+  ${kubectl} create secret generic ${secret_name} \
+  --from-file=heapster-cert=${config_dir}/heapster/heapster.crt \
+  --from-file=heapster-key=${config_dir}/heapster/heapster.key \
+  --from-file=ca=${config_dir}/ca.pem \
+  -n ${namespace}
+}
+
+create_influx_secrets() {
+  local secret_name=influxdb-certs
+  local namespace=kube-system
+
+  if ${kubectl} get secret ${secret_name} -n ${namespace}; then
+    ${kubectl} delete secret ${secret_name} -n ${namespace}
+  fi
+
+  ${kubectl} create secret generic ${secret_name} \
+  --from-file=influxdb-cert=${config_dir}/influxdb/influxdb.crt \
+  --from-file=influxdb-key=${config_dir}/influxdb/influxdb.key \
+  -n ${namespace}
 }
 
 create_dashboard_secrets() {
@@ -34,9 +64,11 @@ main() {
   apply_spec "kubedns-controller.yml"
   wait_for kube-dns
 
+  create_heapster_secrets
   apply_spec "heapster.yml"
   wait_for heapster
 
+  create_influx_secrets
   apply_spec "influxdb.yml"
   wait_for monitoring-influxdb
 
