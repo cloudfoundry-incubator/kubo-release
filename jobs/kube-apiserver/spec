@@ -5,6 +5,7 @@ templates:
   bin/kube_apiserver_ctl.erb: bin/kube_apiserver_ctl
   config/tokens.csv.erb: config/tokens.csv
   config/authorization_policy.jsonl.erb: config/authorization_policy.jsonl
+  config/audit_policy.yml: config/audit_policy.yml
   config/kubernetes.pem.erb: config/kubernetes.pem
   config/kubernetes-key.pem.erb: config/kubernetes-key.pem
   config/service-account-public-key.pem.erb: config/service-account-public-key.pem
@@ -28,9 +29,9 @@ properties:
   authorization-mode:
     description: The authorization mode for kube-apiserver. Should be 'abac' or 'rbac'
     default: rbac
-  backend_port:
-    example: 80
-    default: 1234
+  enable_audit_logs:
+    description: Enables audit logs
+    default: true
   kube-controller-manager-password:
     description: The password for the system:kube-controller-manager user
   kubelet-password:

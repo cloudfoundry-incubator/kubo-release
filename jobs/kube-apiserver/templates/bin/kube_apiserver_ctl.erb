@@ -7,6 +7,8 @@ export PATH=/var/vcap/packages/kubernetes/bin/:$PATH
 RUN_DIR=/var/vcap/sys/run/kubernetes
 PIDFILE=$RUN_DIR/kube-apiserver.pid
 LOG_DIR=/var/vcap/sys/log/kube-apiserver
+CONFIG_DIR=/var/vcap/jobs/kube-apiserver/config
+AUDIT_LOG_FILE="${LOG_DIR}/audit.log"
 
 # shellcheck disable=SC1091
 . /var/vcap/packages/pid_utils/pid_utils.sh
@@ -42,7 +44,7 @@ start_kube_apiserver() {
   authorization_flags = if authorization_mode == 'abac'
     <<-FLAGS
       --authorization-mode=ABAC \\
-      --authorization-policy-file=/var/vcap/jobs/kube-apiserver/config/authorization_policy.jsonl \\
+      --authorization-policy-file="$CONFIG_DIR/authorization_policy.jsonl" \\
     FLAGS
   elsif authorization_mode == 'rbac'
     <<-FLAGS
@@ -52,6 +54,18 @@ start_kube_apiserver() {
   else
     raise "Unsupported authorization mode #{authorization_mode}. Supported modes: abac, rbac"
   end
+
+  audit_flags = if p('enable_audit_logs')
+   <<-FLAGS
+    --audit-log-path="$AUDIT_LOG_FILE" \\
+    --audit-log-maxage=0 \\
+    --audit-log-maxsize=0 \\
+    --audit-log-maxbackup=0 \\
+    --audit-policy-file="$CONFIG_DIR/audit_policy.yml" \\
+    FLAGS
+  else
+    ""
+  end
 %>
 
   exec chpst -u vcap:vcap  \
@@ -60,32 +74,34 @@ start_kube_apiserver() {
       --anonymous-auth=false \
       --allow-privileged=<%= p('allow_privileged') %> \
       --apiserver-count=<%= api_server_count %> \
-      <%= authorization_flags %>     --bind-address=0.0.0.0 \
+      <%= audit_flags %> \
+      <%= authorization_flags %> \
+      --bind-address=0.0.0.0 \
       --cloud-provider=${cloud_provider} \
       --cloud-config="${cloud_config}" \
       --enable-swagger-ui=true \
       --etcd-servers=<%= etcd_endpoints %> \
-      --etcd-cafile=/var/vcap/jobs/kube-apiserver/config/etcd-ca.crt \
-      --etcd-certfile=/var/vcap/jobs/kube-apiserver/config/etcd-client.crt \
-      --etcd-keyfile=/var/vcap/jobs/kube-apiserver/config/etcd-client.key \
+      --etcd-cafile="$CONFIG_DIR/etcd-ca.crt" \
+      --etcd-certfile="$CONFIG_DIR/etcd-client.crt" \
+      --etcd-keyfile="$CONFIG_DIR/etcd-client.key" \
       --insecure-port=0 \
       --kubelet-https=true \
       --profiling=false \
       --secure-port=8443 \
-      --service-account-key-file=/var/vcap/jobs/kube-apiserver/config/service-account-public-key.pem \
+      --service-account-key-file="$CONFIG_DIR/service-account-public-key.pem" \
       --service-account-lookup=true \
       --service-cluster-ip-range=10.100.200.0/24 \
       --service-node-port-range=30000-32767 \
-      --tls-cert-file=/var/vcap/jobs/kube-apiserver/config/kubernetes.pem \
-      --tls-private-key-file=/var/vcap/jobs/kube-apiserver/config/kubernetes-key.pem \
-      --token-auth-file=/var/vcap/jobs/kube-apiserver/config/tokens.csv \
+      --tls-cert-file="$CONFIG_DIR/kubernetes.pem" \
+      --tls-private-key-file="$CONFIG_DIR/kubernetes-key.pem" \
+      --token-auth-file="$CONFIG_DIR/tokens.csv" \
       --storage-media-type=application/json \
       <% if authorization_mode == 'rbac' %>\
-      --client-ca-file=/var/vcap/jobs/kube-apiserver/config/kubernetes.pem \
-      --proxy-client-cert-file=/var/vcap/jobs/kube-apiserver/config/kubernetes.pem \
-      --proxy-client-key-file=/var/vcap/jobs/kube-apiserver/config/kubernetes-key.pem \
+      --client-ca-file="$CONFIG_DIR/kubernetes.pem" \
+      --proxy-client-cert-file="$CONFIG_DIR/kubernetes.pem" \
+      --proxy-client-key-file="$CONFIG_DIR/kubernetes-key.pem" \
       --requestheader-allowed-names=aggregator \
-      --requestheader-client-ca-file=/var/vcap/jobs/kube-apiserver/config/kubernetes.pem \
+      --requestheader-client-ca-file="$CONFIG_DIR/kubernetes.pem" \
       --requestheader-extra-headers-prefix=X-Remote-Extra- \
       --requestheader-group-headers=X-Remote-Group \
       --requestheader-username-headers=X-Remote-User \
