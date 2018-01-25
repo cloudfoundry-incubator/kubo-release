@@ -74,4 +74,30 @@ describe 'kube-apiserver' do
     expect(rendered_kube_apiserver_ctl).to include('--audit-log-maxbackup=0')
     expect(rendered_kube_apiserver_ctl).to include('--audit-policy-file="$CONFIG_DIR/audit_policy.yml"')
   end
+
+  it 'has no security context deny when privileged containers are enabled' do
+    rendered_kube_apiserver_ctl = compiled_template(
+      'kube-apiserver',
+      'bin/kube_apiserver_ctl',
+      { 'allow_privileged' => true },
+      link_spec
+    )
+
+    expect(rendered_kube_apiserver_ctl).to include(
+      '--admission-control=DenyEscalatingExec,LimitRanger,' \
+      'NamespaceExists,NamespaceLifecycle,ResourceQuota,' \
+      'ServiceAccount,DefaultStorageClass'
+    )
+  end
+
+  it 'denies security context when privileged containers are not enabled' do
+    rendered_kube_apiserver_ctl = compiled_template(
+      'kube-apiserver',
+      'bin/kube_apiserver_ctl',
+      {},
+      link_spec
+    )
+
+    expect(rendered_kube_apiserver_ctl).to match(/--admission-control=.*,SecurityContextDeny/)
+  end
 end

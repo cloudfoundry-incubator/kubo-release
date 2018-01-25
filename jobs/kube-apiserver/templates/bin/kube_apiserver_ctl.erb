@@ -66,11 +66,20 @@ start_kube_apiserver() {
   else
     ""
   end
+
+  admission_control_options = [
+    "DenyEscalatingExec", "LimitRanger", "NamespaceExists",
+    "NamespaceLifecycle","ResourceQuota","ServiceAccount",
+    "DefaultStorageClass"]
+
+  if !p('allow_privileged')
+    admission_control_options.push("SecurityContextDeny")
+  end
 %>
 
   exec chpst -u vcap:vcap  \
     kube-apiserver \
-      --admission-control=DenyEscalatingExec,LimitRanger,NamespaceExists,NamespaceLifecycle,ResourceQuota,ServiceAccount,DefaultStorageClass \
+      --admission-control=<%= admission_control_options.join(",") %> \
       --anonymous-auth=false \
       --allow-privileged=<%= p('allow_privileged') %> \
       --apiserver-count=<%= api_server_count %> \
