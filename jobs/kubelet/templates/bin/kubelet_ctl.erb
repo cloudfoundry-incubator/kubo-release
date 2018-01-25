@@ -65,6 +65,7 @@ start_kubelet() {
     --fail-swap-on=false \
     --hostname-override=${hostname_override} \
     --kubeconfig=/var/vcap/jobs/kubelet/config/kubeconfig \
+    --read-only-port 0 \
     --serialize-image-pulls=false \
     --tls-cert-file=/var/vcap/jobs/kubelet/config/kubelet.pem \
     --tls-private-key-file=/var/vcap/jobs/kubelet/config/kubelet-key.pem \
