@@ -4,7 +4,18 @@ require 'rspec'
 require 'spec_helper'
 
 describe 'cloud-provider-ini' do
-  let(:rendered_template) { compiled_template('cloud-provider', 'config/cloud-provider.ini', properties) }
+  let(:link_spec) do
+    {
+      'cloud-provider' => {
+        'instances' => [
+          {
+            'az' => 'z1'
+          }
+        ]
+      }
+    }
+  end
+  let(:rendered_template) { compiled_template('cloud-provider', 'config/cloud-provider.ini', properties, link_spec) }
 
   context 'if cloud provider is gce' do
     let(:properties) { { 'cloud-provider' => { 'type' => 'gce', 'gce' => gce_config } } }
@@ -16,6 +27,10 @@ describe 'cloud-provider-ini' do
       expect(rendered_template).to include('node-tags=fake-worker-node-tag')
     end
 
+    it 'does not define the multi-az property' do
+      expect(rendered_template).not_to include('multizone=true')
+    end
+
     it 'sets token-url to nil if service_key is set' do
       expect(rendered_template).to include('token-url=nil')
     end
@@ -25,6 +40,27 @@ describe 'cloud-provider-ini' do
 
       it 'does not set token-url to nil' do
         expect(rendered_template).not_to include('token-url=nil')
+      end
+    end
+
+    context 'multiple az defined' do
+      let(:link_spec) do
+        {
+          'cloud-provider' => {
+            'instances' => [
+              {
+                'az' => 'z1'
+              },
+              {
+                'az' => 'z2'
+              }
+            ]
+          }
+        }
+      end
+
+      it 'defines the multi-az property' do
+        expect(rendered_template).to include('multizone=true')
       end
     end
   end
