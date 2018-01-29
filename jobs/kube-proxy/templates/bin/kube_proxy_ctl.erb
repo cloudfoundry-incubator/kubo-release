@@ -28,6 +28,7 @@ start_kubernetes_proxy() {
 
   kube-proxy \
   --config /var/vcap/jobs/kube-proxy/config/config.yml \
+  --v=<%=p('logging-level') %> \
   1>> $LOG_DIR/kube_proxy.stdout.log \
   2>> $LOG_DIR/kube_proxy.stderr.log
 }
