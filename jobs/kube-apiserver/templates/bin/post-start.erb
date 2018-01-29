@@ -1,0 +1,13 @@
+#!/bin/bash -e
+
+[ -z "$DEBUG" ] || set -x
+
+TIMEOUT=60
+
+if timeout "$TIMEOUT" /var/vcap/jobs/kube-apiserver/bin/ensure_apiserver_healthy
+then
+  echo "Kubernetes api is healthy"
+else
+  echo "Waited for ${TIMEOUT}s, but kubernetes api is still not healthy"
+  exit 1
+fi
