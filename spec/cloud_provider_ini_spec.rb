@@ -99,7 +99,8 @@ describe 'cloud-provider-ini' do
         'region' => 'fake-region',
         'ca-file' => 'fake-perm-file',
         'bs-version' => 'fake-bs-version',
-        'trust-device-path' => 'fake-trust-device-path'
+        'trust-device-path' => 'fake-trust-device-path',
+        'ignore-volume-az' => 'fake-ignore-volume-az'
       }
     end
 
