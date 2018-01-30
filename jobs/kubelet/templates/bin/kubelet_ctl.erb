@@ -57,8 +57,6 @@ start_kubelet() {
 
   kubelet \
     --allow-privileged=<%= p('allow_privileged') %> \
-    --anonymous-auth=false \
-    --authentication-token-webhook=true \
     --cadvisor-port=0 \
     --cloud-provider=${cloud_provider} \
     --cloud-config=${cloud_config} \
