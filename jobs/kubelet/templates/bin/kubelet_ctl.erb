@@ -20,7 +20,7 @@ else
 fi
 
 <%
-  labels = ["spec.ip=\"#{spec.ip}\""]
+  labels = ["spec.ip=#{spec.ip}"]
   labels += p("labels").map {|k,v| "#{k}=#{v}"}
   labels = labels.join(',')
 %>
