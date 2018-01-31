@@ -92,3 +92,6 @@ properties:
   cloud-provider.openstack.trust-device-path:
     description: By default block device names provided by Cinder (e.g. /dev/vda) can not be trusted. True toggle this behavior (Optional).
     default: false
+  cloud-provider.openstack.ignore-volume-az:
+    description: When Nova and Cinder have different availability zones, this should be set to true. Default to false (Optional).
+    default: false
