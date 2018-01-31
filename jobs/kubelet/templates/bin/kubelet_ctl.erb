@@ -20,12 +20,9 @@ else
 fi
 
 <%
-  labels = "spec.ip=\"#{spec.ip}\""
-  if ! p("labels").empty?
-    labels += "," + p("labels").map {|k,v| "#{k}=#{v}"}.join(",")
-  end
-
-  labels += ",failure-domain.beta.kubernetes.io/zone=\"#{spec.az}\""
+  labels = ["spec.ip=\"#{spec.ip}\""]
+  labels += p("labels").map {|k,v| "#{k}=#{v}"}
+  labels = labels.join(',')
 %>
 
 # shellcheck disable=SC1091
@@ -48,11 +45,17 @@ start_kubelet() {
 
   ln -s -f /var/vcap/jobs/kubelet/packages/cni/bin/nsenter /usr/bin/nsenter
 
-  if [ "gce" == "$cloud_provider" ]; then
+  if [[ "gce" == "$cloud_provider" ]]; then
     # The hostname needs to be set to the instance name so the gce cloud provider can manage the instance
     hostname_override=$(curl http://metadata.google.internal/computeMetadata/v1/instance/name -H "Metadata-Flavor: Google")
   else
     hostname_override=<%= spec.ip %>
+  fi
+
+  zone_label=""
+
+  if [[ "vsphere" == "$cloud_provider"  ]]; then
+    zone_label=",failure-domain.beta.kubernetes.io/zone=<%= spec.az %>"
   fi
 
   kubelet \
@@ -78,7 +81,7 @@ start_kubelet() {
     <% if_p('system-reserved') do |system_reserved| %>--system-reserved="<%= system_reserved %>"<% end %> \
     <% if_p('eviction-hard') do |eviction_hard| %>--eviction-hard="<%= eviction_hard %>"<% end %> \
     --v=<%=p('logging-level') %> \
-    --node-labels=<%= labels %> \
+    --node-labels=<%= labels %>"$zone_label" \
   1>> $LOG_DIR/kubelet.stdout.log \
   2>> $LOG_DIR/kubelet.stderr.log
 }
