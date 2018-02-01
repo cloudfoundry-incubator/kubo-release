@@ -35,6 +35,12 @@ properties:
   enable_audit_logs:
     description: Enables audit logs
     default: true
+  http_proxy:
+    description: http_proxy env var for the kubernetes-api binary (i.e. for cloud provider interactions)
+  https_proxy:
+    description: https_proxy env var for the kubernetes-api binary (i.e. for cloud provider interactions)
+  no_proxy:
+    description: no_proxy env var for the kubernetes-api binary (i.e. for cloud provider interactions)
   kube-controller-manager-password:
     description: The password for the system:kube-controller-manager user
   kubelet-password:

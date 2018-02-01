@@ -9,3 +9,6 @@ Metrics/LineLength:
 
 Metrics/MethodLength:
   Enabled: false
+
+Style/BracesAroundHashParameters:
+  EnforcedStyle: context_dependent

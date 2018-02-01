@@ -4,17 +4,11 @@ require 'rspec'
 require 'spec_helper'
 require 'yaml'
 
-describe 'kubelet_ctl' do
-  let(:rendered_template) { compiled_template('kubelet', 'bin/kubelet_ctl', {}, {}, {}, 'z1') }
-
-  it 'labels the kubelet with its own az' do
-    expect(rendered_template).to include(',failure-domain.beta.kubernetes.io/zone=z1')
-  end
-
+describe 'kube_controller_manager' do
   it 'has no http proxy when no proxy is defined' do
     rendered_kubelet_ctl = compiled_template(
-      'kubelet',
-      'bin/kubelet_ctl',
+      'kube-controller-manager',
+      'bin/kube_controller_manager_ctl',
       {}
     )
 
@@ -25,8 +19,8 @@ describe 'kubelet_ctl' do
 
   it 'sets http_proxy when an http proxy is defined' do
     rendered_kubelet_ctl = compiled_template(
-      'kubelet',
-      'bin/kubelet_ctl',
+      'kube-controller-manager',
+      'bin/kube_controller_manager_ctl',
       'http_proxy' => 'proxy.example.com:8090'
     )
 
@@ -35,8 +29,8 @@ describe 'kubelet_ctl' do
 
   it 'sets https_proxy when an https proxy is defined' do
     rendered_kubelet_ctl = compiled_template(
-      'kubelet',
-      'bin/kubelet_ctl',
+      'kube-controller-manager',
+      'bin/kube_controller_manager_ctl',
       'https_proxy' => 'proxy.example.com:8100'
     )
 
@@ -45,8 +39,8 @@ describe 'kubelet_ctl' do
 
   it 'sets no_proxy when no proxy property is set' do
     rendered_kubelet_ctl = compiled_template(
-      'kubelet',
-      'bin/kubelet_ctl',
+      'kube-controller-manager',
+      'bin/kube_controller_manager_ctl',
       'no_proxy' => 'noproxy.example.com,noproxy.example.net'
     )
 

@@ -35,6 +35,12 @@ properties:
   backend_port:
     example: 80
     default: 6789
+  http_proxy:
+    description: http_proxy env var for cloud provider interactions, i.e. for the kubelet and govc binary
+  https_proxy:
+    description: https_proxy env var for cloud provider interactions, i.e. for the kubelet and govc binary
+  no_proxy:
+    description: no_proxy env var for cloud provider interactions, i.e. for the kubelet and govc binary
   port:
     example: 81
     default: 4567

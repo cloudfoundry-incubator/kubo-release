@@ -15,6 +15,12 @@ packages:
 properties:
   api-token:
     description: "API Token for the system:kube-controller-manager user"
+  http_proxy:
+    description: http_proxy env var for the kubernetes-controller-manager binary (i.e. for cloud provider interactions)
+  https_proxy:
+    description: https_proxy env var for the kubernetes-controller-manager binary (i.e. for cloud provider interactions)
+  no_proxy:
+    description: no_proxy env var for cloud provider interactions, i.e. for the kubelet and govc binary
   tls.kubernetes:
     description: "Certificate and private key for the Kubernetes master"
   service-account-private-key:

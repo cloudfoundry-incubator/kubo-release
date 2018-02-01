@@ -24,6 +24,18 @@ update_vsphere_vms() {
    export GOVC_INSECURE="$(get_cloud_property "insecure-flag")"
    export GOVC_DATACENTER="$(get_cloud_property "datacenter")"
 
+    <% if_p('http_proxy') do |http_proxy| %>
+    export http_proxy=<%= http_proxy %>
+    <% end %>
+    <% if_p('https_proxy') do |https_proxy| %>
+    export https_proxy=<%= https_proxy %>
+    <% end %>
+    <% if_p('no_proxy') do |no_proxy| %>
+    export no_proxy=<%= no_proxy %>
+    # also use NO_PROXY since this fix is not in k8s we use yet: https://github.com/kubernetes/kubernetes/commit/92350f336b7aec303ba502c785d13f0cab1ad7f8#diff-1cb1608abe317a2c9acd24f738bc4837
+    export NO_PROXY=<%= no_proxy %>
+    <% end %>
+
    # how to get the vm uuid and why we need this is described in https://kubernetes.io/docs/getting-started-guides/vsphere/#enable-vsphere-cloud-provider
    local vm_uuid=$(cat /sys/class/dmi/id/product_serial | sed -e 's/^VMware-//' -e 's/-/ /' | awk '{ print tolower($1$2$3$4 "-" $5$6 "-" $7$8 "-" $9$10 "-" $11$12$13$14$15$16) }')
    /var/vcap/packages/govc/bin/govc vm.change -e 'disk.enableUUID=1' -vm.uuid=$vm_uuid
