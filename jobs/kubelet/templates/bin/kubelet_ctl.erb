@@ -61,27 +61,28 @@ start_kubelet() {
   kubelet \
     --allow-privileged=<%= p('allow_privileged') %> \
     --cadvisor-port=0 \
-    --cloud-provider=${cloud_provider} \
     --cloud-config=${cloud_config} \
+    --cloud-provider=${cloud_provider} \
     --cluster-dns=10.100.200.10 \
     --cluster-domain=cluster.local \
+    --cni-bin-dir=/var/vcap/jobs/kubelet/packages/cni/bin \
     --container-runtime=docker \
-    --docker="${DOCKER_SOCKET}" \
     --docker-endpoint="${DOCKER_SOCKET}" \
+    --docker="${DOCKER_SOCKET}" \
     --fail-swap-on=false \
     --hostname-override=${hostname_override} \
+    --keep-terminated-pod-volumes=false \
     --kubeconfig=/var/vcap/jobs/kubelet/config/kubeconfig \
+    --network-plugin=cni \
+    --node-labels=<%= labels %>"$zone_label" \
     --read-only-port 0 \
     --serialize-image-pulls=false \
     --tls-cert-file=/var/vcap/jobs/kubelet/config/kubelet.pem \
     --tls-private-key-file=/var/vcap/jobs/kubelet/config/kubelet-key.pem \
-    --network-plugin=cni \
-    --cni-bin-dir=/var/vcap/jobs/kubelet/packages/cni/bin \
+    --v=<%=p('logging-level') %> \
     <% if_p('kube-reserved') do |kube_reserved| %>--kube-reserved="<%= kube_reserved %>"<% end %> \
     <% if_p('system-reserved') do |system_reserved| %>--system-reserved="<%= system_reserved %>"<% end %> \
     <% if_p('eviction-hard') do |eviction_hard| %>--eviction-hard="<%= eviction_hard %>"<% end %> \
-    --v=<%=p('logging-level') %> \
-    --node-labels=<%= labels %>"$zone_label" \
   1>> $LOG_DIR/kubelet.stdout.log \
   2>> $LOG_DIR/kubelet.stderr.log
 }
