@@ -12,6 +12,28 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+apiVersion: v1
+kind: Service
+metadata:
+  name: kube-dns
+  namespace: kube-system
+  labels:
+    k8s-app: kube-dns
+    kubernetes.io/cluster-service: "true"
+    addonmanager.kubernetes.io/mode: Reconcile
+    kubernetes.io/name: "KubeDNS"
+spec:
+  selector:
+    k8s-app: kube-dns
+  clusterIP: 10.100.200.10
+  ports:
+  - name: dns
+    port: 53
+    protocol: UDP
+  - name: dns-tcp
+    port: 53
+    protocol: TCP
+---
 <% if p('authorization-mode').downcase == 'rbac' %>
 apiVersion: v1
 kind: ServiceAccount
@@ -23,6 +45,14 @@ metadata:
     addonmanager.kubernetes.io/mode: Reconcile
 ---
 <% end %>
+# apiVersion: v1
+# kind: ConfigMap
+# metadata:
+#   name: kube-dns
+#   namespace: kube-system
+#   labels:
+#     addonmanager.kubernetes.io/mode: EnsureExists
+# ---
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
@@ -51,9 +81,6 @@ spec:
       annotations:
         scheduler.alpha.kubernetes.io/critical-pod: ''
     spec:
-      <% if p('authorization-mode').downcase == 'rbac' %>
-      serviceAccountName: kube-dns
-      <% end %>
       tolerations:
       - key: "CriticalAddonsOnly"
         operator: "Exists"
@@ -96,11 +123,11 @@ spec:
         args:
         - --domain=cluster.local.
         - --dns-port=10053
+        - --config-dir=/var/vcap/jobs/kubelet/config
+        - --v=2
         <% if p('authorization-mode').downcase != 'rbac' %>
         - --kubecfg-file=/var/vcap/jobs/kubelet/config/kubeconfig
         <% end %>
-        - --config-dir=/var/vcap/jobs/kubelet/config
-        - --v=2
         ports:
         - containerPort: 10053
           name: dns-local
@@ -131,8 +158,7 @@ spec:
         - --
         - -k
         - --cache-size=1000
-        - --no-resolv
-        - --server=127.0.0.1#10053
+        - --no-negcache
         - --log-facility=-
         - --server=/cluster.local/127.0.0.1#10053
         - --server=/in-addr.arpa/127.0.0.1#10053
@@ -177,3 +203,7 @@ spec:
             memory: 20Mi
             cpu: 10m
       dnsPolicy: Default  # Don't use cluster DNS. We want DNS resolved by worker node for now to be able to access cluster instances.
+      <% if p('authorization-mode').downcase == 'rbac' %>
+      serviceAccountName: kube-dns
+      <% end %>
+# Based on https://raw.githubusercontent.com/kubernetes/kubernetes/release-1.9/cluster/addons/dns/kube-dns.yaml.base

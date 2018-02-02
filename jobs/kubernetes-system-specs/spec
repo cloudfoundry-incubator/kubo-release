@@ -14,8 +14,7 @@ templates:
   config/influxdb/influxdb.crt.erb: config/influxdb/influxdb.crt
   config/influxdb/influxdb.key.erb: config/influxdb/influxdb.key
   config/kubeconfig.erb: config/kubeconfig
-  config/kubedns-controller.yml.erb: config/kubedns-controller.yml
-  config/kubedns-svc.yml: config/kubedns-svc.yml
+  config/kube-dns.yml.erb: config/kube-dns.yml
   config/kubernetes-dashboard.yml.erb: config/kubernetes-dashboard.yml
   config/kubernetes-dashboard/kubernetes-dashboard.crt.erb: config/kubernetes-dashboard/kubernetes-dashboard.crt
   config/kubernetes-dashboard/kubernetes-dashboard.key.erb: config/kubernetes-dashboard/kubernetes-dashboard.key

@@ -60,8 +60,7 @@ create_dashboard_secrets() {
 }
 
 main() {
-  apply_spec "kubedns-svc.yml"
-  apply_spec "kubedns-controller.yml"
+  apply_spec "kube-dns.yml"
   wait_for kube-dns
 
   create_heapster_secrets
