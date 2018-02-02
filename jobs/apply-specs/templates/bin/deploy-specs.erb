@@ -2,19 +2,89 @@
 
 set -e
 
-spec_dir="/var/vcap/jobs/apply-specs/specs/"
+spec_dir="/var/vcap/jobs/apply-specs/specs"
+config_dir="/var/vcap/jobs/apply-specs/config"
 
 kubectl="/var/vcap/packages/kubernetes/bin/kubectl --kubeconfig=/var/vcap/jobs/apply-specs/config/kubeconfig"
 
 apply_spec() {
-  ${kubectl} apply -f "${1}"
+  local spec_file="${spec_dir}/${1}"
+  echo "Deploying $spec_file"
+  ${kubectl} apply -f "${spec_file}"
 }
 
 wait_for() {
     ${kubectl} rollout status "deployments/${1}" -w --namespace=kube-system
 }
 
+create_heapster_secrets() {
+  local secret_name=heapster-certs
+  local namespace=kube-system
+
+  if ${kubectl} get secret ${secret_name} -n ${namespace}  > /dev/null 2>&1; then
+    ${kubectl} delete secret ${secret_name} -n ${namespace}
+  fi
+
+  ${kubectl} create secret generic ${secret_name} \
+  --from-file=heapster-cert=${config_dir}/heapster/heapster.crt \
+  --from-file=heapster-key=${config_dir}/heapster/heapster.key \
+  --from-file=ca=${config_dir}/ca.pem \
+  -n ${namespace}
+}
+
+create_influx_secrets() {
+  local secret_name=influxdb-certs
+  local namespace=kube-system
+
+  if ${kubectl} get secret ${secret_name} -n ${namespace} > /dev/null 2>&1; then
+    ${kubectl} delete secret ${secret_name} -n ${namespace}
+  fi
+
+  ${kubectl} create secret generic ${secret_name} \
+  --from-file=influxdb-cert=${config_dir}/influxdb/influxdb.crt \
+  --from-file=influxdb-key=${config_dir}/influxdb/influxdb.key \
+  -n ${namespace}
+}
+
+create_dashboard_secrets() {
+  local secret_name=kubernetes-dashboard-certs
+  local namespace=kube-system
+
+  if ${kubectl} get secret ${secret_name} -n ${namespace} > /dev/null 2>&1; then
+    ${kubectl} delete secret ${secret_name} -n ${namespace}
+  fi
+
+  ${kubectl} create secret generic ${secret_name} \
+  --from-file=kubernetes-dashboard-cert=${config_dir}/kubernetes-dashboard/kubernetes-dashboard.crt \
+  --from-file=kubernetes-dashboard-key=${config_dir}/kubernetes-dashboard/kubernetes-dashboard.key \
+  -n ${namespace}
+}
+
 main() {
+  apply_spec "kube-dns.yml"
+  wait_for kube-dns
+
+  create_heapster_secrets
+  apply_spec "heapster.yml"
+  wait_for heapster
+
+  create_influx_secrets
+  apply_spec "influxdb.yml"
+  wait_for monitoring-influxdb
+
+  create_dashboard_secrets
+  apply_spec "kubernetes-dashboard.yml"
+  wait_for kubernetes-dashboard
+
+  <% if_link('cloud-provider') do |link| %>
+    <% link.if_p('cloud-provider.type') do |p| %>
+      <% if p == 'gce' %>
+        apply_spec "storage-class-gce.yml"
+      <% end %>
+    <% end %>
+  <% end %>
+  echo "System specs added successfully."
+
   <% if !p('addons-spec').empty? and p('addons-spec') != "nil" %>
   apply_spec ${spec_dir}/addon-spec.yml
   <% else %>
