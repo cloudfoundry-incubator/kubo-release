@@ -14,6 +14,9 @@ packages:
 consumes:
 - name: kube-apiserver
   type: kube-apiserver
+- name: cloud-provider
+  type: cloud-provider
+  optional: true
 
 properties:
   authorization-mode:
