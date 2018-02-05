@@ -1,6 +1,6 @@
 set -exu
 
-GOVC_VERSION="0.15.0"
+GOVC_VERSION="0.16.0"
 GOVC_BINARY_NAME=govc_v${GOVC_VERSION}_linux_amd64
 mkdir -p ${BOSH_INSTALL_TARGET}/bin
 gzip -d ${GOVC_BINARY_NAME}.gz
