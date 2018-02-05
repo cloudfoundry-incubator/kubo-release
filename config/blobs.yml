@@ -50,9 +50,9 @@ go/go1.9.2.linux-amd64.tar.gz:
   size: 104247844
   object_id: 9dd1786f-8cda-4ce4-4a95-6fe98ed237d5
   sha: 94c889e039e3d2e94ed95e8f8cb747c5bc1c2b58
-govc_linux_amd64.gz:
+govc_v0.15.0_linux_amd64.gz:
   size: 5941851
-  object_id: e7f1ebef-4ccf-48bb-6ba6-f46ec47ed4f3
+  object_id: 2a6ba821-ea00-48c8-7db9-789ef823703e
   sha: 79db9661d65b265856976b360ee4ce84de761fa9
 jq-linux64-1.5:
   size: 3027945

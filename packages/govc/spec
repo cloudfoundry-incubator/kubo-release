@@ -2,4 +2,4 @@
 name: govc
 
 files:
-- govc_linux_amd64.gz
+- govc_v0.15.0_linux_amd64.gz
