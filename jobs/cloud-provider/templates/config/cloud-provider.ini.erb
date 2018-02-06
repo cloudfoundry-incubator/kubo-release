@@ -15,7 +15,17 @@
     elsif provider_type == 'vsphere'
       cloud_config_string = "[Global]\n"
       cloud_config['user'] = p('cloud-provider.vsphere.user').gsub('\\','\\\\\\')
-      cloud_config['password'] = p('cloud-provider.vsphere.password')
+
+      password = ""
+      p('cloud-provider.vsphere.password').split("").each do |i|
+      # check for / and "
+	if i == '"' or i == '\\'
+	  password += '\\' + i
+	else
+	  password += i
+	end
+      end
+      cloud_config['password'] = '"' + password + '"' # To support special chars in password
       cloud_config['server'] = p('cloud-provider.vsphere.server')
       cloud_config['port'] = p('cloud-provider.vsphere.port')
       cloud_config['insecure-flag'] = p('cloud-provider.vsphere.insecure-flag')

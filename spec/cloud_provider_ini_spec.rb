@@ -47,7 +47,34 @@ describe 'cloud-provider-ini' do
     end
 
     it 'renders the correct template for vsphere' do
-      vsphere_config.each { |k, v| expect(rendered_template).to include("#{k}=#{v}") }
+      vsphere_config.each do |k, v|
+        if k == 'password'
+          expect(rendered_template).to include("#{k}=\"#{v}\"")
+        else
+          expect(rendered_template).to include("#{k}=#{v}")
+        end
+      end
+    end
+
+    context 'password has a special character #' do
+      it 'has a special character in the rendered template' do
+       vsphere_config['password'] = 'foo#bar'
+       expect(rendered_template).to include("password=\"foo#bar\"")
+      end
+    end
+
+    context 'password has a special character "' do
+      it 'has a special character in the rendered template' do
+       vsphere_config['password'] = 'foo"bar'
+       expect(rendered_template).to include("password=\"foo\\\"bar\"")
+      end
+    end
+
+    context 'password has multiple special characters' do
+      it 'has a special character in the rendered template' do
+       vsphere_config['password'] = %(x123#$%^&*')
+       expect(rendered_template).to include("password=\"x123#\$%^&*'")
+      end
     end
   end
 
