@@ -10,6 +10,9 @@ processes:
   <% end %>
   - --cluster-cidr=10.200.0.0/16
   - --cluster-name=kubernetes
+  - --cluster-signing-cert-file=/var/vcap/jobs/kube-controller-manager/config/ca.pem
+  - --cluster-signing-key-file=/var/vcap/jobs/kube-controller-manager/config/signing-key.key
+  - --feature-gates=RotateKubeletServerCertificate=true
   - --kubeconfig=/var/vcap/jobs/kube-controller-manager/config/kubeconfig
   - --leader-elect
   - --root-ca-file=/var/vcap/jobs/kube-controller-manager/config/ca.pem

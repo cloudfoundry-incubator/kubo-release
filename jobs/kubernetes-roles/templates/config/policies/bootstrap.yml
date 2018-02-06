@@ -1,0 +1,31 @@
+# ------------------- Kubelet Bootstrap Role Binding ------------------- #
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: kubo:internal:kubelet
+  name: kubo:internal:kubelet-bootstrapper
+subjects:
+- kind: User
+  name: kubelet
+  name: kubelet-bootstrap
+  apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: ClusterRole
+  name: system:node
+  name: system:node-bootstrapper
+  apiGroup: rbac.authorization.k8s.io
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: kubo:internal:kubelet-bootstrap-nodeclient
+subjects:
+- kind: User
+  name: kubelet-bootstrap
+  apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: ClusterRole
+  name: system:certificates.k8s.io:certificatesigningrequests:nodeclient
+  apiGroup: rbac.authorization.k8s.io
+---
+

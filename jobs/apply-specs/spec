@@ -29,8 +29,6 @@ properties:
     description: The admin username for the Kubernetes cluster
   admin-password:
     description: The admin password for the Kubernetes cluster
-  api-token:
-    description: The token to access Kubernetes API
   timeout-sec:
     description: Timeout for system spec deployment
     default: 1200

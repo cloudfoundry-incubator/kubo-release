@@ -71,7 +71,10 @@ start_kubelet() {
 
   kubelet \
     --allow-privileged=<%= p('allow_privileged') %> \
+    --anonymous-auth=false \
+    --bootstrap-kubeconfig=/var/vcap/jobs/kubelet/config/bootstrap-kubeconfig \
     --cadvisor-port=0 \
+    --client-ca-file=/var/vcap/jobs/kubelet/config/ca.pem \
     --cloud-config=${cloud_config} \
     --cloud-provider=${cloud_provider} \
     --cluster-dns=10.100.200.10 \
@@ -81,15 +84,15 @@ start_kubelet() {
     --docker-endpoint="${DOCKER_SOCKET}" \
     --docker="${DOCKER_SOCKET}" \
     --fail-swap-on=false \
+    --feature-gates=RotateKubeletServerCertificate=true \
     --hostname-override=${hostname_override} \
     --keep-terminated-pod-volumes=false \
     --kubeconfig=/var/vcap/jobs/kubelet/config/kubeconfig \
     --network-plugin=cni \
     --node-labels=<%= labels %>"$zone_label" \
     --read-only-port 0 \
+    --rotate-certificates \
     --serialize-image-pulls=false \
-    --tls-cert-file=/var/vcap/jobs/kubelet/config/kubelet.pem \
-    --tls-private-key-file=/var/vcap/jobs/kubelet/config/kubelet-key.pem \
     --v=<%=p('logging-level') %> \
     <% if_p('kube-reserved') do |kube_reserved| %>--kube-reserved="<%= kube_reserved %>"<% end %> \
     <% if_p('system-reserved') do |system_reserved| %>--system-reserved="<%= system_reserved %>"<% end %> \
