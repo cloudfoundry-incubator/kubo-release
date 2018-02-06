@@ -65,7 +65,9 @@ main() {
   wait_for kube-dns
 
   create_heapster_secrets
-  apply_spec "heapster.yml"
+  apply_spec "heapster-rbac.yml"
+  apply_spec "heapster-service.yml"
+  apply_spec "heapster-controller.yml"
   wait_for heapster
 
   create_influx_secrets
