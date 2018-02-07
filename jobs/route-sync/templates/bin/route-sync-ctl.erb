@@ -15,6 +15,19 @@ setup_directories() {
   chown -R vcap:vcap "$RUN_DIR" "$LOG_DIR" "$DATA_DIR"
 }
 
+<% if_p('http_proxy') do |http_proxy| %>
+export http_proxy=<%= http_proxy %>
+export HTTP_PROXY=<%= http_proxy %>
+<% end %>
+<% if_p('https_proxy') do |https_proxy| %>
+export https_proxy=<%= https_proxy %>
+export HTTPS_PROXY=<%= https_proxy %>
+<% end %>
+<% if_p('no_proxy') do |no_proxy| %>
+export no_proxy=<%= no_proxy %>
+export NO_PROXY=<%= no_proxy %>
+<% end %>
+
 start_route_sync() {
   pid_guard $PIDFILE route-sync
   echo $$ > $PIDFILE

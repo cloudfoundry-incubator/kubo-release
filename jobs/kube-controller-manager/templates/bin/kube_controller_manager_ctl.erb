@@ -32,13 +32,14 @@ start_kube_controller_manager() {
 
   <% if_p('http_proxy') do |http_proxy| %>
   export http_proxy=<%= http_proxy %>
+  export HTTP_PROXY=<%= http_proxy %>
   <% end %>
   <% if_p('https_proxy') do |https_proxy| %>
   export https_proxy=<%= https_proxy %>
+  export HTTPS_PROXY=<%= https_proxy %>
   <% end %>
   <% if_p('no_proxy') do |no_proxy| %>
   export no_proxy=<%= no_proxy %>
-  # also use NO_PROXY since this fix is not in k8s we use yet: https://github.com/kubernetes/kubernetes/commit/92350f336b7aec303ba502c785d13f0cab1ad7f8#diff-1cb1608abe317a2c9acd24f738bc4837
   export NO_PROXY=<%= no_proxy %>
   <% end %>
 

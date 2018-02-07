@@ -49,6 +49,13 @@ properties:
   tls.kubernetes:
     description: "Certificate and private key for the Kubernetes master"
 
+  http_proxy:
+    description: http_proxy env var
+  https_proxy:
+    description: https_proxy env var
+  no_proxy:
+    description: no_proxy env var
+
 consumes:
 - name: kubernetes-workers
   type: kubernetes-workers
