@@ -82,6 +82,30 @@ kubernetes-1.9.2/kubelet:
   size: 147795024
   object_id: 131e7e0e-7667-4484-76a4-872fbed12b19
   sha: b27e42094c102fa0e053b69916b754746904bc8e
+kubernetes-1.9.3/kube-apiserver:
+  size: 209306907
+  object_id: 53c8aa00-173f-4916-6f2f-aa0f359b86cf
+  sha: 78d2494d7143aa4548ea5faedbdefcbdd57930e4
+kubernetes-1.9.3/kube-controller-manager:
+  size: 136680621
+  object_id: f5971455-3bfb-43ff-5f27-da3386f9999b
+  sha: dc5d59d39ca65eb8254c87df4e461ff4c6a0a564
+kubernetes-1.9.3/kube-proxy:
+  size: 63378854
+  object_id: 6674fbd7-30ed-48ce-50af-3fce1fab2672
+  sha: 2b127358a4780d54a431fafbd134874a48c30e74
+kubernetes-1.9.3/kube-scheduler:
+  size: 61566871
+  object_id: 22f8e613-d08c-4cd6-5915-fe2c83204790
+  sha: 34b09e6675503d178ea92c8a691e1a22838b7e48
+kubernetes-1.9.3/kubectl:
+  size: 67390456
+  object_id: c2346637-c644-4402-63f0-75d0bef19966
+  sha: a27d808eb011dbeea876fe5326349ed167a7ed28
+kubernetes-1.9.3/kubelet:
+  size: 147799384
+  object_id: a68669b0-d905-48fd-42cc-24cba92a06b9
+  sha: ef979a00ba2f7bf4ee5023e82f94ced2d94c1726
 socat-1.7.3.2.tar.gz:
   size: 615818
   object_id: a6f3dcb3-54a0-44a3-4100-f408932aaf8f
