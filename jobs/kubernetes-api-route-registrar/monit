@@ -1,5 +1,5 @@
 check process kubernetes-api-route-registrar
-  with pidfile /var/vcap/sys/run/kubernetes-api-route-registrar/kubernetes-api-route-registrar.pid
-  start program "/var/vcap/jobs/kubernetes-api-route-registrar/bin/kubernetes-api-route-registrar-ctl start"
-  stop program "/var/vcap/jobs/kubernetes-api-route-registrar/bin/kubernetes-api-route-registrar-ctl stop"
+  with pidfile /var/vcap/sys/run/bpm/kubernetes-api-route-registrar/kubernetes-api-route-registrar.pid
+  start program "/var/vcap/jobs/bpm/bin/bpm start kubernetes-api-route-registrar"
+  stop program "/var/vcap/jobs/bpm/bin/bpm stop kubernetes-api-route-registrar"
   group vcap

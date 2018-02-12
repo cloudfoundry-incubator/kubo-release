@@ -4,11 +4,10 @@ name: kubernetes-api-route-registrar
 templates:
   bin/announce_loop.erb: bin/announce_loop
   bin/announce_route.erb: bin/announce_route
-  bin/kubernetes-api-route-registrar-ctl.erb: bin/kubernetes-api-route-registrar-ctl
+  config/bpm.yml: config/bpm.yml
 
 packages:
 - jq
-- pid_utils
 
 properties:
   register_interval:
