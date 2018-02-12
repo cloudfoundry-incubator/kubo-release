@@ -2,13 +2,12 @@
 name: kube-controller-manager
 
 templates:
-  bin/kube_controller_manager_ctl.erb: bin/kube_controller_manager_ctl
+  config/bpm.yml.erb: config/bpm.yml
   config/ca.pem.erb: config/ca.pem
-  config/service-account-private-key.pem.erb: config/service-account-private-key.pem
   config/kubeconfig.erb: config/kubeconfig
+  config/service-account-private-key.pem.erb: config/service-account-private-key.pem
 
 packages:
-- pid_utils
 - kubernetes
 - kubo-common
 

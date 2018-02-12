@@ -1,5 +1,5 @@
 check process kube-controller-manager
-  with pidfile /var/vcap/sys/run/kubernetes/kube-controller-manager.pid
-  start program "/var/vcap/jobs/kube-controller-manager/bin/kube_controller_manager_ctl start"
-  stop program "/var/vcap/jobs/kube-controller-manager/bin/kube_controller_manager_ctl stop"
+  with pidfile /var/vcap/sys/run/bpm/kube-controller-manager/kube-controller-manager.pid
+  start program "/var/vcap/jobs/bpm/bin/bpm start kube-controller-manager"
+  stop program "/var/vcap/jobs/bpm/bin/bpm stop kube-controller-manager"
   group vcap
