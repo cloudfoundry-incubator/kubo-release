@@ -1,0 +1,101 @@
+---
+<%
+  etcd_endpoints = link("etcd").instances.map do |instance|
+    # See kubo-dns-aliases/dns/aliases.json
+    node_name = "#{instance.name.gsub('_','-')}-#{instance.index}"
+    etcd_advertise_urls_dns_suffix = link('etcd').p('etcd.advertise_urls_dns_suffix')
+    "https://#{node_name}.#{etcd_advertise_urls_dns_suffix}:4001"
+  end.join(',')
+
+  admission_control_options = [
+    "DenyEscalatingExec", "LimitRanger", "NamespaceExists",
+    "NamespaceLifecycle","ResourceQuota","ServiceAccount",
+    "DefaultStorageClass"]
+
+  if !p('allow_privileged')
+    admission_control_options.push("SecurityContextDeny")
+  end
+%>
+processes:
+- name: kube-apiserver
+  executable: /var/vcap/packages/kubernetes/bin/kube-apiserver
+  args:
+  - --admission-control=<%= admission_control_options.join(",") %>
+  - --anonymous-auth=false
+  - --allow-privileged=<%= p('allow_privileged') %>
+  - --apiserver-count=<%= link('kube-apiserver').instances.size %>
+  - --bind-address=0.0.0.0
+  - --enable-swagger-ui
+  - --etcd-servers=<%= etcd_endpoints %>
+  - --etcd-cafile=/var/vcap/jobs/kube-apiserver/config/etcd-ca.crt
+  - --etcd-certfile=/var/vcap/jobs/kube-apiserver/config/etcd-client.crt
+  - --etcd-keyfile=/var/vcap/jobs/kube-apiserver/config/etcd-client.key
+  - --insecure-port=0
+  - --kubelet-https
+  - --repair-malformed-updates=false
+  - --secure-port=8443
+  - --service-account-key-file=/var/vcap/jobs/kube-apiserver/config/service-account-public-key.pem
+  - --service-account-lookup
+  - --service-cluster-ip-range=10.100.200.0/24
+  - --service-node-port-range=30000-32767
+  - --tls-cert-file=/var/vcap/jobs/kube-apiserver/config/kubernetes.pem
+  - --tls-private-key-file=/var/vcap/jobs/kube-apiserver/config/kubernetes-key.pem
+  - --token-auth-file=/var/vcap/jobs/kube-apiserver/config/tokens.csv
+  - --storage-media-type=application/json
+  - --enable-aggregator-routing
+  - --v=<%=p('logging-level') %>
+  <% if p('authorization-mode').downcase == 'abac' %>
+  - --authorization-mode=ABAC
+  - --authorization-policy-file=/var/vcap/jobs/kube-apiserver/config/authorization_policy.jsonl
+  <% end %>
+  <% if p('authorization-mode').downcase == 'rbac' %>
+  - --authorization-mode=RBAC
+  - --runtime-config=api/v1,rbac.authorization.k8s.io/v1alpha1
+  - --client-ca-file=/var/vcap/jobs/kube-apiserver/config/kubernetes.pem
+  - --proxy-client-cert-file=/var/vcap/jobs/kube-apiserver/config/kubernetes.pem
+  - --proxy-client-key-file=/var/vcap/jobs/kube-apiserver/config/kubernetes-key.pem
+  - --requestheader-allowed-names=aggregator
+  - --requestheader-client-ca-file=/var/vcap/jobs/kube-apiserver/config/kubernetes.pem
+  - --requestheader-extra-headers-prefix=X-Remote-Extra-
+  - --requestheader-group-headers=X-Remote-Group
+  - --requestheader-username-headers=X-Remote-User
+  <% end %>
+  <% if p('enable_audit_logs') %>
+  - --audit-log-path=/var/vcap/sys/log/kube-apiserver/audit.log
+  - --audit-log-maxage=0
+  - --audit-log-maxsize=0
+  - --audit-log-maxbackup=0
+  - --audit-policy-file=/var/vcap/jobs/kube-apiserver/config/audit_policy.yml
+  <% end %>
+  <% if_p("oidc.issuer-url", "oidc.client-id") do |oidc_issuer_url, oidc_client_id| %>
+  - --oidc-issuer-url=<%= oidc_issuer_url %>
+  - --oidc-client-id=<%= oidc_client_id %>
+  <% end %>
+  <% if_p("oidc.username-claim") do |oidc_username_claim| %>
+  - --oidc-username-claim=<%= oidc_username_claim %>
+  <% end %>
+  <% if_p("oidc.username-prefix") do |oidc_username_prefix| %>
+  - --oidc-username-prefix=<%= oidc_username_prefix %>
+  <% end %>
+  <% if_p("oidc.groups-claim") do |oidc_groups_claim| %>
+  - --oidc-groups-claim=<%= oidc_groups_claim %>
+  <% end %>
+  <% if_p("oidc.groups-prefix") do |oidc_groups_prefix| %>
+  - --oidc-groups-prefix=<%= oidc_groups_prefix %>
+  <% end %>
+  <% if_p("oidc.ca") do %>
+  - --oidc-ca-file=/var/vcap/jobs/kube-apiserver/config/oidc-ca.pem
+  <% end %>
+  env:
+    <% if_p('no_proxy') do |no_proxy| %>
+    NO_PROXY: <%= no_proxy %>
+    no_proxy: <%= no_proxy %>
+    <% end %>
+    <% if_p('https_proxy') do |https_proxy| %>
+    HTTPS_PROXY: <%= https_proxy %>
+    https_proxy: <%= https_proxy %>
+    <% end %>
+    <% if_p('http_proxy') do |http_proxy| %>
+    HTTP_PROXY: <%= http_proxy %>
+    http_proxy: <%= http_proxy %>
+    <% end %>
