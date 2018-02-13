@@ -1,0 +1,81 @@
+#!/bin/bash -ex
+
+NAME="${0##*/}"
+
+RUN_DIR=/var/vcap/sys/run/kubernetes-api-route-registrar
+PIDFILE=$RUN_DIR/kubernetes-api-route-registrar.pid
+LOG_DIR=/var/vcap/sys/log/kubernetes-api-route-registrar
+DATA_DIR=/var/vcap/store/kubernetes-api-route-registrar
+
+# shellcheck disable=SC1091
+. /var/vcap/packages/pid_utils/pid_utils.sh
+
+export PS4='+\t (${BASH_SOURCE}:${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
+
+<% if_p('http_proxy') do |http_proxy| %>
+export http_proxy=<%= http_proxy %>
+export HTTP_PROXY=<%= http_proxy %>
+<% end %>
+<% if_p('https_proxy') do |https_proxy| %>
+export https_proxy=<%= https_proxy %>
+export HTTPS_PROXY=<%= https_proxy %>
+<% end %>
+<% if_p('no_proxy') do |no_proxy| %>
+export no_proxy=<%= no_proxy %>
+export NO_PROXY=<%= no_proxy %>
+<% end %>
+
+
+setup_directories() {
+  mkdir -p "$RUN_DIR" "$LOG_DIR" "$DATA_DIR"
+  chown -R vcap:vcap "$RUN_DIR" "$LOG_DIR" "$DATA_DIR"
+}
+
+send_process_stdout_to_logfile() {
+  exec 10>> "$LOG_DIR/$NAME.stdout.log"
+  export BASH_XTRACEFD=10
+  exec 1>> "$LOG_DIR/$NAME.stdout.log"
+}
+
+send_process_stderr_to_logfile() {
+  exec 2>> "$LOG_DIR/$NAME.stderr.log"
+}
+
+start_registrar() {
+  pid_guard $PIDFILE kubernetes-api-route-registrar
+  echo $$ > $PIDFILE
+
+  exec chpst -u vcap:vcap /var/vcap/jobs/kubernetes-api-route-registrar/bin/announce_loop \
+    1>> "$LOG_DIR/$NAME.stdout.log" \
+    2>> "$LOG_DIR/$NAME.stderr.log"
+}
+
+stop_registrar() {
+  kill_and_wait "$PIDFILE"
+}
+
+pid() {
+  head -1 "$PIDFILE"
+}
+
+case $1 in
+
+  start)
+    setup_directories
+    send_process_stdout_to_logfile
+    send_process_stderr_to_logfile
+    start_registrar
+    ;;
+
+  stop)
+    setup_directories
+    send_process_stdout_to_logfile
+    send_process_stderr_to_logfile
+    stop_registrar
+    ;;
+
+  *)
+    echo "Usage: $0 {start|stop}"
+    ;;
+
+esac

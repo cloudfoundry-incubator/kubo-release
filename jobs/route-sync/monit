@@ -1,5 +1,5 @@
 check process route-sync
-  with pidfile /var/vcap/sys/run/bpm/route-sync/route-sync.pid
-  start program "/var/vcap/jobs/bpm/bin/bpm start route-sync"
-  stop program "/var/vcap/jobs/bpm/bin/bpm stop route-sync"
+  with pidfile /var/vcap/sys/run/route-sync/route-sync.pid
+  start program "/var/vcap/jobs/route-sync/bin/route-sync-ctl start"
+  stop program "/var/vcap/jobs/route-sync/bin/route-sync-ctl stop"
   group vcap
