@@ -2,11 +2,12 @@
 name: kube-scheduler
 
 templates:
-  config/bpm.yml.erb: config/bpm.yml
-  config/ca.pem.erb: config/ca.pem
+  bin/kube_scheduler_ctl.erb: bin/kube_scheduler_ctl
   config/kubeconfig.erb: config/kubeconfig
+  config/ca.pem.erb: config/ca.pem
 
 packages:
+- pid_utils
 - kubernetes
 
 properties:
