@@ -46,10 +46,6 @@ flannel-v0.9.1-linux-amd64.tar.gz:
   size: 9084492
   object_id: 0672c984-dd38-4db1-5efd-0515a0ace8ee
   sha: 9d92bf991341163a16a6b9c1a54d45466826a658
-go/go1.9.2.linux-amd64.tar.gz:
-  size: 104247844
-  object_id: 9dd1786f-8cda-4ce4-4a95-6fe98ed237d5
-  sha: 94c889e039e3d2e94ed95e8f8cb747c5bc1c2b58
 govc_linux_amd64.gz:
   size: 5941851
   object_id: e7f1ebef-4ccf-48bb-6ba6-f46ec47ed4f3
