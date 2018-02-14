@@ -10,14 +10,13 @@ LOG_DIR=/var/vcap/sys/log/kubelet
 DATA_DIR=/var/vcap/store/kubernetes
 DOCKER_SOCKET=unix:///var/vcap/sys/run/docker/docker.sock
 
-if [ -e /var/vcap/jobs/cloud-provider/bin/cloud-provider_utils ]; then
-  . /var/vcap/jobs/cloud-provider/bin/cloud-provider_utils
-  set_cloud_provider
-  cloud_config="/var/vcap/jobs/cloud-provider/config/cloud-provider.ini"
-else
-  cloud_config=""
-  cloud_provider=""
-fi
+<% if_link('cloud-provider') do |cloud_provider| %>
+  cloud_provider="<%= cloud_provider.p('cloud-provider.type') %>"
+  cloud_config="/var/vcap/jobs/kubelet/config/cloud-provider.ini"
+  <% cloud_provider.if_p('cloud-provider.gce.service_key') do |service_key| %>
+    export GOOGLE_APPLICATION_CREDENTIALS="/var/vcap/jobs/kubelet/config/service_key.json"
+  <% end %>
+<% end %>
 
 <%
   labels = ["spec.ip=#{spec.ip}"]
@@ -55,7 +54,6 @@ export NO_PROXY=<%= no_proxy %>
 <% end %>
 
 start_kubelet() {
-
   ln -s -f /var/vcap/jobs/kubelet/packages/cni/bin/nsenter /usr/bin/nsenter
 
   if [[ "gce" == "$cloud_provider" ]]; then

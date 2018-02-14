@@ -4,7 +4,6 @@ name: cloud-provider
 templates:
   config/cloud-provider.ini.erb: config/cloud-provider.ini
   config/service_key.json.erb: config/service_key.json
-  bin/cloud-provider_utils.erb: bin/cloud-provider_utils
   config/openstack-ca.crt.erb: config/openstack-ca.crt
 
 packages:
@@ -15,6 +14,33 @@ provides:
   type: cloud-provider
   properties:
   - cloud-provider.type
+  - cloud-provider.gce.network-name
+  - cloud-provider.gce.project-id
+  - cloud-provider.gce.service_key
+  - cloud-provider.gce.worker-node-tag
+  - cloud-provider.openstack.auth-url
+  - cloud-provider.openstack.bs-version
+  - cloud-provider.openstack.ca-file
+  - cloud-provider.openstack.domain-id
+  - cloud-provider.openstack.domain-name
+  - cloud-provider.openstack.ignore-volume-az
+  - cloud-provider.openstack.password
+  - cloud-provider.openstack.region
+  - cloud-provider.openstack.tenant-id
+  - cloud-provider.openstack.tenant-name
+  - cloud-provider.openstack.trust-device-path
+  - cloud-provider.openstack.trust-id
+  - cloud-provider.openstack.username
+  - cloud-provider.vsphere.datacenter
+  - cloud-provider.vsphere.datastore
+  - cloud-provider.vsphere.insecure-flag
+  - cloud-provider.vsphere.password
+  - cloud-provider.vsphere.port
+  - cloud-provider.vsphere.scsicontrollertype
+  - cloud-provider.vsphere.server
+  - cloud-provider.vsphere.user
+  - cloud-provider.vsphere.vm-uuid
+  - cloud-provider.vsphere.working-dir
 
 properties:
   cloud-provider.type:

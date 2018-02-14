@@ -2,10 +2,13 @@
 name: kube-controller-manager
 
 templates:
+  bin/pre-start.erb: bin/pre-start
   config/bpm.yml.erb: config/bpm.yml
   config/ca.pem.erb: config/ca.pem
+  config/cloud-provider.ini.erb: config/cloud-provider.ini
   config/kubeconfig.erb: config/kubeconfig
   config/service-account-private-key.pem.erb: config/service-account-private-key.pem
+  config/service_key.json.erb: config/service_key.json
 
 packages:
 - kubernetes
@@ -27,3 +30,8 @@ properties:
   logging-level:
     description: "V-leveled logging at the specified level. See https://github.com/golang/glog"
     default: 2
+
+consumes:
+- name: cloud-provider
+  type: cloud-provider
+  optional: true

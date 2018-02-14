@@ -25,6 +25,10 @@ processes:
   - --allow-privileged=<%= p('allow_privileged') %>
   - --apiserver-count=<%= link('kube-apiserver').instances.size %>
   - --bind-address=0.0.0.0
+  <% if_link('cloud-provider') do |cloud_provider| %>
+  - --cloud-provider=<%= cloud_provider.p('cloud-provider.type') %>
+  - --cloud-config=/var/vcap/jobs/kube-apiserver/config/cloud-provider.ini
+  <% end %>
   - --enable-swagger-ui
   - --etcd-servers=<%= etcd_endpoints %>
   - --etcd-cafile=/var/vcap/jobs/kube-apiserver/config/etcd-ca.crt
@@ -98,4 +102,9 @@ processes:
     <% if_p('http_proxy') do |http_proxy| %>
     HTTP_PROXY: <%= http_proxy %>
     http_proxy: <%= http_proxy %>
+    <% end %>
+    <% if_link('cloud-provider') do |cloud_provider| %>
+    <% cloud_provider.if_p('cloud-provider.gce.service_key') do |service_key| %>
+    GOOGLE_APPLICATION_CREDENTIALS: /var/vcap/jobs/kube-apiserver/config/service_key.json
+    <% end %>
     <% end %>

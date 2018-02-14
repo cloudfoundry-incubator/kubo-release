@@ -1,0 +1,64 @@
+<%
+  cloud_config_string = ""
+  disk_config_string = ""
+  cloud_config = {}
+  disk_config = {}
+
+  cloud_config_string = "[Random]\n"
+  if_link('cloud-provider') do |cloud_provider|
+    cloud_config_string = "[Global]\n"
+    cloud_provider.if_p('cloud-provider.type') do |provider_type|
+      if provider_type == 'gce'
+        cloud_config['project-id'] = cloud_provider.p('cloud-provider.gce.project-id')
+        cloud_config['network-name'] = cloud_provider.p('cloud-provider.gce.network-name')
+        cloud_provider.if_p('cloud-provider.gce.service_key') { cloud_config['token-url'] = 'nil' }
+        cloud_provider.if_p('cloud-provider.gce.worker-node-tag') { |tag| cloud_config['node-tags'] = tag  }
+        cloud_config['multizone'] = true
+      elsif provider_type == 'vsphere'
+        cloud_config['user'] = cloud_provider.p('cloud-provider.vsphere.user').gsub('\\','\\\\\\')
+
+        password = ""
+        cloud_provider.p('cloud-provider.vsphere.password').split("").each do |i|
+        # check for / and "
+        if i == '"' or i == '\\'
+          password += '\\' + i
+        else
+          password += i
+        end
+        end
+        cloud_config['password'] = '"' + password + '"' # To support special chars in password
+        cloud_config['server'] = cloud_provider.p('cloud-provider.vsphere.server')
+        cloud_config['port'] = cloud_provider.p('cloud-provider.vsphere.port')
+        cloud_config['insecure-flag'] = cloud_provider.p('cloud-provider.vsphere.insecure-flag')
+        cloud_config['datacenter'] = cloud_provider.p('cloud-provider.vsphere.datacenter')
+        cloud_config['datastore'] = cloud_provider.p('cloud-provider.vsphere.datastore')
+        cloud_config['working-dir'] = cloud_provider.p('cloud-provider.vsphere.working-dir')
+        cloud_config['vm-uuid'] = cloud_provider.p('cloud-provider.vsphere.vm-uuid', '')
+
+        disk_config_string="[Disk]\n"
+        disk_config['scsicontrollertype'] = cloud_provider.p('cloud-provider.vsphere.scsicontrollertype')
+      elsif provider_type == 'openstack'
+        cloud_config['auth-url'] = cloud_provider.p('cloud-provider.openstack.auth-url')
+        cloud_config['username'] = cloud_provider.p('cloud-provider.openstack.username')
+        cloud_config['password'] = cloud_provider.p('cloud-provider.openstack.password')
+        cloud_config['tenant-id'] = cloud_provider.p('cloud-provider.openstack.tenant-id')
+        cloud_config['tenant-name'] = cloud_provider.p('cloud-provider.openstack.tenant-name')
+        cloud_config['trust-id'] = cloud_provider.p('cloud-provider.openstack.trust-id')
+        cloud_config['domain-id'] = cloud_provider.p('cloud-provider.openstack.domain-id')
+        cloud_config['domain-name'] = cloud_provider.p('cloud-provider.openstack.domain-name')
+        cloud_config['region'] = cloud_provider.p('cloud-provider.openstack.region')
+        cloud_provider.if_p('cloud-provider.openstack.ca-file') { cloud_config['ca-file'] = '/var/vcap/jobs/cloud-provider/config/openstack-ca.crt' }
+
+        disk_config_string="[BlockStorage]\n"
+        disk_config['bs-version'] = cloud_provider.p('cloud-provider.openstack.bs-version')
+        disk_config['trust-device-path'] = cloud_provider.p('cloud-provider.openstack.trust-device-path')
+        disk_config['ignore-volume-az'] = cloud_provider.p('cloud-provider.openstack.ignore-volume-az')
+      end
+
+      cloud_config.each { |key, prop| cloud_config_string = cloud_config_string + "#{key}=#{prop}\n" }
+      disk_config.each { |key, prop| disk_config_string = disk_config_string + "#{key}=#{prop}\n" }
+    end
+  end
+%>
+<%= cloud_config_string %>
+<%= disk_config_string %>

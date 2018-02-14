@@ -4,6 +4,10 @@ processes:
   executable: /var/vcap/packages/kubernetes/bin/kube-controller-manager
   args:
   - --allocate-node-cidrs
+  <% if_link('cloud-provider') do |cloud_provider| %>
+  - --cloud-provider=<%= cloud_provider.p('cloud-provider.type') %>
+  - --cloud-config=/var/vcap/jobs/kube-controller-manager/config/cloud-provider.ini
+  <% end %>
   - --cluster-cidr=10.200.0.0/16
   - --cluster-name=kubernetes
   - --kubeconfig=/var/vcap/jobs/kube-controller-manager/config/kubeconfig
@@ -26,4 +30,9 @@ processes:
     <% if_p('http_proxy') do |http_proxy| %>
     HTTP_PROXY: <%= http_proxy %>
     http_proxy: <%= http_proxy %>
+    <% end %>
+    <% if_link('cloud-provider') do |cloud_provider| %>
+    <% cloud_provider.if_p('cloud-provider.gce.service_key') do |service_key| %>
+    GOOGLE_APPLICATION_CREDENTIALS: /var/vcap/jobs/kube-controller-manager/config/service_key.json
+    <% end %>
     <% end %>
