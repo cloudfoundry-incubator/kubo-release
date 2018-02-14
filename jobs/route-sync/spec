@@ -2,14 +2,13 @@
 name: route-sync
 
 templates:
-  bin/route-sync-ctl.erb: bin/route-sync-ctl
   config/route-sync.yml.erb: config/route-sync.yml
   config/kubeconfig.erb: config/kubeconfig
   config/ca.pem.erb: config/ca.pem
+  config/bpm.yml: config/bpm.yml
 
 packages:
 - route-sync
-- pid_utils
 
 properties:
   cloud_foundry:

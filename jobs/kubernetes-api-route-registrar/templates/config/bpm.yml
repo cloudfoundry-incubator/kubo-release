@@ -1,0 +1,4 @@
+---
+processes:
+- name: kubernetes-api-route-registrar
+  executable: /var/vcap/jobs/kubernetes-api-route-registrar/bin/announce_loop

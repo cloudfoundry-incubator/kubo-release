@@ -2,9 +2,6 @@
 
 set -euo pipefail
 
-exec 1>> /var/vcap/sys/log/kubernetes-api-route-registrar/trace_announce_route.stdout.log
-exec 2>> /var/vcap/sys/log/kubernetes-api-route-registrar/trace_announce_route.stderr.log
-
 log() {
     echo "$(date '+[%Y-%m-%d %H:%M:%S]') $*"
 }
