@@ -28,18 +28,20 @@ exit_with_code() {
 }
 
 ensure_safe_exit() {
-  exec 1>&3 2>&4
-  echo $exit_code
+  echo $exit_code >&3
   exit $exit_code
 }
 
-send_process_stdout_to_logfile_and_syslog() {
+save_stdout_to_fd3() {
   exec 3>&1
+}
+
+send_process_stdout_to_logfile_and_syslog() {
+  save_stdout_to_fd3
   exec 1>> "$LOG_DIR/$NAME.stdout.log"
 }
 
 send_process_stderr_to_logfile_and_syslog() {
-  exec 4>&2
   exec 2>> "$LOG_DIR/$NAME.stderr.log"
 }
 
