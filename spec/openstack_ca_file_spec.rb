@@ -1,18 +1,27 @@
 # frozen_string_literal: true
 
 require 'rspec'
+require 'spec_helper'
 
 describe 'openstack ca-file' do
   let(:valid_cert) { 'certificate' }
-  let(:rendered_template) do
-    properties = {
+  let(:link_spec) do
+    {
       'cloud-provider' => {
-        'openstack' => {
-          'ca-file' => 'certificate'
+        'instances' => [],
+        'properties' => {
+          'cloud-provider' => {
+            'openstack' => {
+              'ca-file' => 'certificate'
+            }
+          }
         }
       }
     }
-    compiled_template('cloud-provider', 'config/openstack-ca.crt', properties)
+  end
+
+  let(:rendered_template) do
+    compiled_template('kube-apiserver', 'config/openstack-ca.crt', {}, link_spec)
   end
 
   it 'renders a valid ca-file' do

@@ -15,6 +15,7 @@ templates:
   config/kubernetes-key.pem.erb: config/kubernetes-key.pem
   config/kubernetes.pem.erb: config/kubernetes.pem
   config/oidc-ca.pem.erb: config/oidc-ca.pem
+  config/openstack-ca.crt.erb: config/openstack-ca.crt
   config/service-account-public-key.pem.erb: config/service-account-public-key.pem
   config/service_key.json.erb: config/service_key.json
   config/tokens.csv.erb: config/tokens.csv

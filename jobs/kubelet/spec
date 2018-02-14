@@ -12,6 +12,7 @@ templates:
   config/kubeconfig.erb: config/kubeconfig
   config/kubelet-key.pem.erb: config/kubelet-key.pem
   config/kubelet.pem.erb: config/kubelet.pem
+  config/openstack-ca.crt.erb: config/openstack-ca.crt
   config/service_key.json.erb: config/service_key.json
 
 packages:

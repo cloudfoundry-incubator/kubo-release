@@ -4,15 +4,23 @@ require 'rspec'
 
 describe 'service key' do
   let(:valid_json) { { 'valid-json' => true }.to_json }
-  let(:rendered_template) do
-    properties = {
+  let(:link_spec) do
+    {
       'cloud-provider' => {
-        'gce' => {
-          'service_key' => valid_json
+        'instances' => [],
+        'properties' => {
+          'cloud-provider' => {
+            'gce' => {
+              'service_key' => valid_json
+            }
+          }
         }
       }
     }
-    compiled_template('cloud-provider', 'config/service_key.json', properties)
+  end
+
+  let(:rendered_template) do
+    compiled_template('kube-apiserver', 'config/service_key.json', {}, link_spec)
   end
 
   it 'renders a valid json' do

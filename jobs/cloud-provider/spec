@@ -1,11 +1,6 @@
 ---
 name: cloud-provider
 
-templates:
-  config/cloud-provider.ini.erb: config/cloud-provider.ini
-  config/service_key.json.erb: config/service_key.json
-  config/openstack-ca.crt.erb: config/openstack-ca.crt
-
 packages:
 - pid_utils
 

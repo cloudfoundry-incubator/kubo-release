@@ -11,11 +11,12 @@ describe 'cloud-provider-ini' do
           {
             'az' => 'z1'
           }
-        ]
+        ],
+        'properties' => properties
       }
     }
   end
-  let(:rendered_template) { compiled_template('cloud-provider', 'config/cloud-provider.ini', properties, link_spec) }
+  let(:rendered_template) { compiled_template('kube-apiserver', 'config/cloud-provider.ini', {}, link_spec) }
 
   context 'if cloud provider is gce' do
     let(:properties) { { 'cloud-provider' => { 'type' => 'gce', 'gce' => gce_config } } }
@@ -42,7 +43,6 @@ describe 'cloud-provider-ini' do
         expect(rendered_template).not_to include('token-url=nil')
       end
     end
-
   end
 
   context 'if cloud provider is vsphere' do
