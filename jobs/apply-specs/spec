@@ -12,9 +12,7 @@ templates:
   config/kubernetes-dashboard/kubernetes-dashboard.crt.erb: config/kubernetes-dashboard/kubernetes-dashboard.crt
   config/kubernetes-dashboard/kubernetes-dashboard.key.erb: config/kubernetes-dashboard/kubernetes-dashboard.key
   specs/addon-spec.yml.erb: specs/addon-spec.yml
-  specs/heapster-controller.yml.erb: specs/heapster-controller.yml
-  specs/heapster-service.yml.erb: specs/heapster-service.yml
-  specs/heapster-rbac.yml.erb: specs/heapster-rbac.yml
+  specs/heapster.yml.erb: specs/heapster.yml
   specs/influxdb.yml.erb: specs/influxdb.yml
   specs/kube-dns.yml.erb: specs/kube-dns.yml
   specs/kubernetes-dashboard.yml.erb: specs/kubernetes-dashboard.yml
