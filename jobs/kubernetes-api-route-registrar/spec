@@ -4,7 +4,7 @@ name: kubernetes-api-route-registrar
 templates:
   bin/announce_loop.erb: bin/announce_loop
   bin/announce_route.erb: bin/announce_route
-  bin/kubernetes-api-route-registrar-ctl: bin/kubernetes-api-route-registrar-ctl
+  bin/kubernetes-api-route-registrar-ctl.erb: bin/kubernetes-api-route-registrar-ctl
 
 packages:
 - jq
@@ -35,3 +35,9 @@ properties:
   external_kubo_port:
     description: "Externally accessible port"
     example: 2749
+  http_proxy:
+    description: http_proxy env var
+  https_proxy:
+    description: https_proxy env var
+  no_proxy:
+    description: no_proxy env var

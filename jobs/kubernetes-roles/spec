@@ -1,0 +1,30 @@
+---
+name: kubernetes-roles
+
+templates:
+  bin/apply_rbac.erb: bin/apply_rbac
+  bin/post-start.erb: bin/post-start
+  config/ca.pem.erb: config/ca.pem
+  config/kubeconfig.erb: config/kubeconfig
+  config/rbac_policy.yml.erb: config/rbac_policy.yml
+
+packages:
+- kubernetes
+
+consumes:
+- name: kube-apiserver
+  type: kube-apiserver
+- name: cloud-provider
+  type: cloud-provider
+  optional: true
+
+properties:
+  authorization-mode:
+    description: The authorization mode for kube-apiserver. Should be 'abac' or 'rbac'
+    default: rbac
+  admin-username:
+    description: The admin username for the Kubernetes cluster
+  admin-password:
+    description: The admin password for the Kubernetes cluster
+  tls.kubernetes:
+    description: Certificate and private key for the Kubernetes master

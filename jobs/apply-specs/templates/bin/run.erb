@@ -3,7 +3,7 @@
 TIMEOUT=<%=p("timeout-sec")%>
 
 main() {
-  if timeout "$TIMEOUT" /var/vcap/jobs/kubernetes-system-specs/bin/deploy-specs
+  if timeout "$TIMEOUT" /var/vcap/jobs/apply-specs/bin/deploy-specs
   then
     echo "all expected specs are running"
   else
@@ -13,3 +13,4 @@ main() {
 }
 
 main
+

@@ -1,6 +1,8 @@
 set -exu
 
+GOVC_VERSION="0.16.0"
+GOVC_BINARY_NAME=govc_v${GOVC_VERSION}_linux_amd64
 mkdir -p ${BOSH_INSTALL_TARGET}/bin
-gzip -d govc_linux_amd64.gz
-chmod +x govc_linux_amd64
-mv govc_linux_amd64 ${BOSH_INSTALL_TARGET}/bin/govc
+gzip -d ${GOVC_BINARY_NAME}.gz
+chmod +x ${GOVC_BINARY_NAME}
+mv ${GOVC_BINARY_NAME} ${BOSH_INSTALL_TARGET}/bin/govc

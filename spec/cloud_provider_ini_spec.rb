@@ -27,8 +27,8 @@ describe 'cloud-provider-ini' do
       expect(rendered_template).to include('node-tags=fake-worker-node-tag')
     end
 
-    it 'does not define the multi-az property' do
-      expect(rendered_template).not_to include('multizone=true')
+    it 'defines the multi-az property' do
+      expect(rendered_template).to include('multizone=true')
     end
 
     it 'sets token-url to nil if service_key is set' do
@@ -43,26 +43,6 @@ describe 'cloud-provider-ini' do
       end
     end
 
-    context 'multiple az defined' do
-      let(:link_spec) do
-        {
-          'cloud-provider' => {
-            'instances' => [
-              {
-                'az' => 'z1'
-              },
-              {
-                'az' => 'z2'
-              }
-            ]
-          }
-        }
-      end
-
-      it 'defines the multi-az property' do
-        expect(rendered_template).to include('multizone=true')
-      end
-    end
   end
 
   context 'if cloud provider is vsphere' do
@@ -83,7 +63,34 @@ describe 'cloud-provider-ini' do
     end
 
     it 'renders the correct template for vsphere' do
-      vsphere_config.each { |k, v| expect(rendered_template).to include("#{k}=#{v}") }
+      vsphere_config.each do |k, v|
+        if k == 'password'
+          expect(rendered_template).to include("#{k}=\"#{v}\"")
+        else
+          expect(rendered_template).to include("#{k}=#{v}")
+        end
+      end
+    end
+
+    context 'password has a special character #' do
+      it 'has a special character in the rendered template' do
+       vsphere_config['password'] = 'foo#bar'
+       expect(rendered_template).to include("password=\"foo#bar\"")
+      end
+    end
+
+    context 'password has a special character "' do
+      it 'has a special character in the rendered template' do
+       vsphere_config['password'] = 'foo"bar'
+       expect(rendered_template).to include("password=\"foo\\\"bar\"")
+      end
+    end
+
+    context 'password has multiple special characters' do
+      it 'has a special character in the rendered template' do
+       vsphere_config['password'] = %(x123#$%^&*')
+       expect(rendered_template).to include("password=\"x123#\$%^&*'")
+      end
     end
   end
 

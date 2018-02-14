@@ -3,7 +3,7 @@
 set -e
 [ -z "$DEBUG" ] || set -x
 
-config_dir="/var/vcap/jobs/kubernetes-system-specs/config/"
+config_dir="/var/vcap/jobs/kubernetes-roles/config/"
 kubectl="/var/vcap/packages/kubernetes/bin/kubectl --kubeconfig=${config_dir}/kubeconfig"
 
 until ${kubectl} apply -f "${config_dir}/rbac_policy.yml"; do
