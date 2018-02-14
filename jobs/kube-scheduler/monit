@@ -1,5 +1,5 @@
 check process kube-scheduler
-  with pidfile /var/vcap/sys/run/kubernetes/kube-scheduler.pid
-  start program "/var/vcap/jobs/kube-scheduler/bin/kube_scheduler_ctl start"
-  stop program "/var/vcap/jobs/kube-scheduler/bin/kube_scheduler_ctl stop"
+  with pidfile /var/vcap/sys/run/bpm/kube-scheduler/kube-scheduler.pid
+  start program "/var/vcap/jobs/bpm/bin/bpm start kube-scheduler"
+  stop program "/var/vcap/jobs/bpm/bin/bpm stop kube-scheduler"
   group vcap
