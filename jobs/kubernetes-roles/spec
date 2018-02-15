@@ -6,7 +6,12 @@ templates:
   bin/post-start.erb: bin/post-start
   config/ca.pem.erb: config/ca.pem
   config/kubeconfig.erb: config/kubeconfig
-  config/rbac_policy.yml.erb: config/rbac_policy.yml
+  config/policies/cluster_admin.yml: config/policies/cluster_admin.yml
+  config/policies/kube_proxy.yml: config/policies/kube_proxy.yml
+  config/policies/kubelet.yml: config/policies/kubelet.yml
+  config/policies/kubelet_drain.yml: config/policies/kubelet_drain.yml
+  config/policies/route_sync.yml: config/policies/route_sync.yml
+  config/policies/vsphere_cloud_provider.yml.erb: config/policies/vsphere_cloud_provider.yml
 
 packages:
 - kubernetes
