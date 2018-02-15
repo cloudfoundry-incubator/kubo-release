@@ -35,6 +35,8 @@ properties:
     description: The password for the system:kube-controller-manager user
   kubelet-password:
     description: The password for the kubelet user
+  kubelet-drain-password:
+    description: The password for the kubelet drain user
   kube-proxy-password:
     description: The password for the kube-proxy user
   kube-scheduler-password:
