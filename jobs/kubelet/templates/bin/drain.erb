@@ -34,11 +34,11 @@ save_stdout_to_fd3() {
 
 send_process_stdout_to_logfile_and_syslog() {
   save_stdout_to_fd3
-  exec 1>> "$LOG_DIR/$NAME.stdout.log"
+  exec 1>> "$LOG_DIR/drain.stdout.log"
 }
 
 send_process_stderr_to_logfile_and_syslog() {
-  exec 2>> "$LOG_DIR/$NAME.stderr.log"
+  exec 2>> "$LOG_DIR/drain.stderr.log"
 }
 
 check_if_pid_is_running() {
@@ -63,8 +63,8 @@ check_if_pidfile_exists() {
 }
 
 drain_kubelet() {
-  local node_name=$(kubectl --kubeconfig /var/vcap/jobs/kubelet/config/kubeconfig get nodes -o wide -L spec.ip | grep "<%= spec.ip %>" | awk '{print $1}')
-  kubectl --kubeconfig /var/vcap/jobs/kubelet/config/kubeconfig drain "${node_name}" --grace-period 10 --force --delete-local-data  --ignore-daemonsets
+  local node_name=$(kubectl --kubeconfig /var/vcap/jobs/kubelet/config/kubeconfig-drain get nodes -o wide -L spec.ip | grep "<%= spec.ip %>" | awk '{print $1}')
+  kubectl --kubeconfig /var/vcap/jobs/kubelet/config/kubeconfig-drain drain "${node_name}" --grace-period 10 --force --delete-local-data  --ignore-daemonsets
 }
 
 kill_node() {
