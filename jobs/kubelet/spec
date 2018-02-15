@@ -9,6 +9,7 @@ templates:
   bin/pre-start.erb: bin/pre-start
   config/ca.pem.erb: config/ca.pem
   config/cloud-provider.ini.erb: config/cloud-provider.ini
+  config/kubeconfig-drain.erb: config/kubeconfig-drain
   config/kubeconfig.erb: config/kubeconfig
   config/kubelet-key.pem.erb: config/kubelet-key.pem
   config/kubelet.pem.erb: config/kubelet.pem
@@ -64,6 +65,8 @@ properties:
     example: "memory.available<500Mi,nodefs.available<10%"
   api-token:
     description: The token to access Kubernetes API
+  drain-api-token:
+    description: The token to access Kubernetes API used to drain the kubelet.
   logging-level:
     description: "V-leveled logging at the specified level. See https://github.com/golang/glog"
     default: 2
