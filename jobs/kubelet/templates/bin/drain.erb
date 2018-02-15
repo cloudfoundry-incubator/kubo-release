@@ -6,11 +6,9 @@ set -eu
 
 export PATH=/var/vcap/packages/kubernetes/bin:$PATH
 
-NAME="${0##*/}"
 LOG_DIR=/var/vcap/sys/log/kubelet
 PIDFILE=/var/vcap/sys/run/kubernetes/kubelet.pid
 
-exit_code=1
 trap ensure_safe_exit EXIT
 
 main() {
@@ -19,27 +17,27 @@ main() {
   check_if_pidfile_exists
   check_if_pid_is_running
   drain_kubelet
-  exit_with_code 0
-}
-
-exit_with_code() {
-  exit_code=$1
-  exit
 }
 
 ensure_safe_exit() {
-  exec 1>&3 2>&4
-  echo $exit_code
-  exit $exit_code
+  exit_code=$?
+  if [[ $exit_code -ne 0 ]]; then
+    echo "Kubelet drain failed"
+    exit $exit_code
+  fi
+  echo 0 >&3
+}
+
+save_stdout_to_fd3() {
+  exec 3>&1
 }
 
 send_process_stdout_to_logfile_and_syslog() {
-  exec 3>&1
+  save_stdout_to_fd3
   exec 1>> "$LOG_DIR/$NAME.stdout.log"
 }
 
 send_process_stderr_to_logfile_and_syslog() {
-  exec 4>&2
   exec 2>> "$LOG_DIR/$NAME.stderr.log"
 }
 
