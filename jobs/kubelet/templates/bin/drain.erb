@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# vi: ft=sh
 
 [ -z "$DEBUG" ] || set -x
 
@@ -16,7 +17,9 @@ main() {
   send_process_stderr_to_logfile_and_syslog
   check_if_pidfile_exists
   check_if_pid_is_running
-  drain_kubelet
+  if ! drain_kubelet; then
+    fail_if_master_is_running
+  fi
 }
 
 ensure_safe_exit() {
@@ -48,6 +51,25 @@ check_if_pid_is_running() {
     echo "$(date) -- Process from pidfile not running, so not attempting to drain."
     exit_with_code 0
   fi
+}
+
+fail_if_master_is_running() {
+  local ATTEMPTS_REMAINING=100
+  local cacert=/var/vcap/jobs/kubelet/config/ca.pem
+  local auth_header='Authorization: Bearer <%= p("drain-api-token")  %>'
+  while true; do
+    if curl -sS https://master.cfcr.internal:8443/healthz -H "$auth_header" --fail --cacert "$cacert" --connect-timeout 2 > /dev/null; then
+      exit 1
+    else
+      ATTEMPTS_REMAINING=$(( ATTEMPTS_REMAINING - 1 ))
+      if [[ "$ATTEMPTS_REMAINING" -eq 0 ]]; then
+        echo 'Master seems to be down'
+        echo 'Assuming this is a bosh delete-deployment, the drain failure will be ignored.'
+        exit
+      fi
+      sleep 1
+    fi
+  done
 }
 
 pid_is_running?() {
