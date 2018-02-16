@@ -17,6 +17,9 @@ UAA_API_URL="<%=p('cloud_foundry.uaa_url') %>"
 UAA_CLIENT_ID="<%=p('cloud_foundry.uaa_client_id') %>"
 UAA_CLIENT_SECRET="<%=p('cloud_foundry.uaa_client_secret') %>"
 
+# Check the credentials. Print errors to logs.
+curl --max-time 10 -s -k -X POST ${UAA_API_URL}/oauth/token --data "client_id=${UAA_CLIENT_ID}&client_secret=${UAA_CLIENT_SECRET}&grant_type=client_credentials&response_type=token"
+
 # Fetch UAA token
 log "Fetching token from UAA at ${UAA_API_URL}"
 UAA_REQUEST=$(curl --fail --max-time 10 -s -k -X POST ${UAA_API_URL}/oauth/token --data "client_id=${UAA_CLIENT_ID}&client_secret=${UAA_CLIENT_SECRET}&grant_type=client_credentials&response_type=token")
