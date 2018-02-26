@@ -47,7 +47,7 @@ properties:
   # AWS specific properties
   cloud-provider.aws.access_key_id:
     description: AWS access key ID that is used by cloud-provider.
-  cloud-provider.gce.secret_access_key:
+  cloud-provider.aws.secret_access_key:
     description: AWS secret access key that is used by cloud-provider.
 
   # GCE specific properties
