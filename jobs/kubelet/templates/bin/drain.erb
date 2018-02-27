@@ -49,7 +49,7 @@ check_if_pid_is_running() {
   pid=$(head -1 "$PIDFILE")
   if ! pid_is_running? "${pid}"; then
     echo "$(date) -- Process from pidfile not running, so not attempting to drain."
-    exit_with_code 0
+    exit
   fi
 }
 
@@ -80,7 +80,7 @@ pid_is_running?() {
 check_if_pidfile_exists() {
   if [ ! -e $PIDFILE ]; then
     echo "$(date) -- Pidfile not found, so not attempting to drain."
-    exit_with_code 0
+    exit
   fi
 }
 
