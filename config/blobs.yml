@@ -42,14 +42,14 @@ etcdctl-3.0.7:
   size: 18427584
   object_id: 32221476-5c3d-4ec7-5869-44c989cc3077
   sha: 11f0462cc86bf85332399a2fa584d5bb46d0cb2a
-govc_v0.16.0_linux_amd64.gz:
-  size: 7941649
-  object_id: a1f90508-10d4-4f13-43b6-4974e47b29c3
-  sha: fed663701376d9f0896eb2fe9f9fc5aaeee1c3dd
 flannel-v0.10.0-linux-amd64.tar.gz:
   size: 9706487
   object_id: 36a8e66a-0b6c-4ca2-5f27-c277a7db90c5
   sha: 9d19a56847d6aad207671a349eddd85de87ba560
+govc_v0.16.0_linux_amd64.gz:
+  size: 7941649
+  object_id: a1f90508-10d4-4f13-43b6-4974e47b29c3
+  sha: fed663701376d9f0896eb2fe9f9fc5aaeee1c3dd
 jq-linux64-1.5:
   size: 3027945
   object_id: 41eb1cd1-0377-4e08-5602-51e0af8b9b52
