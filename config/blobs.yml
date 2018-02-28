@@ -18,10 +18,10 @@ container-images/gcr.io_google_containers_k8s-dns-sidecar-amd64:1.14.8.tgz:
   size: 11240942
   object_id: 7b67f40e-6428-4441-459b-858ef4151389
   sha: 71f699220f8685114493ac82428835294eaea869
-container-images/gcr.io_google_containers_kubernetes-dashboard-amd64:v1.8.2.tgz:
-  size: 37217815
-  object_id: c3b9d396-8537-498d-403a-3afc628ee3c7
-  sha: de1fc537fa30c9547087a64ceb36e415b38f37ae
+container-images/gcr.io_google_containers_kubernetes-dashboard-amd64:v1.8.3.tgz:
+  size: 37246406
+  object_id: fb470084-0a61-48d8-76af-870745aa2057
+  sha: 63af8451dd262e2d4068a090029a8f8514aece1c
 container-images/gcr.io_google_containers_pause-amd64:3.0.tgz:
   size: 313309
   object_id: 7af46f58-b711-491a-4142-048930964b81
