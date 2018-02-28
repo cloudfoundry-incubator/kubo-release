@@ -34,10 +34,6 @@ container-images/k8s.gcr.io_heapster-amd64:v1.5.0.tgz:
   size: 19853400
   object_id: 3fd4b0ad-3e1b-4ba7-7d71-d600dc8283ea
   sha: 0698cdc1e91d7d57e0bccf86a7a7e13dc02fe3c0
-container-images/k8s.gcr.io_heapster-amd64:v1.5.1.tgz:
-  size: 19797523
-  object_id: 5ededd01-5478-4c4c-7005-237e4d25b650
-  sha: 9f7e11ff96729c7d531631e2217272e63bca3d37
 container-images/k8s.gcr.io_heapster-influxdb-amd64:v1.3.3.tgz:
   size: 4751608
   object_id: 72e0b4f1-269e-4174-4e47-e1598bf0e8cb
@@ -46,14 +42,14 @@ etcdctl-3.0.7:
   size: 18427584
   object_id: 32221476-5c3d-4ec7-5869-44c989cc3077
   sha: 11f0462cc86bf85332399a2fa584d5bb46d0cb2a
-flannel-v0.10.0-linux-amd64.tar.gz:
-  size: 9706487
-  object_id: 36a8e66a-0b6c-4ca2-5f27-c277a7db90c5
-  sha: 9d19a56847d6aad207671a349eddd85de87ba560
 govc_v0.16.0_linux_amd64.gz:
   size: 7941649
   object_id: a1f90508-10d4-4f13-43b6-4974e47b29c3
   sha: fed663701376d9f0896eb2fe9f9fc5aaeee1c3dd
+flannel-v0.10.0-linux-amd64.tar.gz:
+  size: 9706487
+  object_id: 36a8e66a-0b6c-4ca2-5f27-c277a7db90c5
+  sha: 9d19a56847d6aad207671a349eddd85de87ba560
 jq-linux64-1.5:
   size: 3027945
   object_id: 41eb1cd1-0377-4e08-5602-51e0af8b9b52
