@@ -2,52 +2,32 @@
 
 set -eu -o pipefail
 
-CONF_DIR=/var/vcap/jobs/kubelet/config
-PKG_DIR=/var/vcap/packages/kubernetes
+/etc/init.d/rpcbind stop || echo Already stopped.
 
-get_cloud_property() {
-  local property_name="${1}="
-  local prefix_length=$(echo "${property_name}" | wc -c | tr -d ' ')
-  grep "${property_name}" "${cloud_config}" | tr -d '"' | cut -c${prefix_length}-
-}
-
-shutdown_rpcbind_if_its_running() {
-  /etc/init.d/rpcbind stop || echo Already stopped.
-}
-
-update_vsphere_vms() {
-  export GOVC_URL="$(get_cloud_property "server"):$(get_cloud_property "port")"
-  export GOVC_USERNAME="$(get_cloud_property "user" | sed 's/\\\\/\\/g')"
-  export GOVC_PASSWORD="$(get_cloud_property "password")"
-  export GOVC_INSECURE="$(get_cloud_property "insecure-flag")"
-  export GOVC_DATACENTER="$(get_cloud_property "datacenter")"
+<% if_link('cloud-provider') do |cloud_provider|
+    if cloud_provider.p('cloud-provider.type') == 'vsphere' %>
+  export GOVC_URL="<%= cloud_provider.p('cloud-provider.vsphere.server') %>:<%= cloud_provider.p('cloud-provider.vsphere.port') %>"
+  export GOVC_USERNAME="<%= cloud_provider.p('cloud-provider.vsphere.user').gsub('\\','\\\\\\') %>"
+  export GOVC_PASSWORD=$'<%= cloud_provider.p('cloud-provider.vsphere.password').gsub("'", %q(\\\')) %>'
+  export GOVC_INSECURE="<%= cloud_provider.p('cloud-provider.vsphere.insecure-flag') %>"
+  export GOVC_DATACENTER="<%= cloud_provider.p('cloud-provider.vsphere.datacenter') %>"
 
   <% if_p('http_proxy') do |http_proxy| %>
-  export http_proxy=<%= http_proxy %>
-  export HTTP_PROXY=<%= http_proxy %>
+    export http_proxy=<%= http_proxy %>
+    export HTTP_PROXY=<%= http_proxy %>
   <% end %>
   <% if_p('https_proxy') do |https_proxy| %>
-  export https_proxy=<%= https_proxy %>
-  export HTTPS_PROXY=<%= https_proxy %>
+    export https_proxy=<%= https_proxy %>
+    export HTTPS_PROXY=<%= https_proxy %>
   <% end %>
   <% if_p('no_proxy') do |no_proxy| %>
-  export no_proxy=<%= no_proxy %>
-  export NO_PROXY=<%= no_proxy %>
+    export no_proxy=<%= no_proxy %>
+    export NO_PROXY=<%= no_proxy %>
   <% end %>
 
   # how to get the vm uuid and why we need this is described in https://kubernetes.io/docs/getting-started-guides/vsphere/#enable-vsphere-cloud-provider
-  local vm_uuid=$(cat /sys/class/dmi/id/product_serial | sed -e 's/^VMware-//' -e 's/-/ /' | awk '{ print tolower($1$2$3$4 "-" $5$6 "-" $7$8 "-" $9$10 "-" $11$12$13$14$15$16) }')
+  vm_uuid=$(cat /sys/class/dmi/id/product_serial | sed -e 's/^VMware-//' -e 's/-/ /' | awk '{ print tolower($1$2$3$4 "-" $5$6 "-" $7$8 "-" $9$10 "-" $11$12$13$14$15$16) }')
   /var/vcap/packages/govc/bin/govc vm.change -e 'disk.enableUUID=1' -vm.uuid=$vm_uuid
-}
+<%  end
+  end %>
 
-main() {
-  shutdown_rpcbind_if_its_running
-  <% if_link('cloud-provider') do |cloud_provider| %>
-    <% if cloud_provider.p('cloud-provider.type') == 'vsphere' %>
-       cloud_config="/var/vcap/jobs/kubelet/config/cloud-provider.ini"
-       update_vsphere_vms
-    <% end %>
-  <% end %>
-}
-
-main

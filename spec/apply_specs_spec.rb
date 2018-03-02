@@ -57,17 +57,17 @@ describe 'apply-specs' do
           'authorization-mode' => 'abac'
         }
 
-        compiled_template('apply-specs', 'specs/kubernetes-dashboard.yml', properties)
+        compiled_template('apply-specs', 'specs/kubernetes-dashboard.yml', properties, links)
       end
 
       it 'should include the kubconfig' do
-        str = '- --kubeconfig=/var/vcap/jobs/kubelet/config/kubeconfig'
+        str = '- --kubeconfig=/kubernetes-dashboard-config/kubeconfig'
 
         expect(rendered_template).to include(str)
       end
 
-      it 'should include the mountPath of kubconfig' do
-        str = '- mountPath: /var/vcap/jobs/kubelet/config/'
+      it 'should include the mountPath of kubeconfig' do
+        str = '- mountPath: /kubernetes-dashboard-config'
 
         expect(rendered_template).to include(str)
       end
@@ -79,7 +79,7 @@ describe 'apply-specs' do
           'authorization-mode' => 'rbac'
         }
 
-        compiled_template('apply-specs', 'specs/kubernetes-dashboard.yml', properties)
+        compiled_template('apply-specs', 'specs/kubernetes-dashboard.yml', properties, links)
       end
 
       it 'should include a service account' do
