@@ -10,7 +10,7 @@
   admission_control_options = [
     "DenyEscalatingExec", "LimitRanger", "NamespaceExists",
     "NamespaceLifecycle","ResourceQuota","ServiceAccount",
-    "DefaultStorageClass"]
+    "DefaultStorageClass", "MutatingAdmissionWebhook"]
 
   if !p('allow_privileged')
     admission_control_options.push("SecurityContextDeny")

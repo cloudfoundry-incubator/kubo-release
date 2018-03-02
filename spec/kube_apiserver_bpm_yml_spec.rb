@@ -91,7 +91,7 @@ describe 'kube-apiserver' do
     expect(bpm_yml['processes'][0]['args']).to include(
       '--admission-control=DenyEscalatingExec,LimitRanger,' \
       'NamespaceExists,NamespaceLifecycle,ResourceQuota,' \
-      'ServiceAccount,DefaultStorageClass'
+      'ServiceAccount,DefaultStorageClass,MutatingAdmissionWebhook'
     )
   end
 
