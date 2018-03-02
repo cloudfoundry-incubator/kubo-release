@@ -57,8 +57,14 @@ rules:
 - apiGroups: [""]
   resources: ["pods/eviction"]
   verbs: ["create"]
+- apiGroups: ["apps"]
+  resources: ["statefulsets"]
+  verbs: ["get"]
 - apiGroups: ["extensions"]
-  resources: ["replicasets"]
+  resources: ["replicasets", "daemonsets"]
+  verbs: ["get"]
+- apiGroups: ["batch"]
+  resources: ["jobs"]
   verbs: ["get"]
 ---
 kind: ClusterRoleBinding
