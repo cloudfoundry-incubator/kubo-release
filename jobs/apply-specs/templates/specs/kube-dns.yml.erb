@@ -48,7 +48,7 @@ metadata:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: kube-dns
+  name: kube-dns-auth
   namespace: kube-system
   labels:
     addonmanager.kubernetes.io/mode: EnsureExists
@@ -60,7 +60,7 @@ data:
     kind: Config
     clusters:
     - cluster:
-        certificate-authority: "/kube-dns-config/ca.pem"
+        certificate-authority: "/kube-dns-auth/ca.pem"
         server: https://master.cfcr.internal:8443
       name: kubernetes
     contexts:
@@ -76,6 +76,14 @@ data:
   ca.pem: |
 <%= link("kube-apiserver").p("tls.kubernetes.ca").lines.map! { |line| line.prepend("    ") }.join -%>
 <% end -%>
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kube-dns
+  namespace: kube-system
+  labels:
+    addonmanager.kubernetes.io/mode: EnsureExists
 ---
 apiVersion: extensions/v1beta1
 kind: Deployment
@@ -109,6 +117,9 @@ spec:
       - key: "CriticalAddonsOnly"
         operator: "Exists"
       volumes:
+      - name: kube-dns-auth
+        configMap:
+          name: kube-dns-auth
       - name: kube-dns-config
         configMap:
           name: kube-dns
@@ -151,7 +162,7 @@ spec:
         - --config-dir=/kube-dns-config
         - --v=10
 <% if p('authorization-mode').downcase != 'rbac' -%>
-        - --kubecfg-file=/kube-dns-config/kubeconfig
+        - --kubecfg-file=/kube-dns-auth/kubeconfig
 <% end -%>
         ports:
         - containerPort: 10053
@@ -161,6 +172,8 @@ spec:
           name: dns-tcp-local
           protocol: TCP
         volumeMounts:
+        - name: kube-dns-auth
+          mountPath: /kube-dns-auth
         - name: kube-dns-config
           mountPath: /kube-dns-config
       - name: dnsmasq
