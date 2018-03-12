@@ -2,6 +2,14 @@
 
 TIMEOUT=<%=p("timeout-sec")%>
 
+
+remove_drain_permissions_from_kubelet() {
+  local config_dir="/var/vcap/jobs/kubernetes-system-specs/config/"
+  local kubectl="/var/vcap/packages/kubernetes/bin/kubectl --kubeconfig=${config_dir}/kubeconfig"
+
+  $kubectl delete clusterrolebinding drain-permissions-for-kubelet --ignore-not-found=true
+}
+
 main() {
   if timeout "$TIMEOUT" /var/vcap/jobs/kubernetes-system-specs/bin/deploy-specs
   then
@@ -10,6 +18,7 @@ main() {
     echo "failed to start all system specs after $TIMEOUT with exit code $?"
     exit 1
   fi
+  remove_drain_permissions_from_kubelet
 }
 
 main
