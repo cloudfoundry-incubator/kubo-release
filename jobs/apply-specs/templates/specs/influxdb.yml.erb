@@ -14,20 +14,23 @@ spec:
       containers:
       - name: influxdb
         image: k8s.gcr.io/heapster-influxdb-amd64:v1.3.3
+        command:
+        - influxd
+        - --config
+        - /config/config.toml
         volumeMounts:
         - mountPath: /data
           name: influxdb-storage
-      #  - mountPath: /etc/config.toml
-      #    name: influxdb-config
-      #    subPath: config.toml
+        - mountPath: /config
+          name: influxdb-config
         - mountPath: /certs
           name: influxdb-certs
       volumes:
       - name: influxdb-storage
         emptyDir: {}
-    #  - name: influxdb-config
-    #    configMap:
-    #      name: influxdb-config
+      - name: influxdb-config
+        configMap:
+          name: influxdb-config
       - name: influxdb-certs
         secret:
           secretName: influxdb-certs
