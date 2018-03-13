@@ -17,16 +17,17 @@ spec:
         volumeMounts:
         - mountPath: /data
           name: influxdb-storage
-        - mountPath: /etc/
-          name: influxdb-config
+      #  - mountPath: /etc/config.toml
+      #    name: influxdb-config
+      #    subPath: config.toml
         - mountPath: /certs
           name: influxdb-certs
       volumes:
       - name: influxdb-storage
         emptyDir: {}
-      - name: influxdb-config
-        configMap:
-          name: influxdb-config
+    #  - name: influxdb-config
+    #    configMap:
+    #      name: influxdb-config
       - name: influxdb-certs
         secret:
           secretName: influxdb-certs
