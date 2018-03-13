@@ -1,0 +1,9 @@
+#!/bin/bash
+
+set -eu -o pipefail
+
+CONNTRACK_PACKAGES=/var/vcap/packages/conntrack
+
+dpkg -i "${CONNTRACK_PACKAGES:?}/libmnl0_1.0.3-3.deb"
+dpkg -i "${CONNTRACK_PACKAGES:?}/libnetfilter-conntrack3_1.0.4-1.deb"
+dpkg -i "${CONNTRACK_PACKAGES:?}/conntrack_1.4.1-1.deb"

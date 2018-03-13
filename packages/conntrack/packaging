@@ -1,0 +1,5 @@
+set -e
+
+mkdir -p "${BOSH_INSTALL_TARGET:?}/"
+cp -a conntrack/* "${BOSH_INSTALL_TARGET:?}"
+
