@@ -8,12 +8,15 @@ cni/util-linux_2.27.1-6ubuntu3_amd64.deb:
   sha: 568f62cb031608ab09ba1e3c2121e9e8b92dcae4
 conntrack/conntrack_1.4.1-1.deb:
   size: 25112
+  object_id: 9bf859c2-93aa-48b0-69f9-5903f0b4acbe
   sha: 494df11d77a1dd31fbc1e0e8c7946957ef5a74af
 conntrack/libmnl0_1.0.3-3.deb:
   size: 11416
+  object_id: 245e085f-1ad2-447d-67bb-1894b960c571
   sha: dcb0b572f1207ad192d8cb1a9010fc6dd22d0000
 conntrack/libnetfilter-conntrack3_1.0.4-1.deb:
   size: 45872
+  object_id: 42a59368-8ae3-4502-480b-56ecd3f40f7a
   sha: 743b497bd6a6491a8cad11c04103e55c7a9cc93c
 container-images/gcr.io_google_containers_k8s-dns-dnsmasq-nanny-amd64:1.14.8.tgz:
   size: 10940805
