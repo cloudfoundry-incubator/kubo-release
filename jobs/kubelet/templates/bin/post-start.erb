@@ -39,3 +39,33 @@ else
   echo "kubelet failed post-start checks after $TIMEOUT seconds"
   exit 1
 fi
+
+if  [ $($kubectl get nodes ${node_name} -o jsonpath='{.status.conditions[?(@.type=="NetworkUnavailable")].status}') ==  "True" ]
+then
+v="$(cat <<-EOF
+{
+  "status":{
+    "conditions": [
+     {
+        "type": "NetworkUnavailable",
+        "status": "False",
+        "reason": "NetworkProvidedByFlannel",
+        "message": "Status manually modified by CFCR kubelet post-start"
+     }
+    ]
+  }
+}
+EOF
+)"
+
+  KUBE_TOKEN=$($kubectl  config view -o jsonpath='{.users[?(@.name == "kubelet")].user.token}')
+  /usr/bin/curl -sS --cacert /var/vcap/jobs/kubelet/config/ca.pem \
+  -H "Authorization: Bearer ${KUBE_TOKEN}" \
+  -H "Accept: application/json" \
+  -H "Content-Type: application/strategic-merge-patch+json" \
+  -X PATCH \
+  -d "$v" \
+  https://master.cfcr.internal:8443/api/v1/nodes/${node_name}/status
+
+  echo "need to patch network availability"
+fi
