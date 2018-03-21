@@ -38,6 +38,19 @@ provides:
   - cloud-provider.vsphere.user
   - cloud-provider.vsphere.vm-uuid
   - cloud-provider.vsphere.working-dir
+  - cloud-provider.azure.cloud
+  - cloud-provider.azure.subscription-id
+  - cloud-provider.azure.tenant-id
+  - cloud-provider.azure.service-principal-id
+  - cloud-provider.azure.service-principal-secret
+  - cloud-provider.azure.location
+  - cloud-provider.azure.resource-group-name
+  - cloud-provider.azure.vnet-resource-group-name
+  - cloud-provider.azure.vnet-name
+  - cloud-provider.azure.subnet-name
+  - cloud-provider.azure.network-security-group-name
+  - cloud-provider.azure.route-table-name
+  - cloud-provider.azure.availability-set
 
 properties:
   cloud-provider.type:
@@ -59,6 +72,35 @@ properties:
     description: Google Cloud tag that identifies only worker nodes in this deployment.
   cloud-provider.gce.service_key:
     description: Google Cloud service key that is used by cloud-provider.
+
+  # Azure specific properties
+  cloud-provider.azure.cloud:
+    description: Microsoft Azure cloud id. Defaults to AzurePublicCloud, can also be AzureUSGovernmentCloud, AzureChinaCloud, or AzureGermanCloud. Required when cloud-provider.type is azure
+    default: "AzurePublicCloud"
+  cloud-provider.azure.subscription-id:
+    description: Microsoft Azure subscription id.  Required when cloud-provider.type is azure
+  cloud-provider.azure.tenant-id:
+    description: Microsoft Azure tenant id.  Required when cloud-provider.type is azure
+  cloud-provider.azure.service-principal-id:
+    description: Microsoft Azure service principal uuid.  Required when cloud-provider.type is azure
+  cloud-provider.azure.service-principal-secret:
+    description: Microsoft Azure service principal secret.  Required when cloud-provider.type is azure
+  cloud-provider.azure.location:
+    description: Microsoft Azure datacenter location for the Kubernetes cluster.  Required when cloud-provider.type is azure
+  cloud-provider.azure.resource-group-name:
+    description: Microsoft Azure resource group name for the Kubernetes cluster.  Disks and Load Balancers will be created here.  Required when cloud-provider.type is azure
+  cloud-provider.azure.vnet-resource-group-name:
+    description: Microsoft Azure resource group that includes the Virtual Network.  Required when cloud-provider.type is azure
+  cloud-provider.azure.vnet-name:
+    description: Microsoft Azure Virtual Network name.  Optionally prefixed with resource group name, i.e. "resource_group.vnet_name". Required when cloud-provider.type is azure
+  cloud-provider.azure.subnet-name:
+    description: Microsoft Azure subnet name.  Must be part of the virtual network.   required when cloud-provider.type is azure
+  cloud-provider.azure.network-security-group-name:
+    description: Microsoft Azure network security group that is attached to the subnet.  This will be be used to manage rules for Load Balancers.  Required when cloud-provider.type is azure
+  cloud-provider.azure.route-table-name:
+    description: Microsoft Azure route table that is attached to the subnet.  Used for managed routes.  Optional when cloud-provider.type is azure
+  cloud-provider.azure.availability-set:
+    description: Microsoft Azure availability set for the cluster worker nodes.  Required when cloud-provider.type is azure
 
   # vSphere specific properties
   cloud-provider.vsphere.user:

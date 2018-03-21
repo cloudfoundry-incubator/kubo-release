@@ -1,0 +1,71 @@
+#!/bin/bash -ex
+
+NAME="${0##*/}"
+
+RUN_DIR=/var/vcap/sys/run/poll_nodes
+PIDFILE=$RUN_DIR/poll_nodes.pid
+LOG_DIR=/var/vcap/sys/log/poll_nodes
+
+# shellcheck disable=SC1091
+. /var/vcap/packages/pid_utils/pid_utils.sh
+
+setup_directories() {
+  mkdir -p "$RUN_DIR" "$LOG_DIR"
+  chown -R vcap:vcap "$RUN_DIR" "$LOG_DIR"
+}
+
+send_process_stdout_to_logfile() {
+  exec 1>> "$LOG_DIR/$NAME.stdout.log"
+}
+
+send_process_stderr_to_logfile() {
+  exec 2>> "$LOG_DIR/$NAME.stderr.log"
+}
+
+start_poll_nodes() {
+    /var/vcap/jobs/node-dns-aliases/bin/poll_nodes \
+    1>> $LOG_DIR/poll_nodes.stdout.log \
+    2>> $LOG_DIR/poll_nodes.stderr.log
+}
+
+stop_poll_nodes() {
+  kill_and_wait "$PIDFILE"
+}
+
+pid() {
+  head -1 "$PIDFILE"
+}
+
+stop_associated_logging_processes() {
+  # shellcheck disable=SC2046
+  pkill -g $(get_group_pid)
+}
+
+get_group_pid() {
+  ps -ho pgrp "$(pid)"
+}
+
+case $1 in
+
+  start)
+    setup_directories
+    send_process_stdout_to_logfile
+    send_process_stderr_to_logfile
+    rm /var/vcap/jobs/node-dns-aliases/config/nodelist
+
+    pid_guard "$PIDFILE" "poll_nodes"
+
+    echo $$ > $PIDFILE
+    start_poll_nodes
+    ;;
+
+  stop)
+    stop_associated_logging_processes
+    stop_poll_nodes
+    ;;
+
+  *)
+    echo "Usage: $0 {start|stop}"
+    ;;
+
+esac

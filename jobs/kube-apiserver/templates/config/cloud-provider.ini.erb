@@ -37,6 +37,28 @@
 
         disk_config_string="[Disk]\n"
         disk_config['scsicontrollertype'] = cloud_provider.p('cloud-provider.vsphere.scsicontrollertype')
+
+      elsif provider_type == 'azure'
+      cloud_config_string = ""
+      %>
+---
+cloud: <%= cloud_provider.p('cloud-provider.azure.cloud') %>
+tenantId: <%= cloud_provider.p('cloud-provider.azure.tenant-id') %>
+aadClientId: <%= cloud_provider.p('cloud-provider.azure.service-principal-id') %>
+aadClientSecret: <%= cloud_provider.p('cloud-provider.azure.service-principal-secret') %>
+subscriptionId: <%= cloud_provider.p('cloud-provider.azure.subscription-id') %>
+resourceGroup: <%= cloud_provider.p('cloud-provider.azure.resource-group-name') %>
+location: <%= cloud_provider.p('cloud-provider.azure.location') %>
+vnetName: <%= cloud_provider.p('cloud-provider.azure.vnet-name') %>
+vnetResourceGroup: <%= cloud_provider.p('cloud-provider.azure.vnet-resource-group-name') %>
+subnetName: <%= cloud_provider.p('cloud-provider.azure.subnet-name') %>
+securityGroupName: <%= cloud_provider.p('cloud-provider.azure.network-security-group-name') %>
+<%  cloud_provider.if_p('cloud-provider.azure.route-table-name') do | route_table| %>
+   <%= route_table %>
+<%  end %>
+useInstanceMetadata: true
+primaryAvailabilitySetName: <%= cloud_provider.p('cloud-provider.azure.availability-set') %>
+      <%
       elsif provider_type == 'openstack'
         cloud_config['auth-url'] = cloud_provider.p('cloud-provider.openstack.auth-url')
         cloud_config['username'] = cloud_provider.p('cloud-provider.openstack.username')
