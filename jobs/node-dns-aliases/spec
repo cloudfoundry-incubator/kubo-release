@@ -1,0 +1,21 @@
+---
+name: node-dns-aliases
+
+templates:
+  dns/aliases.json.erb: dns/aliases.json
+  bin/poll_nodes_ctl.erb: bin/poll_nodes_ctl
+  bin/sync_aliases.erb: bin/sync_aliases
+  bin/poll_nodes.erb: bin/poll_nodes
+  config/ca.pem.erb: config/ca.pem
+  config/kubeconfig.erb: config/kubeconfig
+
+packages:
+- kubernetes
+- jq
+- pid_utils
+
+properties:
+  tls.kubernetes:
+      description: "Certificate and private key for the Kubernetes master"
+  api-token:
+    description: The token to access Kubernetes API

@@ -11,6 +11,7 @@ templates:
   config/policies/kubelet.yml: config/policies/kubelet.yml
   config/policies/kubelet_drain.yml: config/policies/kubelet_drain.yml
   config/policies/vsphere_cloud_provider.yml.erb: config/policies/vsphere_cloud_provider.yml
+  config/policies/azure_cloud_provider.yml.erb: config/policies/azure_cloud_provider.yml
 
 packages:
 - kubernetes
