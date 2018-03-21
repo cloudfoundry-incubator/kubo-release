@@ -75,7 +75,7 @@ packages:
   fingerprint: d7feccf759f1717a843485ba5b606ce4daf31bfeb76d47fbdb570516c9f889e0
   sha1: sha256:0477f20d33a55adc0af71825526ed1698d36bdf6efc9555d8f0633cdfb9793a7
   dependencies: []
-- name: golang-1.9-linux
+- name: golang-1.10-linux
   version: 8d6c67abda8684ce454f0bc74050a213456573ff
   fingerprint: 8d6c67abda8684ce454f0bc74050a213456573ff
   sha1: e9dd8e92accad2091d9f19d6ffabc8e019e58f6b
@@ -110,7 +110,7 @@ packages:
   fingerprint: 7a9bda903f655d0913711124b0ac0c9eb8f67d0d6b8a8650c36670a6684b678e
   sha1: sha256:e283a3eea3eb92519991fa615614400f1245bfaa60037a5e0592c143e543fe57
   dependencies:
-  - golang-1.9-linux
+  - golang-1.10-linux
 - name: socat
   version: 5737907822eb2c5ab7aa509d699acc566f349b7e86d8a8d176037b90d3427dbe
   fingerprint: 5737907822eb2c5ab7aa509d699acc566f349b7e86d8a8d176037b90d3427dbe
