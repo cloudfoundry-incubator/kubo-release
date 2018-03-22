@@ -2,6 +2,8 @@
 
 set -eu -o pipefail
 
+export PATH=/var/vcap/packages/kubernetes/bin:$PATH
+
 CONF_DIR=/var/vcap/jobs/kubelet/config
 PKG_DIR=/var/vcap/packages/kubernetes
 
@@ -29,7 +31,15 @@ update_vsphere_vms() {
    /var/vcap/packages/govc/bin/govc vm.change -e 'disk.enableUUID=1' -vm.uuid=$vm_uuid
 }
 
+delete_stale_drained_node() {
+  local node_name=$(kubectl --kubeconfig /var/vcap/jobs/kubelet/config/kubeconfig-drain get nodes -o wide -L spec.ip | grep "<%= spec.ip %>" | grep "NotReady" | awk '{print $1}')
+  if [[ ! -z "${node_name}" ]]; then
+    kubectl --kubeconfig /var/vcap/jobs/kubelet/config/kubeconfig-drain delete node "${node_name}" --ignore-not-found
+  fi
+}
+
 main() {
+  delete_stale_drained_node
   detect_cloud_config
   shutdown_rpcbind_if_its_running
   if [[ "vsphere" == "$cloud_provider" ]]; then
