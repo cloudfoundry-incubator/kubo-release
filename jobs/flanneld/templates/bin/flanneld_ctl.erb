@@ -50,6 +50,7 @@ start_flanneld() {
     set /coreos.com/network/config '{"Network":"10.200.0.0/16","Backend":{"Type":"vxlan"}}'
 
   flanneld -etcd-endpoints=<%= etcd_endpoints %> \
+    --ip-masq \
     --etcd-certfile=/var/vcap/jobs/flanneld/config/etcd-client.crt \
     --etcd-keyfile=/var/vcap/jobs/flanneld/config/etcd-client.key \
     --etcd-cafile=/var/vcap/jobs/flanneld/config/etcd-ca.crt \
