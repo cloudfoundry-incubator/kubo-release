@@ -1,11 +1,6 @@
 ---
 <%
-  etcd_endpoints = link("etcd").instances.map do |instance|
-    # See kubo-dns-aliases/dns/aliases.json
-    node_name = "#{instance.name.gsub('_','-')}-#{instance.index}"
-    etcd_advertise_urls_dns_suffix = link('etcd').p('etcd.advertise_urls_dns_suffix')
-    "https://#{node_name}.#{etcd_advertise_urls_dns_suffix}:4001"
-  end.join(',')
+  etcd_endpoints = link('etcd').instances.map { |server| "https://#{server.address}:2379" }.join(",")
 
   admission_control_options = [
     "DenyEscalatingExec", "LimitRanger", "NamespaceExists",
