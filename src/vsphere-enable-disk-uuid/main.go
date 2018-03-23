@@ -20,24 +20,29 @@ func main() {
 		os.Exit(1)
 	}
 
-	kubeconfig, err := clientcmd.LoadFromFile(opts.Kubeconfig)
+	k8s, err := getK8sClient(opts)
 	if err != nil {
 		fmt.Printf("Failed to load kubeconfig: %s", err.Error())
 		os.Exit(1)
 	}
 
+	ListWatch(k8s, nil)
+}
+
+
+func getK8sClient(opts Options) (kubernetes.Interface, error) {
+	kubeconfig, err := clientcmd.LoadFromFile(opts.Kubeconfig)
+	if err != nil {
+		return nil, err
+	}
 	clientConfig := clientcmd.NewDefaultClientConfig(*kubeconfig, &clientcmd.ConfigOverrides{})
 	restConfig, err := clientConfig.ClientConfig()
 	if err != nil {
-		fmt.Printf("Something is wrong with kubeconfig: %s", err.Error())
-		os.Exit(1)
+		return nil, err
 	}
-
-	clientSet, err := kubernetes.NewForConfig(restConfig)
+	k8s, err := kubernetes.NewForConfig(restConfig)
 	if err != nil {
-		fmt.Printf("Something is wrong with kubeconfig: %s", err.Error())
-		os.Exit(1)
+		return nil, err
 	}
-
-	ListWatch(clientSet, nil)
+	return k8s, nil
 }

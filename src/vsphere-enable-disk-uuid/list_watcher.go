@@ -10,8 +10,8 @@ import (
 
 type NodeAddedCallback func(*v1.Node)
 
-func ListWatch(clientSet kubernetes.Interface, nodeAddedCallback NodeAddedCallback) error {
-	watcher, err := clientSet.CoreV1().Nodes().Watch(meta_v1.ListOptions{})
+func ListWatch(k8s kubernetes.Interface, nodeAddedCallback NodeAddedCallback) error {
+	watcher, err := k8s.CoreV1().Nodes().Watch(meta_v1.ListOptions{})
 	if err != nil {
 		return err
 	}
