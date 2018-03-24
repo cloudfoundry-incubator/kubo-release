@@ -1,0 +1,18 @@
+#!/bin/bash
+
+set -euxo pipefail
+
+CONNTRACK_PACKAGES=/var/vcap/packages/conntrack
+
+install_package() {
+  local package=$1
+
+  until dpkg -i "$package"; do
+    echo "Retrying '$package'"
+    sleep 2
+  done
+}
+
+install_package "${CONNTRACK_PACKAGES:?}/libmnl0_1.0.3-3.deb"
+install_package "${CONNTRACK_PACKAGES:?}/libnetfilter-conntrack3_1.0.4-1.deb"
+install_package "${CONNTRACK_PACKAGES:?}/conntrack_1.4.1-1.deb"

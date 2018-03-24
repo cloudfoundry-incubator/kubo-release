@@ -1,0 +1,10 @@
+---
+name: kubernetes-dependencies
+
+templates:
+  bin/pre-start.erb: bin/pre-start
+
+packages:
+- conntrack
+
+properties: {}
