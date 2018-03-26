@@ -6,6 +6,7 @@ templates:
   config/ca.pem.erb: config/ca.pem
   config/service-account-private-key.pem.erb: config/service-account-private-key.pem
   config/kubeconfig.erb: config/kubeconfig
+  bin/post-deploy.erb: bin/post-deploy
 
 packages:
 - pid_utils
