@@ -10,6 +10,15 @@ export PATH=/var/vcap/packages/kubernetes/bin:$PATH
 LOG_DIR=/var/vcap/sys/log/kubelet
 PIDFILE=/var/vcap/sys/run/kubernetes/kubelet.pid
 
+if [ -e /var/vcap/jobs/cloud-provider/bin/cloud-provider_utils ]; then
+  . /var/vcap/jobs/cloud-provider/bin/cloud-provider_utils
+  set_cloud_provider
+  cloud_config="/var/vcap/jobs/cloud-provider/config/cloud-provider.ini"
+else
+  cloud_config=""
+  cloud_provider=""
+fi
+
 trap ensure_safe_exit EXIT
 
 main() {
@@ -89,6 +98,10 @@ check_if_pidfile_exists() {
 drain_kubelet() {
   local node_name=$(kubectl --kubeconfig /var/vcap/jobs/kubelet/config/kubeconfig-drain get nodes -o wide -L spec.ip | grep "<%= spec.ip %>" | awk '{print $1}')
   kubectl --kubeconfig /var/vcap/jobs/kubelet/config/kubeconfig-drain drain "${node_name}" --grace-period 10 --force --delete-local-data  --ignore-daemonsets
+  # Adding sleep here to allow kube-controller-manager reconcile state of the world before VM is deleted
+  if [ "vsphere" == "$cloud_provider" ]; then
+    sleep 30
+  fi
 }
 
 kill_node() {
