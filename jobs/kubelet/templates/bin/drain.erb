@@ -19,7 +19,10 @@ main() {
   check_if_pid_is_running
   if ! drain_kubelet; then
     fail_if_master_is_running
+  else
+    delete_drained_node
   fi
+
 }
 
 ensure_safe_exit() {
@@ -92,6 +95,11 @@ drain_kubelet() {
 kill_node() {
   kill -9 $(head -1 "$PIDFILE")
   rm -f $PIDFILE
+}
+
+delete_drained_node() {
+  local node_name=$(kubectl --kubeconfig /var/vcap/jobs/kubelet/config/kubeconfig-drain get nodes -o wide -L spec.ip | grep "<%= spec.ip %>" | awk '{print $1}')
+  kubectl --kubeconfig /var/vcap/jobs/kubelet/config/kubeconfig-drain delete node "${node_name}" --ignore-not-found
 }
 
 main

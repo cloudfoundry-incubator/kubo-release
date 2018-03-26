@@ -6,7 +6,7 @@ metadata:
 rules:
 - apiGroups: [""]
   resources: ["nodes"]
-  verbs: ["list", "get", "patch"]
+  verbs: ["list", "get", "patch", "delete"]
 - apiGroups: [""]
   resources: ["pods"]
   verbs: ["list", "delete"]

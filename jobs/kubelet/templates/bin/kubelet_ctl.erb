@@ -59,6 +59,13 @@ export no_proxy=<%= no_proxy %>
 export NO_PROXY=<%= no_proxy %>
 <% end %>
 
+delete_stale_drained_node() {
+  local node_name=$(kubectl --kubeconfig /var/vcap/jobs/kubelet/config/kubeconfig-drain get nodes -o wide -L spec.ip | grep "<%= spec.ip %>" | grep "NotReady" | awk '{print $1}')
+  if [[ ! -z "${node_name}" ]]; then
+    kubectl --kubeconfig /var/vcap/jobs/kubelet/config/kubeconfig-drain delete node "${node_name}" --ignore-not-found
+  fi
+}
+
 start_kubelet() {
   ln -s -f /var/vcap/jobs/kubelet/packages/cni/bin/nsenter /usr/bin/nsenter
 
@@ -133,6 +140,8 @@ case $1 in
     pid_guard "$PIDFILE" "Kubelet"
 
     echo $$ > $PIDFILE
+
+    delete_stale_drained_node
     start_kubelet
     ;;
 
