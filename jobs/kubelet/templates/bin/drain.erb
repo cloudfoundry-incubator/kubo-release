@@ -29,6 +29,10 @@ main() {
   if ! drain_kubelet; then
     fail_if_master_is_running
   else
+    # Adding sleep here to allow kube-controller-manager reconcile state of the world before VM is deleted
+    if [ "vsphere" == "$cloud_provider" ]; then
+      sleep 30
+    fi
     delete_drained_node
   fi
 }
@@ -98,10 +102,6 @@ check_if_pidfile_exists() {
 drain_kubelet() {
   local node_name=$(kubectl --kubeconfig /var/vcap/jobs/kubelet/config/kubeconfig-drain get nodes -o wide -L spec.ip | grep "<%= spec.ip %>" | awk '{print $1}')
   kubectl --kubeconfig /var/vcap/jobs/kubelet/config/kubeconfig-drain drain "${node_name}" --grace-period 10 --force --delete-local-data  --ignore-daemonsets
-  # Adding sleep here to allow kube-controller-manager reconcile state of the world before VM is deleted
-  if [ "vsphere" == "$cloud_provider" ]; then
-    sleep 30
-  fi
 }
 
 kill_node() {
