@@ -8,6 +8,8 @@ processes:
   - --cloud-config=/var/vcap/jobs/kube-controller-manager/config/cloud-provider.ini
   <% end %>
   - --cluster-name=kubernetes
+  - --cluster-signing-cert-file=/var/vcap/jobs/kube-controller-manager/config/cluster-signing/ca.pem
+  - --cluster-signing-key-file=/var/vcap/jobs/kube-controller-manager/config/cluster-signing/ca.key
   - --kubeconfig=/var/vcap/jobs/kube-controller-manager/config/kubeconfig
   - --leader-elect
   - --root-ca-file=/var/vcap/jobs/kube-controller-manager/config/ca.pem
