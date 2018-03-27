@@ -8,7 +8,7 @@ main() {
         images=$@
     else
         images=(
-            "gcr.io/google_containers/pause-amd64:3.0"
+            "gcr.io/google_containers/pause-amd64:3.1"
             "k8s.gcr.io/heapster-amd64:v1.5.2"
             "k8s.gcr.io/heapster-influxdb-amd64:v1.3.3"
             "gcr.io/google_containers/k8s-dns-kube-dns-amd64:1.14.8"

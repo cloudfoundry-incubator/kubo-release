@@ -4,6 +4,11 @@ set -eu -o pipefail
 
 /etc/init.d/rpcbind stop || echo Already stopped.
 
+# Mark the entire mount-tree as sharable for MountPropagation feature
+# https://github.com/kubernetes/kubernetes/issues/61058
+mount --make-rshared /
+mount --make-rshared /tmp
+
 <% if_link('cloud-provider') do |cloud_provider|
     if cloud_provider.p('cloud-provider.type') == 'vsphere' %>
   export GOVC_URL="<%= cloud_provider.p('cloud-provider.vsphere.server') %>:<%= cloud_provider.p('cloud-provider.vsphere.port') %>"

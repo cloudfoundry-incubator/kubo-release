@@ -3,6 +3,7 @@
 set -euxo pipefail
 
 CONNTRACK_PACKAGES=/var/vcap/packages/conntrack
+IPSET_PACKAGES=/var/vcap/packages/ipset
 
 install_package() {
   local package=$1
@@ -14,5 +15,9 @@ install_package() {
 }
 
 install_package "${CONNTRACK_PACKAGES:?}/libmnl0_1.0.3-3.deb"
+
 install_package "${CONNTRACK_PACKAGES:?}/libnetfilter-conntrack3_1.0.4-1.deb"
 install_package "${CONNTRACK_PACKAGES:?}/conntrack_1.4.1-1.deb"
+
+install_package "${IPSET_PACKAGES:?}/libipset3_6.20.1-1_amd64.deb"
+install_package "${IPSET_PACKAGES:?}/ipset_6.20.1-1_amd64.deb"

@@ -35,6 +35,9 @@ properties:
   authorization-mode:
     description: The authorization mode for kube-apiserver. Should be 'abac' or 'rbac'
     default: rbac
+  deny_escalating_exec:
+    description: Enable the `DenyEscalatingExec` admission controller.
+    default: true
   enable_audit_logs:
     description: Enables audit logs
     default: true

@@ -6,5 +6,6 @@ templates:
 
 packages:
 - conntrack
+- ipset
 
 properties: {}
