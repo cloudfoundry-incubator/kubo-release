@@ -18,7 +18,7 @@
 # Example usage: kubectl create -f <this_file>
 
 ---
-<% if p('authorization-mode').downcase == 'rbac' %>
+<% if p('authorization-mode').downcase == 'rbac' -%>
 # ------------------- Dashboard Service Account ------------------- #
 
 apiVersion: v1
@@ -75,7 +75,41 @@ subjects:
   namespace: kube-system
 
 ---
-<% end %>
+<% end -%>
+# ------------------- Dashboard Config ------------------- #
+  
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kubernetes-dashboard
+  namespace: kube-system
+  labels:
+    addonmanager.kubernetes.io/mode: EnsureExists
+data:
+<% if p('authorization-mode').downcase != 'rbac' -%>
+<% api_link = link("kube-apiserver") -%>
+  kubeconfig: |
+    apiVersion: v1
+    kind: Config
+    clusters:
+    - cluster:
+        certificate-authority: "/kubernetes-dashboard-config/ca.pem"
+        server: https://master.cfcr.internal:8443
+      name: kubernetes
+    contexts:
+    - context:
+        cluster: kubernetes
+        user: "<%= api_link.p("admin-username") %>"
+      name: context
+    current-context: context
+    users:
+    - name: "<%= api_link.p("admin-username") %>"
+      user:
+        token: "<%= api_link.p("admin-password") %>"
+<% end -%>
+  ca.pem: |
+<%= link("kube-apiserver").p("tls.kubernetes.ca").lines.map! { |line| line.prepend("    ") }.join -%>
+---
 # ------------------- Dashboard Deployment ------------------- #
 
 kind: Deployment
@@ -98,7 +132,7 @@ spec:
     spec:
       containers:
       - name: kubernetes-dashboard
-        image: gcr.io/google_containers/kubernetes-dashboard-amd64:v1.8.2
+        image: gcr.io/google_containers/kubernetes-dashboard-amd64:v1.8.3
         ports:
         - containerPort: 8443
           protocol: TCP
@@ -111,12 +145,12 @@ spec:
           # If not specified, Dashboard will attempt to auto discover the API server and connect
           # to it. Uncomment only if the default does not work.
           # - --apiserver-host=http://my-address:port
-<% if p('authorization-mode').downcase != 'rbac' %>
-          - --kubeconfig=/var/vcap/jobs/kubelet/config/kubeconfig
+<% if p('authorization-mode').downcase != 'rbac' -%>
+          - --kubeconfig=/kubernetes-dashboard-config/kubeconfig
         env:
           - name: KUBECONFIG
-            value: /var/vcap/jobs/kubelet/config/kubeconfig
-<% end %>
+            value: /kubernetes-dashboard-config/kubeconfig
+<% end -%>
         volumeMounts:
           # Create on-disk volume to store exec logs
         - mountPath: /tmp
@@ -124,13 +158,13 @@ spec:
         - mountPath: /certs
           name: kubernetes-dashboard-certs
           readOnly: true
-        - mountPath: /etc/ssl/certs/ca-certificates.crt
+        - mountPath: /etc/ssl/certs/
           name: kubo-ca
           readOnly: true
-<% if p('authorization-mode').downcase != 'rbac' %>
-        - mountPath: /var/vcap/jobs/kubelet/config/
-          name: config
-<% end %>
+<% if p('authorization-mode').downcase != 'rbac' -%>
+        - mountPath: /kubernetes-dashboard-config
+          name: kubernetes-dashboard-config
+<% end -%>
         livenessProbe:
           httpGet:
             scheme: HTTPS
@@ -145,16 +179,19 @@ spec:
       - name: tmp-volume
         emptyDir: {}
       - name: kubo-ca
-        hostPath:
-          path: "/var/vcap/jobs/kubelet/config/ca.pem"
-<% if p('authorization-mode').downcase != 'rbac' %>
-      - name: config
-        hostPath:
-          path: "/var/vcap/jobs/kubelet/config"
-<% end %>
-<% if p('authorization-mode').downcase == 'rbac' %>
+        configMap:
+          name: kubernetes-dashboard
+          items:
+          - key: ca.pem
+            path: ca-certificates.crt
+<% if p('authorization-mode').downcase != 'rbac' -%>
+      - name: kubernetes-dashboard-config
+        configMap:
+          name: kubernetes-dashboard
+<% end -%>
+<% if p('authorization-mode').downcase == 'rbac' -%>
       serviceAccountName: kubernetes-dashboard
-<% end %>
+<% end -%>
       # Comment the following tolerations if Dashboard must not be deployed on master
       # tolerations:
       # - key: node-role.kubernetes.io/master

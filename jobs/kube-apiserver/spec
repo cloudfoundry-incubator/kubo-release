@@ -93,7 +93,7 @@ properties:
 
 consumes:
 - name: etcd
-  type: etcd_service
+  type: etcd
 - name: kube-apiserver
   type: kube-apiserver
 - name: cloud-provider

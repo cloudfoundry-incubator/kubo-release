@@ -36,21 +36,20 @@ spec:
     spec:
       containers:
       - name: heapster
-        image: k8s.gcr.io/heapster-amd64:v1.5.0
+        image: k8s.gcr.io/heapster-amd64:v1.5.2
         imagePullPolicy: IfNotPresent
         command:
         - /heapster
-        - --source=kubernetes:https://master.cfcr.internal:8443?useServiceAccount=true
+        - --source=kubernetes:https://master.cfcr.internal:8443?useServiceAccount=true&kubeletHttps=true&kubeletPort=10250&insecure=true
         - --sink=influxdb:https://monitoring-influxdb:8086?secure=true
         - --tls_cert=/certs/heapster-cert
         - --tls_key=/certs/heapster-key
-        - --tls_client_ca=/certs/ca
         - --vmodule=*=5
         volumeMounts:
         - mountPath: /certs
           name: heapster-certs
           readOnly: true
-        - mountPath: /etc/ssl/certs/ca-certificates.crt
+        - mountPath: /etc/ssl/certs/
           name: kubo-ca
           readOnly: true
       volumes:
@@ -58,8 +57,11 @@ spec:
         secret:
           secretName: heapster-certs
       - name: kubo-ca
-        hostPath:
-          path: "/var/vcap/jobs/kubelet/config/ca.pem"
+        secret:
+          secretName: heapster-certs
+          items:
+          - key: ca
+            path: ca-certificates.crt
       <% if p('authorization-mode').downcase == 'rbac' %>
       serviceAccountName: heapster
       <% end %>

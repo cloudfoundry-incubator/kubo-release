@@ -4,15 +4,19 @@ set -e
 main() {
     local images staging_dir
 
-    images=(
-      "gcr.io/google_containers/pause-amd64:3.0"
-      "k8s.gcr.io/heapster-amd64:v1.5.0"
-      "k8s.gcr.io/heapster-influxdb-amd64:v1.3.3"
-      "gcr.io/google_containers/k8s-dns-kube-dns-amd64:1.14.8"
-      "gcr.io/google_containers/k8s-dns-dnsmasq-nanny-amd64:1.14.8"
-      "gcr.io/google_containers/k8s-dns-sidecar-amd64:1.14.8"
-      "gcr.io/google_containers/kubernetes-dashboard-amd64:v1.8.2"
-    )
+    if [[ $# -ne 0 ]] ; then
+        images=$@
+    else
+        images=(
+            "gcr.io/google_containers/pause-amd64:3.0"
+            "k8s.gcr.io/heapster-amd64:v1.5.2"
+            "k8s.gcr.io/heapster-influxdb-amd64:v1.3.3"
+            "gcr.io/google_containers/k8s-dns-kube-dns-amd64:1.14.8"
+            "gcr.io/google_containers/k8s-dns-dnsmasq-nanny-amd64:1.14.8"
+            "gcr.io/google_containers/k8s-dns-sidecar-amd64:1.14.8"
+            "gcr.io/google_containers/kubernetes-dashboard-amd64:v1.8.3"
+        )
+    fi
 
     staging_dir=$(mktemp -d)
 
@@ -63,4 +67,4 @@ add_blob() {
     bosh add-blob "${binary_path}" "container-images/${binary_name}"
 }
 
-main
+main "$@"

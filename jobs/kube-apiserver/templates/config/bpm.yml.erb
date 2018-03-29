@@ -1,16 +1,11 @@
 ---
 <%
-  etcd_endpoints = link("etcd").instances.map do |instance|
-    # See kubo-dns-aliases/dns/aliases.json
-    node_name = "#{instance.name.gsub('_','-')}-#{instance.index}"
-    etcd_advertise_urls_dns_suffix = link('etcd').p('etcd.advertise_urls_dns_suffix')
-    "https://#{node_name}.#{etcd_advertise_urls_dns_suffix}:4001"
-  end.join(',')
+  etcd_endpoints = link('etcd').instances.map { |server| "https://#{server.address}:2379" }.join(",")
 
   admission_control_options = [
     "DenyEscalatingExec", "LimitRanger", "NamespaceExists",
     "NamespaceLifecycle","ResourceQuota","ServiceAccount",
-    "DefaultStorageClass", "NodeRestriction"]
+    "DefaultStorageClass", "NodeRestriction", "MutatingAdmissionWebhook"]
 
   if !p('allow_privileged')
     admission_control_options.push("SecurityContextDeny")
@@ -112,5 +107,11 @@ processes:
     <% if_link('cloud-provider') do |cloud_provider| %>
     <% cloud_provider.if_p('cloud-provider.gce.service_key') do |service_key| %>
     GOOGLE_APPLICATION_CREDENTIALS: /var/vcap/jobs/kube-apiserver/config/service_key.json
+    <% end %>
+    <% cloud_provider.if_p('cloud-provider.aws.access_key_id') do |access_key_id| %>
+    AWS_ACCESS_KEY_ID: <%= access_key_id %>
+    <% end %>
+    <% cloud_provider.if_p('cloud-provider.aws.secret_access_key') do |secret_access_key| %>
+    AWS_SECRET_ACCESS_KEY: <%= secret_access_key %>
     <% end %>
     <% end %>

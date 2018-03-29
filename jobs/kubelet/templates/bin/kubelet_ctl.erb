@@ -16,6 +16,12 @@ DOCKER_SOCKET=unix:///var/vcap/sys/run/docker/docker.sock
   <% cloud_provider.if_p('cloud-provider.gce.service_key') do |service_key| %>
     export GOOGLE_APPLICATION_CREDENTIALS="/var/vcap/jobs/kubelet/config/service_key.json"
   <% end %>
+  <% cloud_provider.if_p('cloud-provider.aws.access_key_id') do |access_key_id| %>
+  export AWS_ACCESS_KEY_ID="<%= access_key_id %>"
+  <% end %>
+  <% cloud_provider.if_p('cloud-provider.aws.secret_access_key') do |secret_access_key| %>
+  export AWS_SECRET_ACCESS_KEY="<%= secret_access_key %>"
+  <% end %>
 <% end %>
 
 <%
@@ -52,6 +58,13 @@ export HTTPS_PROXY=<%= https_proxy %>
 export no_proxy=<%= no_proxy %>
 export NO_PROXY=<%= no_proxy %>
 <% end %>
+
+delete_stale_drained_node() {
+  local node_name=$(kubectl --kubeconfig /var/vcap/jobs/kubelet/config/kubeconfig-drain get nodes -o wide -L spec.ip | grep "<%= spec.ip %>" | grep "NotReady" | awk '{print $1}')
+  if [[ ! -z "${node_name}" ]]; then
+    kubectl --kubeconfig /var/vcap/jobs/kubelet/config/kubeconfig-drain delete node "${node_name}" --ignore-not-found
+  fi
+}
 
 start_kubelet() {
   ln -s -f /var/vcap/jobs/kubelet/packages/cni/bin/nsenter /usr/bin/nsenter
@@ -130,6 +143,8 @@ case $1 in
     pid_guard "$PIDFILE" "Kubelet"
 
     echo $$ > $PIDFILE
+
+    delete_stale_drained_node
     start_kubelet
     ;;
 

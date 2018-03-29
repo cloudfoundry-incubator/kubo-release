@@ -25,14 +25,7 @@ send_process_stderr_to_logfile() {
 }
 
 start_flanneld() {
-  <%
-    etcd_endpoints = link("etcd").instances.map do |instance|
-      # See kubo-dns-aliases/dns/aliases.json
-      node_name = "#{instance.name.gsub('_','-')}-#{instance.index}"
-      etcd_advertise_urls_dns_suffix = link('etcd').p('etcd.advertise_urls_dns_suffix')
-      "https://#{node_name}.#{etcd_advertise_urls_dns_suffix}:4001"
-    end.join(',')
-  %>
+  <% etcd_endpoints = link('etcd').instances.map { |server| "https://#{server.address}:2379" }.join(",") %>
 
   modprobe br_netfilter || true
 
@@ -50,6 +43,7 @@ start_flanneld() {
     set /coreos.com/network/config '{"Network":"10.200.0.0/16","Backend":{"Type":"vxlan"}}'
 
   flanneld -etcd-endpoints=<%= etcd_endpoints %> \
+    --ip-masq \
     --etcd-certfile=/var/vcap/jobs/flanneld/config/etcd-client.crt \
     --etcd-keyfile=/var/vcap/jobs/flanneld/config/etcd-client.key \
     --etcd-cafile=/var/vcap/jobs/flanneld/config/etcd-ca.crt \

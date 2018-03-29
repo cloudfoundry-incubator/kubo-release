@@ -10,6 +10,7 @@ templates:
 packages:
 - pid_utils
 - kubernetes
+- conntrack
 
 properties:
   tls.kubernetes:

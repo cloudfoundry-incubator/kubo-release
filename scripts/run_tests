@@ -3,16 +3,33 @@
 
 project_root="$( cd "$( dirname "${BASH_SOURCE[0]}" )/../" && pwd )"
 
-test_route_sync() {
-  pushd "${project_root}/src/route-sync" > /dev/null
+run_go_tests() {
+  sourceDir=$1
+  pushd "$sourceDir" > /dev/null
     export GOPATH=${project_root}
     echo "Running go vet"
-    go vet $(go list "./..." | grep -v "route-sync/vendor/")
+    go vet ./...
     echo "Running ginkgo"
     ginkgo -r -race .
     echo "Compiling final binary"
     go build
   popd > /dev/null
+}
+
+test_route_sync() {
+  echo "Testing route-sync"
+  run_go_tests ${project_root}/src/route-sync
+}
+
+test_vsphere_enable_disk_uuid() {
+  echo "Testing vsphere-enable-disk-uuid"
+  packagePath="${project_root}/src/vsphere-enable-disk-uuid"
+
+  pushd "$packagePath" >/dev/null
+    dep ensure
+  popd >/dev/null
+
+  run_go_tests "$packagePath"
 }
 
 test_release_specs() {
@@ -24,6 +41,7 @@ test_release_specs() {
 }
 
 test_route_sync
+test_vsphere_enable_disk_uuid
 test_release_specs
 
 exit 0
