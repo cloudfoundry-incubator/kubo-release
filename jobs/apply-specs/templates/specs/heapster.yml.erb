@@ -62,7 +62,7 @@ spec:
         imagePullPolicy: IfNotPresent
         command:
         - /heapster
-        - --source=kubernetes:https://master.cfcr.internal:8443?useServiceAccount=true&kubeletHttps=true&kubeletPort=10250&insecure=true
+        - --source=kubernetes:https://master.cfcr.internal:8443?useServiceAccount=true&kubeletHttps=true&kubeletPort=10250
         - --sink=influxdb:https://monitoring-influxdb:8086?secure=true
         - --tls_cert=/certs/heapster-cert
         - --tls_key=/certs/heapster-key
