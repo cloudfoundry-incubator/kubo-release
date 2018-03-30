@@ -85,6 +85,8 @@ start_kubelet() {
   kubelet \
     --allow-privileged=<%= p('allow_privileged') %> \
     --anonymous-auth=false \
+    --authentication-token-webhook \
+    --authorization-mode=Webhook \
     --bootstrap-kubeconfig=/var/vcap/jobs/kubelet/config/bootstrap-kubeconfig \
     --cadvisor-port=0 \
     --client-ca-file=/var/vcap/jobs/kubelet/config/ca.pem \
