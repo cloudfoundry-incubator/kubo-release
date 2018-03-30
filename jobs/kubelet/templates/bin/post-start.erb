@@ -47,6 +47,9 @@ fi
 
 if  [ $($kubectl get nodes ${node_name} -o jsonpath='{.status.conditions[?(@.type=="NetworkUnavailable")].status}') ==  "True" ]
 then
+
+  echo "Need to patch network availability"
+
 v="$(cat <<-EOF
 {
   "status":{
@@ -63,14 +66,17 @@ v="$(cat <<-EOF
 EOF
 )"
 
-  KUBE_TOKEN=$($kubectl  config view -o jsonpath='{.users[?(@.name == "kubelet")].user.token}')
-  /usr/bin/curl -sS --cacert /var/vcap/jobs/kubelet/config/ca.pem \
-  -H "Authorization: Bearer ${KUBE_TOKEN}" \
+  CLIENT_CERT=$($kubectl config view -o jsonpath='{.users[?(@.name == "default-auth")].user.client-certificate}')
+  CLIENT_KEY=$($kubectl config view -o jsonpath='{.users[?(@.name == "default-auth")].user.client-key}')
+  /usr/bin/curl -sS \
+  --cert ${CLIENT_CERT} \
+  --key ${CLIENT_KEY} \
+  --cacert /var/vcap/jobs/kubelet/config/ca.pem \
   -H "Accept: application/json" \
   -H "Content-Type: application/strategic-merge-patch+json" \
   -X PATCH \
   -d "$v" \
   https://master.cfcr.internal:8443/api/v1/nodes/${node_name}/status
 
-  echo "need to patch network availability"
+  echo "Successfully patched network availability"
 fi
