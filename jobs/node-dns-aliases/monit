@@ -1,0 +1,12 @@
+check process poll_nodes
+  with pidfile /var/vcap/sys/run/poll_nodes/poll_nodes.pid
+  start program "/var/vcap/jobs/node-dns-aliases/bin/poll_nodes_ctl start"
+  stop program "/var/vcap/jobs/node-dns-aliases/bin/poll_nodes_ctl stop"
+  group vcap
+
+check file node_list with path /var/vcap/jobs/node-dns-aliases/config/nodelist
+    if changed checksum then exec "/var/vcap/jobs/node-dns-aliases/bin/sync_aliases"
+    depends on poll_nodes
+
+check file aliases with path /var/vcap/jobs/node-dns-aliases/dns/aliases.json
+  if changed checksum then exec "/var/vcap/bosh/bin/monit restart bosh-dns"
