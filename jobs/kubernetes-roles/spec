@@ -27,9 +27,3 @@ properties:
   authorization-mode:
     description: The authorization mode for kube-apiserver. Should be 'abac' or 'rbac'
     default: rbac
-  admin-username:
-    description: The admin username for the Kubernetes cluster
-  admin-password:
-    description: The admin password for the Kubernetes cluster
-  tls.kubernetes:
-    description: Certificate and private key for the Kubernetes master
