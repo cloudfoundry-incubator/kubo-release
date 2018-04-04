@@ -17,7 +17,6 @@ conntrack:
 enableProfiling: false
 featureGates: 
 healthzBindAddress: 0.0.0.0:10256
-hostnameOverride: <%= spec.ip %>
 iptables:
   masqueradeAll: false
   masqueradeBit: 14
@@ -34,3 +33,4 @@ oomScoreAdj: -999
 portRange: ""
 resourceContainer: /kube-proxy
 udpTimeoutMilliseconds: 250ms
+hostnameOverride: HOSTNAMEOVERRIDE
