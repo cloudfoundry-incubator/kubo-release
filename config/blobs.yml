@@ -1,3 +1,15 @@
+autoconf-2.69.tar.gz:
+  size: 1927468
+  object_id: 853712b9-d42b-41d8-7129-418d7af51c95
+  sha: 562471cbcb0dd0fa42a76665acf0dbb68479b78a
+automake-1.15.tar.gz:
+  size: 2244206
+  object_id: 87e16553-5f63-4b0e-479a-819700f2f774
+  sha: b5a840c7ec4321e78fdc9472e476263fa6614ca1
+cifs-utils-6.7.tar.bz2:
+  size: 363647
+  object_id: 76cff441-71f0-45d3-6654-8e941c457079
+  sha: 9ba5091d7c2418a90773c861f04a3f4a36854c14
 cni/cni-amd64-v0.5.2.tgz:
   size: 14085755
   object_id: 31cb39af-c33d-4df8-4d45-c02541806e39
@@ -90,7 +102,19 @@ kubernetes-1.9.6/kubelet:
   size: 147306352
   object_id: 844c032b-56aa-45eb-757b-fc6e2f4325d3
   sha: 32b1234e68d4d576c3fe0b62e608e361e09408a1
+libtool-2.4.6.tar.gz:
+  size: 1806697
+  object_id: 241c28a2-7e77-44f5-4261-3f917310d58f
+  sha: 25b6931265230a06f0fc2146df64c04e5ae6ec33
+pkg-config-0.29.2.tar.gz:
+  size: 2016830
+  object_id: 64c4933b-c4df-4b9f-4fa0-40608366694d
+  sha: 76e501663b29cb7580245720edfb6106164fad2b
 socat-1.7.3.2.tar.gz:
   size: 615818
   object_id: a6f3dcb3-54a0-44a3-4100-f408932aaf8f
   sha: a2446f65fb9fe9703b85ac5664c8920089fe32d8
+talloc-2.1.9.tar.gz:
+  size: 440335
+  object_id: d28b1335-6ea8-47f9-4a05-a25bcf06a799
+  sha: e1e79fec4c0b6bd92be904a9c03b0a168478711a

@@ -51,7 +51,6 @@ case $1 in
     setup_directories
     send_process_stdout_to_logfile
     send_process_stderr_to_logfile
-    rm /var/vcap/jobs/node-dns-aliases/config/nodelist
 
     pid_guard "$PIDFILE" "poll_nodes"
 
