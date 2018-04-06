@@ -4,10 +4,14 @@ set -eu -o pipefail
 
 /etc/init.d/rpcbind stop || echo Already stopped.
 
-# Mark the entire mount-tree as sharable for MountPropagation feature
+# Mark all mounted devices as shareable for MountPropagation feature
 # https://github.com/kubernetes/kubernetes/issues/61058
-mount --make-rshared /
-mount --make-rshared /tmp
+while read -r line; do
+  linearray=($line)
+  if [ "${linearray[0]}" != "tempfs" ] && [ "${linearray[0]}" != "tracefs" ] ; then
+    mount --make-rshared "${linearray[1]}"
+  fi
+done < /etc/mtab
 
 <% if_link('cloud-provider') do |cloud_provider|
     if cloud_provider.p('cloud-provider.type') == 'vsphere' %>
