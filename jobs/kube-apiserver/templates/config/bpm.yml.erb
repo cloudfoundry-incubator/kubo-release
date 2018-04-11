@@ -1,6 +1,6 @@
 ---
 <%
-  etcd_endpoints = link('etcd').instances.map { |server| "https://#{server.address}:2379" }.join(",")
+  etcd_endpoints = "https://master.cfcr.internal:2379"
 
   admission_control_options = [
     "DenyEscalatingExec", "LimitRanger", "NamespaceExists",

@@ -25,7 +25,7 @@ send_process_stderr_to_logfile() {
 }
 
 start_flanneld() {
-  <% etcd_endpoints = link('etcd').instances.map { |server| "https://#{server.address}:2379" }.join(",") %>
+  <% etcd_endpoints = "https://master.cfcr.internal:2379" %>
 
   modprobe br_netfilter || true
 
