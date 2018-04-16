@@ -25,7 +25,7 @@ DOCKER_SOCKET=unix:///var/vcap/sys/run/docker/docker.sock
 <% end %>
 
 <%
-  labels = ["spec.ip=#{spec.ip}"]
+  labels = ["spec.ip=#{spec.ip}","bosh.id=#{spec.id}"]
   labels += p("labels").map {|k,v| "#{k}=#{v}"}
   labels = labels.join(',')
 %>
