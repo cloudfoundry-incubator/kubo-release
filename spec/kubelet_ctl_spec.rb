@@ -6,10 +6,18 @@ require 'fileutils'
 require 'open3'
 
 describe 'kubelet_ctl' do
-  let(:rendered_template) { compiled_template('kubelet', 'bin/kubelet_ctl', {}, {}, {}, 'z1') }
+  let(:rendered_template) { compiled_template('kubelet', 'bin/kubelet_ctl', {}, {}, {}, 'z1', 'fake-bosh-ip', 'fake-bosh-id') }
 
   it 'labels the kubelet with its own az' do
     expect(rendered_template).to include(',failure-domain.beta.kubernetes.io/zone=z1')
+  end
+
+  it 'labels the kubelet with the spec ip' do
+    expect(rendered_template).to include('spec.ip=fake-bosh-ip')
+  end
+
+  it 'labels the kubelet with the bosh id' do
+    expect(rendered_template).to include(',bosh.id=fake-bosh-id')
   end
 
   it 'has no http proxy when no proxy is defined' do
