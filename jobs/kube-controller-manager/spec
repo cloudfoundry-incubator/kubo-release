@@ -10,6 +10,8 @@ templates:
   config/openstack-ca.crt.erb: config/openstack-ca.crt
   config/service-account-private-key.pem.erb: config/service-account-private-key.pem
   config/service_key.json.erb: config/service_key.json
+  config/cluster-signing-ca.pem.erb: config/cluster-signing-ca.pem
+  config/cluster-signing-key.pem.erb: config/cluster-signing-key.pem
 
 packages:
 - kubernetes
@@ -18,6 +20,8 @@ packages:
 properties:
   api-token:
     description: "API Token for the system:kube-controller-manager user"
+  cluster-signing:
+    description: "CA Certificate and private key for the certificate controller to issue certificates"
   http_proxy:
     description: http_proxy env var for the kubernetes-controller-manager binary (i.e. for cloud provider interactions)
   https_proxy:

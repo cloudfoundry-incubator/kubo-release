@@ -20,3 +20,8 @@ properties:
   logging-level:
     description: "V-leveled logging at the specified level. See https://github.com/golang/glog"
     default: 2
+
+consumes:
+- name: cloud-provider
+  type: cloud-provider
+  optional: true

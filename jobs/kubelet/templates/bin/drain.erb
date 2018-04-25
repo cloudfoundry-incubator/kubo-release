@@ -17,12 +17,9 @@ main() {
   send_process_stderr_to_logfile_and_syslog
   check_if_pidfile_exists
   check_if_pid_is_running
-  if ! drain_kubelet; then
-    fail_if_master_is_running
-  else
-    delete_drained_node
-  fi
 
+  fail_if_master_is_running drain_kubelet
+  fail_if_master_is_running delete_drained_node
 }
 
 ensure_safe_exit() {
@@ -57,22 +54,34 @@ check_if_pid_is_running() {
 }
 
 fail_if_master_is_running() {
+  local func=$1
+
+  if ! $func; then
+    if master_is_running?; then
+      echo 'Master seems to be running and the drain failed!'
+      exit 1
+    else
+      echo 'Master seems to be down'
+      echo 'Assuming this is a bosh delete-deployment, the drain failure will be ignored.'
+    fi
+  fi
+}
+
+master_is_running?() {
   local ATTEMPTS_REMAINING=100
   local cacert=/var/vcap/jobs/kubelet/config/ca.pem
   local auth_header='Authorization: Bearer <%= p("drain-api-token")  %>'
-  while true; do
+
+  while [[ "$ATTEMPTS_REMAINING" -ne 0 ]]; do
     if curl -sS https://master.cfcr.internal:8443/healthz -H "$auth_header" --fail --cacert "$cacert" --connect-timeout 2 > /dev/null; then
-      exit 1
+      return 0
     else
       ATTEMPTS_REMAINING=$(( ATTEMPTS_REMAINING - 1 ))
-      if [[ "$ATTEMPTS_REMAINING" -eq 0 ]]; then
-        echo 'Master seems to be down'
-        echo 'Assuming this is a bosh delete-deployment, the drain failure will be ignored.'
-        exit
-      fi
       sleep 1
     fi
   done
+
+  return 1
 }
 
 pid_is_running?() {
