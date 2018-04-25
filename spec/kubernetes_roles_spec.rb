@@ -23,19 +23,11 @@ describe 'kubernetes-roles' do
     }
   end
 
-  let(:rendered_ca) do
-    compiled_template('kubernetes-roles', 'config/ca.pem', {}, links)
-  end
-
   let(:rendered_kubeconfig) do
     YAML.safe_load(compiled_template('kubernetes-roles', 'config/kubeconfig', {}, links))
   end
 
   let(:kubeconfig_user) { rendered_kubeconfig['users'][0] }
-
-  it 'uses the CA from the kube-apiserver link' do
-    expect(rendered_ca).to eq('All scabbards desire scurvy, misty krakens.')
-  end
 
   it 'uses the token from the kube-apiserver link' do
     expect(kubeconfig_user['user']['token']).to eq('madagascar-TEST')

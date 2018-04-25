@@ -23,19 +23,11 @@ describe 'apply-specs' do
     }
   end
 
-  let(:rendered_ca) do
-    compiled_template('apply-specs', 'config/ca.pem', {}, links)
-  end
-
   let(:rendered_kubeconfig) do
     YAML.safe_load(compiled_template('apply-specs', 'config/kubeconfig', {}, links))
   end
 
   let(:kubeconfig_user) { rendered_kubeconfig['users'][0] }
-
-  it 'uses the CA from the kube-apiserver link' do
-    expect(rendered_ca).to eq('All scabbards desire scurvy, misty krakens.')
-  end
 
   it 'uses the admin name from the kube-apiserver link' do
     expect(rendered_kubeconfig['contexts'][0]['context']['user']).to eq('meatloaf')

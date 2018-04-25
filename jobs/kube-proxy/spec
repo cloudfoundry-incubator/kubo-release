@@ -25,3 +25,5 @@ consumes:
 - name: cloud-provider
   type: cloud-provider
   optional: true
+- name: kube-apiserver
+  type: kube-apiserver

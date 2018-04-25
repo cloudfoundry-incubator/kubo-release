@@ -61,3 +61,5 @@ consumes:
 - name: nats
   type: nats
   optional: true
+- name: kube-apiserver
+  type: kube-apiserver
