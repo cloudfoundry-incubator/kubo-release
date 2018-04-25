@@ -28,8 +28,6 @@ properties:
     description: https_proxy env var for the kubernetes-controller-manager binary (i.e. for cloud provider interactions)
   no_proxy:
     description: no_proxy env var for cloud provider interactions, i.e. for the kubelet and govc binary
-  tls.kubernetes:
-    description: "Certificate and private key for the Kubernetes master"
   service-account-private-key:
     description: "Private key used to sign generated tokens"
   logging-level:
@@ -40,3 +38,5 @@ consumes:
 - name: cloud-provider
   type: cloud-provider
   optional: true
+- name: kube-apiserver
+  type: kube-apiserver
