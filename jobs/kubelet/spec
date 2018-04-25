@@ -71,6 +71,9 @@ properties:
   logging-level:
     description: "V-leveled logging at the specified level. See https://github.com/golang/glog"
     default: 2
+  drain-fail-silently:
+    description: "If false, failed kubectl commands cause drain to fail."
+    default: false
 
 consumes:
 - name: cloud-provider
