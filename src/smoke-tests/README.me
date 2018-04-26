@@ -1,0 +1,17 @@
+# CFCR Smoke Tests
+
+Tests that run against a remote kubernetes cluster
+
+
+## How To Run
+
+1. Directly from the command line
+```
+export KUBECONFIG=/tmp/temp-kubo/config
+ginkgo -r
+```
+
+1. As a bosh-errand
+```
+bosh -e flounder -d cfcr run-errand smoke-tests
+```

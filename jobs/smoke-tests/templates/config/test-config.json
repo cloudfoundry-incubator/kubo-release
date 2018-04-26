@@ -1,0 +1,5 @@
+{
+  "kubernetes": {
+    "path_to_kubeconfig": "/var/vcap/jobs/smoke-tests/config/kubeconfig"
+  }
+}
