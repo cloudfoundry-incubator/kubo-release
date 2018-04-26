@@ -2,7 +2,6 @@ package runner
 
 import (
 	"os/exec"
-	"testing"
 
 	uuid "github.com/satori/go.uuid"
 
@@ -29,7 +28,7 @@ func (runner KubectlRunner) RunKubectlCommand(args ...string) *gexec.Session {
 }
 
 func (runner KubectlRunner) RunKubectlCommandInNamespace(namespace string, args ...string) *gexec.Session {
-	newArgs := append([]string{"--kubeconfig", runner.configPath, "--namespace", namespace}, args...)
+	newArgs := append([]string{"--namespace", namespace}, args...)
 	command := exec.Command("kubectl", newArgs...)
 	session, err := gexec.Start(command, GinkgoWriter, GinkgoWriter)
 
@@ -38,9 +37,4 @@ func (runner KubectlRunner) RunKubectlCommandInNamespace(namespace string, args 
 }
 func (runner KubectlRunner) Namespace() string {
 	return runner.namespace
-}
-
-func TestPodLogs(t *testing.T) {
-	RegisterFailHandler(Fail)
-	RunSpecs(t, "PodLogs Suite")
 }
