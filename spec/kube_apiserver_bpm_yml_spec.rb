@@ -152,7 +152,7 @@ describe 'kube-apiserver' do
     expect(bpm_yml['processes'][0]['env']['HTTPS_PROXY']).to eq('proxy.example.com:8100')
   end
 
-  fit 'sets no_proxy when no proxy property is set' do
+  it 'sets no_proxy when no proxy property is set' do
     rendered_kube_apiserver_bpm_yml = compiled_template(
       'kube-apiserver',
       'config/bpm.yml',
