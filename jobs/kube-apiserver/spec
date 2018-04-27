@@ -41,6 +41,8 @@ properties:
   enable_audit_logs:
     description: Enables audit logs
     default: true
+  feature_gates:
+    description: A map of key=value pairs that describe alpha or experimental features.
   http_proxy:
     description: http_proxy env var for the kubernetes-api binary (i.e. for cloud provider interactions)
   https_proxy:
