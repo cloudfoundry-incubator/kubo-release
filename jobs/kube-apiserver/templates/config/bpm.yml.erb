@@ -40,6 +40,9 @@ processes:
   - --enable-swagger-ui
   - --etcd-servers=<%= etcd_endpoints %>
   - --etcd-cafile=/var/vcap/jobs/kube-apiserver/config/etcd-ca.crt
+  <% if_p('feature_gates') do |feature_gates| %>
+  - --feature-gates=<%= feature_gates.flat_map {|k,v| "#{k}=#{v}"}.join(",") %>
+  <% end %>
   - --etcd-certfile=/var/vcap/jobs/kube-apiserver/config/etcd-client.crt
   - --etcd-keyfile=/var/vcap/jobs/kube-apiserver/config/etcd-client.key
   - --kubelet-https
