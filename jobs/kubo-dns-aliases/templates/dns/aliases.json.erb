@@ -5,13 +5,20 @@ def wildcard_name(name)
   name.split('.').collect!.with_index {|s, i| (i == 0) ? '*' : s}.join('.')
 end
 
-def node_name(instance)
-  # As specified in kubo-etcd https://github.com/pivotal-cf-experimental/kubo-etcd/blob/8cc5af9c47e15b6c9eebb0712b0fa50a8c700241/src/etcdfab/config/config.go#L106-L111
-  "#{instance.name.gsub('_','-')}-#{instance.index}"
+# As defined by cfcr-etcd-release
+def get_etcd_alias(server)
+  node_name = "#{server.name.gsub('_','-')}-#{server.index}"
+  "#{node_name}.#{link('etcd').p('etcd.dns_suffix')}"
 end
 
 master_node_dns = link('kube-apiserver').address
 aliases = { 'master.cfcr.internal' => [ wildcard_name(master_node_dns) ] }
+
+if link('etcd').p('etcd.dns_suffix', false) != false
+  link('etcd').instances.each do |instance|
+    aliases.merge!({ get_etcd_alias(instance) => [instance.address] })
+  end
+end
 
 JSON.dump(aliases)
 %>

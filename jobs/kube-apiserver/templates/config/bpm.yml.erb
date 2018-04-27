@@ -1,6 +1,15 @@
 ---
 <%
-  etcd_endpoints = link('etcd').instances.map { |server| "https://#{server.address}:2379" }.join(",")
+  def get_url(server, port)
+    if link('etcd').p('etcd.dns_suffix', false) != false
+      node_name = "#{server.name.gsub('_','-')}-#{server.index}"
+      return "https://#{node_name}.#{link('etcd').p('etcd.dns_suffix')}:#{port}"
+    else
+      return "https://#{server.address}:#{port}"
+    end
+  end
+
+  etcd_endpoints = link('etcd').instances.map { |server| get_url(server, 2379) }.join(",")
 
   admission_control_options = [
     "LimitRanger", "NamespaceExists",
