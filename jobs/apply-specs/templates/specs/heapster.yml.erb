@@ -37,7 +37,7 @@ spec:
       containers:
       - name: heapster
         image: k8s.gcr.io/heapster-amd64:v1.5.2
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Never
         command:
         - /heapster
         - --source=kubernetes:https://master.cfcr.internal:8443?useServiceAccount=true&kubeletHttps=true&kubeletPort=10250&insecure=true
