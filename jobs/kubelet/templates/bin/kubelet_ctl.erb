@@ -25,7 +25,7 @@ DOCKER_SOCKET=unix:///var/vcap/sys/run/docker/docker.sock
 <% end %>
 
 <%
-  labels = ["spec.ip=#{spec.ip}"]
+  labels = ["spec.ip=#{spec.ip}","bosh.id=#{spec.id}"]
   labels += p("labels").map {|k,v| "#{k}=#{v}"}
   labels = labels.join(',')
 %>
@@ -66,9 +66,7 @@ delete_stale_drained_node() {
   fi
 }
 
-start_kubelet() {
-  ln -s -f /var/vcap/jobs/kubelet/packages/cni/bin/nsenter /usr/bin/nsenter
-
+get_hostname_override() {
   if [[ "gce" == "$cloud_provider" ]]; then
     # The hostname needs to be set to the instance name so the gce cloud provider can manage the instance
     hostname_override=$(curl http://metadata.google.internal/computeMetadata/v1/instance/name -H "Metadata-Flavor: Google")
@@ -78,6 +76,12 @@ start_kubelet() {
   else
     hostname_override=<%= spec.ip %>
   fi
+
+  echo $hostname_override
+}
+
+start_kubelet() {
+  ln -s -f /var/vcap/jobs/kubelet/packages/cni/bin/nsenter /usr/bin/nsenter
 
   zone_label=""
 
@@ -90,22 +94,17 @@ start_kubelet() {
     --cadvisor-port=0 \
     --cloud-config=${cloud_config} \
     --cloud-provider=${cloud_provider} \
-    --cluster-dns=10.100.200.10 \
-    --cluster-domain=cluster.local \
     --cni-bin-dir=/var/vcap/jobs/kubelet/packages/cni/bin \
+    --config=/var/vcap/jobs/kubelet/config/kubeletconfig.yml \
     --container-runtime=docker \
     --docker-endpoint="${DOCKER_SOCKET}" \
     --docker="${DOCKER_SOCKET}" \
     --fail-swap-on=false \
-    --hostname-override=${hostname_override} \
+    --hostname-override=$(get_hostname_override) \
     --keep-terminated-pod-volumes=false \
     --kubeconfig=/var/vcap/jobs/kubelet/config/kubeconfig \
     --network-plugin=cni \
     --node-labels=<%= labels %>"$zone_label" \
-    --read-only-port 0 \
-    --serialize-image-pulls=false \
-    --tls-cert-file=/var/vcap/jobs/kubelet/config/kubelet.pem \
-    --tls-private-key-file=/var/vcap/jobs/kubelet/config/kubelet-key.pem \
     --v=<%=p('logging-level') %> \
     <% if_p('kube-reserved') do |kube_reserved| %>--kube-reserved="<%= kube_reserved %>"<% end %> \
     <% if_p('system-reserved') do |system_reserved| %>--system-reserved="<%= system_reserved %>"<% end %> \

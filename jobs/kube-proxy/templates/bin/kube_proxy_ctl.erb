@@ -8,6 +8,10 @@ RUN_DIR=/var/vcap/sys/run/kubernetes
 PIDFILE=$RUN_DIR/kube-proxy.pid
 LOG_DIR=/var/vcap/sys/log/kube-proxy
 
+<% if_link('cloud-provider') do |cloud_provider| %>
+  cloud_provider="<%= cloud_provider.p('cloud-provider.type') %>"
+<% end %>
+
 # shellcheck disable=SC1091
 . /var/vcap/packages/pid_utils/pid_utils.sh
 
@@ -24,9 +28,22 @@ send_process_stderr_to_logfile() {
   exec 2>> "$LOG_DIR/$NAME.stderr.log"
 }
 
+get_hostname_override() {
+  if [[ "gce" == "$cloud_provider" ]]; then
+    # The hostname needs to be set to the instance name so the gce cloud provider can manage the instance
+    hostname_override=$(curl http://metadata.google.internal/computeMetadata/v1/instance/name -H "Metadata-Flavor: Google")
+  else
+    hostname_override=<%= spec.ip %>
+  fi
+
+  echo $hostname_override
+}
+
 start_kubernetes_proxy() {
 
-  kube-proxy \
+  sed -i "s|HOSTNAMEOVERRIDE|$(get_hostname_override)|g"  /var/vcap/jobs/kube-proxy/config/config.yml
+
+ kube-proxy \
   --config /var/vcap/jobs/kube-proxy/config/config.yml \
   --v=<%=p('logging-level') %> \
   1>> $LOG_DIR/kube_proxy.stdout.log \

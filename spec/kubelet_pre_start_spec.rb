@@ -9,7 +9,6 @@ describe 'kubelet-pre-start-script' do
   let(:link_spec) { {} }
 
   it 'renders' do
-    expect(rendered_template).to include('rpcbind stop')
     expect(rendered_template).to_not include('GOVC')
   end
 

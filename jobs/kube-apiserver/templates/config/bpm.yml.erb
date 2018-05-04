@@ -1,11 +1,24 @@
 ---
 <%
-  etcd_endpoints = link('etcd').instances.map { |server| "https://#{server.address}:2379" }.join(",")
+  def get_url(server, port)
+    if link('etcd').p('etcd.dns_suffix', false) != false
+      node_name = "#{server.name.gsub('_','-')}-#{server.index}"
+      return "https://#{node_name}.#{link('etcd').p('etcd.dns_suffix')}:#{port}"
+    else
+      return "https://#{server.address}:#{port}"
+    end
+  end
+
+  etcd_endpoints = link('etcd').instances.map { |server| get_url(server, 2379) }.join(",")
 
   admission_control_options = [
-    "DenyEscalatingExec", "LimitRanger", "NamespaceExists",
+    "LimitRanger", "NamespaceExists",
     "NamespaceLifecycle","ResourceQuota","ServiceAccount",
     "DefaultStorageClass", "MutatingAdmissionWebhook"]
+
+  if p('deny_escalating_exec')
+    admission_control_options.push("DenyEscalatingExec")
+  end
 
   if !p('allow_privileged')
     admission_control_options.push("SecurityContextDeny")
@@ -15,7 +28,6 @@ processes:
 - name: kube-apiserver
   executable: /var/vcap/packages/kubernetes/bin/kube-apiserver
   args:
-  - --admission-control=<%= admission_control_options.join(",") %>
   - --anonymous-auth=false
   - --allow-privileged=<%= p('allow_privileged') %>
   - --apiserver-count=<%= link('kube-apiserver').instances.size %>
@@ -24,12 +36,15 @@ processes:
   - --cloud-provider=<%= cloud_provider.p('cloud-provider.type') %>
   - --cloud-config=/var/vcap/jobs/kube-apiserver/config/cloud-provider.ini
   <% end %>
+  - --enable-admission-plugins=<%= admission_control_options.join(",") %>
   - --enable-swagger-ui
   - --etcd-servers=<%= etcd_endpoints %>
   - --etcd-cafile=/var/vcap/jobs/kube-apiserver/config/etcd-ca.crt
+  <% if_p('feature_gates') do |feature_gates| %>
+  - --feature-gates=<%= feature_gates.flat_map {|k,v| "#{k}=#{v}"}.join(",") %>
+  <% end %>
   - --etcd-certfile=/var/vcap/jobs/kube-apiserver/config/etcd-client.crt
   - --etcd-keyfile=/var/vcap/jobs/kube-apiserver/config/etcd-client.key
-  - --insecure-port=0
   - --kubelet-https
   - --repair-malformed-updates=false
   - --secure-port=8443

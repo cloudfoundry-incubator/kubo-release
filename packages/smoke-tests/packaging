@@ -1,0 +1,16 @@
+#!/bin/bash
+set -e -x
+exec >&2
+
+export GOROOT=$(readlink -nf /var/vcap/packages/golang-1.10-linux)
+export GOPATH=$BOSH_INSTALL_TARGET
+export PATH=$GOROOT/bin:$PATH
+
+REPO_NAME=smoke-tests
+REPO_DIR=${BOSH_INSTALL_TARGET}/src/${REPO_NAME}
+mkdir -p $(dirname $REPO_DIR)
+mkdir -p $BOSH_INSTALL_TARGET/bin
+
+cp -a $REPO_NAME $REPO_DIR
+cd $REPO_DIR
+go test -c -v -o  ${BOSH_INSTALL_TARGET}/bin/run-smoke-tests
