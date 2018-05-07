@@ -6,7 +6,7 @@ set -eu -o pipefail
 # https://github.com/kubernetes/kubernetes/issues/61058
 while read -r line; do
   linearray=($line)
-  if [ "${linearray[0]}" != "tempfs" ] && [ "${linearray[0]}" != "tracefs" ] ; then
+  if [ "${linearray[0]}" != "tmpfs" ] && [ "${linearray[0]}" != "tracefs" ] ; then
     mount --make-rshared "${linearray[1]}"
   fi
 done < /etc/mtab
