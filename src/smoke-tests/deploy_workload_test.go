@@ -1,8 +1,8 @@
 package cfcr_smoke_tests_test
 
 import (
-	"io/ioutil"
-	"os"
+	"math/rand"
+	"os/exec"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
@@ -11,73 +11,60 @@ import (
 	"github.com/onsi/gomega/gexec"
 )
 
-var nginxSpec = `
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: nginx-smoke-test
-spec:
-  selector:
-    matchLabels:
-      app: nginx-smoke-test
-  replicas: 2
-  template:
-    metadata:
-      labels:
-        app: nginx-smoke-test
-    spec:
-      containers:
-      - name: nginx
-        image: nginx:1.8 #TODO something that we upload in blobs
-        ports:
-        - containerPort: 80
-`
+var letters = []rune("abcdefghi")
+
+func randSeq(n int) string {
+	b := make([]rune, n)
+	for i := range b {
+		b[i] = letters[rand.Intn(len(letters))]
+	}
+	return string(b)
+}
 
 var _ = Describe("CFCR Smoke Tests", func() {
 	Context("When deploying workloads", func() {
-		var file *os.File
-		var err error
+		var dName string
 
 		BeforeEach(func() {
-			file, err = ioutil.TempFile(os.TempDir(), "nginx-smoke-test")
-			Expect(err).ToNot(HaveOccurred())
-			Expect(ioutil.WriteFile(file.Name(), []byte(nginxSpec), 0644)).ToNot(HaveOccurred())
+			dName = randSeq(10)
 
-			s := k8sRunner.RunKubectlCommand("create", "-f", file.Name())
+			args := []string{"run", dName, "--image=nginx", "--replicas=2", "-l", "app=" + dName} //TODO. set specific image
+			s := k8sRunner.RunKubectlCommand(args...)
 			Eventually(s, "60s").Should(gexec.Exit(0))
 
-			rolloutWatch := k8sRunner.RunKubectlCommand("rollout", "status", "deployment/nginx-smoke-test", "-w")
+			rolloutWatch := k8sRunner.RunKubectlCommand("rollout", "status", "deployment/"+dName, "-w")
 			Eventually(rolloutWatch, "120s").Should(gexec.Exit(0))
 		})
 
 		AfterEach(func() {
-			s := k8sRunner.RunKubectlCommand("delete", "-f", file.Name())
+			s := k8sRunner.RunKubectlCommand("delete", "deployment", dName)
 			Eventually(s, "60s").Should(gexec.Exit(0))
-			os.Remove(file.Name())
 		})
 
 		It("shows the pods are healthy", func() {
-			args := []string{"get", "pods", "-l", "app=nginx-smoke-test", "-o", "jsonpath={.items[:].status.phase}"}
+			args := []string{"get", "pods", "-l", "app=" + dName, "-o", "jsonpath={.items[:].status.phase}"}
 			s := k8sRunner.RunKubectlCommand(args...)
 			Eventually(s, "60s").Should(gexec.Exit(0))
 			Expect(s.Out).To(gbytes.Say("Running Running"))
 		})
 
 		It("allows commands to be executed on a container", func() {
-			getPodName := k8sRunner.RunKubectlCommand("get", "pods", "-o", "jsonpath={.items[0].metadata.name}")
-			Eventually(getPodName, "15s").Should(gexec.Exit(0))
-			podName := string(getPodName.Out.Contents())
-
-			args := []string{"exec", podName, "--", "which", "nginx"}
+			args := []string{"get", "pods", "-l", "app=" + dName, "-o", "jsonpath={.items[0].metadata.name}"}
 			s := k8sRunner.RunKubectlCommand(args...)
-			Eventually(s, "60s").Should(gexec.Exit(0))
-			Expect(s.Out).To(gbytes.Say("/usr/sbin/nginx"))
+			Eventually(s, "15s").Should(gexec.Exit(0))
+			podName := string(s.Out.Contents())
+
+			args1 := []string{"exec", podName, "--", "which", "nginx"}
+			s1 := k8sRunner.RunKubectlCommand(args1...)
+			Eventually(s1, "60s").Should(gexec.Exit(0))
+			Expect(s1.Out).To(gbytes.Say("/usr/sbin/nginx"))
 		})
 
 		It("allows access to pod logs", func() {
-			getPodName := k8sRunner.RunKubectlCommand("get", "pods", "-o", "jsonpath={.items[0].metadata.name}")
-			Eventually(getPodName, "15s").Should(gexec.Exit(0))
-			podName := string(getPodName.Out.Contents())
+			args := []string{"get", "pods", "-l", "app=" + dName, "-o", "jsonpath={.items[0].metadata.name}"}
+			s := k8sRunner.RunKubectlCommand(args...)
+			Eventually(s, "15s").Should(gexec.Exit(0))
+			podName := string(s.Out.Contents())
 
 			getLogs := k8sRunner.RunKubectlCommand("logs", podName)
 			Eventually(getLogs, "15s").Should(gexec.Exit(0))
@@ -86,8 +73,31 @@ var _ = Describe("CFCR Smoke Tests", func() {
 			Expect(logContent).To(Equal(""))
 		})
 
-		Context("Data Encryption", func() {
-			It("successfully encrypts the data in ETCD", func() {
+		Context("Port Forwarding", func() {
+			var cmd *gexec.Session
+			var port = "57869"
+
+			BeforeEach(func() {
+				args := []string{"get", "pods", "-l", "app=" + dName, "-o", "jsonpath={.items[0].metadata.name}"}
+				s := k8sRunner.RunKubectlCommand(args...)
+				Eventually(s, "15s").Should(gexec.Exit(0))
+				podName := string(s.Out.Contents())
+
+				args = []string{"port-forward", podName, port + ":80"}
+				cmd = k8sRunner.RunKubectlCommand(args...)
+			})
+
+			AfterEach(func() {
+				cmd.Terminate().Wait("15s")
+			})
+
+			It("successfully curls the nginx service", func() {
+				curlNginx := func() (string, error) {
+					cmd := exec.Command("curl", "--head", "http://127.0.0.1:"+port)
+					out, err := cmd.CombinedOutput()
+					return string(out), err
+				}
+				Eventually(curlNginx, "15s").Should(ContainSubstring("Server: nginx"))
 			})
 		})
 	})
