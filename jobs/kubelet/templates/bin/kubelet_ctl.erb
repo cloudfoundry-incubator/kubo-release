@@ -91,10 +91,12 @@ start_kubelet() {
   kubelet \
     --allow-privileged=<%= p('allow_privileged') %> \
     --cadvisor-port=0 \
-    <%- if !iaas.nil? and iaas != "vsphere" -%>
+    <%- if !iaas.nil? -%>
+      <%- if iaas != "vsphere" -%>
     --cloud-config=${cloud_config} \
-    <%- end -%>
+      <%- end -%>
     --cloud-provider=${cloud_provider} \
+    <%- end -%>
     --cni-bin-dir=/var/vcap/jobs/kubelet/packages/cni/bin \
     --config=/var/vcap/jobs/kubelet/config/kubeletconfig.yml \
     --container-runtime=docker \

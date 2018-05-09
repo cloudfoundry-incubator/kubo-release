@@ -164,3 +164,11 @@ context 'when cloud provider is vsphere' do
     expect(rendered_kubelet_ctl).not_to include('--cloud-config')
   end
 end
+
+context 'when there is no cloud-provider' do
+  it 'does not set cloud options' do
+    rendered_kubelet_ctl = compiled_template('kubelet', 'bin/kubelet_ctl', {}, {})
+    expect(rendered_kubelet_ctl).not_to include('--cloud-config')
+    expect(rendered_kubelet_ctl).not_to include('--cloud-provider')
+  end
+end
