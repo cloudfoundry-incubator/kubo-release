@@ -37,7 +37,7 @@ var _ = Describe("CFCR Smoke Tests", func() {
 			session, err := gexec.Start(command, GinkgoWriter, GinkgoWriter)
 			Expect(err).NotTo(HaveOccurred())
 			Eventually(session, "60s").Should(gexec.Exit(0))
-			Expect(string(session.Out.Contents())).To(Equal("Healthy Healthy Healthy"))
+			Expect(session.Out).To(gbytes.Say("^(Healthy )+Healthy$"))
 		})
 	})
 
