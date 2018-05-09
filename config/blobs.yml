@@ -50,6 +50,10 @@ container-images/k8s.gcr.io_heapster-influxdb-amd64:v1.3.3.tgz:
   size: 4751608
   object_id: 93e1221a-e955-4d68-562b-0d47dbbb06ea
   sha: 1b2e197e0cccd7c0b7fb2f7ee791b9bc52d0654b
+container-images/nginx:1.13-alpine.tgz:
+  size: 7633579
+  object_id: e23764f0-27cf-49fe-7cc3-04d3b90b2cca
+  sha: 16b664282f0010b441587dd3c0d2d3587661ab31
 etcdctl-3.0.7:
   size: 18427584
   object_id: 32221476-5c3d-4ec7-5869-44c989cc3077

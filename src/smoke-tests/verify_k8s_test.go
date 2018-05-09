@@ -18,5 +18,4 @@ var _ = Describe("Verify K8S cluster", func() {
 			Expect(string(session.Out.Contents())).To(Equal("Healthy Healthy Healthy"))
 		})
 	})
-
 })
