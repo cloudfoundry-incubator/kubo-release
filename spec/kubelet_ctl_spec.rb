@@ -99,7 +99,7 @@ describe 'kubelet_ctl setting of --hostname-override property' do
 
     it 'sets hostname_override to IP address of container IP' do
       expected_spec_ip = '1111'
-      rendered_kubelet_ctl = compiled_template('kubelet', 'bin/kubelet_ctl', {}, {}, {}, 'az1', expected_spec_ip)
+      rendered_kubelet_ctl = compiled_template('kubelet', 'bin/kubelet_ctl', { 'cloud-provider' => 'nonsense' }, {}, {}, 'az1', expected_spec_ip)
       result = call_get_hostname_override(rendered_kubelet_ctl, test_context['kubelet_ctl_file'])
 
       expect(result).to include(expected_spec_ip)
@@ -117,20 +117,30 @@ describe 'kubelet_ctl setting of --hostname-override property' do
         f.write("echo #{expected_google_hostname}")
       }
 
-      test_link = {'cloud-provider' => {
+      manifest_properties = {
+        'cloud-provider' => 'gce'
+      }
+
+      test_link = {
+        'cloud-provider' => {
           'instances' => [],
           'properties' => {
-              'cloud-provider' => {
-                  'type' => 'gce',
-                  'gce' => {
-                      'project-id' => 'f',
-                      'network-name' => 'ff',
-                      'worker-node-tag' => 'fff',
-                      'service_key' => 'ffff'
-                  }}}}}
-      rendered_kubelet_ctl = compiled_template('kubelet', 'bin/kubelet_ctl', {}, test_link)
-      result = call_get_hostname_override(rendered_kubelet_ctl, test_context['kubelet_ctl_file'])
+            'cloud-provider' => {
+              'type' => 'gce',
+              'gce' => {
+                  'project-id' => 'f',
+                  'network-name' => 'ff',
+                  'worker-node-tag' => 'fff',
+                  'service_key' => 'ffff'
+              }
+            }
+          }
+        }
+      }
+      rendered_kubelet_ctl = compiled_template('kubelet', 'bin/kubelet_ctl', manifest_properties, test_link)
+      expect(rendered_kubelet_ctl).to include('cloud_provider="gce"')
 
+      result = call_get_hostname_override(rendered_kubelet_ctl, test_context['kubelet_ctl_file'])
       expect(result).to include(expected_google_hostname)
     end
   end
@@ -138,6 +148,10 @@ end
 
 context 'when cloud provider is vsphere' do
   it 'does not set cloud-config' do
+    manifest_properties = {
+      'cloud-provider' => 'vsphere'
+    }
+
     test_link = {
       'cloud-provider' => {
         'instances' => [],
@@ -160,12 +174,13 @@ context 'when cloud provider is vsphere' do
         }
       }
     }
-    rendered_kubelet_ctl = compiled_template('kubelet', 'bin/kubelet_ctl', {}, test_link)
+    rendered_kubelet_ctl = compiled_template('kubelet', 'bin/kubelet_ctl', manifest_properties, test_link)
     expect(rendered_kubelet_ctl).not_to include('--cloud-config')
+    expect(rendered_kubelet_ctl).to include('cloud_provider="vsphere"')
   end
 end
 
-context 'when there is no cloud-provider' do
+context 'when there is no cloud-provider link' do
   it 'does not set cloud options' do
     rendered_kubelet_ctl = compiled_template('kubelet', 'bin/kubelet_ctl', {}, {})
     expect(rendered_kubelet_ctl).not_to include('--cloud-config')

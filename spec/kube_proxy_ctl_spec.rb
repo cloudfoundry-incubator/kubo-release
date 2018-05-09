@@ -49,7 +49,7 @@ describe 'kube_proxy_ctl setting of hostnameOverride property' do
 
     it 'sets hostname_override to IP address of container IP' do
       expected_spec_ip = '1111'
-      rendered_kube_proxy_ctl = compiled_template('kube-proxy', 'bin/kube_proxy_ctl', {}, {}, {}, 'az1', expected_spec_ip)
+      rendered_kube_proxy_ctl = compiled_template('kube-proxy', 'bin/kube_proxy_ctl', { 'cloud-provider' => 'nonsense' }, {}, {}, 'az1', expected_spec_ip)
       result = run_get_hostname_override(rendered_kube_proxy_ctl, test_context['kube_proxy_ctl_file'])
 
       expect(result).to include(expected_spec_ip)
@@ -78,7 +78,7 @@ describe 'kube_proxy_ctl setting of hostnameOverride property' do
                       'worker-node-tag' => 'fff',
                       'service_key' => 'ffff'
                   }}}}}
-      rendered_kube_proxy_ctl = compiled_template('kube-proxy', 'bin/kube_proxy_ctl', {}, test_link)
+      rendered_kube_proxy_ctl = compiled_template('kube-proxy', 'bin/kube_proxy_ctl', { 'cloud-provider' => 'gce' }, test_link)
       result = run_get_hostname_override(rendered_kube_proxy_ctl, test_context['kube_proxy_ctl_file'])
 
       expect(result).to include(expected_google_hostname)

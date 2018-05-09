@@ -26,6 +26,8 @@ packages:
 - govc
 
 properties:
+  cloud-provider:
+    description: "The type of cloud-provider that is being deployed"
   allow_privileged:
     description: Allows privileged containers for the Kubernetes cluster
     default: false

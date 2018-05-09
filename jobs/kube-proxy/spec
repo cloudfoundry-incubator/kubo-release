@@ -13,6 +13,8 @@ packages:
 - conntrack
 
 properties:
+  cloud-provider:
+    description: "The type of cloud-provider that is being deployed"
   tls.kubernetes:
     description: "Certificate and private key for the Kubernetes master"
   api-token:
@@ -20,8 +22,3 @@ properties:
   logging-level:
     description: "V-leveled logging at the specified level. See https://github.com/golang/glog"
     default: 2
-
-consumes:
-- name: cloud-provider
-  type: cloud-provider
-  optional: true
