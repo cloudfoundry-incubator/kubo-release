@@ -18,27 +18,18 @@ conntrack/libnetfilter-conntrack3_1.0.4-1.deb:
   size: 45872
   object_id: 42a59368-8ae3-4502-480b-56ecd3f40f7a
   sha: 743b497bd6a6491a8cad11c04103e55c7a9cc93c
-container-images/gcr.io_google_containers_k8s-dns-dnsmasq-nanny-amd64:1.14.8.tgz:
-  size: 10940805
-  object_id: 489ed65d-dba1-4365-79c2-a81a25085c7a
-  sha: e1585bc240a1ee34c7939e4d99e8a5bfe3e86c54
 container-images/gcr.io_google_containers_k8s-dns-dnsmasq-nanny-amd64:1.14.10.tgz:
   size: 10980446
-  sha: 3314058a1d52c6037f9853724449ea647b79dd1c
-container-images/gcr.io_google_containers_k8s-dns-kube-dns-amd64:1.14.8.tgz:
-  size: 13181223
-  object_id: c333c5bf-a52e-4ac9-7dff-67b2c5b766ff
-  sha: f6f391a30e3332183f5e24c11531db7a23007e47
+  object_id: 80191878-fd78-4d9a-6ad3-bff1224300a9
+  sha: ba8ca62dc4fcf71a40c894d6f63e017c9d853ed8
 container-images/gcr.io_google_containers_k8s-dns-kube-dns-amd64:1.14.10.tgz:
   size: 13175598
-  sha: bbfefa38f08fe00fa475516cae60fa5e751a09b1
-container-images/gcr.io_google_containers_k8s-dns-sidecar-amd64:1.14.8.tgz:
-  size: 11240942
-  object_id: d9ad481c-dda4-43a5-4329-c6458554433b
-  sha: c6df56b00623d235dfa0d15f684ad85424022996
+  object_id: 7703b9a6-bd1f-46a2-7811-1814b1806987
+  sha: aa2447a1e80fa1e8177dc606018c74e2606b9925
 container-images/gcr.io_google_containers_k8s-dns-sidecar-amd64:1.14.10.tgz:
   size: 11294012
-  sha: b94740e54f11f42a9902cb664abc175e7acee465
+  object_id: cccdc7cf-33dd-4939-6000-84e4c16baf97
+  sha: fd2d82294bcbefb87349446d388bfe12ebd0ca0f
 container-images/gcr.io_google_containers_kubernetes-dashboard-amd64:v1.8.3.tgz:
   size: 37223449
   object_id: 939c66c1-9114-4573-6d73-8f6cfa82d879
