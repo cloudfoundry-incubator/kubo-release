@@ -31,7 +31,17 @@ func curlLater(endpoint string) func() (string, error) {
 }
 
 var _ = Describe("CFCR Smoke Tests", func() {
-	Context("When deploying workloads", func() {
+	Describe("System Compenents", func() {
+		It("should be healthy", func() {
+			command := exec.Command("kubectl", "get", "componentstatuses", "-o", "jsonpath={.items[*].conditions[*].type}")
+			session, err := gexec.Start(command, GinkgoWriter, GinkgoWriter)
+			Expect(err).NotTo(HaveOccurred())
+			Eventually(session, "60s").Should(gexec.Exit(0))
+			Expect(string(session.Out.Contents())).To(Equal("Healthy Healthy Healthy"))
+		})
+	})
+
+	Context("Deployment", func() {
 		var dName string
 
 		BeforeEach(func() {
