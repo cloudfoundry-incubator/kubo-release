@@ -135,3 +135,32 @@ describe 'kubelet_ctl setting of --hostname-override property' do
     end
   end
 end
+
+context 'when cloud provider is vsphere' do
+  it 'does not set cloud-config' do
+    test_link = {
+      'cloud-provider' => {
+        'instances' => [],
+        'properties' => {
+          'cloud-provider' => {
+            'type' => 'vsphere',
+            'vsphere' => {
+              'user' => 'fake-user',
+              'password' => 'fake-password',
+              'server' => 'fake-server',
+              'port' => 'fake-port',
+              'insecure-flag' => 'fake-insecure-flag',
+              'datacenter' => 'fake-datacenter',
+              'datastore' => 'fake-datastore',
+              'working-dir' => 'fake-working-dir',
+              'vm-uuid' => 'fake-vm-uuid',
+              'scsicontrollertype' => 'fake-scsicontrollertype'
+            }
+          }
+        }
+      }
+    }
+    rendered_kubelet_ctl = compiled_template('kubelet', 'bin/kubelet_ctl', {}, test_link)
+    expect(rendered_kubelet_ctl).not_to include('--cloud-config')
+  end
+end

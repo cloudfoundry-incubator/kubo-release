@@ -10,18 +10,20 @@ LOG_DIR=/var/vcap/sys/log/kubelet
 DATA_DIR=/var/vcap/store/kubernetes
 DOCKER_SOCKET=unix:///var/vcap/sys/run/docker/docker.sock
 
+<% iaas = nil %>
 <% if_link('cloud-provider') do |cloud_provider| %>
-  cloud_provider="<%= cloud_provider.p('cloud-provider.type') %>"
-  cloud_config="/var/vcap/jobs/kubelet/config/cloud-provider.ini"
-  <% cloud_provider.if_p('cloud-provider.gce.service_key') do |service_key| %>
-    export GOOGLE_APPLICATION_CREDENTIALS="/var/vcap/jobs/kubelet/config/service_key.json"
-  <% end %>
-  <% cloud_provider.if_p('cloud-provider.aws.access_key_id') do |access_key_id| %>
-  export AWS_ACCESS_KEY_ID="<%= access_key_id %>"
-  <% end %>
-  <% cloud_provider.if_p('cloud-provider.aws.secret_access_key') do |secret_access_key| %>
-  export AWS_SECRET_ACCESS_KEY="<%= secret_access_key %>"
-  <% end %>
+    <% iaas = cloud_provider.p('cloud-provider.type') %>
+    cloud_provider="<%= cloud_provider.p('cloud-provider.type') %>"
+    cloud_config="/var/vcap/jobs/kubelet/config/cloud-provider.ini"
+    <% cloud_provider.if_p('cloud-provider.gce.service_key') do |service_key| %>
+      export GOOGLE_APPLICATION_CREDENTIALS="/var/vcap/jobs/kubelet/config/service_key.json"
+    <% end %>
+    <% cloud_provider.if_p('cloud-provider.aws.access_key_id') do |access_key_id| %>
+    export AWS_ACCESS_KEY_ID="<%= access_key_id %>"
+    <% end %>
+    <% cloud_provider.if_p('cloud-provider.aws.secret_access_key') do |secret_access_key| %>
+    export AWS_SECRET_ACCESS_KEY="<%= secret_access_key %>"
+    <% end %>
 <% end %>
 
 <%
@@ -89,7 +91,9 @@ start_kubelet() {
   kubelet \
     --allow-privileged=<%= p('allow_privileged') %> \
     --cadvisor-port=0 \
+    <%- if !iaas.nil? and iaas != "vsphere" -%>
     --cloud-config=${cloud_config} \
+    <%- end -%>
     --cloud-provider=${cloud_provider} \
     --cni-bin-dir=/var/vcap/jobs/kubelet/packages/cni/bin \
     --config=/var/vcap/jobs/kubelet/config/kubeletconfig.yml \
