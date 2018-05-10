@@ -35,8 +35,9 @@ var _ = Describe("CFCR Smoke Tests", func() {
 		It("should be healthy", func() {
 			command := exec.Command("kubectl", "get", "componentstatuses", "-o", "jsonpath={.items[*].conditions[*].type}")
 			session, err := gexec.Start(command, GinkgoWriter, GinkgoWriter)
-			Expect(err).NotTo(HaveOccurred())
+
 			Eventually(session, "60s").Should(gexec.Exit(0))
+			Expect(err).ToNot(HaveOccurred())
 			Expect(session.Out).To(gbytes.Say("^(Healthy )+Healthy$"))
 		})
 	})
@@ -46,7 +47,6 @@ var _ = Describe("CFCR Smoke Tests", func() {
 
 		BeforeEach(func() {
 			dName = randSeq(10)
-
 			args := []string{"run", dName, "--image=nginx:1.13-alpine", "--image-pull-policy=Never", "-l", "app=" + dName}
 			session := k8sRunner.RunKubectlCommand(args...)
 			Eventually(session, "60s").Should(gexec.Exit(0))
@@ -97,7 +97,8 @@ var _ = Describe("CFCR Smoke Tests", func() {
 			Eventually(session).Should(gexec.Exit(0))
 			port := session.Out.Contents()
 
-			_, err := curlLater(fmt.Sprintf("http://%s:%s", nodeIP, port))()
+			endpoint := fmt.Sprintf("http://%s:%s", nodeIP, port)
+			_, err := curlLater(endpoint)()
 			Expect(err).ToNot(HaveOccurred())
 
 			getLogs := k8sRunner.RunKubectlCommand("logs", podName)
