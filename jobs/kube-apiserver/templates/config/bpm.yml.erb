@@ -28,7 +28,7 @@ processes:
 - name: kube-apiserver
   executable: /var/vcap/packages/kubernetes/bin/kube-apiserver
   args:
-  - --anonymous-auth=false
+  - --anonymous-auth=<%= p('anonymous_auth') %>
   - --allow-privileged=<%= p('allow_privileged') %>
   - --apiserver-count=<%= link('kube-apiserver').instances.size %>
   - --bind-address=0.0.0.0
