@@ -33,16 +33,18 @@ delete_drained_node() {
 }
 
 retry() {
-  local attempts_remaining=10
+  local attempts_remaining=1
+  local max_attempts=10
   local func=$1
-  while [[ ${attempts_remaining} -ne 0 ]]; do
+
+  while [[ ${attempts_remaining} -le $max_attempts ]]; do
     if ${func}; then
       echo "Successfully ${func}"
       return 0
-    else
-      sleep 1
     fi
-    attempts_remaining=$((attempts_remaining - 1))
+    attempts_remaining=$((attempts_remaining + 1))
+    printf "[%s] Unsuccessful ${func}, retrying attempt %d out of %d" "$(date +%s)" "$attempts_remaining" "$max_attempts" >&2
+    sleep 1
   done
 
   echo "Failed all retry attempts for ${func}"
