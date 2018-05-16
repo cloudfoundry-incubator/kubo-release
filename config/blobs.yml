@@ -78,30 +78,6 @@ kubernetes-1.9.6/kubelet:
   size: 147306352
   object_id: 844c032b-56aa-45eb-757b-fc6e2f4325d3
   sha: 32b1234e68d4d576c3fe0b62e608e361e09408a1
-kubernetes-1.9.7/kube-apiserver:
-  size: 210754499
-  object_id: 6c149795-4319-4ec1-44b0-98e035979b12
-  sha: b545c26fb4d46fe0d70b87811d1bf7b3ebfa7e5f
-kubernetes-1.9.7/kube-controller-manager:
-  size: 138086462
-  object_id: 1b809a0a-9d3c-4512-6685-b44a0fa3389f
-  sha: 1ee57735649688068b0e9fbcedb5fa17296fe740
-kubernetes-1.9.7/kube-proxy:
-  size: 63587157
-  object_id: 800b6e64-2625-47ef-70a6-4040a8976c23
-  sha: 4f4884e72a364901fa82fc42fd4bf40b31ad06c0
-kubernetes-1.9.7/kube-scheduler:
-  size: 61715358
-  object_id: f88b7c83-2655-4b1a-601f-651eb10f5104
-  sha: b2b5fc6f746b00134345ca83cca781504c14fcc4
-kubernetes-1.9.7/kubectl:
-  size: 67561293
-  object_id: 81c45276-e0b8-47a5-5c14-0c483f2cd311
-  sha: 7425dbf67007cee328b85da3bf5155d01d3939e2
-kubernetes-1.9.7/kubelet:
-  size: 147353184
-  object_id: 932cc01c-b4cc-4c07-4b9f-236b3b74ad87
-  sha: 41a46a32d3a24afb7451a3836e95d00c040d1235
 socat-1.7.3.2.tar.gz:
   size: 615818
   object_id: a6f3dcb3-54a0-44a3-4100-f408932aaf8f
