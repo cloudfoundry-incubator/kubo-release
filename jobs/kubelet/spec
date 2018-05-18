@@ -25,11 +25,13 @@ packages:
 - govc
 
 properties:
-  cloud-provider:
-    description: "The type of cloud-provider that is being deployed"
+  admin-password:
+    description: The admin password for the Kubernetes cluster
   allow_privileged:
     description: Allows privileged containers for the Kubernetes cluster
     default: false
+  cloud-provider:
+    description: "The type of cloud-provider that is being deployed"
   tls.kubernetes:
       description: "Certificate and private key for the Kubernetes master"
   backend_port:
