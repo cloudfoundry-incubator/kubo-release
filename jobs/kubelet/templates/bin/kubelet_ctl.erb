@@ -10,22 +10,27 @@ LOG_DIR=/var/vcap/sys/log/kubelet
 DATA_DIR=/var/vcap/store/kubernetes
 DOCKER_SOCKET=unix:///var/vcap/sys/run/docker/docker.sock
 
+<% iaas = nil %>
+<% if_p('cloud-provider') do |cloud_provider| %>
+  <% iaas = cloud_provider %>
+  cloud_provider="<%= cloud_provider %>"
+<% end %>
+
 <% if_link('cloud-provider') do |cloud_provider| %>
-  cloud_provider="<%= cloud_provider.p('cloud-provider.type') %>"
-  cloud_config="/var/vcap/jobs/kubelet/config/cloud-provider.ini"
-  <% cloud_provider.if_p('cloud-provider.gce.service_key') do |service_key| %>
-    export GOOGLE_APPLICATION_CREDENTIALS="/var/vcap/jobs/kubelet/config/service_key.json"
-  <% end %>
-  <% cloud_provider.if_p('cloud-provider.aws.access_key_id') do |access_key_id| %>
-  export AWS_ACCESS_KEY_ID="<%= access_key_id %>"
-  <% end %>
-  <% cloud_provider.if_p('cloud-provider.aws.secret_access_key') do |secret_access_key| %>
-  export AWS_SECRET_ACCESS_KEY="<%= secret_access_key %>"
-  <% end %>
+    cloud_config="/var/vcap/jobs/kubelet/config/cloud-provider.ini"
+    <% cloud_provider.if_p('cloud-provider.gce.service_key') do |service_key| %>
+      export GOOGLE_APPLICATION_CREDENTIALS="/var/vcap/jobs/kubelet/config/service_key.json"
+    <% end %>
+    <% cloud_provider.if_p('cloud-provider.aws.access_key_id') do |access_key_id| %>
+    export AWS_ACCESS_KEY_ID="<%= access_key_id %>"
+    <% end %>
+    <% cloud_provider.if_p('cloud-provider.aws.secret_access_key') do |secret_access_key| %>
+    export AWS_SECRET_ACCESS_KEY="<%= secret_access_key %>"
+    <% end %>
 <% end %>
 
 <%
-  labels = ["spec.ip=#{spec.ip}"]
+  labels = ["spec.ip=#{spec.ip}","bosh.id=#{spec.id}"]
   labels += p("labels").map {|k,v| "#{k}=#{v}"}
   labels = labels.join(',')
 %>
@@ -66,9 +71,7 @@ delete_stale_drained_node() {
   fi
 }
 
-start_kubelet() {
-  ln -s -f /var/vcap/jobs/kubelet/packages/cni/bin/nsenter /usr/bin/nsenter
-
+get_hostname_override() {
   if [[ "gce" == "$cloud_provider" ]]; then
     # The hostname needs to be set to the instance name so the gce cloud provider can manage the instance
     hostname_override=$(curl http://metadata.google.internal/computeMetadata/v1/instance/name -H "Metadata-Flavor: Google")
@@ -76,11 +79,26 @@ start_kubelet() {
     hostname_override=<%= spec.ip %>
   fi
 
+  echo $hostname_override
+}
+
+start_kubelet() {
+  ln -s -f /var/vcap/jobs/kubelet/packages/cni/bin/nsenter /usr/bin/nsenter
+
   zone_label=""
 
   if [[ "vsphere" == "$cloud_provider"  ]]; then
     zone_label=",failure-domain.beta.kubernetes.io/zone=<%= spec.az %>"
   fi
+
+  <%-
+    include_config = false
+    if !iaas.nil? and iaas != "vsphere"
+      if_link('cloud-provider') do
+        include_config = true
+      end
+    end
+  -%>
 
   kubelet \
     --allow-privileged=<%= p('allow_privileged') %> \
@@ -90,17 +108,16 @@ start_kubelet() {
     --bootstrap-kubeconfig=/var/vcap/jobs/kubelet/config/bootstrap-kubeconfig \
     --cadvisor-port=0 \
     --client-ca-file=/var/vcap/jobs/kubelet/config/ca.pem \
-    --cloud-config=${cloud_config} \
-    --cloud-provider=${cloud_provider} \
-    --cluster-dns=10.100.200.10 \
-    --cluster-domain=cluster.local \
+    <% if include_config -%>--cloud-config=${cloud_config}<% end %> \
+    <% if !iaas.nil? -%>--cloud-provider=${cloud_provider}<% end %> \
     --cni-bin-dir=/var/vcap/jobs/kubelet/packages/cni/bin \
+    --config=/var/vcap/jobs/kubelet/config/kubeletconfig.yml \
     --container-runtime=docker \
     --docker-endpoint="${DOCKER_SOCKET}" \
     --docker="${DOCKER_SOCKET}" \
     --fail-swap-on=false \
     --feature-gates=RotateKubeletServerCertificate=true \
-    --hostname-override=${hostname_override} \
+    --hostname-override=$(get_hostname_override) \
     --keep-terminated-pod-volumes=false \
     --kubeconfig=/var/vcap/jobs/kubelet/config/kubeconfig \
     --network-plugin=cni \

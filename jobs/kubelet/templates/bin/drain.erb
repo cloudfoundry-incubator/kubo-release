@@ -17,12 +17,38 @@ main() {
   send_process_stderr_to_logfile_and_syslog
   check_if_pidfile_exists
   check_if_pid_is_running
-  if ! drain_kubelet; then
-    fail_if_master_is_running
-  else
-    delete_drained_node
-  fi
 
+  retry drain_kubelet
+  retry delete_drained_node
+}
+
+drain_kubelet() {
+  local node_name=$(kubectl --kubeconfig /var/vcap/jobs/kubelet/config/kubeconfig-drain get nodes -o wide -L spec.ip | grep "<%= spec.ip %>" | awk '{print $1}')
+  kubectl --kubeconfig /var/vcap/jobs/kubelet/config/kubeconfig-drain drain "${node_name}" --grace-period 10 --force --delete-local-data  --ignore-daemonsets
+}
+
+delete_drained_node() {
+  local node_name=$(kubectl --kubeconfig /var/vcap/jobs/kubelet/config/kubeconfig-drain get nodes -o wide -L spec.ip | grep "<%= spec.ip %>" | awk '{print $1}')
+  kubectl --kubeconfig /var/vcap/jobs/kubelet/config/kubeconfig-drain delete node "${node_name}" --ignore-not-found
+}
+
+retry() {
+  local attempts_remaining=1
+  local max_attempts=10
+  local func=$1
+
+  while [[ ${attempts_remaining} -le $max_attempts ]]; do
+    if ${func}; then
+      echo "Successfully ${func}"
+      return 0
+    fi
+    attempts_remaining=$((attempts_remaining + 1))
+    printf "[%s] Unsuccessful ${func}, retrying attempt %d out of %d" "$(date +%s)" "$attempts_remaining" "$max_attempts" >&2
+    sleep 1
+  done
+
+  echo "Failed all retry attempts for ${func}"
+  exit 1
 }
 
 ensure_safe_exit() {
@@ -56,25 +82,6 @@ check_if_pid_is_running() {
   fi
 }
 
-fail_if_master_is_running() {
-  local ATTEMPTS_REMAINING=100
-  local cacert=/var/vcap/jobs/kubelet/config/ca.pem
-  local auth_header='Authorization: Bearer <%= p("drain-api-token")  %>'
-  while true; do
-    if curl -sS https://master.cfcr.internal:8443/healthz -H "$auth_header" --fail --cacert "$cacert" --connect-timeout 2 > /dev/null; then
-      exit 1
-    else
-      ATTEMPTS_REMAINING=$(( ATTEMPTS_REMAINING - 1 ))
-      if [[ "$ATTEMPTS_REMAINING" -eq 0 ]]; then
-        echo 'Master seems to be down'
-        echo 'Assuming this is a bosh delete-deployment, the drain failure will be ignored.'
-        exit
-      fi
-      sleep 1
-    fi
-  done
-}
-
 pid_is_running?() {
   declare pid="$1"
   ps -p "${pid}" >/dev/null 2>&1
@@ -87,19 +94,9 @@ check_if_pidfile_exists() {
   fi
 }
 
-drain_kubelet() {
-  local node_name=$(kubectl --kubeconfig /var/vcap/jobs/kubelet/config/kubeconfig-drain get nodes -o wide -L spec.ip | grep "<%= spec.ip %>" | awk '{print $1}')
-  kubectl --kubeconfig /var/vcap/jobs/kubelet/config/kubeconfig-drain drain "${node_name}" --grace-period 10 --force --delete-local-data  --ignore-daemonsets
-}
-
 kill_node() {
   kill -9 $(head -1 "$PIDFILE")
   rm -f $PIDFILE
-}
-
-delete_drained_node() {
-  local node_name=$(kubectl --kubeconfig /var/vcap/jobs/kubelet/config/kubeconfig-drain get nodes -o wide -L spec.ip | grep "<%= spec.ip %>" | awk '{print $1}')
-  kubectl --kubeconfig /var/vcap/jobs/kubelet/config/kubeconfig-drain delete node "${node_name}" --ignore-not-found
 }
 
 main

@@ -2,7 +2,15 @@
 
 set -eu -o pipefail
 
-/etc/init.d/rpcbind stop || echo Already stopped.
+# Mark all mounted devices as shareable for MountPropagation feature
+# https://github.com/kubernetes/kubernetes/issues/61058
+while read -r line; do
+  linearray=($line)
+  if [ "${linearray[0]}" != "tracefs" ] ; then
+    # https://bugs.launchpad.net/ubuntu/+source/sysvinit/+bug/32455/comments/2
+    mount --make-rshared "$(printf %b $(echo "${linearray[1]}" | sed -r 's/(\\[0-7]{3})([0-7])/\1\\06\2/g'))"
+  fi
+done < /etc/mtab
 
 <% if_link('cloud-provider') do |cloud_provider|
     if cloud_provider.p('cloud-provider.type') == 'vsphere' %>
@@ -30,4 +38,3 @@ set -eu -o pipefail
   /var/vcap/packages/govc/bin/govc vm.change -e 'disk.enableUUID=1' -vm.uuid=$vm_uuid
 <%  end
   end %>
-

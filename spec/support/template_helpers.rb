@@ -6,14 +6,15 @@ require 'yaml'
 module TemplateHelpers
   include Bosh::Template::PropertyHelper
 
-  def compiled_template(job_name, template_name, manifest_properties = {}, links = {}, network_properties = [], az = '')
-    manifest = emulate_bosh_director_merge(job_name, manifest_properties, links, network_properties, az)
+  def compiled_template(job_name, template_name, manifest_properties = {}, links = {}, network_properties = [], az = '', ip = '', id = '')
+    manifest = emulate_bosh_director_merge(job_name, manifest_properties, links, network_properties, az, ip, id)
+
     renderer = Bosh::Template::Renderer.new(context: manifest)
     renderer.render("jobs/#{job_name}/templates/#{template_name}.erb")
   end
 
   # Trying to emulate bosh director Bosh::Director::DeploymentPlan::Job#extract_template_properties
-  def emulate_bosh_director_merge(job_name, manifest_properties, links, network_properties, az)
+  def emulate_bosh_director_merge(job_name, manifest_properties, links, network_properties, az, ip, id)
     job_spec = YAML.load_file("jobs/#{job_name}/spec")
     spec_properties = job_spec['properties']
 
@@ -45,7 +46,9 @@ module TemplateHelpers
       'properties' => effective_properties,
       'networks' => network_properties,
       'links' => links,
-      'az' => az
+      'az' => az,
+      'ip' => ip,
+      'id' => id,
     }.to_json
   end
 

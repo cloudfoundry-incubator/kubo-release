@@ -79,19 +79,22 @@ describe 'kube-apiserver' do
     expect(bpm_yml['processes'][0]['args']).to include('--audit-policy-file=/var/vcap/jobs/kube-apiserver/config/audit_policy.yml')
   end
 
-  it 'has no security context deny when privileged containers are enabled' do
+  it 'has no security context deny when privileged containers are enabled and deny is disabled' do
     rendered_kube_apiserver_bpm_yml = compiled_template(
       'kube-apiserver',
       'config/bpm.yml',
-      { 'allow_privileged' => true },
+      {
+        'allow_privileged' => true,
+        'disable_deny_escalating_exec' => true
+      },
       link_spec
     )
 
     bpm_yml = YAML.safe_load(rendered_kube_apiserver_bpm_yml)
     expect(bpm_yml['processes'][0]['args']).to include(
-      '--admission-control=DenyEscalatingExec,LimitRanger,' \
+      '--enable-admission-plugins=LimitRanger,' \
       'NamespaceExists,NamespaceLifecycle,ResourceQuota,' \
-      'ServiceAccount,DefaultStorageClass,NodeRestriction,MutatingAdmissionWebhook'
+      'ServiceAccount,DefaultStorageClass,NodeRestriction,MutatingAdmissionWebhook,DenyEscalatingExec'
     )
   end
 
@@ -104,7 +107,7 @@ describe 'kube-apiserver' do
     )
 
     bpm_yml = YAML.safe_load(rendered_kube_apiserver_bpm_yml)
-    expect(bpm_yml['processes'][0]['args']).to include(match(/--admission-control=.*,SecurityContextDeny/))
+    expect(bpm_yml['processes'][0]['args']).to include(match(/--enable-admission-plugins=.*,SecurityContextDeny/))
   end
 
   it 'has no http proxy when no proxy is defined' do
@@ -149,7 +152,7 @@ describe 'kube-apiserver' do
     expect(bpm_yml['processes'][0]['env']['HTTPS_PROXY']).to eq('proxy.example.com:8100')
   end
 
-  fit 'sets no_proxy when no proxy property is set' do
+  it 'sets no_proxy when no proxy property is set' do
     rendered_kube_apiserver_bpm_yml = compiled_template(
       'kube-apiserver',
       'config/bpm.yml',
@@ -162,5 +165,22 @@ describe 'kube-apiserver' do
     bpm_yml = YAML.safe_load(rendered_kube_apiserver_bpm_yml)
     expect(bpm_yml['processes'][0]['env']['no_proxy']).to eq('noproxy.example.com,noproxy.example.net')
     expect(bpm_yml['processes'][0]['env']['NO_PROXY']).to eq('noproxy.example.com,noproxy.example.net')
+  end
+
+  it 'sets feature gates if the property is defined' do
+    rendered_kube_apiserver_bpm_yml = compiled_template(
+      'kube-apiserver',
+      'config/bpm.yml',
+      {
+        'feature_gates' => {
+          'CustomFeature1' => true,
+          'CustomFeature2' => false
+        }
+      },
+      link_spec
+    )
+
+    bpm_yml = YAML.safe_load(rendered_kube_apiserver_bpm_yml)
+    expect(bpm_yml['processes'][0]['args']).to include('--feature-gates=CustomFeature1=true,CustomFeature2=false')
   end
 end

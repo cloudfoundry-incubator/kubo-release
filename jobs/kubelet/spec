@@ -12,6 +12,7 @@ templates:
   config/ca.pem.erb: config/ca.pem
   config/cloud-provider.ini.erb: config/cloud-provider.ini
   config/kubeconfig-drain.erb: config/kubeconfig-drain
+  config/kubeletconfig.yml.erb: config/kubeletconfig.yml
   config/openstack-ca.crt.erb: config/openstack-ca.crt
   config/service_key.json.erb: config/service_key.json
 
@@ -24,8 +25,8 @@ packages:
 - govc
 
 properties:
-  admin-password:
-    description: The admin password for the Kubernetes cluster
+  cloud-provider:
+    description: "The type of cloud-provider that is being deployed"
   allow_privileged:
     description: Allows privileged containers for the Kubernetes cluster
     default: false

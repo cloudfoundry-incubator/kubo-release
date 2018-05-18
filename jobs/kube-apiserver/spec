@@ -33,12 +33,24 @@ properties:
   allow_privileged:
     description: Allows privileged containers for the Kubernetes cluster
     default: false
+  anonymous_auth:
+    description: |
+      Allows anonymous authentication for the API server. This is often useful
+      to allow unauthenticated users to view discovery endpoints such as
+      `/healthz` or `/version`. This is also useful when configuring load
+      balancer health checks against the TLS port.
+    default: true
   authorization-mode:
     description: The authorization mode for kube-apiserver. Should be 'abac' or 'rbac'
     default: rbac
+  deny_escalating_exec:
+    description: Enable the `DenyEscalatingExec` admission controller.
+    default: true
   enable_audit_logs:
     description: Enables audit logs
     default: true
+  feature_gates:
+    description: A map of key=value pairs that describe alpha or experimental features.
   http_proxy:
     description: http_proxy env var for the kubernetes-api binary (i.e. for cloud provider interactions)
   https_proxy:
