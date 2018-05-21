@@ -28,18 +28,23 @@ container-images/k8s.gcr.io_heapster-influxdb-amd64:v1.3.3.tgz:
   sha: 1b2e197e0cccd7c0b7fb2f7ee791b9bc52d0654b
 container-images/k8s.gcr.io_k8s-dns-dnsmasq-nanny-amd64:1.14.10.tgz:
   size: 10980438
+  object_id: 7eb4cfb4-d834-4e86-5660-b59c5aa5144c
   sha: c87f66f8332c5cf5d78441458ef323c2599c0b96
 container-images/k8s.gcr.io_k8s-dns-kube-dns-amd64:1.14.10.tgz:
   size: 13175585
+  object_id: 6d36c105-d8f0-45df-61ea-1032c875f77a
   sha: b7b2f482b0c7d92fd8a3ec875af37ae17c1f6bda
 container-images/k8s.gcr.io_k8s-dns-sidecar-amd64:1.14.10.tgz:
   size: 11294008
+  object_id: bbb7dfd6-6ddb-473d-5b78-d75c1fc709a9
   sha: 2197e413d8f22419e01924485c99c0d744a140e7
 container-images/k8s.gcr.io_kubernetes-dashboard-amd64:v1.8.3.tgz:
   size: 37223437
+  object_id: a6b0aa27-cc63-4207-69dc-8c9a0cba5907
   sha: a6b943402efcd0a9cdbcdce40bf43f5e299c0156
 container-images/k8s.gcr.io_pause-amd64:3.1.tgz:
   size: 315595
+  object_id: 3d40e826-441f-4fa8-5f46-5407e476e7e3
   sha: 00a7361bccb801c10803089aab620cf8ba2c84ec
 container-images/nginx:1.13-alpine.tgz:
   size: 7633579
