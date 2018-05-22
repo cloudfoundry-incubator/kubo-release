@@ -31,16 +31,6 @@ properties:
     description: The password for the admin account
   admission-plugins:
     description: Map of admission plugs and a boolean indicating whether it should be enabled or disabled. Anything not explicitly declared in the map reverts to the default Kubernetes behavior.A
-    default:
-      DefaultStorageClass: true
-      DenyEscalatingExec: true
-      LimitRanger: true
-      MutatingAdmissionWebhook: true
-      NamespaceExists: true
-      NamespaceLifecycle: true
-      ResourceQuota: true
-      SecurityContextDeny: true
-      ServiceAccount: true
   allow_privileged:
     description: Allow privileged containers
     default: false

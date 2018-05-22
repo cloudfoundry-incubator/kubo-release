@@ -11,8 +11,12 @@
 
   etcd_endpoints = link('etcd').instances.map { |server| get_url(server, 2379) }.join(",")
 
-  enable_admission_plugins = p('admission-plugins').select { |k, v| v == true }.keys
-  disable_admission_plugins = p('admission-plugins').select { |k, v| v== false }.keys
+  enable_admission_plugins = []
+  disable_admission_plugins = []
+  if_p('admission-plugins') do |plugins|
+    enable_admission_plugins = p('admission-plugins').select { |k, v| v == true }.keys
+    disable_admission_plugins = p('admission-plugins').select { |k, v| v== false }.keys
+  end
 %>
 processes:
 - name: kube-apiserver
