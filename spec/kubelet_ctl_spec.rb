@@ -65,38 +65,33 @@ describe 'kubelet_ctl' do
 end
 
 def call_get_hostname_override(rendered_kubelet_ctl, executable_path)
-  File.open(executable_path, 'w', 0777) do |f|
+  File.open(executable_path, 'w', 0o777) do |f|
     f.write(rendered_kubelet_ctl)
   end
 
   # exercise bash function by changing path for any necessary executables to our mocks in /tmp/mock/*
-  cmd = 'PATH=%s:%s /bin/bash -c "source %s && get_hostname_override"' % [
-      File.dirname(executable_path),
-      ENV['PATH'],
-      executable_path
-  ]
+  cmd = format('PATH=%<dirname>s:%<env_path>s /bin/bash -c "source %<exe>s && get_hostname_override"',
+               dirname: File.dirname(executable_path), env_path: ENV['PATH'], exe: executable_path)
 
   # capturing stderr (ignored) prevents expected warnings from showing up in test console
-  result, _, _ = Open3.capture3(cmd)
+  result, = Open3.capture3(cmd)
   result
 end
 
-
 describe 'kubelet_ctl setting of --hostname-override property' do
-  let(:test_context) {
+  let(:test_context) do
     mock_dir = '/tmp/kubelet_mock'
     FileUtils.remove_dir(mock_dir, true)
     FileUtils.mkdir(mock_dir)
     kubelet_ctl_file = mock_dir + '/kubelet_ctl'
 
-    test_context = {'mock_dir' => mock_dir, 'kubelet_ctl_file' => kubelet_ctl_file}
-  }
+    { 'mock_dir' => mock_dir, 'kubelet_ctl_file' => kubelet_ctl_file }
+  end
   after(:each) do
     FileUtils.remove_dir(test_context['mock_dir'], true)
   end
 
   describe 'when cloud-provider is NOT gce' do
-
     it 'sets hostname_override to IP address of container IP' do
       expected_spec_ip = '1111'
       rendered_kubelet_ctl = compiled_template('kubelet', 'bin/kubelet_ctl', { 'cloud-provider' => 'nonsense' }, {}, {}, 'az1', expected_spec_ip)
@@ -112,10 +107,10 @@ describe 'kubelet_ctl setting of --hostname-override property' do
 
       # mock out curl because this code path will try to use it.
       echo_mock_file = test_context['mock_dir'] + '/curl'
-      File.open(echo_mock_file, 'w', 0777) {|f|
+      File.open(echo_mock_file, 'w', 0o777) do |f|
         f.write("#!/bin/bash\n")
         f.write("echo #{expected_google_hostname}")
-      }
+      end
 
       manifest_properties = {
         'cloud-provider' => 'gce'
@@ -128,10 +123,10 @@ describe 'kubelet_ctl setting of --hostname-override property' do
             'cloud-provider' => {
               'type' => 'gce',
               'gce' => {
-                  'project-id' => 'f',
-                  'network-name' => 'ff',
-                  'worker-node-tag' => 'fff',
-                  'service_key' => 'ffff'
+                'project-id' => 'f',
+                'network-name' => 'ff',
+                'worker-node-tag' => 'fff',
+                'service_key' => 'ffff'
               }
             }
           }

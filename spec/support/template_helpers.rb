@@ -49,7 +49,7 @@ module TemplateHelpers
       'az' => az,
       'ip' => ip,
       'id' => id,
-      'name' => instance_name,
+      'name' => instance_name
     }.to_json
   end
 
