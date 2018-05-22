@@ -58,10 +58,6 @@ flannel-v0.10.0-linux-amd64.tar.gz:
   size: 9706487
   object_id: 36a8e66a-0b6c-4ca2-5f27-c277a7db90c5
   sha: 9d19a56847d6aad207671a349eddd85de87ba560
-govc_v0.17.1_linux_amd64.gz:
-  size: 8062539
-  object_id: 454383c5-b65d-4e4e-524e-84ba489a1d3f
-  sha: 3f2d0f18df724000731013349e2a703f70c69875
 ipset/ipset_6.20.1-1_amd64.deb:
   size: 34156
   object_id: 5dfcce8f-366e-49f0-59e6-9e2d48178750

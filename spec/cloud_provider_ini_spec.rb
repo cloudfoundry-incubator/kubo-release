@@ -16,7 +16,7 @@ describe 'cloud-provider-ini' do
       }
     }
   end
-  let(:rendered_template) { compiled_template('kube-apiserver', 'config/cloud-provider.ini', {}, link_spec) }
+  let(:rendered_template) { compiled_template('kube-apiserver', 'config/cloud-provider.ini', {}, link_spec, instance_name: 'master') }
 
   context 'if cloud provider is gce' do
     let(:properties) { { 'cloud-provider' => { 'type' => 'gce', 'gce' => gce_config } } }
@@ -60,6 +60,13 @@ describe 'cloud-provider-ini' do
         'vm-uuid' => 'fake-vm-uuid',
         'scsicontrollertype' => 'fake-scsicontrollertype'
       }
+    end
+
+    context 'and when the instance group is worker' do
+      it 'renders empty cloud provider' do
+        rendered_template_worker = compiled_template('kube-apiserver', 'config/cloud-provider.ini', {}, link_spec, instance_name: 'worker')
+        expect(rendered_template_worker).to eq("\n[Global]\n\n\n")
+      end
     end
 
     it 'renders the correct template for vsphere' do
