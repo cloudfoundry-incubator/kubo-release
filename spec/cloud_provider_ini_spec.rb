@@ -58,14 +58,15 @@ describe 'cloud-provider-ini' do
         'datastore' => 'fake-datastore',
         'working-dir' => 'fake-working-dir',
         'vm-uuid' => 'fake-vm-uuid',
-        'scsicontrollertype' => 'fake-scsicontrollertype'
+        'scsicontrollertype' => 'fake-scsicontrollertype',
+        'resourcepool-path' => '/fake-datacenter/host/cluster'
       }
     end
 
     context 'and when the instance group is worker' do
       it 'renders empty cloud provider' do
         rendered_template_worker = compiled_template('kube-apiserver', 'config/cloud-provider.ini', {}, link_spec, instance_name: 'worker')
-        expect(rendered_template_worker).to eq("\n[Global]\n\n\n")
+        expect(rendered_template_worker).to eq("\n[Global]\n\n\n\n")
       end
     end
 

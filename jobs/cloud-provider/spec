@@ -84,6 +84,9 @@ properties:
   cloud-provider.vsphere.scsicontrollertype:
     description: vSphere vSCSI adapter type name
     default: pvscsi
+  cloud-provider.vsphere.resourcepool-path:
+    description: Path to resource pool for volume creation
+    example: /data_center/host/cluster
 
   # OpenStack specific properties
   cloud-provider.openstack.auth-url:
