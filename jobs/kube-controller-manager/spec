@@ -28,7 +28,7 @@ properties:
   https_proxy:
     description: https_proxy env var for the kubernetes-controller-manager binary (i.e. for cloud provider interactions)
   no_proxy:
-    description: no_proxy env var for cloud provider interactions, i.e. for the kubelet and govc binary
+    description: no_proxy env var for cloud provider interactions, i.e. for the kubelet
   tls.kubo-ca:
     description: "Certificate and private key for the Kubo CA"
   service-account-private-key:

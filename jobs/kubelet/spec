@@ -22,7 +22,6 @@ packages:
 - kubernetes
 - cni
 - socat
-- govc
 
 properties:
   admin-password:
@@ -38,11 +37,11 @@ properties:
     example: 80
     default: 6789
   http_proxy:
-    description: http_proxy env var for cloud provider interactions, i.e. for the kubelet and govc binary
+    description: http_proxy env var for cloud provider interactions, i.e. for the kubelet
   https_proxy:
-    description: https_proxy env var for cloud provider interactions, i.e. for the kubelet and govc binary
+    description: https_proxy env var for cloud provider interactions, i.e. for the kubelet
   no_proxy:
-    description: no_proxy env var for cloud provider interactions, i.e. for the kubelet and govc binary
+    description: no_proxy env var for cloud provider interactions, i.e. for the kubelet
   port:
     example: 81
     default: 4567
