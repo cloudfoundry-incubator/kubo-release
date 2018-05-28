@@ -58,11 +58,6 @@ processes:
   - --storage-media-type=application/json
   - --enable-aggregator-routing
   - --v=<%=p('logging-level') %>
-  <% if p('authorization-mode').downcase == 'abac' %>
-  - --authorization-mode=ABAC
-  - --authorization-policy-file=/var/vcap/jobs/kube-apiserver/config/authorization_policy.jsonl
-  <% end %>
-  <% if p('authorization-mode').downcase == 'rbac' %>
   - --authorization-mode=RBAC
   - --runtime-config=api/v1,rbac.authorization.k8s.io/v1alpha1
   - --client-ca-file=/var/vcap/jobs/kube-apiserver/config/kubernetes.pem
@@ -73,7 +68,6 @@ processes:
   - --requestheader-extra-headers-prefix=X-Remote-Extra-
   - --requestheader-group-headers=X-Remote-Group
   - --requestheader-username-headers=X-Remote-User
-  <% end %>
   <% if p('enable_audit_logs') %>
   - --audit-log-path=/var/vcap/sys/log/kube-apiserver/audit.log
   - --audit-log-maxage=0

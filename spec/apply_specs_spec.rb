@@ -50,52 +50,6 @@ describe 'apply-specs' do
     expect(rendered_kubeconfig['clusters'][0]['cluster']['server']).to eq('https://master.cfcr.internal:8443')
   end
 
-  context 'kubernetes-dashboard yaml' do
-    context 'if authorization mode is set to abac' do
-      let(:rendered_template) do
-        properties = {
-          'authorization-mode' => 'abac'
-        }
-
-        compiled_template('apply-specs', 'specs/kubernetes-dashboard.yml', properties, links)
-      end
-
-      it 'should include the kubconfig' do
-        str = '- --kubeconfig=/kubernetes-dashboard-config/kubeconfig'
-
-        expect(rendered_template).to include(str)
-      end
-
-      it 'should include the mountPath of kubeconfig' do
-        str = '- mountPath: /kubernetes-dashboard-config'
-
-        expect(rendered_template).to include(str)
-      end
-    end
-
-    context 'if authorization mode is set to rbac' do
-      let(:rendered_template) do
-        properties = {
-          'authorization-mode' => 'rbac'
-        }
-
-        compiled_template('apply-specs', 'specs/kubernetes-dashboard.yml', properties, links)
-      end
-
-      it 'should include a service account' do
-        str = <<~FOO
-          kind: ServiceAccount
-          metadata:
-            labels:
-              k8s-app: kubernetes-dashboard
-            name: kubernetes-dashboard
-            namespace: kube-system
-        FOO
-        expect(rendered_template).to include(str)
-      end
-    end
-  end
-
   let(:link_spec) { {} }
   let(:default_properties) do
     {

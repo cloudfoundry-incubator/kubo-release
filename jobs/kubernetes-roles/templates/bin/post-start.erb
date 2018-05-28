@@ -2,10 +2,8 @@
 
 set -e
 
-echo 'Authorization mode is <%= p('authorization-mode') %>'
 TIMEOUT=120
 
-<% if p('authorization-mode').downcase == 'rbac' %>
 echo 'Applying the RBAC policy'
 if timeout "$TIMEOUT" /var/vcap/jobs/kubernetes-roles/bin/apply_rbac; then
   echo "Applied the RBAC policy"
@@ -13,7 +11,4 @@ else
   echo "Failed to apply the RBAC policy after $TIMEOUT with exit code $?"
   exit 1
 fi
-<% else %>
-echo 'Not applying the RBAC policy.'
-<% end %>
 
