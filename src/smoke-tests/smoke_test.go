@@ -98,8 +98,7 @@ var _ = Describe("CFCR Smoke Tests", func() {
 			port := session.Out.Contents()
 
 			endpoint := fmt.Sprintf("http://%s:%s", nodeIP, port)
-			_, err := curlLater(endpoint)()
-			Expect(err).ToNot(HaveOccurred())
+			Eventually(curlLater(endpoint), "5s").Should(ContainSubstring("Server: nginx"))
 
 			getLogs := k8sRunner.RunKubectlCommand("logs", podName)
 			Eventually(getLogs, "15s").Should(gexec.Exit(0))
