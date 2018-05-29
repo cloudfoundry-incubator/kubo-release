@@ -43,36 +43,36 @@ var _ = Describe("CFCR Smoke Tests", func() {
 	})
 
 	Context("Deployment", func() {
-		var dName string
+		var deploymentName string
 
 		BeforeEach(func() {
-			dName = randSeq(10)
-			args := []string{"run", dName, "--image=nginx:1.13-alpine", "--image-pull-policy=Never", "-l", "app=" + dName}
+			deploymentName = randSeq(10)
+			args := []string{"run", deploymentName, "--image=nginx:1.13-alpine", "--image-pull-policy=Never", "-l", "app=" + deploymentName}
 			session := k8sRunner.RunKubectlCommand(args...)
 			Eventually(session, "60s").Should(gexec.Exit(0))
 
-			exposeArgs := []string{"expose", "deployment", dName, "--port=80", "--type=NodePort"}
+			exposeArgs := []string{"expose", "deployment", deploymentName, "--port=80", "--type=NodePort"}
 			session = k8sRunner.RunKubectlCommand(exposeArgs...)
 			Eventually(session, "120s").Should(gexec.Exit(0))
 
-			rolloutWatch := k8sRunner.RunKubectlCommand("rollout", "status", "deployment/"+dName, "-w")
+			rolloutWatch := k8sRunner.RunKubectlCommand("rollout", "status", "deployment/"+deploymentName, "-w")
 			Eventually(rolloutWatch, "120s").Should(gexec.Exit(0))
 		})
 
 		AfterEach(func() {
-			session := k8sRunner.RunKubectlCommand("delete", "deployment", dName)
+			session := k8sRunner.RunKubectlCommand("delete", "deployment", deploymentName)
 			Eventually(session, "60s").Should(gexec.Exit(0))
 		})
 
 		It("shows the pods are healthy", func() {
-			args := []string{"get", "pods", "-l", "app=" + dName, "-o", "jsonpath={.items[:].status.phase}"}
+			args := []string{"get", "pods", "-l", "app=" + deploymentName, "-o", "jsonpath={.items[:].status.phase}"}
 			session := k8sRunner.RunKubectlCommand(args...)
 			Eventually(session, "60s").Should(gexec.Exit(0))
 			Expect(session.Out).To(gbytes.Say("Running"))
 		})
 
 		It("allows commands to be executed on a container", func() {
-			args := []string{"get", "pods", "-l", "app=" + dName, "-o", "jsonpath={.items[0].metadata.name}"}
+			args := []string{"get", "pods", "-l", "app=" + deploymentName, "-o", "jsonpath={.items[0].metadata.name}"}
 			session := k8sRunner.RunKubectlCommand(args...)
 			Eventually(session, "15s").Should(gexec.Exit(0))
 			podName := string(session.Out.Contents())
@@ -84,7 +84,7 @@ var _ = Describe("CFCR Smoke Tests", func() {
 		})
 
 		It("allows access to pod logs", func() {
-			args := []string{"get", "pods", "-l", "app=" + dName, "-o", "jsonpath={.items[0].metadata.name}"}
+			args := []string{"get", "pods", "-l", "app=" + deploymentName, "-o", "jsonpath={.items[0].metadata.name}"}
 			session := k8sRunner.RunKubectlCommand(args...)
 			Eventually(session, "15s").Should(gexec.Exit(0))
 			podName := string(session.Out.Contents())
@@ -93,13 +93,12 @@ var _ = Describe("CFCR Smoke Tests", func() {
 			Eventually(session).Should(gexec.Exit(0))
 			nodeIP := session.Out.Contents()
 
-			session = k8sRunner.RunKubectlCommand("get", "svc", dName, "-o", "jsonpath={.spec.ports[0].nodePort}")
+			session = k8sRunner.RunKubectlCommand("get", "svc", deploymentName, "-o", "jsonpath={.spec.ports[0].nodePort}")
 			Eventually(session).Should(gexec.Exit(0))
 			port := session.Out.Contents()
 
 			endpoint := fmt.Sprintf("http://%s:%s", nodeIP, port)
-			_, err := curlLater(endpoint)()
-			Expect(err).ToNot(HaveOccurred())
+			Eventually(curlLater(endpoint), "5s").Should(ContainSubstring("Server: nginx"))
 
 			getLogs := k8sRunner.RunKubectlCommand("logs", podName)
 			Eventually(getLogs, "15s").Should(gexec.Exit(0))
@@ -113,7 +112,7 @@ var _ = Describe("CFCR Smoke Tests", func() {
 			var port = "57869"
 
 			BeforeEach(func() {
-				args := []string{"get", "pods", "-l", "app=" + dName, "-o", "jsonpath={.items[0].metadata.name}"}
+				args := []string{"get", "pods", "-l", "app=" + deploymentName, "-o", "jsonpath={.items[0].metadata.name}"}
 				session := k8sRunner.RunKubectlCommand(args...)
 				Eventually(session, "15s").Should(gexec.Exit(0))
 				podName := string(session.Out.Contents())
