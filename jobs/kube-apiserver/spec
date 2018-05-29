@@ -6,7 +6,6 @@ templates:
   bin/post-start.erb: bin/post-start
   bin/pre-start.erb: bin/pre-start
   config/audit_policy.yml: config/audit_policy.yml
-  config/authorization_policy.jsonl.erb: config/authorization_policy.jsonl
   config/bpm.yml.erb: config/bpm.yml
   config/cloud-provider.ini.erb: config/cloud-provider.ini
   config/etcd-ca.crt.erb: config/etcd-ca.crt
@@ -40,9 +39,6 @@ properties:
       `/healthz` or `/version`. This is also useful when configuring load
       balancer health checks against the TLS port.
     default: true
-  authorization-mode:
-    description: The authorization mode for kube-apiserver. Should be 'abac' or 'rbac'
-    default: rbac
   deny_escalating_exec:
     description: Enable the `DenyEscalatingExec` admission controller.
     default: true
