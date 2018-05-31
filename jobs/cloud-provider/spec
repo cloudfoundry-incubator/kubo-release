@@ -33,6 +33,7 @@ provides:
   - cloud-provider.vsphere.insecure-flag
   - cloud-provider.vsphere.password
   - cloud-provider.vsphere.port
+  - cloud-provider.vsphere.resourcepool-path
   - cloud-provider.vsphere.scsicontrollertype
   - cloud-provider.vsphere.server
   - cloud-provider.vsphere.user
