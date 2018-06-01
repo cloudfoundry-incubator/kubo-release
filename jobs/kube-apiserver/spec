@@ -29,8 +29,10 @@ properties:
     description: The admin username for the Kubernetes cluster
   admin-password:
     description: The password for the admin account
+  admission-plugins:
+    description: Map of admission plugs and a boolean indicating whether it should be enabled or disabled. Anything not explicitly declared in the map reverts to the default Kubernetes behavior.A
   allow_privileged:
-    description: Allows privileged containers for the Kubernetes cluster
+    description: Allow privileged containers
     default: false
   anonymous_auth:
     description: |
@@ -42,9 +44,6 @@ properties:
   authorization-mode:
     description: The authorization mode for kube-apiserver. Should be 'abac' or 'rbac'
     default: rbac
-  deny_escalating_exec:
-    description: Enable the `DenyEscalatingExec` admission controller.
-    default: true
   enable_audit_logs:
     description: Enables audit logs
     default: true
