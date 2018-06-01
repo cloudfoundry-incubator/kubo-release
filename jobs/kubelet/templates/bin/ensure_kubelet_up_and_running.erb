@@ -2,7 +2,7 @@
 
 [ -z "$DEBUG" ] || set -x
 
-CERT_DIR=/var/lib/kubelet/pki
+CERT_DIR=/var/vcap/jobs/kubelet/config/cert
 
 kubectl="/var/vcap/packages/kubernetes/bin/kubectl --kubeconfig=/var/vcap/jobs/kubelet/config/kubeconfig"
 admin_kubectl="/var/vcap/packages/kubernetes/bin/kubectl --kubeconfig=/var/vcap/jobs/kubelet/config/admin-kubeconfig"
