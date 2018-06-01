@@ -8,6 +8,7 @@ RUN_DIR=/var/vcap/sys/run/kubernetes
 PIDFILE=$RUN_DIR/kubelet.pid
 LOG_DIR=/var/vcap/sys/log/kubelet
 DATA_DIR=/var/vcap/store/kubernetes
+CERT_DIR=/var/vcap/jobs/kubelet/config/cert
 DOCKER_SOCKET=unix:///var/vcap/sys/run/docker/docker.sock
 
 <% iaas = nil %>
@@ -39,8 +40,8 @@ DOCKER_SOCKET=unix:///var/vcap/sys/run/docker/docker.sock
 . /var/vcap/packages/pid_utils/pid_utils.sh
 
 setup_directories() {
-  mkdir -p "$RUN_DIR" "$LOG_DIR" "$DATA_DIR"
-  chown -R vcap:vcap "$RUN_DIR" "$LOG_DIR" "$DATA_DIR"
+  mkdir -p "$RUN_DIR" "$LOG_DIR" "$DATA_DIR" "$CERT_DIR"
+  chown -R vcap:vcap "$RUN_DIR" "$LOG_DIR" "$DATA_DIR" "$CERT_DIR"
 }
 
 send_process_stdout_to_logfile() {
@@ -107,6 +108,7 @@ start_kubelet() {
     --client-ca-file=/var/vcap/jobs/kubelet/config/ca.pem \
     <% if include_config -%>--cloud-config=${cloud_config}<% end %> \
     <% if !iaas.nil? -%>--cloud-provider=${cloud_provider}<% end %> \
+    --cert-dir="$CERT_DIR" \
     --cni-bin-dir=/var/vcap/jobs/kubelet/packages/cni/bin \
     --config=/var/vcap/jobs/kubelet/config/kubeletconfig.yml \
     --container-runtime=docker \

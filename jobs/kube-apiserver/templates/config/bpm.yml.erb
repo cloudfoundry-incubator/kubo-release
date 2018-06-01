@@ -44,6 +44,7 @@ processes:
   - --cloud-provider=<%= cloud_provider.p('cloud-provider.type') %>
   - --cloud-config=/var/vcap/jobs/kube-apiserver/config/cloud-provider.ini
   <% end %>
+  - --enable-admission-plugins=<%= admission_control_options.join(",") %>
   - --enable-bootstrap-token-auth
   - --enable-swagger-ui
   - --etcd-servers=<%= etcd_endpoints %>
