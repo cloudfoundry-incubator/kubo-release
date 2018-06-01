@@ -6,6 +6,7 @@ templates:
   config/bpm.yml.erb: config/bpm.yml
   config/ca.pem.erb: config/ca.pem
   config/cloud-provider.ini.erb: config/cloud-provider.ini
+  config/service-account-private-key.pem.erb: config/service-account-private-key.pem
   config/kubeconfig.erb: config/kubeconfig
   config/openstack-ca.crt.erb: config/openstack-ca.crt
   config/service-account-private-key.pem.erb: config/service-account-private-key.pem
@@ -28,8 +29,8 @@ properties:
     description: https_proxy env var for the kubernetes-controller-manager binary (i.e. for cloud provider interactions)
   no_proxy:
     description: no_proxy env var for cloud provider interactions, i.e. for the kubelet
-  tls.kubernetes:
-    description: "Certificate and private key for the Kubernetes master"
+  tls.kubo-ca:
+    description: "Certificate and private key for the Kubo CA"
   service-account-private-key:
     description: "Private key used to sign generated tokens"
   logging-level:
