@@ -34,7 +34,6 @@ spec:
     port: 53
     protocol: TCP
 ---
-<% if p('authorization-mode').downcase == 'rbac' -%>
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -44,7 +43,6 @@ metadata:
     kubernetes.io/cluster-service: "true"
     addonmanager.kubernetes.io/mode: Reconcile
 ---
-<% end -%>
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -52,30 +50,6 @@ metadata:
   namespace: kube-system
   labels:
     addonmanager.kubernetes.io/mode: EnsureExists
-<% if p('authorization-mode').downcase != 'rbac' -%>
-<% api_link = link("kube-apiserver") -%>
-data:
-  kubeconfig: |
-    apiVersion: v1
-    kind: Config
-    clusters:
-    - cluster:
-        certificate-authority: "/kube-dns-auth/ca.pem"
-        server: https://master.cfcr.internal:8443
-      name: kubernetes
-    contexts:
-    - context:
-        cluster: kubernetes
-        user: "<%= api_link.p("admin-username") %>"
-      name: context
-    current-context: context
-    users:
-    - name: "<%= api_link.p("admin-username") %>"
-      user:
-        token: "<%= api_link.p("admin-password") %>"
-  ca.pem: |
-<%= link("kube-apiserver").p("tls.kubernetes.ca").lines.map! { |line| line.prepend("    ") }.join -%>
-<% end -%>
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -126,7 +100,7 @@ spec:
           optional: true
       containers:
       - name: kubedns
-        image: gcr.io/google_containers/k8s-dns-kube-dns-amd64:1.14.10
+        image: k8s.gcr.io/k8s-dns-kube-dns-amd64:1.14.10
         imagePullPolicy: IfNotPresent
         resources:
           # TODO: Set memory limits when we've profiled the container for large
@@ -161,9 +135,6 @@ spec:
         - --dns-port=10053
         - --config-dir=/kube-dns-config
         - --v=10
-<% if p('authorization-mode').downcase != 'rbac' -%>
-        - --kubecfg-file=/kube-dns-auth/kubeconfig
-<% end -%>
         ports:
         - containerPort: 10053
           name: dns-local
@@ -177,7 +148,7 @@ spec:
         - name: kube-dns-config
           mountPath: /kube-dns-config
       - name: dnsmasq
-        image: gcr.io/google_containers/k8s-dns-dnsmasq-nanny-amd64:1.14.10
+        image: k8s.gcr.io/k8s-dns-dnsmasq-nanny-amd64:1.14.10
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
@@ -217,7 +188,7 @@ spec:
         - name: kube-dns-config
           mountPath: /etc/k8s/dns/dnsmasq-nanny
       - name: sidecar
-        image: gcr.io/google_containers/k8s-dns-sidecar-amd64:1.14.10
+        image: k8s.gcr.io/k8s-dns-sidecar-amd64:1.14.10
         livenessProbe:
           httpGet:
             path: /metrics
@@ -241,7 +212,5 @@ spec:
             memory: 20Mi
             cpu: 10m
       dnsPolicy: Default  # Don't use cluster DNS. We want DNS resolved by worker node for now to be able to access cluster instances.
-<% if p('authorization-mode').downcase == 'rbac' -%>
       serviceAccountName: kube-dns
-<% end -%>
 # Based on https://raw.githubusercontent.com/kubernetes/kubernetes/release-1.9/cluster/addons/dns/kube-dns.yaml.base

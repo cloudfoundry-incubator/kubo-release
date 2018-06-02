@@ -21,17 +21,6 @@ test_route_sync() {
   run_go_tests ${project_root}/src/route-sync
 }
 
-test_vsphere_enable_disk_uuid() {
-  echo "Testing vsphere-enable-disk-uuid"
-  packagePath="${project_root}/src/vsphere-enable-disk-uuid"
-
-  pushd "$packagePath" >/dev/null
-    dep ensure
-  popd >/dev/null
-
-  run_go_tests "$packagePath"
-}
-
 test_release_specs() {
   pushd "${project_root}" > /dev/null
     bundle install
@@ -41,7 +30,6 @@ test_release_specs() {
 }
 
 test_route_sync
-test_vsphere_enable_disk_uuid
 test_release_specs
 
 exit 0

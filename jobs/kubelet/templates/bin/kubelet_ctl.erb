@@ -8,20 +8,26 @@ RUN_DIR=/var/vcap/sys/run/kubernetes
 PIDFILE=$RUN_DIR/kubelet.pid
 LOG_DIR=/var/vcap/sys/log/kubelet
 DATA_DIR=/var/vcap/store/kubernetes
+CERT_DIR=/var/vcap/jobs/kubelet/config/cert
 DOCKER_SOCKET=unix:///var/vcap/sys/run/docker/docker.sock
 
+<% iaas = nil %>
+<% if_p('cloud-provider') do |cloud_provider| %>
+  <% iaas = cloud_provider %>
+  cloud_provider="<%= cloud_provider %>"
+<% end %>
+
 <% if_link('cloud-provider') do |cloud_provider| %>
-  cloud_provider="<%= cloud_provider.p('cloud-provider.type') %>"
-  cloud_config="/var/vcap/jobs/kubelet/config/cloud-provider.ini"
-  <% cloud_provider.if_p('cloud-provider.gce.service_key') do |service_key| %>
-    export GOOGLE_APPLICATION_CREDENTIALS="/var/vcap/jobs/kubelet/config/service_key.json"
-  <% end %>
-  <% cloud_provider.if_p('cloud-provider.aws.access_key_id') do |access_key_id| %>
-  export AWS_ACCESS_KEY_ID="<%= access_key_id %>"
-  <% end %>
-  <% cloud_provider.if_p('cloud-provider.aws.secret_access_key') do |secret_access_key| %>
-  export AWS_SECRET_ACCESS_KEY="<%= secret_access_key %>"
-  <% end %>
+    cloud_config="/var/vcap/jobs/kubelet/config/cloud-provider.ini"
+    <% cloud_provider.if_p('cloud-provider.gce.service_key') do |service_key| %>
+      export GOOGLE_APPLICATION_CREDENTIALS="/var/vcap/jobs/kubelet/config/service_key.json"
+    <% end %>
+    <% cloud_provider.if_p('cloud-provider.aws.access_key_id') do |access_key_id| %>
+    export AWS_ACCESS_KEY_ID="<%= access_key_id %>"
+    <% end %>
+    <% cloud_provider.if_p('cloud-provider.aws.secret_access_key') do |secret_access_key| %>
+    export AWS_SECRET_ACCESS_KEY="<%= secret_access_key %>"
+    <% end %>
 <% end %>
 
 <%
@@ -34,8 +40,8 @@ DOCKER_SOCKET=unix:///var/vcap/sys/run/docker/docker.sock
 . /var/vcap/packages/pid_utils/pid_utils.sh
 
 setup_directories() {
-  mkdir -p "$RUN_DIR" "$LOG_DIR" "$DATA_DIR"
-  chown -R vcap:vcap "$RUN_DIR" "$LOG_DIR" "$DATA_DIR"
+  mkdir -p "$RUN_DIR" "$LOG_DIR" "$DATA_DIR" "$CERT_DIR"
+  chown -R vcap:vcap "$RUN_DIR" "$LOG_DIR" "$DATA_DIR" "$CERT_DIR"
 }
 
 send_process_stdout_to_logfile() {
@@ -89,22 +95,38 @@ start_kubelet() {
     zone_label=",failure-domain.beta.kubernetes.io/zone=<%= spec.az %>"
   fi
 
+  <%-
+    include_config = false
+    if !iaas.nil? and iaas != "vsphere"
+      if_link('cloud-provider') do
+        include_config = true
+      end
+    end
+  -%>
+
   kubelet \
     --allow-privileged=<%= p('allow_privileged') %> \
+    --bootstrap-kubeconfig=/var/vcap/jobs/kubelet/config/bootstrap-kubeconfig \
     --cadvisor-port=0 \
-    --cloud-config=${cloud_config} \
-    --cloud-provider=${cloud_provider} \
+    --client-ca-file=/var/vcap/jobs/kubelet/config/ca.pem \
+    <% if include_config -%>--cloud-config=${cloud_config}<% end %> \
+    <% if !iaas.nil? -%>--cloud-provider=${cloud_provider}<% end %> \
+    --cert-dir="$CERT_DIR" \
     --cni-bin-dir=/var/vcap/jobs/kubelet/packages/cni/bin \
     --config=/var/vcap/jobs/kubelet/config/kubeletconfig.yml \
     --container-runtime=docker \
     --docker-endpoint="${DOCKER_SOCKET}" \
     --docker="${DOCKER_SOCKET}" \
     --fail-swap-on=false \
+    --feature-gates=RotateKubeletServerCertificate=true \
     --hostname-override=$(get_hostname_override) \
     --keep-terminated-pod-volumes=false \
     --kubeconfig=/var/vcap/jobs/kubelet/config/kubeconfig \
     --network-plugin=cni \
     --node-labels=<%= labels %>"$zone_label" \
+    --read-only-port 0 \
+    --rotate-certificates \
+    --serialize-image-pulls=false \
     --v=<%=p('logging-level') %> \
     <% if_p('kube-reserved') do |kube_reserved| %>--kube-reserved="<%= kube_reserved %>"<% end %> \
     <% if_p('system-reserved') do |system_reserved| %>--system-reserved="<%= system_reserved %>"<% end %> \

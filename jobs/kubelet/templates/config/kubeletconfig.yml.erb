@@ -2,14 +2,14 @@ kind: KubeletConfiguration
 apiVersion: kubelet.config.k8s.io/v1beta1
 authentication:
   anonymous:
-      enabled: true
+    enabled: false
+  webhook:
+    enabled: true
 authorization:
-  mode: AlwaysAllow
+  mode: Webhook
 clusterDNS: 
   - 10.100.200.10
 clusterDomain: cluster.local
 failSwapOn: false
 readOnlyPort: 0
 serializeImagePulls: false
-tlsCertFile: /var/vcap/jobs/kubelet/config/kubelet.pem
-tlsPrivateKeyFile: /var/vcap/jobs/kubelet/config/kubelet-key.pem
