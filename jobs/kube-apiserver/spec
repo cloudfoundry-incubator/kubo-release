@@ -6,12 +6,12 @@ templates:
   bin/post-start.erb: bin/post-start
   bin/pre-start.erb: bin/pre-start
   config/audit_policy.yml: config/audit_policy.yml
-  config/authorization_policy.jsonl.erb: config/authorization_policy.jsonl
   config/bpm.yml.erb: config/bpm.yml
   config/cloud-provider.ini.erb: config/cloud-provider.ini
   config/etcd-ca.crt.erb: config/etcd-ca.crt
   config/etcd-client.crt.erb: config/etcd-client.crt
   config/etcd-client.key.erb: config/etcd-client.key
+  config/kubernetes-ca.pem.erb: config/kubernetes-ca.pem
   config/kubernetes-key.pem.erb: config/kubernetes-key.pem
   config/kubernetes.pem.erb: config/kubernetes.pem
   config/oidc-ca.pem.erb: config/oidc-ca.pem
@@ -32,9 +32,13 @@ properties:
   allow_privileged:
     description: Allows privileged containers for the Kubernetes cluster
     default: false
-  authorization-mode:
-    description: The authorization mode for kube-apiserver. Should be 'abac' or 'rbac'
-    default: rbac
+  anonymous_auth:
+    description: |
+      Allows anonymous authentication for the API server. This is often useful
+      to allow unauthenticated users to view discovery endpoints such as
+      `/healthz` or `/version`. This is also useful when configuring load
+      balancer health checks against the TLS port.
+    default: true
   deny_escalating_exec:
     description: Enable the `DenyEscalatingExec` admission controller.
     default: true
@@ -49,10 +53,10 @@ properties:
     description: https_proxy env var for the kubernetes-api binary (i.e. for cloud provider interactions)
   no_proxy:
     description: no_proxy env var for the kubernetes-api binary (i.e. for cloud provider interactions)
+  kubelet-bootstrap-token:
+    description: The bootstrap token used during kubelet registration.
   kube-controller-manager-password:
     description: The password for the system:kube-controller-manager user
-  kubelet-password:
-    description: The password for the kubelet user
   kubelet-drain-password:
     description: The password for the kubelet drain user
   kube-proxy-password:

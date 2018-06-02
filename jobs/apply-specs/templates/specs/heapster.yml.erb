@@ -1,5 +1,3 @@
-<% if p('authorization-mode').downcase == 'rbac' %>
-
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -19,7 +17,28 @@ subjects:
   name: heapster
   namespace: kube-system
 ---
-<% end %>
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: heapster-node-stats
+rules:
+- apiGroups: [""]
+  resources: ["nodes/stats"]
+  verbs: ["create", "get"]
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: heapster-node-stats
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: heapster-node-stats
+subjects:
+- kind: ServiceAccount
+  name: heapster
+  namespace: kube-system
+---
 
 apiVersion: extensions/v1beta1
 kind: Deployment
@@ -36,11 +55,11 @@ spec:
     spec:
       containers:
       - name: heapster
-        image: k8s.gcr.io/heapster-amd64:v1.5.2
+        image: k8s.gcr.io/heapster-amd64:v1.5.3
         imagePullPolicy: IfNotPresent
         command:
         - /heapster
-        - --source=kubernetes:https://master.cfcr.internal:8443?useServiceAccount=true&kubeletHttps=true&kubeletPort=10250&insecure=true
+        - --source=kubernetes:https://master.cfcr.internal:8443?useServiceAccount=true&kubeletHttps=true&kubeletPort=10250
         - --sink=influxdb:https://monitoring-influxdb:8086?secure=true
         - --tls_cert=/certs/heapster-cert
         - --tls_key=/certs/heapster-key
@@ -62,9 +81,7 @@ spec:
           items:
           - key: ca
             path: ca-certificates.crt
-      <% if p('authorization-mode').downcase == 'rbac' %>
       serviceAccountName: heapster
-      <% end %>
 ---
 
 apiVersion: v1

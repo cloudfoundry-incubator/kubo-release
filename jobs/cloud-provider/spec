@@ -33,6 +33,7 @@ provides:
   - cloud-provider.vsphere.insecure-flag
   - cloud-provider.vsphere.password
   - cloud-provider.vsphere.port
+  - cloud-provider.vsphere.resourcepool-path
   - cloud-provider.vsphere.scsicontrollertype
   - cloud-provider.vsphere.server
   - cloud-provider.vsphere.user
@@ -126,6 +127,9 @@ properties:
   cloud-provider.vsphere.scsicontrollertype:
     description: vSphere vSCSI adapter type name
     default: pvscsi
+  cloud-provider.vsphere.resourcepool-path:
+    description: Path to resource pool for volume creation
+    example: /data_center/host/cluster
 
   # OpenStack specific properties
   cloud-provider.openstack.auth-url:

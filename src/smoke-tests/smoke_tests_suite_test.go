@@ -1,8 +1,10 @@
 package cfcr_smoke_tests_test
 
 import (
+	"math/rand"
 	"smoke-tests/runner"
 	"testing"
+	"time"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
@@ -18,6 +20,7 @@ var (
 )
 
 var _ = BeforeSuite(func() {
+	rand.Seed(time.Now().UnixNano())
 	k8sRunner = runner.NewKubectlRunner()
 	k8sRunner.RunKubectlCommand("create", "namespace", k8sRunner.Namespace()).Wait("60s")
 })
