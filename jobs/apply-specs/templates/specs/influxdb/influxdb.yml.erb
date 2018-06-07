@@ -1,3 +1,8 @@
+# THIS FILE EXISTS ONLY FOR THE SAKE OF CLEANING UP INFLUXDB
+# DURING THE TRANSITION TO METRICS SERVER
+#
+# WE CAN DELETE AFTER A RELEASE
+---
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
@@ -56,7 +61,6 @@ spec:
   selector:
     k8s-app: influxdb
 ---
-
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -79,3 +83,14 @@ data:
       https-enabled = true
       https-certificate = "/certs/influxdb-cert"
       https-private-key = "/certs/influxdb-key"
+---
+# Added dummy secret to clean up the script-created one that existed previously
+apiVersion: v1
+kind: Secret
+metadata:
+  name: influxdb-certs
+  namespace: kube-system
+type: Opaque
+data:
+  influxdb-cert: RHVtbXk=
+  influxdb-key: RHVtbXk=

@@ -17,35 +17,6 @@ wait_for() {
     ${kubectl} rollout status "deployments/${1}" -w --namespace=kube-system
 }
 
-create_heapster_secrets() {
-  local secret_name=heapster-certs
-  local namespace=kube-system
-
-  if ${kubectl} get secret ${secret_name} -n ${namespace}  > /dev/null 2>&1; then
-    ${kubectl} delete secret ${secret_name} -n ${namespace}
-  fi
-
-  ${kubectl} create secret generic ${secret_name} \
-  --from-file=heapster-cert=${config_dir}/heapster/heapster.crt \
-  --from-file=heapster-key=${config_dir}/heapster/heapster.key \
-  --from-file=ca=${config_dir}/ca.pem \
-  -n ${namespace}
-}
-
-create_influx_secrets() {
-  local secret_name=influxdb-certs
-  local namespace=kube-system
-
-  if ${kubectl} get secret ${secret_name} -n ${namespace} > /dev/null 2>&1; then
-    ${kubectl} delete secret ${secret_name} -n ${namespace}
-  fi
-
-  ${kubectl} create secret generic ${secret_name} \
-  --from-file=influxdb-cert=${config_dir}/influxdb/influxdb.crt \
-  --from-file=influxdb-key=${config_dir}/influxdb/influxdb.key \
-  -n ${namespace}
-}
-
 create_dashboard_secrets() {
   local secret_name=kubernetes-dashboard-certs
   local namespace=kube-system
@@ -60,20 +31,30 @@ create_dashboard_secrets() {
   -n ${namespace}
 }
 
+delete_heapster_if_it_exists() {
+  if ${kubectl} -n kube-system get service/heapster > /dev/null 2>&1; then
+    ${kubectl} delete -f ${spec_dir}/heapster/heapster.yml
+  fi
+}
+
+delete_influxdb_if_it_exists() {
+  if ${kubectl} -n kube-system get service/monitoring-influxdb > /dev/null 2>&1; then
+    ${kubectl} delete -f ${spec_dir}/influxdb/influxdb.yml
+  fi
+}
+
 main() {
-  apply_spec "kube-dns.yml"
+  delete_heapster_if_it_exists
+  delete_influxdb_if_it_exists
+
+  apply_spec "kube-dns/kube-dns.yml"
   wait_for kube-dns
 
-  create_heapster_secrets
-  apply_spec "heapster.yml"
-  wait_for heapster
-
-  create_influx_secrets
-  apply_spec "influxdb.yml"
-  wait_for monitoring-influxdb
+  apply_spec "metrics-server/"
+  wait_for metrics-server
 
   create_dashboard_secrets
-  apply_spec "kubernetes-dashboard.yml"
+  apply_spec "kubernetes-dashboard/kubernetes-dashboard.yml"
   wait_for kubernetes-dashboard
 
   <% if_link('cloud-provider') do |cloud_provider| %>

@@ -5,18 +5,22 @@ templates:
   bin/run.erb: bin/run
   config/kubeconfig.erb: config/kubeconfig
   config/ca.pem.erb: config/ca.pem
-  config/heapster/heapster.crt.erb: config/heapster/heapster.crt
-  config/heapster/heapster.key.erb: config/heapster/heapster.key
-  config/influxdb/influxdb.crt.erb: config/influxdb/influxdb.crt
-  config/influxdb/influxdb.key.erb: config/influxdb/influxdb.key
   config/kubernetes-dashboard/kubernetes-dashboard.crt.erb: config/kubernetes-dashboard/kubernetes-dashboard.crt
   config/kubernetes-dashboard/kubernetes-dashboard.key.erb: config/kubernetes-dashboard/kubernetes-dashboard.key
-  specs/addon-spec.yml.erb: specs/addon-spec.yml
-  specs/heapster.yml.erb: specs/heapster.yml
-  specs/influxdb.yml.erb: specs/influxdb.yml
-  specs/kube-dns.yml.erb: specs/kube-dns.yml
-  specs/kubernetes-dashboard.yml.erb: specs/kubernetes-dashboard.yml
-  specs/storage-class-gce.yml: specs/storage-class-gce.yml
+  specs/addon-spec/addon-spec.yml.erb: specs/addon-spec/addon-spec.yml
+  specs/heapster/heapster.yml.erb: specs/heapster/heapster.yml
+  specs/influxdb/influxdb.yml.erb: specs/influxdb/influxdb.yml
+  specs/kube-dns/kube-dns.yml.erb: specs/kube-dns/kube-dns.yml
+  specs/kubernetes-dashboard/kubernetes-dashboard.yml.erb: specs/kubernetes-dashboard/kubernetes-dashboard.yml
+  specs/metrics-server/auth-create-stats.yml.erb: specs/metrics-server/auth-create-stats.yml
+  specs/metrics-server/auth-delegator.yml.erb: specs/metrics-server/auth-delegator.yml
+  specs/metrics-server/auth-reader.yml.erb: specs/metrics-server/auth-reader.yml
+  specs/metrics-server/certificates.yml.erb: specs/metrics-server/certificates.yml
+  specs/metrics-server/metrics-apiservice.yml.erb: specs/metrics-server/metrics-apiservice.yml
+  specs/metrics-server/metrics-server-deployment.yml.erb: specs/metrics-server/metrics-server-deployment.yml
+  specs/metrics-server/metrics-server-service.yml.erb: specs/metrics-server/metrics-server-service.yml
+  specs/metrics-server/resource-reader.yml.erb: specs/metrics-server/resource-reader.yml
+  specs/storage-class-gce.yml.erb: specs/storage-class-gce.yml
 
 packages:
 - kubernetes
@@ -33,10 +37,8 @@ properties:
     description: "Certificate and private key for the Kubernetes master"
   tls.kubernetes-dashboard:
     description: "Certificate and private key for the Kubernetes dashboard"
-  tls.heapster:
-    description: "Certificate and private key for Heapster"
-  tls.influxdb:
-    description: "Certificate and private key for InfluxDB"
+  tls.metrics:
+    description: "Certificate and private key for the metrics server"
   addons-spec:
     description: Spec of the addons to be deployed into the Kubernetes cluster
     default: ""
