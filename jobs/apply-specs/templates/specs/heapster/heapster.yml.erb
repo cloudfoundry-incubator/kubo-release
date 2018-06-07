@@ -2,6 +2,7 @@
 # DURING THE TRANSITION TO METRICS SERVER
 #
 # WE CAN DELETE AFTER A RELEASE
+<%- require 'base64' -%>
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -65,8 +66,8 @@ spec:
         - /heapster
         - --source=kubernetes:https://master.cfcr.internal:8443?useServiceAccount=true&kubeletHttps=true&kubeletPort=10250
         - --sink=influxdb:https://monitoring-influxdb:8086?secure=true
-        - --tls_cert=/certs/heapster-cert
-        - --tls_key=/certs/heapster-key
+        - --tls_cert=/certs/heapster.crt
+        - --tls_key=/certs/heapster.key
         - --vmodule=*=5
         volumeMounts:
         - mountPath: /certs
@@ -83,7 +84,7 @@ spec:
         secret:
           secretName: heapster-certs
           items:
-          - key: ca
+          - key: ca.crt
             path: ca-certificates.crt
       serviceAccountName: heapster
 ---
@@ -105,7 +106,6 @@ spec:
   selector:
     k8s-app: heapster
 ---
-# Added dummy secret to clean up the script-created one that existed previously
 apiVersion: v1
 kind: Secret
 metadata:
@@ -113,6 +113,6 @@ metadata:
   namespace: kube-system
 type: Opaque
 data:
-  ca: RHVtbXk=
-  heapster-cert: RHVtbXk=
-  heapster-key: RHVtbXk=
+  ca.crt: <%= Base64.strict_encode64(p('tls.heapster.ca')) %>
+  heapster.crt: <%= Base64.strict_encode64(p('tls.heapster.certificate')) %>
+  heapster.key: <%= Base64.strict_encode64(p('tls.heapster.private_key')) %>

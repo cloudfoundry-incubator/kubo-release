@@ -53,7 +53,14 @@ describe 'apply-specs' do
   let(:link_spec) { {} }
   let(:default_properties) do
     {
-      'admin-password' => '1234'
+      'admin-password' => '1234',
+      'tls' => {
+        'kubernetes-dashboard' => {
+          'ca' => "Garbage",
+          'certificate' => "Also garbage",
+          'private_key' => "Super garbage"
+        }
+      }
     }
   end
   let(:rendered_deploy_specs) do
@@ -137,4 +144,52 @@ describe 'apply-specs' do
       expect(rendered_deploy_specs).to_not include('apply_spec "storage-class-gce.yml"')
     end
   end
+
+  let(:rendered_kubernetes_dashboard) do
+    compiled_template('apply-specs', 'specs/kubernetes-dashboard/kubernetes-dashboard.yml', default_properties, links)
+  end
+
+  context 'when delete-heapster is set to true' do
+    let(:default_properties) do
+      {
+        'delete-heapster': true,
+        'tls' => {
+          'kubernetes-dashboard' => {
+            'ca' => "Garbage",
+            'certificate' => "Also garbage",
+            'private_key' => "Super garbage"
+          }
+        }
+      }
+    end
+
+    it 'deletes heapster and influxdb' do
+      expect(rendered_deploy_specs).to include("delete_heapster_if_it_exists\n  delete_influxdb_if_it_exists")
+    end
+
+    it 'does not deploy heapster or influxdb' do
+      expect(rendered_deploy_specs).to_not include("apply_spec \"influxdb/influxdb.yml\"")
+      expect(rendered_deploy_specs).to_not include("apply_spec \"heapster/heapster.yml\"")
+    end
+
+    it 'does not set heapster-host in kubernetes-dashboard' do
+      expect(rendered_kubernetes_dashboard).to_not include("--heapster-host=https://heapster.kube-system.svc.cluster.local:8443")
+    end
+  end
+
+  context 'when delete-heapster defaults to false' do
+    it 'does not delete heapster or influxdb' do
+      expect(rendered_deploy_specs).to_not include("delete_heapster_if_it_exists\n  delete_influxdb_if_it_exists")
+    end
+
+    it 'does deploy heapster and influxdb' do
+      expect(rendered_deploy_specs).to include("apply_spec \"influxdb/influxdb.yml\"")
+      expect(rendered_deploy_specs).to include("apply_spec \"heapster/heapster.yml\"")
+    end
+
+    it 'does set heapster-host in kubernetes-dashboard' do
+      expect(rendered_kubernetes_dashboard).to include("--heapster-host=https://heapster.kube-system.svc.cluster.local:8443")
+    end
+  end
+
 end

@@ -16,7 +16,7 @@
 # Kubernetes 1.8.
 #
 # Example usage: kubectl create -f <this_file>
-
+<%- require 'base64' -%>
 ---
 # ------------------- Dashboard Service Account ------------------- #
 
@@ -27,10 +27,8 @@ metadata:
     k8s-app: kubernetes-dashboard
   name: kubernetes-dashboard
   namespace: kube-system
-
 ---
 # ------------------- Dashboard Role & Role Binding ------------------- #
-
 kind: Role
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
@@ -57,7 +55,6 @@ rules:
   resources: ["services"]
   resourceNames: ["heapster"]
   verbs: ["proxy"]
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -72,23 +69,8 @@ subjects:
 - kind: ServiceAccount
   name: kubernetes-dashboard
   namespace: kube-system
-
----
-# ------------------- Dashboard Config ------------------- #
-  
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: kubernetes-dashboard
-  namespace: kube-system
-  labels:
-    addonmanager.kubernetes.io/mode: EnsureExists
-data:
-  ca.pem: |
-<%= link("kube-apiserver").p("tls.kubernetes.ca").lines.map! { |line| line.prepend("    ") }.join -%>
 ---
 # ------------------- Dashboard Deployment ------------------- #
-
 kind: Deployment
 apiVersion: apps/v1beta2
 metadata:
@@ -114,7 +96,9 @@ spec:
         - containerPort: 8443
           protocol: TCP
         args:
-          - --heapster-host=https://metrics-server.kube-system.svc:443
+        <%- if !p('delete-heapster') then -%>
+          - --heapster-host=https://heapster.kube-system.svc.cluster.local:8443
+        <%- end -%>
           - --default-cert-dir=/certs
           - --tls-cert-file=kubernetes-dashboard-cert
           - --tls-key-file=kubernetes-dashboard-key
@@ -156,10 +140,8 @@ spec:
       # tolerations:
       # - key: node-role.kubernetes.io/master
       #  effect: NoSchedule
-
 ---
 # ------------------- Dashboard Service ------------------- #
-
 kind: Service
 apiVersion: v1
 metadata:
@@ -174,3 +156,15 @@ spec:
     targetPort: 8443
   selector:
     k8s-app: kubernetes-dashboard
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: kubernetes-dashboard-certs
+  namespace: kube-system
+type: Opaque
+data:
+  ca.crt: <%= Base64.strict_encode64(p('tls.kubernetes-dashboard.ca')) %>
+  kubernetes-dashboard.crt: <%= Base64.strict_encode64(p('tls.kubernetes-dashboard.certificate')) %>
+  kubernetes-dashboard.key: <%= Base64.strict_encode64(p('tls.kubernetes-dashboard.private_key')) %>
+

@@ -2,6 +2,7 @@
 # DURING THE TRANSITION TO METRICS SERVER
 #
 # WE CAN DELETE AFTER A RELEASE
+<%- require 'base64' -%>
 ---
 apiVersion: extensions/v1beta1
 kind: Deployment
@@ -42,7 +43,6 @@ spec:
       serviceAccountName: heapster
 
 ---
-
 apiVersion: v1
 kind: Service
 metadata:
@@ -77,14 +77,13 @@ data:
 
     [admin]
       https-enabled = true
-      https-certificate = "/certs/influxdb-cert"
+      https-certificate = "/certs/influxdb.crt"
 
     [http]
       https-enabled = true
-      https-certificate = "/certs/influxdb-cert"
-      https-private-key = "/certs/influxdb-key"
+      https-certificate = "/certs/influxdb.crt"
+      https-private-key = "/certs/influxdb.key"
 ---
-# Added dummy secret to clean up the script-created one that existed previously
 apiVersion: v1
 kind: Secret
 metadata:
@@ -92,5 +91,6 @@ metadata:
   namespace: kube-system
 type: Opaque
 data:
-  influxdb-cert: RHVtbXk=
-  influxdb-key: RHVtbXk=
+  ca.crt: <%= Base64.strict_encode64(p('tls.influxdb.ca')) %>
+  influxdb.crt: <%= Base64.strict_encode64(p('tls.influxdb.certificate')) %>
+  influxdb.key: <%= Base64.strict_encode64(p('tls.influxdb.private_key')) %>
