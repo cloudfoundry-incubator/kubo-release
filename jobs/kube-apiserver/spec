@@ -57,6 +57,8 @@ properties:
     description: The bootstrap token used during kubelet registration.
   kube-controller-manager-password:
     description: The password for the system:kube-controller-manager user
+  kubelet-password:
+    description: The password for the kubelet user
   kubelet-drain-password:
     description: The password for the kubelet drain user
   kube-proxy-password:
