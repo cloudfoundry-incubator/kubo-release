@@ -22,10 +22,6 @@
     admission_control_options.push("DenyEscalatingExec")
   end
 
-  if !p('allow_privileged')
-    admission_control_options.push("SecurityContextDeny")
-  end
-
   feature_gates = {
     'RotateKubeletServerCertificate' => true
   }

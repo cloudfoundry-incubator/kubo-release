@@ -11,7 +11,7 @@ metadata:
   annotations:
     seccomp.security.alpha.kubernetes.io/allowedProfileNames: '*'
 spec:
-  privileged: true
+  privileged: <%= link('kube-apiserver').p('allow_privileged') %>
   allowPrivilegeEscalation: true
   allowedCapabilities:
   - '*'

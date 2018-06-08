@@ -99,18 +99,6 @@ describe 'kube-apiserver' do
     )
   end
 
-  it 'denies security context when privileged containers are not enabled' do
-    rendered_kube_apiserver_bpm_yml = compiled_template(
-      'kube-apiserver',
-      'config/bpm.yml',
-      {},
-      link_spec
-    )
-
-    bpm_yml = YAML.safe_load(rendered_kube_apiserver_bpm_yml)
-    expect(bpm_yml['processes'][0]['args']).to include(match(/--enable-admission-plugins=.*,SecurityContextDeny/))
-  end
-
   it 'has no http proxy when no proxy is defined' do
     rendered_kube_apiserver_bpm_yml = compiled_template(
       'kube-apiserver',
