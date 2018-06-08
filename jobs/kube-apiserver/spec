@@ -114,6 +114,7 @@ provides:
 - name: kube-apiserver
   type: kube-apiserver
   properties:
+  - allow_privileged
   - admin-username
   - admin-password
   - tls.kubernetes.ca

@@ -14,7 +14,9 @@
   admission_control_options = [
     "LimitRanger", "NamespaceExists",
     "NamespaceLifecycle","ResourceQuota","ServiceAccount",
-    "DefaultStorageClass", "NodeRestriction", "MutatingAdmissionWebhook"]
+    "DefaultStorageClass", "NodeRestriction", "MutatingAdmissionWebhook",
+    "PodSecurityPolicy"
+  ]
 
   if p('deny_escalating_exec')
     admission_control_options.push("DenyEscalatingExec")
