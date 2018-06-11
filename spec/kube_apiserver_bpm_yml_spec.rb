@@ -197,4 +197,20 @@ describe 'kube-apiserver' do
     bpm_yml = YAML.safe_load(rendered_kube_apiserver_bpm_yml)
     expect(bpm_yml['processes'][0]['args']).to include('--feature-gates=RotateKubeletServerCertificate=true,CustomFeature1=true,CustomFeature2=false')
   end
+
+  it 'sets runtime-config with custom apis if there are properties defined' do
+    rendered_kube_apiserver_bpm_yml = compiled_template(
+      'kube-apiserver',
+      'config/bpm.yml',
+      {
+        'runtime_config' => {
+          'custom.api/v1' => true,
+        }
+      },
+      link_spec
+    )
+
+    bpm_yml = YAML.safe_load(rendered_kube_apiserver_bpm_yml)
+    expect(bpm_yml['processes'][0]['args']).to include('--runtime-config=api/v1=true,rbac.authorization.k8s.io/v1alpha1=true,custom.api/v1=true')
+  end
 end

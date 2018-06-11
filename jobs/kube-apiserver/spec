@@ -47,6 +47,10 @@ properties:
     default: true
   feature_gates:
     description: A map of key=value pairs that describe alpha or experimental features.
+  runtime_config:
+    description: |
+      A map of key-value pairs that describe runtime configuration that may be passed to apiserver.
+      See kube-apiserver documentation for details.
   http_proxy:
     description: http_proxy env var for the kubernetes-api binary (i.e. for cloud provider interactions)
   https_proxy:
