@@ -3,7 +3,7 @@ processes:
 - name: chmod_product_serial
   hooks:
     pre_start: "true"
-  executable: /var/vcap/packages/jobs/bin/chmod-product-serial
+  executable: /var/vcap/jobs/kube-controller-manager/bin/chmod-product-serial
 - name: kube-controller-manager
   executable: /var/vcap/packages/kubernetes/bin/kube-controller-manager
   args:
