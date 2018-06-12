@@ -1,9 +1,5 @@
 ---
 processes:
-- name: chmod_product_serial
-  hooks:
-    pre_start: "true"
-  executable: /var/vcap/jobs/kube-controller-manager/bin/chmod-product-serial
 - name: kube-controller-manager
   executable: /var/vcap/packages/kubernetes/bin/kube-controller-manager
   args:
@@ -23,6 +19,8 @@ processes:
   - --terminated-pod-gc-threshold=100
   - --use-service-account-credentials
   - --v=<%=p('logging-level') %>
+  hooks:
+    pre_start: /var/vcap/jobs/kube-controller-manager/bin/chmod-product-serial
   env:
     <% if_p('no_proxy') do |no_proxy| %>
     NO_PROXY: <%= no_proxy %>
