@@ -4,7 +4,6 @@ name: kube-apiserver
 templates:
   bin/ensure_apiserver_healthy.erb: bin/ensure_apiserver_healthy
   bin/post-start.erb: bin/post-start
-  bin/pre-start.erb: bin/pre-start
   config/audit_policy.yml: config/audit_policy.yml
   config/bpm.yml.erb: config/bpm.yml
   config/cloud-provider.ini.erb: config/cloud-provider.ini
@@ -21,7 +20,6 @@ templates:
   config/tokens.csv.erb: config/tokens.csv
 
 packages:
-- kubo-common
 - kubernetes
 
 properties:

@@ -1,0 +1,5 @@
+#!/bin/bash -exu
+
+if [ -f /sys/class/dmi/id/product_serial ]; then
+  chmod a+r /sys/class/dmi/id/product_serial
+fi

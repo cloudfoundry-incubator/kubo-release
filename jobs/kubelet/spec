@@ -17,7 +17,6 @@ templates:
   config/service_key.json.erb: config/service_key.json
 
 packages:
-- kubo-common
 - pid_utils
 - kubernetes
 - cni

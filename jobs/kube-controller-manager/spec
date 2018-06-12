@@ -2,7 +2,7 @@
 name: kube-controller-manager
 
 templates:
-  bin/pre-start.erb: bin/pre-start
+  bin/chmod-product-serial: bin/chmod-product-serial
   config/bpm.yml.erb: config/bpm.yml
   config/ca.pem.erb: config/ca.pem
   config/cloud-provider.ini.erb: config/cloud-provider.ini
@@ -16,7 +16,6 @@ templates:
 
 packages:
 - kubernetes
-- kubo-common
 
 properties:
   api-token:
