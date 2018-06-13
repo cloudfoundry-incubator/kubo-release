@@ -14,7 +14,7 @@
   admission_control_options = [
     "LimitRanger", "NamespaceExists",
     "NamespaceLifecycle","ResourceQuota","ServiceAccount",
-    "DefaultStorageClass", "NodeRestriction", "MutatingAdmissionWebhook"]
+    "DefaultStorageClass", "MutatingAdmissionWebhook"]
 
   if p('deny_escalating_exec')
     admission_control_options.push("DenyEscalatingExec")
@@ -22,14 +22,6 @@
 
   if !p('allow_privileged')
     admission_control_options.push("SecurityContextDeny")
-  end
-
-  feature_gates = {
-    'RotateKubeletServerCertificate' => true
-  }
-
-  if_p('feature_gates') do |gates|
-    feature_gates.merge!(gates)
   end
 %>
 processes:
@@ -53,9 +45,6 @@ processes:
   - --feature-gates=<%= feature_gates.flat_map {|k,v| "#{k}=#{v}"}.join(",") %>
   - --etcd-certfile=/var/vcap/jobs/kube-apiserver/config/etcd-client.crt
   - --etcd-keyfile=/var/vcap/jobs/kube-apiserver/config/etcd-client.key
-  - --kubelet-certificate-authority=/var/vcap/jobs/kube-apiserver/config/kubernetes-ca.pem
-  - --kubelet-client-certificate=/var/vcap/jobs/kube-apiserver/config/kubernetes.pem
-  - --kubelet-client-key=/var/vcap/jobs/kube-apiserver/config/kubernetes-key.pem
   - --kubelet-https
   - --repair-malformed-updates=false
   - --secure-port=8443
@@ -69,13 +58,13 @@ processes:
   - --storage-media-type=application/json
   - --enable-aggregator-routing
   - --v=<%=p('logging-level') %>
-  - --authorization-mode=Node,RBAC
+  - --authorization-mode=RBAC
   - --runtime-config=api/v1,rbac.authorization.k8s.io/v1alpha1
-  - --client-ca-file=/var/vcap/jobs/kube-apiserver/config/kubernetes-ca.pem
+  - --client-ca-file=/var/vcap/jobs/kube-apiserver/config/kubernetes.pem
   - --proxy-client-cert-file=/var/vcap/jobs/kube-apiserver/config/kubernetes.pem
   - --proxy-client-key-file=/var/vcap/jobs/kube-apiserver/config/kubernetes-key.pem
   - --requestheader-allowed-names=aggregator
-  - --requestheader-client-ca-file=/var/vcap/jobs/kube-apiserver/config/kubernetes-ca.pem
+  - --requestheader-client-ca-file=/var/vcap/jobs/kube-apiserver/config/kubernetes.pem
   - --requestheader-extra-headers-prefix=X-Remote-Extra-
   - --requestheader-group-headers=X-Remote-Group
   - --requestheader-username-headers=X-Remote-User

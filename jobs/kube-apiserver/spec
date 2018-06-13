@@ -10,7 +10,6 @@ templates:
   config/etcd-ca.crt.erb: config/etcd-ca.crt
   config/etcd-client.crt.erb: config/etcd-client.crt
   config/etcd-client.key.erb: config/etcd-client.key
-  config/kubernetes-ca.pem.erb: config/kubernetes-ca.pem
   config/kubernetes-key.pem.erb: config/kubernetes-key.pem
   config/kubernetes.pem.erb: config/kubernetes.pem
   config/oidc-ca.pem.erb: config/oidc-ca.pem
@@ -51,8 +50,6 @@ properties:
     description: https_proxy env var for the kubernetes-api binary (i.e. for cloud provider interactions)
   no_proxy:
     description: no_proxy env var for the kubernetes-api binary (i.e. for cloud provider interactions)
-  kubelet-bootstrap-token:
-    description: The bootstrap token used during kubelet registration.
   kube-controller-manager-password:
     description: The password for the system:kube-controller-manager user
   kubelet-password:

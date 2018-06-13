@@ -2,76 +2,11 @@
 
 [ -z "$DEBUG" ] || set -x
 
-CERT_DIR=/var/vcap/jobs/kubelet/config/cert
-
 kubectl="/var/vcap/packages/kubernetes/bin/kubectl --kubeconfig=/var/vcap/jobs/kubelet/config/kubeconfig"
-admin_kubectl="/var/vcap/packages/kubernetes/bin/kubectl --kubeconfig=/var/vcap/jobs/kubelet/config/admin-kubeconfig"
 
-wait_for_client_cert() {
-    until [ -e $CERT_DIR/kubelet-client.crt ]; do
-        sleep 2
-    done
-}
-
-wait_for_server_cert() {
-    # Fetch the nodename from the bootstrapped Kubelet certificate since it should be the same
-    # and will honor whatever the cloud provider overrides the name with
-    local nodename=$(openssl x509 -noout -subject -in $CERT_DIR/kubelet-client.crt | sed -n '/^subject/s/^.*CN=//p')
-
-    until $admin_kubectl get csr | grep -e ' Pending' | grep "$nodename"; do
-      sleep 2
-    done
-
-    local csr_name=$($admin_kubectl get csr | grep -e ' Pending' | grep "$nodename" | awk '{print $1}')
-    $admin_kubectl certificate approve $csr_name
-
-    # Grant the node the ability to refresh its own certificates
-    cat << EOF | $admin_kubectl apply -f -
-kind: ClusterRoleBinding
-apiVersion: rbac.authorization.k8s.io/v1
-metadata:
-  name: kubo:internal:<%= "#{spec.name}-#{spec.index}" %>-selfnodeclient
-subjects:
-- kind: User
-  name: $nodename
-  apiGroup: rbac.authorization.k8s.io
-roleRef:
-  kind: ClusterRole
-  name: system:certificates.k8s.io:certificatesigningrequests:selfnodeclient
-  apiGroup: rbac.authorization.k8s.io
----
-kind: ClusterRoleBinding
-apiVersion: rbac.authorization.k8s.io/v1
-metadata:
-  name: kubo:internal:<%= "#{spec.name}-#{spec.index}" %>-selfnodeserver
-subjects:
-- kind: User
-  name: $nodename
-  apiGroup: rbac.authorization.k8s.io
-roleRef:
-  kind: ClusterRole
-  name: system:certificates.k8s.io:certificatesigningrequests:selfnodeserver
-  apiGroup: rbac.authorization.k8s.io
-EOF
-}
-
-wait_for_ready() {
-    # Wait for kubelet to become Ready before we move on to the next node.
-    # Scheduling might not be enabled at this time.
-    # The node then will be Ready;SchedulingDisabled
-    until ${kubectl} get nodes -o wide -L spec.ip | grep -e ' Ready' | grep "<%= spec.ip %>"; do
-      sleep 2
-    done
-}
-
-# Wait for the client cert to be generated
-if [ ! -e $CERT_DIR/kubelet-client.crt ]; then
-    wait_for_client_cert
-fi
-
-# If we don't have a server cert to begin with, we'll get one
-if [ ! -e $CERT_DIR/kubelet-server-current.pem ]; then
-    wait_for_server_cert
-fi
-
-wait_for_ready
+# Wait for kubelet to become Ready before we move on to the next node.
+# Scheduling might not be enabled at this time.
+# The node then will be Ready;SchedulingDisabled
+until ${kubectl} get nodes -o wide -L spec.ip | grep -e ' Ready' | grep "<%= spec.ip %>"; do
+  sleep 2
+done
