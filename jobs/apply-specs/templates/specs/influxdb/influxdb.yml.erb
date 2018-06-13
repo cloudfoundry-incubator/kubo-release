@@ -1,3 +1,9 @@
+# THIS FILE EXISTS ONLY FOR THE SAKE OF CLEANING UP INFLUXDB
+# DURING THE TRANSITION TO METRICS SERVER
+#
+# WE CAN DELETE AFTER A RELEASE
+<%- require 'base64' -%>
+---
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
@@ -37,7 +43,6 @@ spec:
       serviceAccountName: heapster
 
 ---
-
 apiVersion: v1
 kind: Service
 metadata:
@@ -56,7 +61,6 @@ spec:
   selector:
     k8s-app: influxdb
 ---
-
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -73,9 +77,20 @@ data:
 
     [admin]
       https-enabled = true
-      https-certificate = "/certs/influxdb-cert"
+      https-certificate = "/certs/influxdb.crt"
 
     [http]
       https-enabled = true
-      https-certificate = "/certs/influxdb-cert"
-      https-private-key = "/certs/influxdb-key"
+      https-certificate = "/certs/influxdb.crt"
+      https-private-key = "/certs/influxdb.key"
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: influxdb-certs
+  namespace: kube-system
+type: Opaque
+data:
+  ca.crt: <%= Base64.strict_encode64(p('tls.influxdb.ca')) %>
+  influxdb.crt: <%= Base64.strict_encode64(p('tls.influxdb.certificate')) %>
+  influxdb.key: <%= Base64.strict_encode64(p('tls.influxdb.private_key')) %>
