@@ -16,7 +16,7 @@ describe 'cloud-provider-ini' do
       }
     }
   end
-  let(:rendered_template) { compiled_template('kube-apiserver', 'config/cloud-provider.ini', {}, link_spec) }
+  let(:rendered_template) { compiled_template('kube-apiserver', 'config/cloud-provider.ini', {}, link_spec, instance_name: 'master') }
 
   context 'if cloud provider is gce' do
     let(:properties) { { 'cloud-provider' => { 'type' => 'gce', 'gce' => gce_config } } }
@@ -58,8 +58,16 @@ describe 'cloud-provider-ini' do
         'datastore' => 'fake-datastore',
         'working-dir' => 'fake-working-dir',
         'vm-uuid' => 'fake-vm-uuid',
-        'scsicontrollertype' => 'fake-scsicontrollertype'
+        'scsicontrollertype' => 'fake-scsicontrollertype',
+        'resourcepool-path' => '/fake-datacenter/host/cluster'
       }
+    end
+
+    context 'and when the instance group is worker' do
+      it 'renders empty cloud provider' do
+        rendered_template_worker = compiled_template('kube-apiserver', 'config/cloud-provider.ini', {}, link_spec, instance_name: 'worker')
+        expect(rendered_template_worker).to eq("\n[Global]\n\n\n\n")
+      end
     end
 
     it 'renders the correct template for vsphere' do
@@ -74,22 +82,22 @@ describe 'cloud-provider-ini' do
 
     context 'password has a special character #' do
       it 'has a special character in the rendered template' do
-       vsphere_config['password'] = 'foo#bar'
-       expect(rendered_template).to include("password=\"foo#bar\"")
+        vsphere_config['password'] = 'foo#bar'
+        expect(rendered_template).to include('password="foo#bar"')
       end
     end
 
     context 'password has a special character "' do
       it 'has a special character in the rendered template' do
-       vsphere_config['password'] = 'foo"bar'
-       expect(rendered_template).to include("password=\"foo\\\"bar\"")
+        vsphere_config['password'] = 'foo"bar'
+        expect(rendered_template).to include('password="foo\\"bar"')
       end
     end
 
     context 'password has multiple special characters' do
       it 'has a special character in the rendered template' do
-       vsphere_config['password'] = %(x123#$%^&*')
-       expect(rendered_template).to include("password=\"x123#\$%^&*'")
+        vsphere_config['password'] = %(x123#$%^&*')
+        expect(rendered_template).to include("password=\"x123#\$%^&*'")
       end
     end
   end

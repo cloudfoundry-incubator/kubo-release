@@ -1,6 +1,0 @@
-#!/bin/bash -eu
-
-<% if_link('cloud-provider') do |cloud_provider| %>
-source /var/vcap/packages/kubo-common/utils.sh
-check_and_chmod_product_serial <%= cloud_provider.p('cloud-provider.type') %>
-<% end %>

@@ -14,7 +14,7 @@
   admission_control_options = [
     "LimitRanger", "NamespaceExists",
     "NamespaceLifecycle","ResourceQuota","ServiceAccount",
-    "DefaultStorageClass", "MutatingAdmissionWebhook"]
+    "DefaultStorageClass", "NodeRestriction", "MutatingAdmissionWebhook"]
 
   if p('deny_escalating_exec')
     admission_control_options.push("DenyEscalatingExec")
@@ -23,12 +23,20 @@
   if !p('allow_privileged')
     admission_control_options.push("SecurityContextDeny")
   end
+
+  feature_gates = {
+    'RotateKubeletServerCertificate' => true
+  }
+
+  if_p('feature_gates') do |gates|
+    feature_gates.merge!(gates)
+  end
 %>
 processes:
 - name: kube-apiserver
   executable: /var/vcap/packages/kubernetes/bin/kube-apiserver
   args:
-  - --anonymous-auth=false
+  - --anonymous-auth=<%= p('anonymous_auth') %>
   - --allow-privileged=<%= p('allow_privileged') %>
   - --apiserver-count=<%= link('kube-apiserver').instances.size %>
   - --bind-address=0.0.0.0
@@ -37,14 +45,17 @@ processes:
   - --cloud-config=/var/vcap/jobs/kube-apiserver/config/cloud-provider.ini
   <% end %>
   - --enable-admission-plugins=<%= admission_control_options.join(",") %>
+  - --disable-admission-plugins=PersistentVolumeLabel
+  - --enable-bootstrap-token-auth
   - --enable-swagger-ui
   - --etcd-servers=<%= etcd_endpoints %>
   - --etcd-cafile=/var/vcap/jobs/kube-apiserver/config/etcd-ca.crt
-  <% if_p('feature_gates') do |feature_gates| %>
   - --feature-gates=<%= feature_gates.flat_map {|k,v| "#{k}=#{v}"}.join(",") %>
-  <% end %>
   - --etcd-certfile=/var/vcap/jobs/kube-apiserver/config/etcd-client.crt
   - --etcd-keyfile=/var/vcap/jobs/kube-apiserver/config/etcd-client.key
+  - --kubelet-certificate-authority=/var/vcap/jobs/kube-apiserver/config/kubernetes-ca.pem
+  - --kubelet-client-certificate=/var/vcap/jobs/kube-apiserver/config/kubernetes.pem
+  - --kubelet-client-key=/var/vcap/jobs/kube-apiserver/config/kubernetes-key.pem
   - --kubelet-https
   - --repair-malformed-updates=false
   - --secure-port=8443
@@ -58,22 +69,16 @@ processes:
   - --storage-media-type=application/json
   - --enable-aggregator-routing
   - --v=<%=p('logging-level') %>
-  <% if p('authorization-mode').downcase == 'abac' %>
-  - --authorization-mode=ABAC
-  - --authorization-policy-file=/var/vcap/jobs/kube-apiserver/config/authorization_policy.jsonl
-  <% end %>
-  <% if p('authorization-mode').downcase == 'rbac' %>
-  - --authorization-mode=RBAC
+  - --authorization-mode=Node,RBAC
   - --runtime-config=api/v1,rbac.authorization.k8s.io/v1alpha1
-  - --client-ca-file=/var/vcap/jobs/kube-apiserver/config/kubernetes.pem
+  - --client-ca-file=/var/vcap/jobs/kube-apiserver/config/kubernetes-ca.pem
   - --proxy-client-cert-file=/var/vcap/jobs/kube-apiserver/config/kubernetes.pem
   - --proxy-client-key-file=/var/vcap/jobs/kube-apiserver/config/kubernetes-key.pem
   - --requestheader-allowed-names=aggregator
-  - --requestheader-client-ca-file=/var/vcap/jobs/kube-apiserver/config/kubernetes.pem
+  - --requestheader-client-ca-file=/var/vcap/jobs/kube-apiserver/config/kubernetes-ca.pem
   - --requestheader-extra-headers-prefix=X-Remote-Extra-
   - --requestheader-group-headers=X-Remote-Group
   - --requestheader-username-headers=X-Remote-User
-  <% end %>
   <% if p('enable_audit_logs') %>
   - --audit-log-path=/var/vcap/sys/log/kube-apiserver/audit.log
   - --audit-log-maxage=0

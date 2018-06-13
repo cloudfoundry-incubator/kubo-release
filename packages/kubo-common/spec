@@ -1,4 +1,0 @@
----
-name: kubo-common
-files:
-- kubo-common/utils.sh

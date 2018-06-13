@@ -34,9 +34,7 @@ spec:
       - name: influxdb-certs
         secret:
           secretName: influxdb-certs
-      <% if p('authorization-mode').downcase == 'rbac' %>
       serviceAccountName: heapster
-      <% end %>
 
 ---
 
