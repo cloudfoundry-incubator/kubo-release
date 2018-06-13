@@ -5,6 +5,7 @@ templates:
   config/bpm.yml.erb: config/bpm.yml
   config/ca.pem.erb: config/ca.pem
   config/kubeconfig.erb: config/kubeconfig
+  config/config.yml: config/config.yml
 
 packages:
 - kubernetes

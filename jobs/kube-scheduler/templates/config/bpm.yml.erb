@@ -3,8 +3,7 @@ processes:
 - name: kube-scheduler
   executable: /var/vcap/packages/kubernetes/bin/kube-scheduler
   args:
-  - --leader-elect
-  - --kubeconfig
-  - /var/vcap/jobs/kube-scheduler/config/kubeconfig
   - --v
   - <%= p('logging-level') %>
+  - --config
+  - /var/vcap/jobs/kube-scheduler/config/config.yml
