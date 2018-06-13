@@ -61,7 +61,7 @@ processes:
   - --secure-port=8443
   - --service-account-key-file=/var/vcap/jobs/kube-apiserver/config/service-account-public-key.pem
   - --service-account-lookup
-  - --service-cluster-ip-range=10.100.200.0/24
+  - --service-cluster-ip-range=<%= service-cluster-cidr %>
   - --service-node-port-range=30000-32767
   - --tls-cert-file=/var/vcap/jobs/kube-apiserver/config/kubernetes.pem
   - --tls-private-key-file=/var/vcap/jobs/kube-apiserver/config/kubernetes-key.pem

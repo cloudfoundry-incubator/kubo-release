@@ -22,3 +22,6 @@ properties:
   logging-level:
     description: "V-leveled logging at the specified level. See https://github.com/golang/glog"
     default: 2
+  pod-network-cidr:
+    description: The pod networking cidr for pod network overlay
+    default: "10.200.0.0/16"

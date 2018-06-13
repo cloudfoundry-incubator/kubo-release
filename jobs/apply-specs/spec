@@ -26,6 +26,9 @@ properties:
     description: The admin username for the Kubernetes cluster
   admin-password:
     description: The admin password for the Kubernetes cluster
+  kubedns-service-ip:
+    description: The service cluster IP for kube-dns, must reside within service-cluster-cidr set for kube-apiserver
+    default: "10.100.200.10"
   timeout-sec:
     description: Timeout for system spec deployment
     default: 1200

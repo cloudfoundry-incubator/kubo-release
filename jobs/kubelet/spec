@@ -65,6 +65,9 @@ properties:
   logging-level:
     description: "V-leveled logging at the specified level. See https://github.com/golang/glog"
     default: 2
+  kubedns-service-ip:
+    description: The service IP for kube-dns, must match what is configured for kube-dns
+    default: "10.100.200.10"
 
 consumes:
 - name: cloud-provider
