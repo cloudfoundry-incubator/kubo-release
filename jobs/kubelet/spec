@@ -67,7 +67,7 @@ properties:
     default: 2
   kubectl-drain-timeout:
     description: "The length of time to wait before giving up draining a node, zero means infinite"
-    default: 0
+    default: "0s"
 
 consumes:
 - name: cloud-provider
