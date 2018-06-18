@@ -60,7 +60,7 @@ processes:
   - --storage-media-type=application/json
   - --enable-aggregator-routing
   - --v=<%=p('logging-level') %>
-  - --authorization-mode=RBAC
+  - --authorization-mode=Node,RBAC
   - --runtime-config=api/v1,rbac.authorization.k8s.io/v1alpha1
   - --client-ca-file=/var/vcap/jobs/kube-apiserver/config/kubernetes.pem
   - --proxy-client-cert-file=/var/vcap/jobs/kube-apiserver/config/kubernetes.pem
