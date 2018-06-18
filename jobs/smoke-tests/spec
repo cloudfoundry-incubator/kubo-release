@@ -14,3 +14,5 @@ packages:
 consumes:
 - name: kube-apiserver
   type: kube-apiserver
+- name: kubernetes-workers
+  type: kubernetes-workers

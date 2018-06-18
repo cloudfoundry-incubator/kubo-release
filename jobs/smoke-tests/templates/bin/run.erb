@@ -3,6 +3,7 @@
 kubectl="/var/vcap/packages/kubernetes/bin/"
 export PATH=${kubectl}:$PATH
 export KUBECONFIG="/var/vcap/jobs/smoke-tests/config/kubeconfig"
+export CLUSTER_SIZE=<%= link('kubernetes-workers').instances.size %>
 
 echo "Running smoke tests"
 /var/vcap/packages/smoke-tests/bin/run-smoke-tests -ginkgo.randomizeAllSpecs -ginkgo.failOnPending  -ginkgo.v
