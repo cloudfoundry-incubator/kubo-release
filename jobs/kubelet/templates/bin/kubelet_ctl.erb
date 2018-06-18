@@ -104,6 +104,7 @@ start_kubelet() {
   kubelet \
     --allow-privileged=<%= p('allow_privileged') %> \
     --bootstrap-kubeconfig=/var/vcap/jobs/kubelet/config/bootstrap-kubeconfig \
+    --client-ca-file=/var/vcap/jobs/kubelet/config/ca.pem \
     --cadvisor-port=0 \
     <% if include_config -%>--cloud-config=${cloud_config}<% end %> \
     <% if !iaas.nil? -%>--cloud-provider=${cloud_provider}<% end %> \
