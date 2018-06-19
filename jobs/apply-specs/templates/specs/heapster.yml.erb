@@ -17,28 +17,7 @@ subjects:
   name: heapster
   namespace: kube-system
 ---
-kind: ClusterRole
-apiVersion: rbac.authorization.k8s.io/v1beta1
-metadata:
-  name: heapster-node-stats
-rules:
-- apiGroups: [""]
-  resources: ["nodes/stats"]
-  verbs: ["create", "get"]
----
-kind: ClusterRoleBinding
-apiVersion: rbac.authorization.k8s.io/v1beta1
-metadata:
-  name: heapster-node-stats
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: heapster-node-stats
-subjects:
-- kind: ServiceAccount
-  name: heapster
-  namespace: kube-system
----
+
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
