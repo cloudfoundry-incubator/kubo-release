@@ -48,8 +48,6 @@ processes:
   - --etcd-certfile=/var/vcap/jobs/kube-apiserver/config/etcd-client.crt
   - --etcd-keyfile=/var/vcap/jobs/kube-apiserver/config/etcd-client.key
   - --kubelet-https
-  - --kubelet-client-certificate=/var/vcap/jobs/kube-apiserver/config/kubernetes.pem
-  - --kubelet-client-key=/var/vcap/jobs/kube-apiserver/config/kubernetes-key.pem
   - --repair-malformed-updates=false
   - --secure-port=8443
   - --service-account-key-file=/var/vcap/jobs/kube-apiserver/config/service-account-public-key.pem
