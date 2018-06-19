@@ -24,8 +24,6 @@ packages:
 properties:
   admin-username:
     description: The admin username for the Kubernetes cluster
-  kubelet-password:
-    description: The password for the kubelet user
   admin-password:
     description: The password for the admin account
   allow_privileged:
@@ -52,10 +50,10 @@ properties:
     description: https_proxy env var for the kubernetes-api binary (i.e. for cloud provider interactions)
   no_proxy:
     description: no_proxy env var for the kubernetes-api binary (i.e. for cloud provider interactions)
-  kubelet-bootstrap-token:
-    description: The bootstrap token used to allow a kubelet join a cluster
   kube-controller-manager-password:
     description: The password for the system:kube-controller-manager user
+  kubelet-password:
+    description: The password for the kubelet user
   kubelet-drain-password:
     description: The password for the kubelet drain user
   kube-proxy-password:

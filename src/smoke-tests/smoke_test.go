@@ -3,10 +3,7 @@ package cfcr_smoke_tests_test
 import (
 	"fmt"
 	"math/rand"
-	"os"
 	"os/exec"
-	"strconv"
-	"strings"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
@@ -65,17 +62,6 @@ var _ = Describe("CFCR Smoke Tests", func() {
 		AfterEach(func() {
 			session := k8sRunner.RunKubectlCommand("delete", "deployment", deploymentName)
 			Eventually(session, "60s").Should(gexec.Exit(0))
-		})
-
-		It("shows all nodes are healthy", func() {
-			clusterSize, err := strconv.Atoi(os.Getenv("CLUSTER_SIZE"))
-			Expect(err).NotTo(HaveOccurred())
-
-			args := []string{"get", "nodes", "-o", "jsonpath='{.items[:].status.conditions[?(@.type==\"Ready\")].status}'"}
-			session := k8sRunner.RunKubectlCommand(args...)
-			Eventually(session, "60s").Should(gexec.Exit(0))
-			numberOfReportedNodes := strings.Split(string(session.Out.Contents()), " ")
-			Expect(len(numberOfReportedNodes)).To(Equal(clusterSize))
 		})
 
 		It("shows the pods are healthy", func() {

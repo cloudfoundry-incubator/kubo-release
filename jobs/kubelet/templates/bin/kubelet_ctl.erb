@@ -7,7 +7,6 @@ export PATH=/var/vcap/packages/kubernetes/bin/:/var/vcap/packages/docker/sbin/:/
 RUN_DIR=/var/vcap/sys/run/kubernetes
 PIDFILE=$RUN_DIR/kubelet.pid
 LOG_DIR=/var/vcap/sys/log/kubelet
-CERT_DIR=/var/vcap/jobs/kubelet/config
 DATA_DIR=/var/vcap/store/kubernetes
 DOCKER_SOCKET=unix:///var/vcap/sys/run/docker/docker.sock
 
@@ -40,8 +39,8 @@ DOCKER_SOCKET=unix:///var/vcap/sys/run/docker/docker.sock
 . /var/vcap/packages/pid_utils/pid_utils.sh
 
 setup_directories() {
-  mkdir -p "$RUN_DIR" "$LOG_DIR" "$DATA_DIR" "$CERT_DIR"
-  chown -R vcap:vcap "$RUN_DIR" "$LOG_DIR" "$DATA_DIR" "$CERT_DIR"
+  mkdir -p "$RUN_DIR" "$LOG_DIR" "$DATA_DIR"
+  chown -R vcap:vcap "$RUN_DIR" "$LOG_DIR" "$DATA_DIR"
 }
 
 send_process_stdout_to_logfile() {
@@ -103,12 +102,10 @@ start_kubelet() {
 
   kubelet \
     --allow-privileged=<%= p('allow_privileged') %> \
-    --bootstrap-kubeconfig=/var/vcap/jobs/kubelet/config/bootstrap-kubeconfig \
     --cadvisor-port=0 \
     <% if include_config -%>--cloud-config=${cloud_config}<% end %> \
     <% if !iaas.nil? -%>--cloud-provider=${cloud_provider}<% end %> \
     --cni-bin-dir=/var/vcap/jobs/kubelet/packages/cni/bin \
-    --cert-dir="$CERT_DIR" \
     --config=/var/vcap/jobs/kubelet/config/kubeletconfig.yml \
     --container-runtime=docker \
     --docker-endpoint="${DOCKER_SOCKET}" \

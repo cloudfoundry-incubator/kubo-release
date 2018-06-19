@@ -9,7 +9,9 @@ templates:
   config/ca.pem.erb: config/ca.pem
   config/cloud-provider.ini.erb: config/cloud-provider.ini
   config/kubeconfig-drain.erb: config/kubeconfig-drain
-  config/bootstrap-kubeconfig.erb: config/bootstrap-kubeconfig
+  config/kubeconfig.erb: config/kubeconfig
+  config/kubelet-key.pem.erb: config/kubelet-key.pem
+  config/kubelet.pem.erb: config/kubelet.pem
   config/kubeletconfig.yml.erb: config/kubeletconfig.yml
   config/openstack-ca.crt.erb: config/openstack-ca.crt
   config/service_key.json.erb: config/service_key.json
@@ -26,10 +28,14 @@ properties:
     default: false
   cloud-provider:
     description: "The type of cloud-provider that is being deployed"
-  tls.bootstrap_token:
-    description: "Token used for Bootstrapping the worker node"
   tls.kubernetes:
-    description: "Certificate and private key for the Kubernetes master"
+      description: "Certificate and private key for the Kubernetes master"
+  tls.kubelet:
+    description: "Certificate and private key for the Kubernetes worker"
+    type: certificate
+    parameters:
+      key_length: 4096
+      duration: 365
   backend_port:
     example: 80
     default: 6789
@@ -57,6 +63,8 @@ properties:
   eviction-hard:
     description: Node eviction thresholds
     example: "memory.available<500Mi,nodefs.available<10%"
+  api-token:
+    description: The token to access Kubernetes API
   drain-api-token:
     description: The token to access Kubernetes API used to drain the kubelet.
   logging-level:

@@ -6,7 +6,6 @@ templates:
   bin/post-start.erb: bin/post-start
   config/ca.pem.erb: config/ca.pem
   config/kubeconfig.erb: config/kubeconfig
-  config/policies/bootstrap.yml: config/policies/bootstrap.yml
   config/policies/cluster_admin.yml: config/policies/cluster_admin.yml
   config/policies/kube_proxy.yml: config/policies/kube_proxy.yml
   config/policies/kubelet.yml: config/policies/kubelet.yml
