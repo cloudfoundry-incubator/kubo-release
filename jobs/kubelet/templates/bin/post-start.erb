@@ -58,12 +58,9 @@ v="$(cat <<-EOF
 EOF
 )"
 
-  CLIENT_CERT=$($kubectl config view -o jsonpath='{.users[?(@.name == "default-auth")].user.client-certificate}')
-  CLIENT_KEY=$($kubectl config view -o jsonpath='{.users[?(@.name == "default-auth")].user.client-key}')
+  KUBE_TOKEN=$($kubectl  config view -o jsonpath='{.users[?(@.name == "kubelet")].user.token}')
   /usr/bin/curl -sS --cacert /var/vcap/jobs/kubelet/config/ca.pem \
-  --cert ${CLIENT_CERT} \
-  --key ${CLIENT_KEY} \
-  --cacert /var/vcap/jobs/kubelet/config/ca.pem \
+  -H "Authorization: Bearer ${KUBE_TOKEN}" \
   -H "Accept: application/json" \
   -H "Content-Type: application/strategic-merge-patch+json" \
   -X PATCH \
