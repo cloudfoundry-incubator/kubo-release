@@ -14,7 +14,6 @@ processes:
   - --leader-elect
   - --root-ca-file=/var/vcap/jobs/kube-controller-manager/config/ca.pem
   - --service-account-private-key-file=/var/vcap/jobs/kube-controller-manager/config/service-account-private-key.pem
-  - --service-cluster-ip-range=10.100.200.0/24
   - --terminated-pod-gc-threshold=100
   - --use-service-account-credentials
   - --v=<%=p('logging-level') %>
