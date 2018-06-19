@@ -36,6 +36,8 @@ processes:
   - --cloud-provider=<%= cloud_provider.p('cloud-provider.type') %>
   - --cloud-config=/var/vcap/jobs/kube-apiserver/config/cloud-provider.ini
   <% end %>
+  - --kubelet-client-key=/var/vcap/jobs/kube-apiserver/config/kubelet-client-key.pem
+  - --kubelet-client-certificate=/var/vcap/jobs/kube-apiserver/config/kubelet-client-cert.pem
   - --enable-admission-plugins=<%= admission_control_options.join(",") %>
   - --disable-admission-plugins=PersistentVolumeLabel
   - --enable-bootstrap-token-auth

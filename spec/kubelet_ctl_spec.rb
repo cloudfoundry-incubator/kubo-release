@@ -6,7 +6,13 @@ require 'fileutils'
 require 'open3'
 
 describe 'kubelet_ctl' do
-  let(:rendered_template) { compiled_template('kubelet', 'bin/kubelet_ctl', {}, {}, {}, 'z1', 'fake-bosh-ip', 'fake-bosh-id') }
+  let(:rendered_template) do
+    compiled_template('kubelet', 'bin/kubelet_ctl', {}, {}, {}, 'z1', 'fake-bosh-ip', 'fake-bosh-id')
+  end
+
+  it 'should specify a kubeconfig path' do
+    expect(rendered_template).to include('--kubeconfig=/var/vcap/jobs/kubelet/config/kubeconfig')
+  end
 
   it 'labels the kubelet with its own az' do
     expect(rendered_template).to include(',failure-domain.beta.kubernetes.io/zone=z1')

@@ -12,6 +12,8 @@ templates:
   config/etcd-client.key.erb: config/etcd-client.key
   config/kubernetes-key.pem.erb: config/kubernetes-key.pem
   config/kubernetes.pem.erb: config/kubernetes.pem
+  config/kubelet-client-key.pem.erb: config/kubelet-client-key.pem
+  config/kubelet-client-cert.pem.erb: config/kubelet-client-cert.pem
   config/oidc-ca.pem.erb: config/oidc-ca.pem
   config/openstack-ca.crt.erb: config/openstack-ca.crt
   config/service-account-public-key.pem.erb: config/service-account-public-key.pem
@@ -71,6 +73,8 @@ properties:
     description: "Certificate for the Kubernetes master"
   tls.kubernetes.private_key:
     description: "Private key for the Kubernetes master"
+  tls.kubelet-client:
+    description: kubelet client cert
   service-account-public-key:
     description: "Public key used to verify service account tokens"
   logging-level:
