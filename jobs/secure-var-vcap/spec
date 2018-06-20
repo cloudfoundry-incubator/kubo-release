@@ -1,9 +1,0 @@
----
-name: secure-var-vcap
-
-templates:
-  bin/pre-start: bin/pre-start
-
-packages: []
-
-properties: {}
