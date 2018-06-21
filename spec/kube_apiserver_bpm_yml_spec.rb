@@ -183,4 +183,22 @@ describe 'kube-apiserver' do
     bpm_yml = YAML.safe_load(rendered_kube_apiserver_bpm_yml)
     expect(bpm_yml['processes'][0]['args']).to include('--feature-gates=CustomFeature1=true,CustomFeature2=false')
   end
+
+  it 'set oidc properties' do
+    rendered_kube_apiserver_bpm_yml = compiled_template(
+      'kube-apiserver',
+      'config/bpm.yml',
+      {
+        'oidc' => {
+          'username-prefix' => 'oidc:',
+          'groups-prefix' => 'oidc:'
+        }
+      },
+      link_spec
+    )
+
+    bpm_yml = YAML.safe_load(rendered_kube_apiserver_bpm_yml)
+    expect(bpm_yml['processes'][0]['args']).to include('--oidc-username-prefix=oidc:')
+    expect(bpm_yml['processes'][0]['args']).to include('--oidc-groups-prefix=oidc:')
+  end
 end
