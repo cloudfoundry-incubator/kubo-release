@@ -67,6 +67,8 @@ properties:
     default: 1235
   route-sync-password:
     description: The password for the route-sync user
+  tls.kubernetes.root_ca:
+    description: "root ca for the kubernetes master"
   tls.kubernetes.ca:
     description: "CA Certificate for the Kubernetes master"
   tls.kubernetes.certificate:
