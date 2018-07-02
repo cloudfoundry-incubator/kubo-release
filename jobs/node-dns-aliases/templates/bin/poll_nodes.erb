@@ -1,0 +1,16 @@
+#!/bin/bash -e
+
+PATH=/var/vcap/packages/jq/bin/:$PATH
+
+[ -z "$DEBUG" ] || set -x
+
+kubectl="/var/vcap/packages/kubernetes/bin/kubectl --kubeconfig=/var/vcap/jobs/node-dns-aliases/config/kubeconfig"
+
+# This exists to update BOSH DNS with aliases for Azure VM instance IDs that map to underlying BOSH DNS entries.
+# This is required currently in Kubernetes 1.9 to enable Azure kubelets to properly launch with the cloud provider,
+
+# Get nodes forever, updating the a node list
+while true; do
+  ${kubectl} get nodes -o json | jq '[ .items[].status.addresses | [ .[] | { "key": .type, "value": .address }] | from_entries ]' > /var/vcap/jobs/node-dns-aliases/config/nodelist
+  sleep 60
+done

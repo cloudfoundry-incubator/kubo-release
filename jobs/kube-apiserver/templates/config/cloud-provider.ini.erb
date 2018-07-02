@@ -42,6 +42,20 @@
 
         workspace_config_string="[Workspace]\n"
         cloud_provider.if_p('cloud-provider.vsphere.resourcepool-path') { |path| workspace_config['resourcepool-path'] = path }
+      elsif provider_type == 'azure'
+        cloud_config['cloud'] = cloud_provider.p('cloud-provider.azure.cloud')
+        cloud_config['tenantId'] = cloud_provider.p('cloud-provider.azure.tenant-id')
+        cloud_config['aadClientId'] = cloud_provider.p('cloud-provider.azure.service-principal-id')
+        cloud_config['aadClientSecret'] = cloud_provider.p('cloud-provider.azure.service-principal-secret')
+        cloud_config['subscriptionId'] = cloud_provider.p('cloud-provider.azure.subscription-id')
+        cloud_config['resourceGroup'] = cloud_provider.p('cloud-provider.azure.resource-group-name')
+        cloud_config['location'] = cloud_provider.p('cloud-provider.azure.location')
+        cloud_config['vnetName'] = cloud_provider.p('cloud-provider.azure.vnet-name')
+        cloud_config['vnetResourceGroup'] = cloud_provider.p('cloud-provider.azure.vnet-resource-group-name')
+        cloud_config['subnetName'] = cloud_provider.p('cloud-provider.azure.subnet-name')
+        cloud_config['securityGroupName'] = cloud_provider.p('cloud-provider.azure.network-security-group-name')
+        cloud_config['useInstanceMetadata'] = true
+        cloud_config['primaryAvailabilitySetName'] = cloud_provider.p('cloud-provider.azure.availability-set')
       elsif provider_type == 'openstack'
         cloud_config['auth-url'] = cloud_provider.p('cloud-provider.openstack.auth-url')
         cloud_config['username'] = cloud_provider.p('cloud-provider.openstack.username')
@@ -59,10 +73,13 @@
         disk_config['trust-device-path'] = cloud_provider.p('cloud-provider.openstack.trust-device-path')
         disk_config['ignore-volume-az'] = cloud_provider.p('cloud-provider.openstack.ignore-volume-az')
       end
-
-      cloud_config.each { |key, prop| cloud_config_string = cloud_config_string + "#{key}=#{prop}\n" }
-      disk_config.each { |key, prop| disk_config_string = disk_config_string + "#{key}=#{prop}\n" }
-      workspace_config.each { |key, prop| workspace_config_string = workspace_config_string + "#{key}=#{prop}\n" }
+      if provider_type == 'azure'
+        cloud_config_string = cloud_config.to_yaml
+      else
+        cloud_config.each { |key, prop| cloud_config_string = cloud_config_string + "#{key}=#{prop}\n" }
+        disk_config.each { |key, prop| disk_config_string = disk_config_string + "#{key}=#{prop}\n" }
+        workspace_config.each { |key, prop| workspace_config_string = workspace_config_string + "#{key}=#{prop}\n" }
+      end
     end
   end
 %>
