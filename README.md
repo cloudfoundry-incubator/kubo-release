@@ -1,53 +1,71 @@
 # Cloud Foundry Container Runtime
 A [BOSH](http://bosh.io/) release for [Kubernetes](http://kubernetes.io).  Formerly named **kubo**.
 
-**Slack**: #cfcr on https://slack.cloudfoundry.org
-**Pivotal Tracker**: https://www.pivotaltracker.com/n/projects/2093412
+- **Slack**: #cfcr on https://slack.cloudfoundry.org
+- **Pivotal Tracker**: https://www.pivotaltracker.com/n/projects/2093412
+
+## Using CFCR Docs (DEPRECATED)
+
+We are no longer supporting the following documentation for deploying BOSH and CFCR
+* https://docs-cfcr.cfapps.io
+
+The [deploy_bosh](https://github.com/cloudfoundry-incubator/kubo-deployment/blob/master/bin/deploy_bosh)
+and [deploy_k8s](https://github.com/cloudfoundry-incubator/kubo-deployment/blob/master/bin/deploy_k8s)
+scripts in the `kubo-deployment` repository are now deprecated.
 
 ## Prerequisites
 - A BOSH Director configured with UAA, Credhub, and BOSH DNS.
 - [kubo-release](https://github.com/cloudfoundry-incubator/kubo-release)
 - [kubo-deployment](https://github.com/cloudfoundry-incubator/kubo-deployment)
+- Cloud Config with 
+  - `vm_types` named `minimal`, `small`, and `small-highmem` (See [cf-deployment](https://github.com/cloudfoundry/cf-deployment) for reference)
+  - `network` named `default`
 
 ## Deploying CFCR
 
-### Bosh Bootloader
+#### Single Master
+1. Upload the appropriate stemcell to the director. You can determine the version and type of the stemcell with  
+	```
+	bosh int ~/workspace/kubo-deployment/manifests/cfcr.yml --path /stemcells
+	```
+1. Copy the link to the [latest version of kubo-release tarball](https://github.com/cloudfoundry-incubator/kubo-release/releases/latest) and upload it to the director  
+1. Deploy
+	```
+	cd kubo-deployment
 
-[Bosh Bootloader](https://github.com/cloudfoundry/bosh-bootloader) (BBL) is our de-facto way to deploy Bosh and CFCR. See [here](https://github.com/cloudfoundry/bosh-bootloader/tree/master/plan-patches) for a list of CFCR plan patches that can be used on GCP/AWS/vSphere/Openstack IaaS's to configure your Bosh Deployment for CFCR. In each plan patch there are guidelines to follow.
+	bosh deploy -d cfcr manifests/cfcr.yml \
+	  -o manifests/ops-files/misc/single-master.yml
+	```
+	If you have a **BOSH Lite** environment, run
+	```
+	cd kubo-deployment
 
-### BOSH Lite
-The `deploy_cfcr_lite` script will deploy a single master CFCR cluster and assumes the director is configure with the [default cloud config](https://github.com/cloudfoundry/bosh-deployment/blob/master/warden/cloud-config.yml). The kubernetes master host is deployed to a static IP: `10.244.0.34`.
-
-```
-git clone https://github.com/cloudfoundry-incubator/kubo-release.git
-
-cd kubo-deployment
-./bin/deploy_cfcr_lite
-```
-
-### Using CFCR Docs (DEPRECATED)
-
-We are no longer supporting the following deployment strategies and are being deprecated
-* https://docs-cfcr.cfapps.io/installing/gcp/
-* https://docs-cfcr.cfapps.io/installing/aws/
-* https://docs-cfcr.cfapps.io/installing/vsphere/
-* https://docs-cfcr.cfapps.io/installing/openstack/
-
-The following scripts are also deprecated
-* https://github.com/cloudfoundry-incubator/kubo-deployment/blob/master/bin/deploy_bosh
-* https://github.com/cloudfoundry-incubator/kubo-deployment/blob/master/bin/deploy_k8s
-
+	bosh deploy -d cfcr manifests/cfcr.yml \
+	  -o manifests/ops-files/misc/single-master.yml \
+	  -o manifests/ops-files/iaas/virtualbox/bosh-lite.yml
+	```
+1. Add kubernetes system components
+	```
+	bosh -d cfcr run-errand apply-specs
+	```
+1. Run the following to confirm the cluster is operational
+	```
+	bosh -d cfcr run-errand smoke-tests
+	```
 ## Accessing the CFCR Cluster (kubectl)
 
 ### Without Load Balancer
-1. Find the IP address of one master node e.g. `bosh -e ENV -d cfcr vms`
-2. Login to the Credhub Server that stores the cluster's credentials:
-  ```
-  credhub login
-  ```
-3. Execute the [`./bin/set_kubeconfig` script](https://github.com/cloudfoundry-incubator/kubo-deployment/blob/master/bin/set_kubeconfig) to configure the `kubeconfig` for use in your `kubectl` client:
-  ```
-  cd kubo-deployment
+1. Login to the Credhub Server that stores the cluster's credentials:
+	```
+	credhub login
+	```
+1. Find the IP address of one master node by running 
+	```
+	bosh -d cfcr vms
+	```
+1. Configure the `kubeconfig` for your `kubectl` client:
+	```
+	cd kubo-deployment
 
-  $ ./bin/set_kubeconfig <ENV>/cfcr https://<master_node_IP_address>:8443
-  ```
+	./bin/set_kubeconfig <DIRECTOR_NAME>/cfcr https://<master_node_IP_address>:8443
+	```
