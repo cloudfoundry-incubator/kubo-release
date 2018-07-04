@@ -9,6 +9,18 @@ A [BOSH](http://bosh.io/) release for [Kubernetes](http://kubernetes.io).  Forme
 - [kubo-release](https://github.com/cloudfoundry-incubator/kubo-release)
 - [kubo-deployment](https://github.com/cloudfoundry-incubator/kubo-deployment)
 
+## Deploying CFCR
+
+#### BOSH Lite
+The `deploy_cfcr_lite` script will deploy a single master CFCR cluster and assumes the director is configure with the [default cloud config](https://github.com/cloudfoundry/bosh-deployment/blob/master/warden/cloud-config.yml). The kubernetes master host is deployed to a static IP: `10.244.0.34`.
+
+```
+git clone https://github.com/cloudfoundry-incubator/kubo-release.git
+
+cd kubo-deployment
+./bin/deploy_cfcr_lite
+```
+
 ## Accessing the CFCR Cluster (kubectl)
 
 ### Without Load Balancer
