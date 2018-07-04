@@ -30,9 +30,9 @@ load_cached_containers
 
 TIMEOUT=120
 
+node_name=$(cat /var/vcap/instance/worker_hostname)
 if timeout "$TIMEOUT" /var/vcap/jobs/kubelet/bin/ensure_kubelet_up_and_running
 then
-  node_name=$($kubectl get nodes -o wide -L spec.ip | grep "<%= spec.ip %>$" | grep ' Ready' | awk '{print $1}')
   ${kubectl} uncordon ${node_name}
   ${kubectl} get nodes ${node_name} | grep -e ' Ready '
   echo "kubelet post-start checks succeeded"
