@@ -1,15 +1,25 @@
-# kubo-release
-A [BOSH](http://bosh.io/) release for [Kubernetes](http://kubernetes.io).
+# Cloud Foundry Container Runtime
+A [BOSH](http://bosh.io/) release for [Kubernetes](http://kubernetes.io).  Formerly named **kubo**.
 
 **Slack**: #cfcr on https://slack.cloudfoundry.org
 **Pivotal Tracker**: https://www.pivotaltracker.com/n/projects/2093412
 
-## Deploying Kubo
-Deployment instructions, scripts, and manifests are located in [kubo-deployment](https://github.com/cloudfoundry-incubator/kubo-deployment).
+## Prerequisites
+- A BOSH Director configured with UAA, Credhub, and BOSH DNS.
+- [kubo-release](https://github.com/cloudfoundry-incubator/kubo-release)
+- [kubo-deployment](https://github.com/cloudfoundry-incubator/kubo-deployment)
 
-## Developing Kubo
+## Accessing the CFCR Cluster (kubectl)
 
-### Upgrading Kubernetes
+### Without Load Balancer
+1. Find the IP address of one master node e.g. `bosh -e ENV -d cfcr vms`
+2. Login to the Credhub Server that stores the cluster's credentials:
+  ```
+  credhub login
+  ```
+3. Execute the [`./bin/set_kubeconfig` script](https://github.com/cloudfoundry-incubator/kubo-deployment/blob/master/bin/set_kubeconfig) to configure the `kubeconfig` for use in your `kubectl` client:
+  ```
+  cd kubo-deployment
 
-#### Maintaining offline support
-This release can be deployed without external internet access. This is accomplished by loading any required containers into the docker engine of the worker nodes (in [post-start](./jobs/kubelet/templates/bin/post-start.erb)). To maintain this support ensure any updates that depend on new container are added as blobs. See the [download_container_images](./scripts/download_container_images) script to automate the fetch and add of new images.
+  $ ./bin/set_kubeconfig <ENV>/cfcr https://<master_node_IP_address>:8443
+  ```
