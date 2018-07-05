@@ -93,7 +93,8 @@ describe 'kube-apiserver' do
     bpm_yml = YAML.safe_load(rendered_kube_apiserver_bpm_yml)
     expect(bpm_yml['processes'][0]['args']).to include(
       '--enable-admission-plugins=LimitRanger,' \
-      'NamespaceExists,NamespaceLifecycle,ResourceQuota,' \
+      'DefaultTolerationSeconds,ValidatingAdmissionWebhook,' \
+      'NamespaceLifecycle,ResourceQuota,' \
       'ServiceAccount,DefaultStorageClass,MutatingAdmissionWebhook,DenyEscalatingExec'
     )
   end
