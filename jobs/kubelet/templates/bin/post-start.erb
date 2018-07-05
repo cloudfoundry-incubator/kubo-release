@@ -1,4 +1,5 @@
 #!/bin/bash -e
+# vi: ft=sh.eruby
 
 [ -z "$DEBUG" ] || set -x
 
@@ -59,7 +60,7 @@ EOF
 )"
 
   KUBE_TOKEN=$($kubectl  config view -o jsonpath='{.users[?(@.name == "kubelet")].user.token}')
-  /usr/bin/curl -sS --cacert /var/vcap/jobs/kubelet/config/ca.pem \
+  /usr/bin/curl -sS --cacert /var/vcap/jobs/kubelet/config/apiserver-ca.pem \
   -H "Authorization: Bearer ${KUBE_TOKEN}" \
   -H "Accept: application/json" \
   -H "Content-Type: application/strategic-merge-patch+json" \

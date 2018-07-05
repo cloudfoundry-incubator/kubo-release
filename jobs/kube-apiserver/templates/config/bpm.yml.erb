@@ -12,7 +12,8 @@
   etcd_endpoints = link('etcd').instances.map { |server| get_url(server, 2379) }.join(",")
 
   admission_control_options = [
-    "LimitRanger", "NamespaceExists",
+    "LimitRanger",
+    "DefaultTolerationSeconds", "ValidatingAdmissionWebhook",
     "NamespaceLifecycle","ResourceQuota","ServiceAccount",
     "DefaultStorageClass", "MutatingAdmissionWebhook"]
 
