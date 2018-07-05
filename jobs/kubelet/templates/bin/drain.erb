@@ -22,13 +22,13 @@ main() {
   retry delete_drained_node
 }
 
-node_name=$(cat /var/vcap/instance/worker_hostname)
-
 drain_kubelet() {
+  local node_name=$(kubectl --kubeconfig /var/vcap/jobs/kubelet/config/kubeconfig-drain get nodes -o wide -L spec.ip | grep "<%= spec.ip %>" | awk '{print $1}')
   kubectl --kubeconfig /var/vcap/jobs/kubelet/config/kubeconfig-drain drain "${node_name}" --grace-period 10 --force --delete-local-data  --ignore-daemonsets
 }
 
 delete_drained_node() {
+  local node_name=$(kubectl --kubeconfig /var/vcap/jobs/kubelet/config/kubeconfig-drain get nodes -o wide -L spec.ip | grep "<%= spec.ip %>" | awk '{print $1}')
   kubectl --kubeconfig /var/vcap/jobs/kubelet/config/kubeconfig-drain delete node "${node_name}" --ignore-not-found
 }
 

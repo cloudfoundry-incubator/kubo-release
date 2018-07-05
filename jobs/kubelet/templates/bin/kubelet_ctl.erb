@@ -72,8 +72,6 @@ delete_stale_drained_node() {
 }
 
 get_hostname_override() {
-  local hostname_override
-
   if [[ "gce" == "$cloud_provider" ]]; then
     # The hostname needs to be set to the instance name so the gce cloud provider can manage the instance
     hostname_override=$(curl http://metadata.google.internal/computeMetadata/v1/instance/name -H "Metadata-Flavor: Google")
@@ -81,11 +79,8 @@ get_hostname_override() {
     hostname_override=<%= spec.ip %>
   fi
 
-  echo ${hostname_override}
+  echo $hostname_override
 }
-
-hostname_override=$(get_hostname_override)
-echo ${hostname_override} > /var/vcap/instance/worker_hostname
 
 start_kubelet() {
   ln -s -f /var/vcap/jobs/kubelet/packages/cni/bin/nsenter /usr/bin/nsenter
@@ -116,7 +111,7 @@ start_kubelet() {
     --docker-endpoint="${DOCKER_SOCKET}" \
     --docker="${DOCKER_SOCKET}" \
     --fail-swap-on=false \
-    --hostname-override=${hostname_override} \
+    --hostname-override=$(get_hostname_override) \
     --keep-terminated-pod-volumes=false \
     --kubeconfig=/var/vcap/jobs/kubelet/config/kubeconfig \
     --network-plugin=cni \
