@@ -29,6 +29,9 @@ properties:
     description: no_proxy env var for cloud provider interactions, i.e. for the kubelet
   tls.kubernetes:
     description: "Certificate and private key for the Kubernetes master"
+  service-cluster-cidr:
+    description: The service cluster IP for hosting cluster services
+    default: "10.100.200.0/24"
   service-account-private-key:
     description: "Private key used to sign generated tokens"
   logging-level:

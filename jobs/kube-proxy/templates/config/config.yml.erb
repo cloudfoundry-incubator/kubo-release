@@ -6,7 +6,7 @@ clientConnection:
   contentType: application/vnd.kubernetes.protobuf
   kubeconfig: /var/vcap/jobs/kube-proxy/config/kubeconfig
   qps: 5
-clusterCIDR: 10.200.0.0/16
+clusterCIDR: <%= p('pod-network-cidr') %>
 configSyncPeriod: 15m0s
 conntrack:
   max: 0
