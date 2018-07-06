@@ -30,7 +30,7 @@ DOCKER_SOCKET=unix:///var/vcap/sys/run/docker/docker.sock
 <% end %>
 
 <%
-  labels = ["spec.ip=#{spec.ip}","bosh.id=#{spec.id}"]
+  labels = ["spec.ip=#{spec.ip}","bosh.id=#{spec.id}","bosh.zone=#{spec.az}"]
   labels += p("labels").map {|k,v| "#{k}=#{v}"}
   labels = labels.join(',')
 %>
@@ -116,7 +116,7 @@ start_kubelet() {
     --kubeconfig=/var/vcap/jobs/kubelet/config/kubeconfig \
     --network-plugin=cni \
     --node-labels=<%= labels %>"$zone_label" \
-    --client-ca-file=/var/vcap/jobs/kubelet/config/ca.pem \
+    --client-ca-file=/var/vcap/jobs/kubelet/config/kubelet-client-ca.pem \
     --v=<%=p('logging-level') %> \
     <% if_p('kube-reserved') do |kube_reserved| %>--kube-reserved="<%= kube_reserved %>"<% end %> \
     <% if_p('system-reserved') do |system_reserved| %>--system-reserved="<%= system_reserved %>"<% end %> \

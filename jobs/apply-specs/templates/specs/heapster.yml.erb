@@ -47,13 +47,13 @@ spec:
           name: heapster-certs
           readOnly: true
         - mountPath: /etc/ssl/certs/
-          name: kubo-ca
+          name: heapster-ca
           readOnly: true
       volumes:
       - name: heapster-certs
         secret:
           secretName: heapster-certs
-      - name: kubo-ca
+      - name: heapster-ca
         secret:
           secretName: heapster-certs
           items:
