@@ -72,11 +72,20 @@ describe 'cloud-provider-ini' do
 
     it 'renders the correct template for vsphere' do
       vsphere_config.each do |k, v|
-        if k == 'password'
+        if %w[password user].include? k
           expect(rendered_template).to include("#{k}=\"#{v}\"")
         else
           expect(rendered_template).to include("#{k}=#{v}")
         end
+      end
+    end
+
+    context 'user in the form domain\user' do
+      it 'has a double backslash in the template' do
+        vsphere_config['user'] = 'domain\fake-user'
+        # In the following case \\\\ appears as \\ in the actual config
+        # this is because we cannot do a string with an unescaped \ in Ruby
+        expect(rendered_template).to include('user="domain\\\\fake-user"')
       end
     end
 
