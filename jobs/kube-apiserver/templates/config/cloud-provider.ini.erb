@@ -17,7 +17,7 @@
         cloud_provider.if_p('cloud-provider.gce.worker-node-tag') { |tag| cloud_config['node-tags'] = tag  }
         cloud_config['multizone'] = true
       elsif provider_type == 'vsphere' && spec['name'].include?("master")
-        cloud_config['user'] = cloud_provider.p('cloud-provider.vsphere.user').gsub('\\','\\\\\\')
+        cloud_config['user'] = '"' + cloud_provider.p('cloud-provider.vsphere.user').gsub('\\','\\\\\\') + '"'
 
         password = ""
         cloud_provider.p('cloud-provider.vsphere.password').split("").each do |i|
