@@ -33,7 +33,7 @@
         cloud_config['port'] = cloud_provider.p('cloud-provider.vsphere.port')
         cloud_config['insecure-flag'] = cloud_provider.p('cloud-provider.vsphere.insecure-flag')
         cloud_config['datacenter'] = cloud_provider.p('cloud-provider.vsphere.datacenter')
-        cloud_config['datastore'] = cloud_provider.p('cloud-provider.vsphere.datastore')
+        cloud_provider.if_p('cloud-provider.vsphere.datastore') { |datastore| cloud_config['datastore'] = datastore }
         cloud_config['working-dir'] = cloud_provider.p('cloud-provider.vsphere.working-dir')
         cloud_config['vm-uuid'] = cloud_provider.p('cloud-provider.vsphere.vm-uuid', '')
 
