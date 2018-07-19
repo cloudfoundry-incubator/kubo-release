@@ -2,4 +2,5 @@
 name: cni
 
 files:
-- cni/*
+- cni/cni-plugins-amd64-v0.7.1.tgz
+- cni/util-linux_2.27.1-6ubuntu3_amd64.deb
