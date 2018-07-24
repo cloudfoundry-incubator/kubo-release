@@ -1,0 +1,12 @@
+#!/bin/bash
+
+set -euo pipefail
+
+exec 1>&2
+
+/var/vcap/jobs/bpm/bin/bpm start kube-apiserver
+while ! /var/vcap/jobs/bpm/bin/bpm pid kube-apiserver; do
+    echo "Waiting for kube-apiserver to start"
+    sleep 1
+done
+/var/vcap/bosh/bin/monit monitor kube-apiserver
