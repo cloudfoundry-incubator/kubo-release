@@ -20,6 +20,8 @@ scripts in the `kubo-deployment` repository are now deprecated.
 - Cloud Config with 
   - `vm_types` named `minimal`, `small`, and `small-highmem` (See [cf-deployment](https://github.com/cloudfoundry/cf-deployment) for reference)
   - `network` named `default`
+  - There are three availability zones `azs`, and they are named `z1`,`z2`,`z3`
+  - note: the cloud-config properties can be customized by applying ops-files. See `manifests/ops-files` for some examples
 
 ## Deploying CFCR
 
