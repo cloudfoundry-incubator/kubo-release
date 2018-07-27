@@ -70,30 +70,30 @@ jq-linux64-1.5:
   size: 3027945
   object_id: 41eb1cd1-0377-4e08-5602-51e0af8b9b52
   sha: d8e36831c3c94bb58be34dd544f44a6c6cb88568
-kubernetes-1.10.5/kube-apiserver:
-  size: 226913050
-  object_id: 1ab68e5e-92d0-4d71-41dc-d28be0d95c75
-  sha: 56c179fe9dfb29c4e1f5005cd9bfb1116f164a73
-kubernetes-1.10.5/kube-controller-manager:
-  size: 149661619
-  object_id: 27794f6c-82b5-4ecd-5af4-95b28f7c03d7
-  sha: 1af446a11c02acd335aeba44afe485965975ae16
-kubernetes-1.10.5/kube-proxy:
-  size: 52145959
-  object_id: 41ea2f35-4ac2-4a22-50f4-78f95d092480
-  sha: 093eb5c907d51b7fa53259d2c9079bb9c4db3492
-kubernetes-1.10.5/kube-scheduler:
-  size: 50048799
-  object_id: 7afdc97c-46ec-4846-7375-089b88495dbf
-  sha: 34f535dc0e5d35b9a3d7c05fb10b79ddfea886c5
-kubernetes-1.10.5/kubectl:
-  size: 55084063
-  object_id: 4281e6f0-bb4b-446e-44e2-5b8083d29ffb
-  sha: dbe431b2684f8ff4188335b3b3cea185d5a9ec44
-kubernetes-1.10.5/kubelet:
-  size: 155772008
-  object_id: 3f1586af-c47b-4e6a-43dd-8d32c82b3bd7
-  sha: a74b42c2c822df86744f0ecaf2d81982a003d8b5
+kubernetes-1.11.1/kube-apiserver:
+  size: 185513080
+  object_id: 8ac44688-5107-4991-627e-589ae37fba11
+  sha: 6805ea84a3fa1653219e75b3b99f47547e53380e
+kubernetes-1.11.1/kube-controller-manager:
+  size: 154089810
+  object_id: 0b9d4918-5de9-41dc-6172-ca13275fbf2b
+  sha: 7e4d72a71af6bbfd932c837c8fd360fbf30f652e
+kubernetes-1.11.1/kube-proxy:
+  size: 52059570
+  object_id: a06f6af2-7e1f-4039-7cd5-6ca1a0f73d62
+  sha: af7efb720d9941804131260417935c6178b50e15
+kubernetes-1.11.1/kube-scheduler:
+  size: 55618691
+  object_id: 819e3f77-7e61-408f-5555-f7a2006abd24
+  sha: 80fcffcd95e27556f167ae0e8601670a64a5a712
+kubernetes-1.11.1/kubectl:
+  size: 55400930
+  object_id: e62fac05-28af-4393-41f8-25a396096466
+  sha: 29e6ae2db5969445a23012be7406626ede57450a
+kubernetes-1.11.1/kubelet:
+  size: 163031056
+  object_id: 89d2c947-c4eb-4915-6338-d323352a0b33
+  sha: 503d54f3273518993d450767ce8051b98d9e435a
 socat-1.7.3.2.tar.gz:
   size: 615818
   object_id: a6f3dcb3-54a0-44a3-4100-f408932aaf8f
