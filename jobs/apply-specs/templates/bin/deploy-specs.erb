@@ -28,7 +28,7 @@ create_heapster_secrets() {
   ${kubectl} create secret generic ${secret_name} \
   --from-file=heapster-cert=${config_dir}/heapster/heapster.crt \
   --from-file=heapster-key=${config_dir}/heapster/heapster.key \
-  --from-file=ca=${config_dir}/ca.pem \
+  --from-file=ca=${config_dir}/heapster/ca.pem \
   -n ${namespace}
 }
 

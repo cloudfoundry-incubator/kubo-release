@@ -67,6 +67,9 @@ properties:
     default: 1235
   route-sync-password:
     description: The password for the route-sync user
+  service-cluster-cidr:
+    description: The service cluster IP cidr for hosting cluster services
+    default: "10.100.200.0/24"
   tls.kubernetes.ca:
     description: "CA Certificate for the Kubernetes master"
   tls.kubernetes.certificate:

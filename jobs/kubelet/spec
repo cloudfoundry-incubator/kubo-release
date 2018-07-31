@@ -6,7 +6,8 @@ templates:
   bin/ensure_kubelet_up_and_running.erb: bin/ensure_kubelet_up_and_running
   bin/kubelet_ctl.erb: bin/kubelet_ctl
   bin/post-start.erb: bin/post-start
-  config/ca.pem.erb: config/ca.pem
+  config/apiserver-ca.pem.erb: config/apiserver-ca.pem
+  config/kubelet-client-ca.pem.erb: config/kubelet-client-ca.pem
   config/cloud-provider.ini.erb: config/cloud-provider.ini
   config/kubeconfig-drain.erb: config/kubeconfig-drain
   config/kubeconfig.erb: config/kubeconfig
@@ -36,6 +37,8 @@ properties:
     parameters:
       key_length: 4096
       duration: 365
+  tls.kubelet-client-ca.certificate:
+    description: "CA certificate of the authority granting access to kubelet server"
   backend_port:
     example: 80
     default: 6789
@@ -70,6 +73,9 @@ properties:
   logging-level:
     description: "V-leveled logging at the specified level. See https://github.com/golang/glog"
     default: 2
+  kubedns-service-ip:
+    description: The service IP for kube-dns, must match what is configured for kube-dns
+    default: "10.100.200.10"
 
 consumes:
 - name: cloud-provider

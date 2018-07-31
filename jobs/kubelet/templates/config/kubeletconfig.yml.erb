@@ -6,7 +6,7 @@ authentication:
 authorization:
   mode: Webhook
 clusterDNS:
-  - 10.100.200.10
+  - <%= p('kubedns-service-ip') %>
 clusterDomain: cluster.local
 failSwapOn: false
 readOnlyPort: 0
