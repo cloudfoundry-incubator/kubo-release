@@ -41,7 +41,7 @@ else
   exit 1
 fi
 
-if  [ $($kubectl get nodes ${node_name} -o jsonpath='{.status.conditions[?(@.type=="NetworkUnavailable")].status}') ==  "True" ]
+if  [ "$($kubectl get nodes ${node_name} -o jsonpath='{.status.conditions[?(@.type=="NetworkUnavailable")].status}')" ==  "True" ]
 then
 v="$(cat <<-EOF
 {
