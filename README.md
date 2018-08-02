@@ -6,7 +6,7 @@ A [BOSH](http://bosh.io/) release for [Kubernetes](http://kubernetes.io).  Forme
 
 ## Using CFCR Docs (DEPRECATED)
 
-We are no longer supporting the following documentation for deploying BOSH and CFCR
+We are no longer supporting the following documentation for deploying BOSH and CFCR:
 * https://docs-cfcr.cfapps.io
 
 The [deploy_bosh](https://github.com/cloudfoundry-incubator/kubo-deployment/blob/master/bin/deploy_bosh)
