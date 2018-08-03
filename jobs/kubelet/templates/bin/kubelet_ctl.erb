@@ -102,17 +102,21 @@ start_kubelet() {
 
   kubelet \
     --allow-privileged=<%= p('allow_privileged') %> \
+    --cadvisor-port=0 \
     <% if include_config -%>--cloud-config=${cloud_config}<% end %> \
     <% if !iaas.nil? -%>--cloud-provider=${cloud_provider}<% end %> \
     --cni-bin-dir=/var/vcap/jobs/kubelet/packages/cni/bin \
     --config=/var/vcap/jobs/kubelet/config/kubeletconfig.yml \
     --container-runtime=docker \
     --docker-endpoint="${DOCKER_SOCKET}" \
+    --docker="${DOCKER_SOCKET}" \
+    --fail-swap-on=false \
     --hostname-override=$(get_hostname_override) \
     --keep-terminated-pod-volumes=false \
     --kubeconfig=/var/vcap/jobs/kubelet/config/kubeconfig \
     --network-plugin=cni \
     --node-labels=<%= labels %>"$zone_label" \
+    --client-ca-file=/var/vcap/jobs/kubelet/config/kubelet-client-ca.pem \
     --v=<%=p('logging-level') %> \
     <% if_p('kube-reserved') do |kube_reserved| %>--kube-reserved="<%= kube_reserved %>"<% end %> \
     <% if_p('system-reserved') do |system_reserved| %>--system-reserved="<%= system_reserved %>"<% end %> \

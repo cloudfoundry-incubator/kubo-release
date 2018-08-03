@@ -3,8 +3,6 @@ apiVersion: kubelet.config.k8s.io/v1beta1
 authentication:
   anonymous:
     enabled: false
-  x509:
-    clientCAFile: /var/vcap/jobs/kubelet/config/kubelet-client-ca.pem
 authorization:
   mode: Webhook
 clusterDNS:
