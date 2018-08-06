@@ -7,7 +7,7 @@ processes:
   - --cloud-provider=<%= cloud_provider.p('cloud-provider.type') %>
   - --cloud-config=/var/vcap/jobs/kube-controller-manager/config/cloud-provider.ini
   <%- end -%>
-  - --cluster-name=kubernetes
+  - --cluster-name=<%=p('cluster-name') %>
   - --cluster-signing-cert-file=/var/vcap/jobs/kube-controller-manager/config/cluster-signing-ca.pem
   - --cluster-signing-key-file=/var/vcap/jobs/kube-controller-manager/config/cluster-signing-key.pem
   <%- if_p('horizontal-pod-autoscaler.downscale-delay') do |delay| -%>
