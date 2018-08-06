@@ -9,7 +9,7 @@ main() {
     else
         images=(
             "k8s.gcr.io/pause-amd64:3.1"
-            "k8s.gcr.io/heapster-amd64:v1.5.4"
+            "k8s.gcr.io/heapster-amd64:v1.6.0-beta.1"
             "k8s.gcr.io/heapster-influxdb-amd64:v1.3.3"
             "k8s.gcr.io/k8s-dns-kube-dns-amd64:1.14.10"
             "k8s.gcr.io/k8s-dns-dnsmasq-nanny-amd64:1.14.10"
