@@ -18,10 +18,10 @@ conntrack/libnetfilter-conntrack3_1.0.4-1.deb:
   size: 45872
   object_id: 42a59368-8ae3-4502-480b-56ecd3f40f7a
   sha: 743b497bd6a6491a8cad11c04103e55c7a9cc93c
-container-images/k8s.gcr.io_heapster-amd64:v1.6.0-beta.1.tgz:
-  size: 20246580
-  object_id: 1ea3a35d-2821-452c-4811-dbdbce40eee4
-  sha: c602de915c0349c2af4b59c7082f59f9302bb913
+container-images/k8s.gcr.io_heapster-amd64:v1.5.4.tgz:
+  size: 19797457
+  object_id: deb55944-5460-4af5-6b0f-552330fca196
+  sha: 3bf25f122517c10287f3074840c8a3fe66edd499
 container-images/k8s.gcr.io_heapster-influxdb-amd64:v1.3.3.tgz:
   size: 4751608
   object_id: 93e1221a-e955-4d68-562b-0d47dbbb06ea
