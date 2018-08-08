@@ -144,6 +144,7 @@ spec:
           - --tls-key-file=kubernetes-dashboard-key
           # Uncomment the following line
           # Create on-disk volume to store exec logs
+        volumeMounts:
         - mountPath: /tmp
           name: tmp-volume
         - mountPath: /certs
