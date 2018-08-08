@@ -46,14 +46,6 @@ metadata:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: kube-dns-auth
-  namespace: kube-system
-  labels:
-    addonmanager.kubernetes.io/mode: EnsureExists
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
   name: kube-dns
   namespace: kube-system
   labels:
@@ -86,14 +78,13 @@ spec:
         k8s-app: kube-dns
       annotations:
         scheduler.alpha.kubernetes.io/critical-pod: ''
+        seccomp.security.alpha.kubernetes.io/pod: 'docker/default'
     spec:
+      priorityClassName: system-cluster-critical
       tolerations:
       - key: "CriticalAddonsOnly"
         operator: "Exists"
       volumes:
-      - name: kube-dns-auth
-        configMap:
-          name: kube-dns-auth
       - name: kube-dns-config
         configMap:
           name: kube-dns
@@ -143,8 +134,6 @@ spec:
           name: dns-tcp-local
           protocol: TCP
         volumeMounts:
-        - name: kube-dns-auth
-          mountPath: /kube-dns-auth
         - name: kube-dns-config
           mountPath: /kube-dns-config
       - name: dnsmasq
@@ -201,8 +190,8 @@ spec:
         args:
         - --v=2
         - --logtostderr
-        - --probe=kubedns,127.0.0.1:10053,kubernetes.default.svc.cluster.local,5,A
-        - --probe=dnsmasq,127.0.0.1:53,kubernetes.default.svc.cluster.local,5,A
+        - --probe=kubedns,127.0.0.1:10053,kubernetes.default.svc.cluster.local,5,SRV
+        - --probe=dnsmasq,127.0.0.1:53,kubernetes.default.svc.cluster.local,5,SRV
         ports:
         - containerPort: 10054
           name: metrics
