@@ -168,7 +168,7 @@ spec:
         emptyDir: {}
       - name: heapster-ca
         configMap:
-          name: kubernetes-dashboard
+          name: kubernetes-dashboard-settings
           items:
           - key: ca.pem
             path: ca-certificates.crt
