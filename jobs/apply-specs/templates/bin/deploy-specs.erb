@@ -67,27 +67,27 @@ main() {
 
   bootstrap_addons = p('addons')
 
-  bootstrap_addons = bootstrap_addons.map do |v|
-      supported_addons.include?(v) or
-        raise "#{v} is a not supported addon"
-end %>
+  bootstrap_addons = bootstrap_addons.each do |v|
+    raise "#{v} is not a supported addon" unless supported_addons.include?(v)
+  end
+  %>
 
   apply_spec "kube-dns.yml"
   wait_for kube-dns
 
-  <% if initial_addons.include?('heapster') %>
+  <% if bootstrap_addons.include?('heapster') %>
     create_heapster_secrets
     apply_spec "heapster.yml"
     wait_for heapster
   <% end %>
 
-  <% if initial_addons.include?('influxdb') %>
+  <% if bootstrap_addons.include?('influxdb') %>
     create_influx_secrets
     apply_spec "influxdb.yml"
     wait_for monitoring-influxdb
   <% end %>
 
-  <% if initial_addons.include?('dashboard') %>
+  <% if bootstrap_addons.include?('dashboard') %>
     create_dashboard_secrets
     apply_spec "kubernetes-dashboard.yml"
     wait_for kubernetes-dashboard
