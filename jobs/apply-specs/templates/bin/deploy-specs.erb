@@ -63,7 +63,7 @@ create_dashboard_secrets() {
 main() {
 
 <%
-  supported_addons = ['heapster', 'influxdb', 'dashboard']
+  supported_addons = ['kubedns', 'heapster', 'kubernetes-dashboard']
 
   bootstrap_addons = p('addons')
 
@@ -72,22 +72,22 @@ main() {
   end
   %>
 
-  apply_spec "kube-dns.yml"
-  wait_for kube-dns
+  <% if bootstrap_addons.include?('kubedns') %>
+    apply_spec "kube-dns.yml"
+    wait_for kube-dns
+  <% end %>
 
   <% if bootstrap_addons.include?('heapster') %>
+    create_influx_secrets
+    apply_spec "influxdb.yml"
+    wait_for monitoring-influxdb
+
     create_heapster_secrets
     apply_spec "heapster.yml"
     wait_for heapster
   <% end %>
 
-  <% if bootstrap_addons.include?('influxdb') %>
-    create_influx_secrets
-    apply_spec "influxdb.yml"
-    wait_for monitoring-influxdb
-  <% end %>
-
-  <% if bootstrap_addons.include?('dashboard') %>
+  <% if bootstrap_addons.include?('kubernetes-dashboard') %>
     create_dashboard_secrets
     apply_spec "kubernetes-dashboard.yml"
     wait_for kubernetes-dashboard
