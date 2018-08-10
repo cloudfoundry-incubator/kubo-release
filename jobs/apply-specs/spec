@@ -43,6 +43,9 @@ properties:
     description: "Certificate and private key for Heapster"
   tls.influxdb:
     description: "Certificate and private key for InfluxDB"
+  addons:
+    description: A list of default add-ons bootstrapped in the Kubernetes cluster
+    default: ["kubedns", "heapster", "kubernetes-dashboard"]
   addons-spec:
     description: Spec of the addons to be deployed into the Kubernetes cluster
     default: ""

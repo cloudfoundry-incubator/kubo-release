@@ -151,4 +151,42 @@ describe 'apply-specs' do
       expect(rendered_deploy_specs).to_not include('apply_spec "storage-class-gce.yml"')
     end
   end
+
+  context 'when addons are configured' do
+    let(:default_properties) do
+      {
+        'addons' => ['heapster']
+      }
+    end
+
+    it 'deploys only those specified' do
+      rendered = rendered_deploy_specs
+      expect(rendered).to_not include('apply_spec "kube-dns.yml"')
+      expect(rendered).to include('apply_spec "influxdb.yml"')
+      expect(rendered).to include('apply_spec "heapster.yml"')
+      expect(rendered).to_not include('apply_spec "kubernetes-dashboard.yml"')
+    end
+  end
+
+  context 'when addons are not configured' do
+    it 'deploys all of them' do
+      rendered = rendered_deploy_specs
+      expect(rendered).to include('apply_spec "kube-dns.yml"')
+      expect(rendered).to include('apply_spec "influxdb.yml"')
+      expect(rendered).to include('apply_spec "heapster.yml"')
+      expect(rendered).to include('apply_spec "kubernetes-dashboard.yml"')
+    end
+  end
+
+  context 'when addons are misconfigured' do
+    let(:default_properties) do
+      {
+        'addons' => ['crap']
+      }
+    end
+
+    it 'deploys throws a templating error' do
+      expect {rendered_deploy_specs}.to raise_error(RuntimeError, "crap is not a supported addon")
+    end
+  end
 end
