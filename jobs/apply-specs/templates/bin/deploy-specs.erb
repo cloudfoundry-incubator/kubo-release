@@ -61,20 +61,37 @@ create_dashboard_secrets() {
 }
 
 main() {
-  apply_spec "kube-dns.yml"
-  wait_for kube-dns
 
-  create_heapster_secrets
-  apply_spec "heapster.yml"
-  wait_for heapster
+<%
+  supported_addons = ['kubedns', 'heapster', 'kubernetes-dashboard']
 
-  create_influx_secrets
-  apply_spec "influxdb.yml"
-  wait_for monitoring-influxdb
+  bootstrap_addons = p('addons')
 
-  create_dashboard_secrets
-  apply_spec "kubernetes-dashboard.yml"
-  wait_for kubernetes-dashboard
+  bootstrap_addons = bootstrap_addons.each do |v|
+    raise "#{v} is not a supported addon" unless supported_addons.include?(v)
+  end
+  %>
+
+  <% if bootstrap_addons.include?('kubedns') %>
+    apply_spec "kube-dns.yml"
+    wait_for kube-dns
+  <% end %>
+
+  <% if bootstrap_addons.include?('heapster') %>
+    create_heapster_secrets
+    apply_spec "heapster.yml"
+    wait_for heapster
+
+    create_influx_secrets
+    apply_spec "influxdb.yml"
+    wait_for monitoring-influxdb
+  <% end %>
+
+  <% if bootstrap_addons.include?('kubernetes-dashboard') %>
+    create_dashboard_secrets
+    apply_spec "kubernetes-dashboard.yml"
+    wait_for kubernetes-dashboard
+  <% end %>
 
   <% if_link('cloud-provider') do |cloud_provider| %>
     <% cloud_provider.if_p('cloud-provider.type') do |p| %>
