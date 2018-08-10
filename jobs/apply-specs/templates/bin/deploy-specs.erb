@@ -78,13 +78,13 @@ main() {
   <% end %>
 
   <% if bootstrap_addons.include?('heapster') %>
-    create_influx_secrets
-    apply_spec "influxdb.yml"
-    wait_for monitoring-influxdb
-
     create_heapster_secrets
     apply_spec "heapster.yml"
     wait_for heapster
+
+    create_influx_secrets
+    apply_spec "influxdb.yml"
+    wait_for monitoring-influxdb
   <% end %>
 
   <% if bootstrap_addons.include?('kubernetes-dashboard') %>
