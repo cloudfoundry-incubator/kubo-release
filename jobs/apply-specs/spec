@@ -17,12 +17,25 @@ templates:
   specs/influxdb.yml.erb: specs/influxdb.yml
   specs/kube-dns.yml.erb: specs/kube-dns.yml
   specs/kubernetes-dashboard.yml.erb: specs/kubernetes-dashboard.yml
+  specs/metrics-server/auth-delegator.yml: specs/metrics-server/auth-delegator.yml
+  specs/metrics-server/auth-reader.yml: specs/metrics-server/auth-reader.yml
+  specs/metrics-server/metrics-apiservice.yml: specs/metrics-server/metrics-apiservice.yml
+  specs/metrics-server/metrics-server-deployment.yml: specs/metrics-server/metrics-server-deployment.yml
+  specs/metrics-server/metrics-server-service.yml: specs/metrics-server/metrics-server-service.yml
+  specs/metrics-server/resource-reader.yml: specs/metrics-server/resource-reader.yml
+  specs/metrics-server/secrets.yml.erb: specs/metrics-server/secrets.yml
   specs/storage-class-gce.yml: specs/storage-class-gce.yml
 
 packages:
 - kubernetes
 
 properties:
+  addons:
+    description: A list of default add-ons bootstrapped in the Kubernetes cluster
+    default: ["kubedns", "metrics-server", "heapster", "kubernetes-dashboard"]
+  addons-spec:
+    description: Spec of the addons to be deployed into the Kubernetes cluster
+    default: ""
   admin-username:
     description: The admin username for the Kubernetes cluster
   admin-password:
@@ -36,19 +49,15 @@ properties:
     description: Timeout for system spec deployment
     default: 1200
   tls.kubernetes:
-    description: "Certificate and private key for the Kubernetes master"
+    description: "Certificate authority, certificate, and private key for the Kubernetes master"
   tls.kubernetes-dashboard:
-    description: "Certificate and private key for the Kubernetes dashboard"
+    description: "Certificate authority, certificate, and private key for the Kubernetes dashboard"
   tls.heapster:
-    description: "Certificate and private key for Heapster"
+    description: "Certificate authority, certificate, and private key for Heapster"
+  tls.metrics-server:
+    description: "Certificate authority, certificate, and private key for Metrics Server"
   tls.influxdb:
     description: "Certificate and private key for InfluxDB"
-  addons:
-    description: A list of default add-ons bootstrapped in the Kubernetes cluster
-    default: ["kubedns", "heapster", "kubernetes-dashboard"]
-  addons-spec:
-    description: Spec of the addons to be deployed into the Kubernetes cluster
-    default: ""
 
 consumes:
 - name: kube-apiserver

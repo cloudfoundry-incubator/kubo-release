@@ -63,7 +63,7 @@ create_dashboard_secrets() {
 main() {
 
 <%
-  supported_addons = ['kubedns', 'heapster', 'kubernetes-dashboard']
+  supported_addons = ['kubedns', 'metrics-server', 'heapster', 'kubernetes-dashboard']
 
   bootstrap_addons = p('addons')
 
@@ -75,6 +75,11 @@ main() {
   <% if bootstrap_addons.include?('kubedns') %>
     apply_spec "kube-dns.yml"
     wait_for kube-dns
+  <% end %>
+
+  <% if bootstrap_addons.include?('metrics-server') %>
+    apply_spec "metrics-server/"
+    wait_for metrics-server
   <% end %>
 
   <% if bootstrap_addons.include?('heapster') %>
