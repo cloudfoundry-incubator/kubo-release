@@ -15,6 +15,7 @@ main() {
             "k8s.gcr.io/k8s-dns-dnsmasq-nanny-amd64:1.14.10"
             "k8s.gcr.io/k8s-dns-sidecar-amd64:1.14.10"
             "k8s.gcr.io/kubernetes-dashboard-amd64:v1.8.3"
+            "gcr.io/google_containers/metrics-server-amd64:v0.2.1"
             "nginx:1.13-alpine"
         )
     fi
