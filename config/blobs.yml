@@ -42,10 +42,10 @@ container-images/k8s.gcr.io_kubernetes-dashboard-amd64:v1.8.3.tgz:
   size: 37223437
   object_id: a6b0aa27-cc63-4207-69dc-8c9a0cba5907
   sha: a6b943402efcd0a9cdbcdce40bf43f5e299c0156
-container-images/k8s.gcr.io_pause-amd64:3.1.tgz:
-  size: 315595
-  object_id: 3d40e826-441f-4fa8-5f46-5407e476e7e3
-  sha: 00a7361bccb801c10803089aab620cf8ba2c84ec
+container-images/k8s.gcr.io_pause:3.1.tgz:
+  size: 315592
+  object_id: f6ba8b90-9a60-454d-73e0-cab4b1c4a554
+  sha: d4095b6513b3d5ef770c44d651ae5601878906d8
 container-images/nginx:1.13-alpine.tgz:
   size: 7633579
   object_id: e23764f0-27cf-49fe-7cc3-04d3b90b2cca
