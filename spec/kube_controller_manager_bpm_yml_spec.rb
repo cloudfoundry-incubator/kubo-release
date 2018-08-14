@@ -5,6 +5,28 @@ require 'spec_helper'
 require 'yaml'
 
 describe 'kube_controller_manager' do
+  context 'horizontal pod autoscaling' do
+    it 'sets the properties' do
+      rendered_kube_controller_manager_bpm_yml = compiled_template(
+        'kube-controller-manager',
+        'config/bpm.yml',
+        'horizontal-pod-autoscaler' => {
+          'downscale-delay' => '2m0s',
+          'upscale-delay' => '2m0s',
+          'sync-period' => '40s',
+          'tolerance' => '0.2',
+          'use-rest-clients' => false
+        }
+      )
+
+      bpm_yml = YAML.safe_load(rendered_kube_controller_manager_bpm_yml)
+      expect(bpm_yml['processes'][0]['args']).to include('--horizontal-pod-autoscaler-downscale-delay=2m0s')
+      expect(bpm_yml['processes'][0]['args']).to include('--horizontal-pod-autoscaler-upscale-delay=2m0s')
+      expect(bpm_yml['processes'][0]['args']).to include('--horizontal-pod-autoscaler-sync-period=40s')
+      expect(bpm_yml['processes'][0]['args']).to include('--horizontal-pod-autoscaler-tolerance=0.2')
+      expect(bpm_yml['processes'][0]['args']).to include('--horizontal-pod-autoscaler-use-rest-clients=false')
+    end
+  end
   it 'has no http proxy when no proxy is defined' do
     rendered_kube_controller_manager_bpm_yml = compiled_template(
       'kube-controller-manager',
