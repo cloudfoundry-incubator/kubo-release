@@ -4,15 +4,6 @@ A [BOSH](http://bosh.io/) release for [Kubernetes](http://kubernetes.io).  Forme
 - **Slack**: #cfcr on https://slack.cloudfoundry.org
 - **Pivotal Tracker**: https://www.pivotaltracker.com/n/projects/2093412
 
-## Using CFCR Docs (DEPRECATED)
-
-We are no longer supporting the following documentation for deploying BOSH and CFCR
-* https://docs-cfcr.cfapps.io
-
-The [deploy_bosh](https://github.com/cloudfoundry-incubator/kubo-deployment/blob/master/bin/deploy_bosh)
-and [deploy_k8s](https://github.com/cloudfoundry-incubator/kubo-deployment/blob/master/bin/deploy_k8s)
-scripts in the `kubo-deployment` repository are now deprecated.
-
 ## Prerequisites
 - A BOSH Director configured with UAA, Credhub, and BOSH DNS.
 - [kubo-release](https://github.com/cloudfoundry-incubator/kubo-release)
@@ -71,3 +62,12 @@ scripts in the `kubo-deployment` repository are now deprecated.
 
 	./bin/set_kubeconfig <DIRECTOR_NAME>/cfcr https://<master_node_IP_address>:8443
 	```
+
+## Using CFCR Docs (DEPRECATED)
+
+We are no longer supporting the following documentation for deploying BOSH and CFCR
+* https://docs-cfcr.cfapps.io
+
+The [deploy_bosh](https://github.com/cloudfoundry-incubator/kubo-deployment/blob/master/bin/deploy_bosh)
+and [deploy_k8s](https://github.com/cloudfoundry-incubator/kubo-deployment/blob/master/bin/deploy_k8s)
+scripts in the `kubo-deployment` repository are now deprecated.
