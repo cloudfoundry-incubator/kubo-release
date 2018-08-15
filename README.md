@@ -16,12 +16,12 @@ A [BOSH](http://bosh.io/) release for [Kubernetes](http://kubernetes.io).  Forme
 
 ## Deploying CFCR
 
-#### Single Master
-1. Upload the appropriate stemcell to the director. You can determine the version and type of the stemcell with  
-	```
-	bosh int ~/workspace/kubo-deployment/manifests/cfcr.yml --path /stemcells
-	```
-1. Copy the link to the [latest version of kubo-release tarball](https://github.com/cloudfoundry-incubator/kubo-release/releases/latest) and upload it to the director  
+### Single Master
+1. Upload the [latest Xenial stemcell](https://bosh.io/stemcells/#ubuntu-xenial) to the director.
+1. Upload the latest kubo-release to the director. 
+    ```
+    bosh upload-release https://bosh.io/d/github.com/cloudfoundry-incubator/kubo-release
+    ```
 1. Deploy
 	```
 	cd kubo-deployment
@@ -45,6 +45,28 @@ A [BOSH](http://bosh.io/) release for [Kubernetes](http://kubernetes.io).  Forme
 	```
 	bosh -d cfcr run-errand smoke-tests
 	```
+
+### Three Masters
+1. Upload the [latest Xenial stemcell](https://bosh.io/stemcells/#ubuntu-xenial) to the director.
+1. Upload the latest kubo-release to the director. 
+    ```
+    bosh upload-release https://bosh.io/d/github.com/cloudfoundry-incubator/kubo-release
+    ```
+1. Deploy
+	```
+	cd kubo-deployment
+
+	bosh deploy -d cfcr manifests/cfcr.yml
+	```
+1. Add kubernetes system components
+	```
+	bosh -d cfcr run-errand apply-specs
+	```
+1. Run the following to confirm the cluster is operational
+	```
+	bosh -d cfcr run-errand smoke-tests
+	```
+
 ## Accessing the CFCR Cluster (kubectl)
 
 ### Without Load Balancer
