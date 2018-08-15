@@ -85,11 +85,15 @@ A [BOSH](http://bosh.io/) release for [Kubernetes](http://kubernetes.io).  Forme
 	./bin/set_kubeconfig <DIRECTOR_NAME>/cfcr https://<master_node_IP_address>:8443
 	```
 
-## Using CFCR Docs (DEPRECATED)
+## Deprecations
 
+### CFCR Docs
 We are no longer supporting the following documentation for deploying BOSH and CFCR
 * https://docs-cfcr.cfapps.io
 
 The [deploy_bosh](https://github.com/cloudfoundry-incubator/kubo-deployment/blob/master/bin/deploy_bosh)
 and [deploy_k8s](https://github.com/cloudfoundry-incubator/kubo-deployment/blob/master/bin/deploy_k8s)
 scripts in the `kubo-deployment` repository are now deprecated.
+
+### Heapster
+K8s 1.11 release kicked off the deprecation timeline for the Heapster component, see [here](https://github.com/kubernetes/heapster/blob/master/docs/deprecation.md) for more info. As a result, we're in the process of replacing Heapster with [Metrics Server](https://github.com/kubernetes-incubator/metrics-server) in the upcoming releases of kubo-release. 
