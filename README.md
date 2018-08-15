@@ -29,14 +29,6 @@ A [BOSH](http://bosh.io/) release for [Kubernetes](http://kubernetes.io).  Forme
 	bosh deploy -d cfcr manifests/cfcr.yml \
 	  -o manifests/ops-files/misc/single-master.yml
 	```
-	If you have a **BOSH Lite** environment, run
-	```
-	cd kubo-deployment
-
-	bosh deploy -d cfcr manifests/cfcr.yml \
-	  -o manifests/ops-files/misc/single-master.yml \
-	  -o manifests/ops-files/iaas/virtualbox/bosh-lite.yml
-	```
 1. Add kubernetes system components
 	```
 	bosh -d cfcr run-errand apply-specs
@@ -67,7 +59,14 @@ A [BOSH](http://bosh.io/) release for [Kubernetes](http://kubernetes.io).  Forme
 	bosh -d cfcr run-errand smoke-tests
 	```
 
-## Accessing the CFCR Cluster (kubectl)
+### BOSH Lite
+CFCR clusters on BOSH Lite are intended for development. We run the [deploy_cfcr_lite](https://github.com/cloudfoundry-incubator/kubo-deployment/blob/master/bin/deploy_cfcr_lite) script to provision a cluster with the latest stemcell and master of kubo-release.
+
+```
+cd kubo-deployment
+./bin/deploy_cfcr_lite
+```
+## Accessing the CFCR Cluster with kubectl
 
 ### Without Load Balancer
 1. Login to the Credhub Server that stores the cluster's credentials:
