@@ -25,6 +25,7 @@ kind: ServiceAccount
 metadata:
   labels:
     k8s-app: kubernetes-dashboard
+    addonmanager.kubernetes.io/mode: Reconcile
   name: kubernetes-dashboard
   namespace: kube-system
 
@@ -34,6 +35,9 @@ metadata:
 kind: Role
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
+  labels:
+    k8s-app: kubernetes-dashboard
+    addonmanager.kubernetes.io/mode: Reconcile
   name: kubernetes-dashboard-minimal
   namespace: kube-system
 rules:
@@ -44,7 +48,6 @@ rules:
   # Allow Dashboard to get, update and delete Dashboard exclusive secrets.
 - apiGroups: [""]
   resources: ["secrets"]
-  # Allow Dashboard to get, update and delete 'kubernetes-dashboard-key-holder' secret.
   resourceNames: ["kubernetes-dashboard-key-holder", "kubernetes-dashboard-certs"]
   verbs: ["get", "update", "delete"]
   # Allow Dashboard to get and update 'kubernetes-dashboard-settings' config map.
@@ -57,6 +60,10 @@ rules:
   resources: ["services"]
   resourceNames: ["heapster"]
   verbs: ["proxy"]
+- apiGroups: [""]
+  resources: ["services/proxy"]
+  resourceNames: ["heapster", "http:heapster:", "https:heapster:"]
+  verbs: ["get"]
 
 ---
 apiVersion: rbac.authorization.k8s.io/v1
@@ -64,6 +71,9 @@ kind: RoleBinding
 metadata:
   name: kubernetes-dashboard-minimal
   namespace: kube-system
+  labels:
+    k8s-app: kubernetes-dashboard
+    addonmanager.kubernetes.io/mode: Reconcile
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -79,9 +89,10 @@ subjects:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: kubernetes-dashboard
+  name: kubernetes-dashboard-settings
   namespace: kube-system
   labels:
+    k8s-app: kubernetes-dashboard
     addonmanager.kubernetes.io/mode: EnsureExists
 data:
   ca.pem: |
@@ -89,13 +100,15 @@ data:
 ---
 # ------------------- Dashboard Deployment ------------------- #
 
+apiVersion: apps/v1
 kind: Deployment
-apiVersion: apps/v1beta2
 metadata:
-  labels:
-    k8s-app: kubernetes-dashboard
   name: kubernetes-dashboard
   namespace: kube-system
+  labels:
+    k8s-app: kubernetes-dashboard
+    kubernetes.io/cluster-service: "true"
+    addonmanager.kubernetes.io/mode: Reconcile
 spec:
   replicas: 1
   revisionHistoryLimit: 10
@@ -106,10 +119,21 @@ spec:
     metadata:
       labels:
         k8s-app: kubernetes-dashboard
+      annotations:
+        scheduler.alpha.kubernetes.io/critical-pod: ''
+        seccomp.security.alpha.kubernetes.io/pod: 'docker/default'
     spec:
+      priorityClassName: system-cluster-critical
       containers:
       - name: kubernetes-dashboard
         image: k8s.gcr.io/kubernetes-dashboard-amd64:v1.8.3
+        resources:
+          limits:
+            cpu: 100m
+            memory: 300Mi
+          requests:
+            cpu: 50m
+            memory: 100Mi
         ports:
         - containerPort: 8443
           protocol: TCP
@@ -118,12 +142,9 @@ spec:
           - --default-cert-dir=/certs
           - --tls-cert-file=kubernetes-dashboard-cert
           - --tls-key-file=kubernetes-dashboard-key
-          # Uncomment the following line to manually specify Kubernetes API server Host
-          # If not specified, Dashboard will attempt to auto discover the API server and connect
-          # to it. Uncomment only if the default does not work.
-          # - --apiserver-host=http://my-address:port
-        volumeMounts:
+          # Uncomment the following line
           # Create on-disk volume to store exec logs
+        volumeMounts:
         - mountPath: /tmp
           name: tmp-volume
         - mountPath: /certs
@@ -147,11 +168,14 @@ spec:
         emptyDir: {}
       - name: heapster-ca
         configMap:
-          name: kubernetes-dashboard
+          name: kubernetes-dashboard-settings
           items:
           - key: ca.pem
             path: ca-certificates.crt
       serviceAccountName: kubernetes-dashboard
+      tolerations:
+      - key: "CriticalAddonsOnly"
+        operator: "Exists"
       # Comment the following tolerations if Dashboard must not be deployed on master
       # tolerations:
       # - key: node-role.kubernetes.io/master
@@ -160,17 +184,19 @@ spec:
 ---
 # ------------------- Dashboard Service ------------------- #
 
-kind: Service
 apiVersion: v1
+kind: Service
 metadata:
-  labels:
-    k8s-app: kubernetes-dashboard
   name: kubernetes-dashboard
   namespace: kube-system
+  labels:
+    k8s-app: kubernetes-dashboard
+    kubernetes.io/cluster-service: "true"
+    addonmanager.kubernetes.io/mode: Reconcile
 spec:
-  type: NodePort
+  selector:
+    k8s-app: kubernetes-dashboard
   ports:
   - port: 443
     targetPort: 8443
-  selector:
-    k8s-app: kubernetes-dashboard
+  type: NodePort
