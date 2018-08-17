@@ -18,6 +18,9 @@ conntrack/libnetfilter-conntrack3_1.0.4-1.deb:
   size: 45872
   object_id: 42a59368-8ae3-4502-480b-56ecd3f40f7a
   sha: 743b497bd6a6491a8cad11c04103e55c7a9cc93c
+container-images/coredns_coredns:1.2.0.tgz:
+  size: 9997810
+  sha: ea43efdef012ea8526df59cca411069ea357a269
 container-images/gcr.io_google_containers_metrics-server-amd64:v0.2.1.tgz:
   size: 11355068
   object_id: 4dbed951-4fca-4708-4853-69264963ffcd

@@ -40,6 +40,7 @@ describe 'apply-specs' do
   let(:link_spec) { {} }
   let(:default_properties) do
     {
+      'addons' => ["kube-dns", "metrics-server", "heapster", "kubernetes-dashboard"],
       'admin-password' => '1234'
     }
   end
@@ -58,6 +59,7 @@ describe 'apply-specs' do
   context 'when errand run timeout is re-configured' do
     let(:default_properties) do
       {
+        'addons' => ["kube-dns", "metrics-server", "heapster", "kubernetes-dashboard"],
         'admin-password' => '1234',
         'timeout-sec' => '1122'
       }
@@ -83,6 +85,7 @@ describe 'apply-specs' do
             'ca' => 'Heapster CA'
           }
         },
+        'addons' => ["kube-dns", "metrics-server", "heapster", "kubernetes-dashboard"],
         'admin-username' => 'meatloaf',
         'admin-password' => 'madagascar-TEST',
         'port' => '2034'
@@ -162,13 +165,6 @@ describe 'apply-specs' do
     it 'deploys only those specified' do
       rendered = rendered_deploy_specs
       expect(rendered).to_not match(/apply_spec (?!"heapster.yml"|"influxdb.yml")/)
-    end
-  end
-
-  context 'when addons are not configured' do
-    it 'deploys all of them' do
-      rendered = rendered_deploy_specs
-      expect(rendered).to_not match(/apply_spec (?!"heapster.yml"|"influxdb.yml"|"kube-dns.yml"|"kubernetes-dashboard.yml"|"metrics-server\/")/)
     end
   end
 
