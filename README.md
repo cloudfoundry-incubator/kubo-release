@@ -87,9 +87,9 @@ cd kubo-deployment
 	```
 	credhub login
 	```
-1. Find the IP address of one master node by running
+1. Find the director name by running
 	```
-	bosh -d cfcr vms
+	bosh env
 	```
 1. Configure the `kubeconfig` for your `kubectl` client:
 	```
