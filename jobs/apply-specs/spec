@@ -13,6 +13,7 @@ templates:
   config/kubernetes-dashboard/kubernetes-dashboard.crt.erb: config/kubernetes-dashboard/kubernetes-dashboard.crt
   config/kubernetes-dashboard/kubernetes-dashboard.key.erb: config/kubernetes-dashboard/kubernetes-dashboard.key
   specs/addon-spec.yml.erb: specs/addon-spec.yml
+  specs/coredns.yml.erb: specs/coredns.yml
   specs/heapster.yml.erb: specs/heapster.yml
   specs/influxdb.yml.erb: specs/influxdb.yml
   specs/kube-dns.yml.erb: specs/kube-dns.yml
@@ -32,7 +33,6 @@ packages:
 properties:
   addons:
     description: A list of default add-ons bootstrapped in the Kubernetes cluster
-    default: ["kubedns", "metrics-server", "heapster", "kubernetes-dashboard"]
   addons-spec:
     description: Spec of the addons to be deployed into the Kubernetes cluster
     default: ""

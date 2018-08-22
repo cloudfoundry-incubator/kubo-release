@@ -8,6 +8,7 @@ main() {
         images=$@
     else
         images=(
+            "coredns/coredns:1.2.0"
             "k8s.gcr.io/pause:3.1"
             "k8s.gcr.io/heapster-amd64:v1.5.4"
             "k8s.gcr.io/heapster-influxdb-amd64:v1.3.3"
