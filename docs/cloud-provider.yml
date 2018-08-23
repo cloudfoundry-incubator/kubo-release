@@ -32,7 +32,7 @@ $ cat ${deployment_name}-cc-vars.yml
 $ export KD="path to kubo-deployment repo"
 
 $ bosh update-config --name ${deployment_name} \
-   ${KD}/manifests/ops-files/iaas/gcp/use-vm-extensions-cloud-config.yml \
+   ${KD}/manifests/cloud-config/iaas/gcp/use-vm-extensions.yml \
    --type cloud \
    --vars-file ${deployment_name}-cc-vars.yml
 ```
@@ -86,7 +86,7 @@ $ cat ${deployment_name}-cc-vars.yml
 $ export KD="path to kubo-deployment repo"
 
 $ bosh update-config --name ${deployment_name} \
-   ${KD}/manifests/ops-files/iaas/aws/use-vm-extensions-cloud-config.yml \
+   ${KD}/manifests/cloud-config/iaas/aws/use-vm-extensions.yml \
    --type cloud \
    --vars-file ${deployment_name}-cc-vars.yml
 ```
