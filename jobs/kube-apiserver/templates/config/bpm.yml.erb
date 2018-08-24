@@ -87,13 +87,13 @@ processes:
   - --oidc-username-claim=<%= oidc_username_claim %>
   <% end %>
   <% if_p("oidc.username-prefix") do |oidc_username_prefix| %>
-  - --oidc-username-prefix=<%= oidc_username_prefix %>
+  - "--oidc-username-prefix=<%= oidc_username_prefix %>"
   <% end %>
   <% if_p("oidc.groups-claim") do |oidc_groups_claim| %>
   - --oidc-groups-claim=<%= oidc_groups_claim %>
   <% end %>
   <% if_p("oidc.groups-prefix") do |oidc_groups_prefix| %>
-  - --oidc-groups-prefix=<%= oidc_groups_prefix %>
+  - "--oidc-groups-prefix=<%= oidc_groups_prefix %>"
   <% end %>
   <% if_p("oidc.ca") do %>
   - --oidc-ca-file=/var/vcap/jobs/kube-apiserver/config/oidc-ca.pem
