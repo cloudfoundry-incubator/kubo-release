@@ -2,6 +2,10 @@ cni/cni-amd64-v0.5.2.tgz:
   size: 14085755
   object_id: 31cb39af-c33d-4df8-4d45-c02541806e39
   sha: 71f411080245aa14d0cc06f6824e8039607dd9e9
+cni/cni-plugins-amd64-v0.7.1.tgz:
+  size: 17108856
+  object_id: 50dc58eb-107d-483a-4e37-5a243ffed520
+  sha: fb29e20401d3e9598a1d8e8d7992970a36de5e05
 cni/util-linux_2.27.1-6ubuntu3_amd64.deb:
   size: 847730
   object_id: 27eb3ec3-220f-4a25-6c4f-ec219c37ac8d
