@@ -1,7 +1,3 @@
-cni/cni-amd64-v0.5.2.tgz:
-  size: 14085755
-  object_id: 31cb39af-c33d-4df8-4d45-c02541806e39
-  sha: 71f411080245aa14d0cc06f6824e8039607dd9e9
 cni/cni-plugins-amd64-v0.7.1.tgz:
   size: 17108856
   object_id: 50dc58eb-107d-483a-4e37-5a243ffed520
