@@ -20,6 +20,9 @@ A [BOSH](http://bosh.io/) release for [Kubernetes](http://kubernetes.io).  Forme
   - Note: the cloud-config properties can be customized by applying ops-files. See `manifests/ops-files` for some examples
   - If using loadbalancers then apply this `vm_extension` called `cfcr-master-loadbalancer` to the cloud-config to add the instances to your loadbalancers. See [BOSH documentation](https://bosh.io/docs/cloud-config/#vm-extensions) for information on how to configure loadbalancers.
 
+#### Hardware Requirements
+Kubernetes uses etcd as its datastore. The official infrastructure requirements and example configurations for the etcd cluster can be found [here](https://coreos.com/etcd/docs/latest/op-guide/hardware.html).
+
 ## Deploying CFCR
 
 ### Single Master
