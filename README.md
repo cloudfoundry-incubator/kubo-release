@@ -101,6 +101,11 @@ cd kubo-deployment
 	./bin/set_kubeconfig <DIRECTOR_NAME>/cfcr https://[DNS-NAME-OR-LOADBALANCER-ADDRESS]:8443
 	```
 
+## Monitoring
+
+Please, follow the recommendations in [etcd's documentation](https://github.com/etcd-io/etcd/blob/master/Documentation/metrics.md) for monitoring etcd
+metrics.
+
 ## Deprecations
 
 ### CFCR Docs
