@@ -12,6 +12,7 @@ provides:
   - cloud-provider.aws.access_key_id
   - cloud-provider.aws.secret_access_key
   - cloud-provider.gce.network-name
+  - cloud-provider.gce.subnetwork-name
   - cloud-provider.gce.project-id
   - cloud-provider.gce.service_key
   - cloud-provider.gce.worker-node-tag
@@ -53,9 +54,11 @@ properties:
 
   # GCE specific properties
   cloud-provider.gce.project-id:
-    description: Google Cloud project id. Required when cloud-provider.type is gce
+    description: Google Cloud project id. Required when cloud-provider.type is gce.
   cloud-provider.gce.network-name:
-    description: Google Cloud network name. Required when cloud-provider.type is gce
+    description: Google Cloud network name. Required when cloud-provider.type is gce.
+  cloud-provider.gce.subnetwork-name:
+    description: Google Cloud subnet name. Optional, used for internal load balancers.
   cloud-provider.gce.worker-node-tag:
     description: Google Cloud tag that identifies only worker nodes in this deployment.
   cloud-provider.gce.service_key:

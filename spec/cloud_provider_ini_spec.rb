@@ -43,6 +43,21 @@ describe 'cloud-provider-ini' do
         expect(rendered_template).not_to include('token-url=nil')
       end
     end
+
+    context 'if subnetwork-name is provider' do
+      let(:gce_config) do
+        {
+          'project-id' => 'fake-project-id',
+          'network-name' => 'fake-network-name',
+          'subnetwork-name' => 'real-subnetwork-name',
+          'worker-node-tag' => 'fake-worker-node-tag'
+        }
+      end
+
+      it 'is added to the cloud provider config' do
+        expect(rendered_template).to include('subnetwork-name=real-subnetwork-name')
+      end
+    end
   end
 
   context 'if cloud provider is vsphere' do
