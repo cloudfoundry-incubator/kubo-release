@@ -156,6 +156,7 @@ In each example it is assumed that you already have access to a BOSH Director.
     vcenter_dc: <vsphere.datacenter>
     vcenter_ds: <vsphere.datastore>
     vcenter_vms: <vsphere.vm_folder>
+    director_uuid: <bosh env | grep UUID>
     deployment_name: <deployment-name>
     ```
     See for mode details at [spec](../jobs/cloud-provider/spec) and at [vSphere
@@ -168,7 +169,7 @@ In each example it is assumed that you already have access to a BOSH Director.
     vm_extensions:
     - cloud_properties:
         vmx_options:
- 	 disk.enableUUID: "1"
+          disk.enableUUID: "1"
       name: enable-disk-UUID
     EOF
     ```
@@ -176,7 +177,7 @@ In each example it is assumed that you already have access to a BOSH Director.
     ```bash
     $ bosh update-config --name cfcr-cc-vm_extension-vsphere \
     cfcr-cc-vm_extension-vsphere.yml \
-    --type cloud \
+    --type cloud
     ```
 
 
@@ -184,9 +185,9 @@ In each example it is assumed that you already have access to a BOSH Director.
 
     ```bash
     cat << EOF > use-vm-extensions-vsphere-only.yml
-      - type: replace
-	path: /instance_groups/name=worker/vm_extensions?/-
-	value: enable-disk-UUID
+    - type: replace
+      path: /instance_groups/name=worker/vm_extensions?/-
+      value: enable-disk-UUID
     EOF
     ```
 
@@ -196,25 +197,26 @@ In each example it is assumed that you already have access to a BOSH Director.
     $ bosh deploy -d ${deployment_name} \
     ${KD}/manifests/cfcr.yml \
     -o ${KD}/manifests/ops-files/iaas/vsphere/cloud-provider.yml \
-    -o use-vm-extensions-vsphere-only.yml \ 
+    -o use-vm-extensions-vsphere-only.yml \
     -o ${KD}/manifests/ops-files/rename.yml \
-    -v deployment_name=${deployment_name}
+    -v deployment_name=${deployment_name} \
+    --vars-file ${deployment_name}-vars.yml
     ```
 
    **NOTE** if the vSphere api is behind proxy add the following ops file `-o add-proxy.yml`
     ```bash
     cat << EOF > add-proxy.yml
-      - type: replace
-	path: /instance_groups/name=master/jobs/name=kube-controller-manager/properties/http_proxy?
-	value: ((http_proxy))
+    - type: replace
+    path: /instance_groups/name=master/jobs/name=kube-controller-manager/properties/http_proxy?
+    value: ((http_proxy))
 
-      - type: replace
-	path: /instance_groups/name=master/jobs/name=kube-controller-manager/properties/https_proxy?
-	value: ((https_proxy))
+    - type: replace
+    path: /instance_groups/name=master/jobs/name=kube-controller-manager/properties/https_proxy?
+    value: ((https_proxy))
 
-      - type: replace
-	path: /instance_groups/name=master/jobs/name=kube-controller-manager/properties/no_proxy?
-	value: ((no_proxy))
+    - type: replace
+    path: /instance_groups/name=master/jobs/name=kube-controller-manager/properties/no_proxy?
+    value: ((no_proxy))
     EOF
     ```
 
