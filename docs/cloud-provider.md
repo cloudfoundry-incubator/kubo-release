@@ -28,12 +28,23 @@ In each example it is assumed that you already have access to a BOSH Director.
 
 1. Add a cloud config for the deployment with BOSH [generic configs](https://bosh.io/docs/configs/)
 
+    ```
+    cat <EOF > cc-gcp-vm_extensions.yml
+    vm_extensions:
+    - cloud_properties:
+        service_account: ((cfcr_master_service_account_address))
+      name: ((deployment_name))-master-cloud-properties
+    - cloud_properties:
+        service_account: ((cfcr_worker_service_account_address))
+      name: ((deployment_name))-worker-cloud-properties
+    EOF
+    ```
+
     ```bash
     $ export KD="path to kubo-deployment repo"
 
-    $ bosh update-config --name ${deployment_name} \
-    ${KD}/manifests/cloud-config/iaas/gcp/use-vm-extensions.yml \
-    --type cloud \
+    $ bosh update-config --name ${deployment_name}  --type cloud \
+    cc-gcp-vm_extensions.yml \
     --vars-file ${deployment_name}-cc-vars.yml
     ```
 
@@ -83,12 +94,23 @@ In each example it is assumed that you already have access to a BOSH Director.
 
 1. Add a cloud config for the deployment with BOSH [generic configs](https://bosh.io/docs/configs/)
 
+    ```
+    cat <EOF > cc-aws-vm_extensions.yml
+    vm_extensions:
+    - cloud_properties:
+        iam_instance_profile: ((master_iam_instance_profile))
+      name: ((deployment_name))-master-cloud-properties
+    - cloud_properties:
+        iam_instance_profile: ((worker_iam_instance_profile))
+      name: ((deployment_name))-worker-cloud-properties
+    EOF
+    ```
+
     ```bash
     $ export KD="path to kubo-deployment repo"
 
-    $ bosh update-config --name ${deployment_name} \
-    ${KD}/manifests/cloud-config/iaas/aws/use-vm-extensions.yml \ #TODO.  use-something is good name for config
-    --type cloud \
+    $ bosh update-config --name ${deployment_name}  --type cloud \
+    cc-aws-vm_extensions.yml \
     --vars-file ${deployment_name}-cc-vars.yml
     ```
 
@@ -117,12 +139,12 @@ In each example it is assumed that you already have access to a BOSH Director.
 
 ### vSphere
 
-   1. Create creds that will be used by the cloud-manager-controller in master nodes to talk to the vSphere api.
+1. Create creds that will be used by the cloud-manager-controller in master nodes to talk to the vSphere api.
     Check [vSphere Cloud Provider documentation](https://vmware.github.io/vsphere-storage-for-kubernetes/documentation/vcp-roles.html) for list of privileges.
 
     **Note**: vSphere workers do not need any credentials.
 
-   1. Save the information to connect to the vCenter into deployment vars file.
+1. Save the information to connect to the vCenter into deployment vars file.
 
     ```bash
     $ export deployment_name="your deployment name"
@@ -139,10 +161,10 @@ In each example it is assumed that you already have access to a BOSH Director.
     See for mode details at [spec](../jobs/cloud-provider/spec) and at [vSphere
     Cloud Provider documentation](https://vmware.github.io/vsphere-storage-for-kubernetes/documentation/overview.html)
 
-   1. Add (if does not exist) a vSphere specific cloud config  with BOSH [generic configs](https://bosh.io/docs/configs/)
+1. Add (if does not exist) a vSphere specific cloud config  with BOSH [generic configs](https://bosh.io/docs/configs/)
 
     ```bash
-    cat << EOF > cfcr-cc-vm_extension-vsphere.yml #TODO. Should we just keep it here?
+    cat << EOF > cfcr-cc-vm_extension-vsphere.yml
     vm_extensions:
     - cloud_properties:
         vmx_options:
@@ -158,10 +180,10 @@ In each example it is assumed that you already have access to a BOSH Director.
     ```
 
 
-   1. Deploy CFCR
+1. Deploy CFCR
 
     ```bash
-    cat << EOF > use-vm-extensions-vsphere-only.yml #TODO. should be merged that in ${KD}/manifests/ops-files/iaas/vsphere/cloud-provider.yml
+    cat << EOF > use-vm-extensions-vsphere-only.yml
       - type: replace
 	path: /instance_groups/name=worker/vm_extensions?/-
 	value: enable-disk-UUID
@@ -198,19 +220,19 @@ In each example it is assumed that you already have access to a BOSH Director.
 
    **NOTE** if everything is proxy add the following ops file `-o {KD}/kubo-deployment/manifests/ops-files/add-proxy.yml`
 
-   1. To test that the cloud provider has been configured correctly, create a simple a workload with persistence volume
+1. To test that the cloud provider has been configured correctly, create a simple a workload with persistence volume
 
-       ```bash
-       $ kubectl apply -f https://github.com/cloudfoundry-incubator/kubo-ci/raw/master/specs/storage-class-vsphere.yml
-       $ kubectl apply -f https://github.com/cloudfoundry-incubator/kubo-ci/raw/master/specs/persistent-volume-claim.yml
+    ```bash
+    $ kubectl apply -f https://github.com/cloudfoundry-incubator/kubo-ci/raw/master/specs/storage-class-vsphere.yml
+    $ kubectl apply -f https://github.com/cloudfoundry-incubator/kubo-ci/raw/master/specs/persistent-volume-claim.yml
 
-       # wait for the volume to be attached
-       $ kubectl describe pvc ci-claim
+    # wait for the volume to be attached
+    $ kubectl describe pvc ci-claim
 
-       # Type    Reason                 Age   From                         Message
-       #  ----    ------                 ----  ----                         -------
-       # Normal  ProvisioningSucceeded  31s   persistentvolume-controller  Successfully provisioned volume ...
-       #
-       ```
+    # Type    Reason                 Age   From                         Message
+    #  ----    ------                 ----  ----                         -------
+    # Normal  ProvisioningSucceeded  31s   persistentvolume-controller  Successfully provisioned volume ...
+    #
+    ```
 
    **NOTE** vSphere cloud-provider does not support service of type LoadBalancer
