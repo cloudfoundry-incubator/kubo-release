@@ -21,7 +21,7 @@
     admission_control_options.push("DenyEscalatingExec")
   end
 
-  if !p('allow_privileged')
+  if p('security-context-deny')
     admission_control_options.push("SecurityContextDeny")
   end
 %>
