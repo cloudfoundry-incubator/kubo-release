@@ -79,38 +79,6 @@ describe 'kube-apiserver' do
     expect(bpm_yml['processes'][0]['args']).to include('--audit-policy-file=/var/vcap/jobs/kube-apiserver/config/audit_policy.yml')
   end
 
-  it 'has no security context deny when privileged containers are enabled and deny is disabled' do
-    rendered_kube_apiserver_bpm_yml = compiled_template(
-      'kube-apiserver',
-      'config/bpm.yml',
-      {
-        'allow_privileged' => true,
-        'disable_deny_escalating_exec' => true
-      },
-      link_spec
-    )
-
-    bpm_yml = YAML.safe_load(rendered_kube_apiserver_bpm_yml)
-    expect(bpm_yml['processes'][0]['args']).to include(
-      '--enable-admission-plugins=LimitRanger,' \
-      'DefaultTolerationSeconds,ValidatingAdmissionWebhook,' \
-      'NamespaceLifecycle,ResourceQuota,' \
-      'ServiceAccount,DefaultStorageClass,MutatingAdmissionWebhook,DenyEscalatingExec'
-    )
-  end
-
-  it 'denies security context when privileged containers are not enabled' do
-    rendered_kube_apiserver_bpm_yml = compiled_template(
-      'kube-apiserver',
-      'config/bpm.yml',
-      {},
-      link_spec
-    )
-
-    bpm_yml = YAML.safe_load(rendered_kube_apiserver_bpm_yml)
-    expect(bpm_yml['processes'][0]['args']).to include(match(/--enable-admission-plugins=.*,SecurityContextDeny/))
-  end
-
   it 'has no http proxy when no proxy is defined' do
     rendered_kube_apiserver_bpm_yml = compiled_template(
       'kube-apiserver',
