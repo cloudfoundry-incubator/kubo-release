@@ -25,15 +25,17 @@ Kubernetes uses etcd as its datastore. The official infrastructure requirements 
 
 ## Deploying CFCR
 
-### Single Master
-
 1. Upload the [latest Xenial stemcell](https://bosh.io/stemcells/#ubuntu-xenial) to the director.
 1. Upload the latest kubo-release to the director.
     ```
     bosh upload-release https://bosh.io/d/github.com/cloudfoundry-incubator/kubo-release
     ```
+
 1. Deploy
-	```
+
+    ##### Option 1. Single Master
+
+	```bash
 	cd kubo-deployment
 
 	bosh deploy -d cfcr manifests/cfcr.yml \
@@ -41,24 +43,10 @@ Kubernetes uses etcd as its datastore. The official infrastructure requirements 
 	  -o manifests/ops-files/add-hostname-to-master-certificate.yml \
 	  -v api-hostname=[DNS-NAME]
 	```
-1. Add kubernetes system components
-	```
-	bosh -d cfcr run-errand apply-specs
-	```
-1. Run the following to confirm the cluster is operational
-	```
-	bosh -d cfcr run-errand smoke-tests
-	```
 
-### Three Masters
+    ##### Option 2. Three Masters
 
-1. Upload the [latest Xenial stemcell](https://bosh.io/stemcells/#ubuntu-xenial) to the director.
-1. Upload the latest kubo-release to the director.
-    ```
-    bosh upload-release https://bosh.io/d/github.com/cloudfoundry-incubator/kubo-release
-    ```
-1. Deploy
-	```
+	```bash
 	cd kubo-deployment
 
 	bosh deploy -d cfcr manifests/cfcr.yml \
@@ -67,15 +55,21 @@ Kubernetes uses etcd as its datastore. The official infrastructure requirements 
 	  -v api-hostname=[LOADBALANCER-ADDRESS]
 	```
 
-  *Note: Loadbalancer address should be the external address (hostname or IP) of the loadbalancer you have configured.*
-1. Add kubernetes system components
-	```
-	bosh -d cfcr run-errand apply-specs
-	```
+	*Note: Loadbalancer address should be the external address (hostname or IP) of the loadbalancer you have configured.*
+
+   Check additional configurations, such as setting Kubernetes cloud provider, in [docs](./docs/cloud-provider.md).
+
+1. Add Kubernetes system components
+
+    ```bash
+    bosh -d cfcr run-errand apply-specs
+    ```
+
 1. Run the following to confirm the cluster is operational
-	```
-	bosh -d cfcr run-errand smoke-tests
-	```
+
+    ```bash
+    bosh -d cfcr run-errand smoke-tests
+    ```
 
 ### BOSH Lite
 CFCR clusters on BOSH Lite are intended for development. We run the [deploy_cfcr_lite](https://github.com/cloudfoundry-incubator/kubo-deployment/blob/master/bin/deploy_cfcr_lite) script to provision a cluster with the latest stemcell and master of kubo-release.
@@ -103,7 +97,7 @@ cd kubo-deployment
 
 ## Monitoring
 
-Please, follow the recommendations in [etcd's documentation](https://github.com/etcd-io/etcd/blob/master/Documentation/metrics.md) for monitoring etcd
+Follow the recommendations in [etcd's documentation](https://github.com/etcd-io/etcd/blob/master/Documentation/metrics.md) for monitoring etcd
 metrics.
 
 ## Deprecations
