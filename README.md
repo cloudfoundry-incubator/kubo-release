@@ -5,7 +5,7 @@ A [BOSH](http://bosh.io/) release for [Kubernetes](http://kubernetes.io).  Forme
 - **Pivotal Tracker**: https://www.pivotaltracker.com/n/projects/2093412
 
 ## Prerequisites
-- A BOSH Director configured with UAA, Credhub, and BOSH DNS.
+- A BOSH Director configured with UAA, Credhub, and BOSH DNS. We recommend using [BOSH Bootloader](https://github.com/cloudfoundry/bosh-bootloader) for this.
 - [kubo-release](https://github.com/cloudfoundry-incubator/kubo-release)
 - [kubo-deployment](https://github.com/cloudfoundry-incubator/kubo-deployment)
 - Accessing the master:
