@@ -152,15 +152,17 @@ In each example it is assumed that you already have access to a BOSH Director.
     $ cat ${deployment_name}-vars.yml
     vcenter_master_user: <user>
     vcenter_master_password: <password>
-    vcenter_ip: <vspere.server>
+    vcenter_ip: <vsphere.server>
     vcenter_dc: <vsphere.datacenter>
     vcenter_ds: <vsphere.datastore>
     vcenter_vms: <vsphere.vm_folder>
-    director_uuid: <bosh env | grep UUID>
+    director_uuid: <BOSH director UUID>
     deployment_name: <deployment-name>
     ```
+
     See for mode details at [spec](../jobs/cloud-provider/spec) and at [vSphere
     Cloud Provider documentation](https://vmware.github.io/vsphere-storage-for-kubernetes/documentation/overview.html)
+    You can get the BOSH director UUID from the output of `bosh env` command.
 
 1. Add (if does not exist) a vSphere specific cloud config  with BOSH [generic configs](https://bosh.io/docs/configs/)
 
@@ -203,7 +205,7 @@ In each example it is assumed that you already have access to a BOSH Director.
     --vars-file ${deployment_name}-vars.yml
     ```
 
-   **NOTE** if the vSphere api is behind proxy add the following ops file `-o add-proxy.yml`
+   **NOTE:** If the *vSphere api* is behind a proxy create the following ops file and add it when deploying with `-o add-proxy.yml`
     ```bash
     cat << EOF > add-proxy.yml
     - type: replace
@@ -220,7 +222,8 @@ In each example it is assumed that you already have access to a BOSH Director.
     EOF
     ```
 
-   **NOTE** if everything is proxy add the following ops file `-o {KD}/kubo-deployment/manifests/ops-files/add-proxy.yml`
+   **NOTE:** If *everything* is behind a proxy add the following ops file when
+   deploying with `-o {KD}/kubo-deployment/manifests/ops-files/add-proxy.yml`
 
 1. To test that the cloud provider has been configured correctly, create a simple a workload with persistence volume
 
@@ -237,4 +240,49 @@ In each example it is assumed that you already have access to a BOSH Director.
     #
     ```
 
-   **NOTE** vSphere cloud-provider does not support service of type LoadBalancer
+   **NOTE:** vSphere cloud-provider does not support service of type LoadBalancer
+
+### Openstack
+
+1. Save the information to connect to the OpenStack into deployment vars file.
+
+    ```bash
+    $ export deployment_name="your deployment name"
+
+    $ cat ${deployment_name}-vars.yml
+    auth_url: < authentication URL >
+    openstack_domain: < domain >
+    openstack_project_id: < tenant id >
+    region: < region >
+    openstack_username: < admin username >
+    openstack_password: < admin user password >
+    ```
+
+    See for mode details at [spec](../jobs/cloud-provider/spec).
+1. Deploy CFCR
+
+   ```bash
+   $ export KD="path to kubo-deployment repo"
+
+   $ bosh deploy -d ${deployment_name} \
+   ${KD}/manifests/cfcr.yml \
+   -o ${KD}/manifests/ops-files/iaas/openstack/cloud-provider.yml \
+   -o ${KD}/manifests/ops-files/rename.yml \
+   -v deployment_name=${deployment_name} \
+   --vars-file ${deployment_name}-vars.yml
+   ```
+
+1. To test that the cloud provider has been configured correctly, create a simple a workload with persistence volume
+
+    ```bash
+    $ kubectl apply -f https://github.com/cloudfoundry-incubator/kubo-ci/raw/master/specs/storage-class-openstack.yml
+    $ kubectl apply -f https://github.com/cloudfoundry-incubator/kubo-ci/raw/master/specs/persistent-volume-claim.yml
+
+    # wait for the volume to be attached
+    $ kubectl describe pvc ci-claim
+
+    # Type    Reason                 Age   From                         Message
+    #  ----    ------                 ----  ----                         -------
+    # Normal  ProvisioningSucceeded  31s   persistentvolume-controller  Successfully provisioned volume ...
+    #
+    ```
