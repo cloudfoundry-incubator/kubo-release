@@ -89,13 +89,14 @@ In each example it is assumed that you already have access to a BOSH Director.
     master_iam_instance_profile: <master-iam-profile-name>
     worker_iam_instance_profile: <worker-iam-profile-name>
     cfcr_master_target_pool: <list-of-elbs-for-master>
+    kubernetes_cluster_tag: <tag-for-k8s-cluster-components>
     deployment_name: <deployment-name>
     ```
 
 1. Add a cloud config for the deployment with BOSH [generic configs](https://bosh.io/docs/configs/)
 
-    ```
-    cat <EOF > cc-aws-vm_extensions.yml
+    ```bash
+    cat << EOF > cc-aws-vm_extensions.yml
     vm_extensions:
     - cloud_properties:
         iam_instance_profile: ((master_iam_instance_profile))
@@ -121,6 +122,7 @@ In each example it is assumed that you already have access to a BOSH Director.
     ${KD}/manifests/cfcr.yml \
     -o ${KD}/manifests/ops-files/iaas/aws/cloud-provider.yml \
     -o ${KD}/manifests/ops-files/use-vm-extensions.yml \
+    -o ${KD}/manifests/ops-files/iaas/aws/lb.yml \
     -o ${KD}/manifests/ops-files/rename.yml \
     -v deployment_name=${deployment_name}
     ```
