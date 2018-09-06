@@ -42,6 +42,23 @@ If the changes are for BOSH templating logic then please consider adding unit te
 
 Execute command `./scripts/run_tests` to run unit tests for kubo-release.  These includes tests for [route-sync](src/route-sync) and the [BOSH templating tests](spec/).  Please run these tests before submitting a pull request.
 
+### Integration tests
+
+Integration tests are located in [kubo-ci](https://github.com/cloudfoundry-incubator/kubo-ci).
+
+1. Install [Go](https://golang.org/doc/install)
+1. Install [Ginkgo](https://onsi.github.io/ginkgo/)
+1. Clone kubo-ci repository
+1. Point kubeconfig to the cluster under test.
+1. Go inside kubo-ci repository.
+1. Run integration tests:
+
+  ```
+  GOPATH=$PWD ginkgo -skipPackage addons -keepGoing -r src/tests/integration_tests
+  ```
+  
+**Note** Tests will create load balancers and persistent disks. Some tests require direct access to the kubelet nodes, but most of them just require access to Kubernetes API.
+
 ## Optional tools to deploy
 
 ### Kubo-deployment
