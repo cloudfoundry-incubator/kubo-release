@@ -27,26 +27,14 @@ In each example it is assumed that you already have access to a BOSH Director.
     ```
 
 1. Add a cloud config for the deployment with BOSH [generic configs](https://bosh.io/docs/configs/)
+   ```bash
+   $ export KD="path to kubo-deployment repo"
 
-    ```
-    cat <EOF > cc-gcp-vm_extensions.yml
-    vm_extensions:
-    - cloud_properties:
-        service_account: ((cfcr_master_service_account_address))
-      name: ((deployment_name))-master-cloud-properties
-    - cloud_properties:
-        service_account: ((cfcr_worker_service_account_address))
-      name: ((deployment_name))-worker-cloud-properties
-    EOF
-    ```
-
-    ```bash
-    $ export KD="path to kubo-deployment repo"
-
-    $ bosh update-config --name ${deployment_name}  --type cloud \
-    cc-gcp-vm_extensions.yml \
-    --vars-file ${deployment_name}-cc-vars.yml
-    ```
+   $ bosh update-config --name ${deployment_name} \
+      ${KD}/manifests/cloud-config/iaas/gcp/use-vm-extensions.yml \
+      --type cloud \
+      --vars-file ${deployment_name}-cc-vars.yml
+   ```
 
 1. Deploy CFCR
 
@@ -94,24 +82,12 @@ In each example it is assumed that you already have access to a BOSH Director.
     ```
 
 1. Add a cloud config for the deployment with BOSH [generic configs](https://bosh.io/docs/configs/)
-
-    ```bash
-    cat << EOF > cc-aws-vm_extensions.yml
-    vm_extensions:
-    - cloud_properties:
-        iam_instance_profile: ((master_iam_instance_profile))
-      name: ((deployment_name))-master-cloud-properties
-    - cloud_properties:
-        iam_instance_profile: ((worker_iam_instance_profile))
-      name: ((deployment_name))-worker-cloud-properties
-    EOF
-    ```
-
     ```bash
     $ export KD="path to kubo-deployment repo"
 
-    $ bosh update-config --name ${deployment_name}  --type cloud \
-    cc-aws-vm_extensions.yml \
+    $ bosh update-config --name ${deployment_name} \
+    ${KD}/manifests/cloud-config/iaas/aws/use-vm-extensions.yml \
+    --type cloud \
     --vars-file ${deployment_name}-cc-vars.yml
     ```
 
