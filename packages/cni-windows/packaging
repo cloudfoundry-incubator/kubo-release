@@ -1,0 +1,8 @@
+. ./exiter.ps1
+
+$ErrorActionPreference = "Stop";
+trap { $host.SetShouldExit(1) }
+
+New-Item -Path "${env:BOSH_INSTALL_TARGET}" -Name "bin" -ItemType "directory"
+
+Copy-Item "cni-windows/*" "${env:BOSH_INSTALL_TARGET}/bin"

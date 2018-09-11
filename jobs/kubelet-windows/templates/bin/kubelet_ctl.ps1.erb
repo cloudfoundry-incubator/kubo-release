@@ -1,0 +1,27 @@
+$ErrorActionPreference = "Stop";
+trap { $host.SetShouldExit(1) }
+
+
+C:\var\vcap\packages\kubernetes-windows\bin\kubelet.exe `
+    --resolv-conf="" `
+    --image-pull-progress-deadline=20m `
+    --cgroups-per-qos=false `
+    --enforce-node-allocatable="" `
+    --allow-privileged=<%= p('allow_privileged') %> `
+    --cni-bin-dir=/var/vcap/jobs/kubelet-windows/packages/cni-windows/bin `
+    --config=/var/vcap/jobs/kubelet-windows/config/kubeletconfig.yml `
+    --container-runtime=docker `
+    --hostname-override=<%= spec.ip %> `
+    --keep-terminated-pod-volumes=false `
+    --kubeconfig=/var/vcap/jobs/kubelet-windows/config/kubeconfig `
+    --network-plugin=cni `
+    --pod-infra-container-image=kubeletwin/pause `
+    --v=<%=p('logging-level') %> `
+    <% if_p('kube-reserved') do |kube_reserved| %>--kube-reserved="<%= kube_reserved %>"<% end %> `
+    <% if_p('system-reserved') do |system_reserved| %>--system-reserved="<%= system_reserved %>"<% end %> `
+    <% if_p('eviction-hard') do |eviction_hard| %>--eviction-hard="<%= eviction_hard %>"<% end %>
+
+
+#    --cluster-dns=$KubeDnsServiceIp --cluster-domain=cluster.local `
+#    --hairpin-mode=promiscuous-bridge `
+#    --cni-conf-dir "c:\k\cni\config"

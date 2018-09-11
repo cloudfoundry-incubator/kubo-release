@@ -31,6 +31,8 @@ spec:
         task: monitoring
         k8s-app: heapster
     spec:
+      nodeSelector:
+        beta.kubernetes.io/os: linux
       containers:
       - name: heapster
         image: k8s.gcr.io/heapster-amd64:v1.5.4

@@ -84,6 +84,8 @@ spec:
       labels:
         k8s-app: kube-dns
     spec:
+      nodeSelector:
+        beta.kubernetes.io/os: linux
       serviceAccountName: coredns
       tolerations:
         - key: "CriticalAddonsOnly"

@@ -1,0 +1,8 @@
+---
+name: flanneld-windows
+
+dependencies:
+
+files:
+- flannel-windows/flanneld.exe
+- exiter.ps1

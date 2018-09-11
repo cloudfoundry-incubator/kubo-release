@@ -72,7 +72,7 @@ EOL
     --cert-file /var/vcap/jobs/flanneld/config/etcd-client.crt \
     --key-file /var/vcap/jobs/flanneld/config/etcd-client.key \
     --ca-file /var/vcap/jobs/flanneld/config/etcd-ca.crt \
-    set /coreos.com/network/config '{"Network":"<%= p('pod-network-cidr') %>","Backend":{"Type":"vxlan"}}'
+    set /coreos.com/network/config '{"Network":"<%= p('pod-network-cidr') %>","Backend":{"Type":"vxlan", "VNI": 4096, "Port": 4789}}'
 
   flanneld -etcd-endpoints=<%= etcd_endpoints %> \
     --ip-masq \
