@@ -28,7 +28,7 @@ create_heapster_secrets() {
   ${kubectl} create secret generic ${secret_name} \
   --from-file=heapster-cert=${config_dir}/heapster/heapster.crt \
   --from-file=heapster-key=${config_dir}/heapster/heapster.key \
-  --from-file=ca=${config_dir}/ca.pem \
+  --from-file=ca=${config_dir}/heapster/ca.pem \
   -n ${namespace}
 }
 
@@ -61,20 +61,47 @@ create_dashboard_secrets() {
 }
 
 main() {
-  apply_spec "kube-dns.yml"
-  wait_for kube-dns
 
-  create_heapster_secrets
-  apply_spec "heapster.yml"
-  wait_for heapster
+<%
+  supported_addons = ['kube-dns', 'coredns', 'metrics-server', 'heapster', 'kubernetes-dashboard']
 
-  create_influx_secrets
-  apply_spec "influxdb.yml"
-  wait_for monitoring-influxdb
+  bootstrap_addons = p('addons')
 
-  create_dashboard_secrets
-  apply_spec "kubernetes-dashboard.yml"
-  wait_for kubernetes-dashboard
+  bootstrap_addons = bootstrap_addons.each do |v|
+    raise "#{v} is not a supported addon" unless supported_addons.include?(v)
+  end
+  %>
+
+  <% if bootstrap_addons.include?('kube-dns') %>
+    apply_spec "kube-dns.yml"
+    wait_for kube-dns
+  <% end %>
+
+  <% if bootstrap_addons.include?('coredns') %>
+    apply_spec "coredns.yml"
+    wait_for coredns
+  <% end %>
+
+  <% if bootstrap_addons.include?('metrics-server') %>
+    apply_spec "metrics-server/"
+    wait_for metrics-server
+  <% end %>
+
+  <% if bootstrap_addons.include?('heapster') %>
+    create_heapster_secrets
+    apply_spec "heapster.yml"
+    wait_for heapster
+
+    create_influx_secrets
+    apply_spec "influxdb.yml"
+    wait_for monitoring-influxdb
+  <% end %>
+
+  <% if bootstrap_addons.include?('kubernetes-dashboard') %>
+    create_dashboard_secrets
+    apply_spec "kubernetes-dashboard.yml"
+    wait_for kubernetes-dashboard
+  <% end %>
 
   <% if_link('cloud-provider') do |cloud_provider| %>
     <% cloud_provider.if_p('cloud-provider.type') do |p| %>

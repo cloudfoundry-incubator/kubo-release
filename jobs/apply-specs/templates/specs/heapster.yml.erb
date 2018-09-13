@@ -17,6 +17,50 @@ subjects:
   name: heapster
   namespace: kube-system
 ---
+
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: heapster
+  namespace: kube-system
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        task: monitoring
+        k8s-app: heapster
+    spec:
+      containers:
+      - name: heapster
+        image: k8s.gcr.io/heapster-amd64:v1.5.4
+        imagePullPolicy: IfNotPresent
+        command:
+        - /heapster
+        - --source=kubernetes:https://master.cfcr.internal:8443?useServiceAccount=true&kubeletHttps=true&kubeletPort=10250&insecure=true
+        - --sink=influxdb:https://monitoring-influxdb:8086?secure=true
+        - --tls_cert=/certs/heapster-cert
+        - --tls_key=/certs/heapster-key
+        - --vmodule=*=5
+        volumeMounts:
+        - mountPath: /certs
+          name: heapster-certs
+          readOnly: true
+        - mountPath: /etc/ssl/certs/
+          name: heapster-ca
+          readOnly: true
+      volumes:
+      - name: heapster-certs
+        secret:
+          secretName: heapster-certs
+      - name: heapster-ca
+        secret:
+          secretName: heapster-certs
+          items:
+          - key: ca
+            path: ca-certificates.crt
+      serviceAccountName: heapster
+---
 kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1beta1
 metadata:
@@ -38,50 +82,6 @@ subjects:
 - kind: ServiceAccount
   name: heapster
   namespace: kube-system
----
-
-apiVersion: extensions/v1beta1
-kind: Deployment
-metadata:
-  name: heapster
-  namespace: kube-system
-spec:
-  replicas: 1
-  template:
-    metadata:
-      labels:
-        task: monitoring
-        k8s-app: heapster
-    spec:
-      containers:
-      - name: heapster
-        image: k8s.gcr.io/heapster-amd64:v1.5.3
-        imagePullPolicy: IfNotPresent
-        command:
-        - /heapster
-        - --source=kubernetes:https://master.cfcr.internal:8443?useServiceAccount=true&kubeletHttps=true&kubeletPort=10250
-        - --sink=influxdb:https://monitoring-influxdb:8086?secure=true
-        - --tls_cert=/certs/heapster-cert
-        - --tls_key=/certs/heapster-key
-        - --vmodule=*=5
-        volumeMounts:
-        - mountPath: /certs
-          name: heapster-certs
-          readOnly: true
-        - mountPath: /etc/ssl/certs/
-          name: kubo-ca
-          readOnly: true
-      volumes:
-      - name: heapster-certs
-        secret:
-          secretName: heapster-certs
-      - name: kubo-ca
-        secret:
-          secretName: heapster-certs
-          items:
-          - key: ca
-            path: ca-certificates.crt
-      serviceAccountName: heapster
 ---
 
 apiVersion: v1

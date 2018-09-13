@@ -13,11 +13,12 @@
       if provider_type == 'gce'
         cloud_config['project-id'] = cloud_provider.p('cloud-provider.gce.project-id')
         cloud_config['network-name'] = cloud_provider.p('cloud-provider.gce.network-name')
+        cloud_provider.if_p('cloud-provider.gce.subnetwork-name') { |path| cloud_config['subnetwork-name'] = path }
         cloud_provider.if_p('cloud-provider.gce.service_key') { cloud_config['token-url'] = 'nil' }
         cloud_provider.if_p('cloud-provider.gce.worker-node-tag') { |tag| cloud_config['node-tags'] = tag  }
         cloud_config['multizone'] = true
       elsif provider_type == 'vsphere' && spec['name'].include?("master")
-        cloud_config['user'] = cloud_provider.p('cloud-provider.vsphere.user').gsub('\\','\\\\\\')
+        cloud_config['user'] = '"' + cloud_provider.p('cloud-provider.vsphere.user').gsub('\\','\\\\\\') + '"'
 
         password = ""
         cloud_provider.p('cloud-provider.vsphere.password').split("").each do |i|
@@ -33,7 +34,7 @@
         cloud_config['port'] = cloud_provider.p('cloud-provider.vsphere.port')
         cloud_config['insecure-flag'] = cloud_provider.p('cloud-provider.vsphere.insecure-flag')
         cloud_config['datacenter'] = cloud_provider.p('cloud-provider.vsphere.datacenter')
-        cloud_config['datastore'] = cloud_provider.p('cloud-provider.vsphere.datastore')
+        cloud_provider.if_p('cloud-provider.vsphere.datastore') { |datastore| cloud_config['datastore'] = datastore }
         cloud_config['working-dir'] = cloud_provider.p('cloud-provider.vsphere.working-dir')
         cloud_config['vm-uuid'] = cloud_provider.p('cloud-provider.vsphere.vm-uuid', '')
 

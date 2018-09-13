@@ -7,15 +7,28 @@ processes:
   - --cloud-provider=<%= cloud_provider.p('cloud-provider.type') %>
   - --cloud-config=/var/vcap/jobs/kube-controller-manager/config/cloud-provider.ini
   <%- end -%>
-  - --cluster-name=kubernetes
+  - --cluster-name=<%=p('cluster-name') %>
   - --cluster-signing-cert-file=/var/vcap/jobs/kube-controller-manager/config/cluster-signing-ca.pem
   - --cluster-signing-key-file=/var/vcap/jobs/kube-controller-manager/config/cluster-signing-key.pem
-  - --feature-gates=RotateKubeletServerCertificate=true
+  <%- if_p('horizontal-pod-autoscaler.downscale-delay') do |delay| -%>
+  - --horizontal-pod-autoscaler-downscale-delay=<%= delay %>
+  <%- end -%>
+  <%- if_p('horizontal-pod-autoscaler.sync-period') do |sync| -%>
+  - --horizontal-pod-autoscaler-sync-period=<%= sync %>
+  <%- end -%>
+  <%- if_p('horizontal-pod-autoscaler.tolerance') do |tolerance| -%>
+  - --horizontal-pod-autoscaler-tolerance=<%= tolerance %>
+  <%- end -%>
+  <%- if_p('horizontal-pod-autoscaler.upscale-delay') do |delay| -%>
+  - --horizontal-pod-autoscaler-upscale-delay=<%= delay %>
+  <%- end -%>
+  <%- if_p('horizontal-pod-autoscaler.use-rest-clients') do |client| -%>
+  - --horizontal-pod-autoscaler-use-rest-clients=<%= client %>
+  <%- end -%>
   - --kubeconfig=/var/vcap/jobs/kube-controller-manager/config/kubeconfig
   - --leader-elect
   - --root-ca-file=/var/vcap/jobs/kube-controller-manager/config/ca.pem
   - --service-account-private-key-file=/var/vcap/jobs/kube-controller-manager/config/service-account-private-key.pem
-  - --service-cluster-ip-range=10.100.200.0/24
   - --terminated-pod-gc-threshold=100
   - --use-service-account-credentials
   - --v=<%=p('logging-level') %>

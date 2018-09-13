@@ -8,13 +8,15 @@ main() {
         images=$@
     else
         images=(
-            "k8s.gcr.io/pause-amd64:3.1"
-            "k8s.gcr.io/heapster-amd64:v1.5.3"
+            "coredns/coredns:1.2.0"
+            "k8s.gcr.io/pause:3.1"
+            "k8s.gcr.io/heapster-amd64:v1.5.4"
             "k8s.gcr.io/heapster-influxdb-amd64:v1.3.3"
             "k8s.gcr.io/k8s-dns-kube-dns-amd64:1.14.10"
             "k8s.gcr.io/k8s-dns-dnsmasq-nanny-amd64:1.14.10"
             "k8s.gcr.io/k8s-dns-sidecar-amd64:1.14.10"
-            "k8s.gcr.io/kubernetes-dashboard-amd64:v1.8.3"
+            "k8s.gcr.io/kubernetes-dashboard-amd64:v1.10.0"
+            "gcr.io/google_containers/metrics-server-amd64:v0.3.0"
             "nginx:1.13-alpine"
         )
     fi

@@ -43,6 +43,21 @@ describe 'cloud-provider-ini' do
         expect(rendered_template).not_to include('token-url=nil')
       end
     end
+
+    context 'if subnetwork-name is provider' do
+      let(:gce_config) do
+        {
+          'project-id' => 'fake-project-id',
+          'network-name' => 'fake-network-name',
+          'subnetwork-name' => 'real-subnetwork-name',
+          'worker-node-tag' => 'fake-worker-node-tag'
+        }
+      end
+
+      it 'is added to the cloud provider config' do
+        expect(rendered_template).to include('subnetwork-name=real-subnetwork-name')
+      end
+    end
   end
 
   context 'if cloud provider is vsphere' do
@@ -72,11 +87,20 @@ describe 'cloud-provider-ini' do
 
     it 'renders the correct template for vsphere' do
       vsphere_config.each do |k, v|
-        if k == 'password'
+        if %w[password user].include? k
           expect(rendered_template).to include("#{k}=\"#{v}\"")
         else
           expect(rendered_template).to include("#{k}=#{v}")
         end
+      end
+    end
+
+    context 'user in the form domain\user' do
+      it 'has a double backslash in the template' do
+        vsphere_config['user'] = 'domain\fake-user'
+        # In the following case \\\\ appears as \\ in the actual config
+        # this is because we cannot do a string with an unescaped \ in Ruby
+        expect(rendered_template).to include('user="domain\\\\fake-user"')
       end
     end
 

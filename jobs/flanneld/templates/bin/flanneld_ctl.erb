@@ -44,14 +44,35 @@ start_flanneld() {
   mknod /dev/net/tun c 10 200 || true
   echo 1 > /proc/sys/net/ipv4/ip_forward
   mkdir -p /etc/cni/net.d
-  echo '{"name":"flannel-network","type":"flannel","delegate":{"isDefaultGateway": true}}' > /etc/cni/net.d/10-flannel.conf
+  rm  /etc/cni/net.d/10-flannel.conf || true
+  cat  > /etc/cni/net.d/50-flannel.conflist <<EOL
+{
+    "name": "flannel-network",
+    "plugins": [
+	    {
+		    "type": "flannel",
+		    "delegate": {
+			    "hairpinMode": true,
+			    "isDefaultGateway": true
+		    }
+	    },
+	    {
+		    "type": "portmap",
+		    "capabilities": {
+			    "portMappings": true
+		    }
+	    }
+    ]
+}
+EOL
+
 
   /var/vcap/packages/etcdctl/etcdctl \
     --endpoints <%= etcd_endpoints %> \
     --cert-file /var/vcap/jobs/flanneld/config/etcd-client.crt \
     --key-file /var/vcap/jobs/flanneld/config/etcd-client.key \
     --ca-file /var/vcap/jobs/flanneld/config/etcd-ca.crt \
-    set /coreos.com/network/config '{"Network":"10.200.0.0/16","Backend":{"Type":"vxlan"}}'
+    set /coreos.com/network/config '{"Network":"<%= p('pod-network-cidr') %>","Backend":{"Type":"vxlan"}}'
 
   flanneld -etcd-endpoints=<%= etcd_endpoints %> \
     --ip-masq \

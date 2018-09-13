@@ -10,11 +10,6 @@ describe 'apply-specs' do
       'kube-apiserver' => {
         'instances' => [],
         'properties' => {
-          'tls' => {
-            'kubernetes' => {
-              'ca' => 'All scabbards desire scurvy, misty krakens.'
-            }
-          },
           'admin-username' => 'meatloaf',
           'admin-password' => 'madagascar-TEST',
           'port' => '2034'
@@ -23,19 +18,11 @@ describe 'apply-specs' do
     }
   end
 
-  let(:rendered_ca) do
-    compiled_template('apply-specs', 'config/ca.pem', {}, links)
-  end
-
   let(:rendered_kubeconfig) do
     YAML.safe_load(compiled_template('apply-specs', 'config/kubeconfig', {}, links))
   end
 
   let(:kubeconfig_user) { rendered_kubeconfig['users'][0] }
-
-  it 'uses the CA from the kube-apiserver link' do
-    expect(rendered_ca).to eq('All scabbards desire scurvy, misty krakens.')
-  end
 
   it 'uses the admin name from the kube-apiserver link' do
     expect(rendered_kubeconfig['contexts'][0]['context']['user']).to eq('meatloaf')
@@ -53,6 +40,7 @@ describe 'apply-specs' do
   let(:link_spec) { {} }
   let(:default_properties) do
     {
+      'addons' => ["kube-dns", "metrics-server", "heapster", "kubernetes-dashboard"],
       'admin-password' => '1234'
     }
   end
@@ -71,6 +59,7 @@ describe 'apply-specs' do
   context 'when errand run timeout is re-configured' do
     let(:default_properties) do
       {
+        'addons' => ["kube-dns", "metrics-server", "heapster", "kubernetes-dashboard"],
         'admin-password' => '1234',
         'timeout-sec' => '1122'
       }
@@ -83,6 +72,34 @@ describe 'apply-specs' do
 
   it 'does not apply the standard storage class by default' do
     expect(rendered_deploy_specs).to_not include('apply_spec "storage-class-gce.yml"')
+  end
+
+  context 'Mutiple CAs' do
+    let(:manifest_properties) do
+      {
+        'tls' => {
+          'kubernetes' => {
+            'ca' => 'All scabbards desire scurvy, misty krakens.'
+          },
+          'heapster' => {
+            'ca' => 'Heapster CA'
+          }
+        },
+        'addons' => ["kube-dns", "metrics-server", "heapster", "kubernetes-dashboard"],
+        'admin-username' => 'meatloaf',
+        'admin-password' => 'madagascar-TEST',
+        'port' => '2034'
+      }
+    end
+
+    let(:rendered_dashboard_spec) do
+      compiled_template('apply-specs', 'specs/kubernetes-dashboard.yml', manifest_properties)
+    end
+
+    it 'uses the heapster CA in dashboard ConfigMap' do
+      expect(rendered_dashboard_spec).to include('Heapster CA')
+    end
+
   end
 
   context 'on GCE' do
@@ -135,6 +152,31 @@ describe 'apply-specs' do
 
     it 'does not apply the standard storage class' do
       expect(rendered_deploy_specs).to_not include('apply_spec "storage-class-gce.yml"')
+    end
+  end
+
+  context 'when addons are configured' do
+    let(:default_properties) do
+      {
+        'addons' => ['heapster']
+      }
+    end
+
+    it 'deploys only those specified' do
+      rendered = rendered_deploy_specs
+      expect(rendered).to_not match(/apply_spec (?!"heapster.yml"|"influxdb.yml")/)
+    end
+  end
+
+  context 'when addons are misconfigured' do
+    let(:default_properties) do
+      {
+        'addons' => ['crap']
+      }
+    end
+
+    it 'deploys throws a templating error' do
+      expect {rendered_deploy_specs}.to raise_error(RuntimeError, "crap is not a supported addon")
     end
   end
 end

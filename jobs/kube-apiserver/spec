@@ -10,9 +10,10 @@ templates:
   config/etcd-ca.crt.erb: config/etcd-ca.crt
   config/etcd-client.crt.erb: config/etcd-client.crt
   config/etcd-client.key.erb: config/etcd-client.key
-  config/kubernetes-ca.pem.erb: config/kubernetes-ca.pem
   config/kubernetes-key.pem.erb: config/kubernetes-key.pem
   config/kubernetes.pem.erb: config/kubernetes.pem
+  config/kubelet-client-key.pem.erb: config/kubelet-client-key.pem
+  config/kubelet-client-cert.pem.erb: config/kubelet-client-cert.pem
   config/oidc-ca.pem.erb: config/oidc-ca.pem
   config/openstack-ca.crt.erb: config/openstack-ca.crt
   config/service-account-public-key.pem.erb: config/service-account-public-key.pem
@@ -51,8 +52,6 @@ properties:
     description: https_proxy env var for the kubernetes-api binary (i.e. for cloud provider interactions)
   no_proxy:
     description: no_proxy env var for the kubernetes-api binary (i.e. for cloud provider interactions)
-  kubelet-bootstrap-token:
-    description: The bootstrap token used during kubelet registration.
   kube-controller-manager-password:
     description: The password for the system:kube-controller-manager user
   kubelet-password:
@@ -68,12 +67,20 @@ properties:
     default: 1235
   route-sync-password:
     description: The password for the route-sync user
+  security-context-deny:
+    description: Addmission controller that prevents setting most securityContext properties on a pod spec
+    default: false
+  service-cluster-cidr:
+    description: The service cluster IP cidr for hosting cluster services
+    default: "10.100.200.0/24"
   tls.kubernetes.ca:
     description: "CA Certificate for the Kubernetes master"
   tls.kubernetes.certificate:
     description: "Certificate for the Kubernetes master"
   tls.kubernetes.private_key:
     description: "Private key for the Kubernetes master"
+  tls.kubelet-client:
+    description: kubelet client cert
   service-account-public-key:
     description: "Public key used to verify service account tokens"
   logging-level:

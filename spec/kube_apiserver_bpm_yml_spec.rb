@@ -79,37 +79,6 @@ describe 'kube-apiserver' do
     expect(bpm_yml['processes'][0]['args']).to include('--audit-policy-file=/var/vcap/jobs/kube-apiserver/config/audit_policy.yml')
   end
 
-  it 'has no security context deny when privileged containers are enabled and deny is disabled' do
-    rendered_kube_apiserver_bpm_yml = compiled_template(
-      'kube-apiserver',
-      'config/bpm.yml',
-      {
-        'allow_privileged' => true,
-        'disable_deny_escalating_exec' => true
-      },
-      link_spec
-    )
-
-    bpm_yml = YAML.safe_load(rendered_kube_apiserver_bpm_yml)
-    expect(bpm_yml['processes'][0]['args']).to include(
-      '--enable-admission-plugins=LimitRanger,' \
-      'NamespaceExists,NamespaceLifecycle,ResourceQuota,' \
-      'ServiceAccount,DefaultStorageClass,NodeRestriction,MutatingAdmissionWebhook,DenyEscalatingExec'
-    )
-  end
-
-  it 'denies security context when privileged containers are not enabled' do
-    rendered_kube_apiserver_bpm_yml = compiled_template(
-      'kube-apiserver',
-      'config/bpm.yml',
-      {},
-      link_spec
-    )
-
-    bpm_yml = YAML.safe_load(rendered_kube_apiserver_bpm_yml)
-    expect(bpm_yml['processes'][0]['args']).to include(match(/--enable-admission-plugins=.*,SecurityContextDeny/))
-  end
-
   it 'has no http proxy when no proxy is defined' do
     rendered_kube_apiserver_bpm_yml = compiled_template(
       'kube-apiserver',
@@ -167,20 +136,6 @@ describe 'kube-apiserver' do
     expect(bpm_yml['processes'][0]['env']['NO_PROXY']).to eq('noproxy.example.com,noproxy.example.net')
   end
 
-  it 'enables Node and RBAC authorization mechanisms by default' do
-    rendered_kube_apiserver_bpm_yml = compiled_template('kube-apiserver', 'config/bpm.yml', {}, link_spec)
-
-    bpm_yml = YAML.safe_load(rendered_kube_apiserver_bpm_yml)
-    expect(bpm_yml['processes'][0]['args']).to include('--authorization-mode=Node,RBAC')
-  end
-
-  it 'sets RotateKubeletServerCertificate feature gate by default' do
-    rendered_kube_apiserver_bpm_yml = compiled_template('kube-apiserver', 'config/bpm.yml', {}, link_spec)
-
-    bpm_yml = YAML.safe_load(rendered_kube_apiserver_bpm_yml)
-    expect(bpm_yml['processes'][0]['args']).to include('--feature-gates=RotateKubeletServerCertificate=true')
-  end
-
   it 'sets feature gates if the property is defined' do
     rendered_kube_apiserver_bpm_yml = compiled_template(
       'kube-apiserver',
@@ -195,6 +150,36 @@ describe 'kube-apiserver' do
     )
 
     bpm_yml = YAML.safe_load(rendered_kube_apiserver_bpm_yml)
-    expect(bpm_yml['processes'][0]['args']).to include('--feature-gates=RotateKubeletServerCertificate=true,CustomFeature1=true,CustomFeature2=false')
+    expect(bpm_yml['processes'][0]['args']).to include('--feature-gates=CustomFeature1=true,CustomFeature2=false')
+  end
+
+  it 'set oidc properties' do
+    rendered_kube_apiserver_bpm_yml = compiled_template(
+      'kube-apiserver',
+      'config/bpm.yml',
+      {
+        'oidc' => {
+          'username-prefix' => 'oidc:',
+          'groups-prefix' => 'oidc:'
+        }
+      },
+      link_spec
+    )
+
+    bpm_yml = YAML.safe_load(rendered_kube_apiserver_bpm_yml)
+    expect(bpm_yml['processes'][0]['args']).to include('--oidc-username-prefix=oidc:')
+    expect(bpm_yml['processes'][0]['args']).to include('--oidc-groups-prefix=oidc:')
+  end
+    
+  it 'defaults authorization mode to RBAC' do
+    rendered_kube_apiserver_bpm_yml = compiled_template(
+      'kube-apiserver',
+      'config/bpm.yml',
+      {},
+      link_spec,
+    )
+
+    bpm_yml = YAML.safe_load(rendered_kube_apiserver_bpm_yml)
+    expect(bpm_yml['processes'][0]['args']).to include('--authorization-mode=RBAC')
   end
 end

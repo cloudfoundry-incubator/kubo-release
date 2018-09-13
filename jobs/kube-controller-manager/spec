@@ -6,7 +6,6 @@ templates:
   config/bpm.yml.erb: config/bpm.yml
   config/ca.pem.erb: config/ca.pem
   config/cloud-provider.ini.erb: config/cloud-provider.ini
-  config/service-account-private-key.pem.erb: config/service-account-private-key.pem
   config/kubeconfig.erb: config/kubeconfig
   config/openstack-ca.crt.erb: config/openstack-ca.crt
   config/service-account-private-key.pem.erb: config/service-account-private-key.pem
@@ -22,14 +21,30 @@ properties:
     description: "API Token for the system:kube-controller-manager user"
   cluster-signing:
     description: "CA Certificate and private key for the certificate controller to issue certificates"
+  horizontal-pod-autoscaler.downscale-delay:
+    description: "The duration that specifies how long the autoscaler has to wait before another downscale"
+  horizontal-pod-autoscaler.sync-period:
+    description: "The period for syncing the number of pods in horizontal pod autoscaler"
+  horizontal-pod-autoscaler.tolerance:
+    description: "The minimum change (from 1.0) in the desired-to-actual metrics ratio for the horizontal pod autoscaler to consider scaling"
+  horizontal-pod-autoscaler.upscale-delay:
+    description: "The duration that specifies how long the autoscaler has to wait before another upscale operation"
+  horizontal-pod-autoscaler.use-rest-clients:
+    description: "If true, horizontal pod autoscaler controller will use REST clients through the kube-aggregator, instead of using the legacy metrics client through the API server proxy"
+  cluster-name:
+    description: Kubernetes cluster name
+    default: kubernetes
   http_proxy:
     description: http_proxy env var for the kubernetes-controller-manager binary (i.e. for cloud provider interactions)
   https_proxy:
     description: https_proxy env var for the kubernetes-controller-manager binary (i.e. for cloud provider interactions)
   no_proxy:
     description: no_proxy env var for cloud provider interactions, i.e. for the kubelet
-  tls.kubo-ca:
-    description: "Certificate and private key for the Kubo CA"
+  tls.kubernetes:
+    description: "Certificate and private key for the Kubernetes master"
+  service-cluster-cidr:
+    description: The service cluster IP for hosting cluster services
+    default: "10.100.200.0/24"
   service-account-private-key:
     description: "Private key used to sign generated tokens"
   logging-level:

@@ -12,24 +12,17 @@
   etcd_endpoints = link('etcd').instances.map { |server| get_url(server, 2379) }.join(",")
 
   admission_control_options = [
-    "LimitRanger", "NamespaceExists",
+    "LimitRanger",
+    "DefaultTolerationSeconds", "ValidatingAdmissionWebhook",
     "NamespaceLifecycle","ResourceQuota","ServiceAccount",
-    "DefaultStorageClass", "NodeRestriction", "MutatingAdmissionWebhook"]
+    "DefaultStorageClass", "MutatingAdmissionWebhook"]
 
   if p('deny_escalating_exec')
     admission_control_options.push("DenyEscalatingExec")
   end
 
-  if !p('allow_privileged')
+  if p('security-context-deny')
     admission_control_options.push("SecurityContextDeny")
-  end
-
-  feature_gates = {
-    'RotateKubeletServerCertificate' => true
-  }
-
-  if_p('feature_gates') do |gates|
-    feature_gates.merge!(gates)
   end
 %>
 processes:
@@ -44,24 +37,24 @@ processes:
   - --cloud-provider=<%= cloud_provider.p('cloud-provider.type') %>
   - --cloud-config=/var/vcap/jobs/kube-apiserver/config/cloud-provider.ini
   <% end %>
+  - --kubelet-client-key=/var/vcap/jobs/kube-apiserver/config/kubelet-client-key.pem
+  - --kubelet-client-certificate=/var/vcap/jobs/kube-apiserver/config/kubelet-client-cert.pem
   - --enable-admission-plugins=<%= admission_control_options.join(",") %>
   - --disable-admission-plugins=PersistentVolumeLabel
   - --enable-bootstrap-token-auth
   - --enable-swagger-ui
   - --etcd-servers=<%= etcd_endpoints %>
   - --etcd-cafile=/var/vcap/jobs/kube-apiserver/config/etcd-ca.crt
+  - <% if_p('feature_gates') do |feature_gates| %>
   - --feature-gates=<%= feature_gates.flat_map {|k,v| "#{k}=#{v}"}.join(",") %>
+  - <% end %>
   - --etcd-certfile=/var/vcap/jobs/kube-apiserver/config/etcd-client.crt
   - --etcd-keyfile=/var/vcap/jobs/kube-apiserver/config/etcd-client.key
-  - --kubelet-certificate-authority=/var/vcap/jobs/kube-apiserver/config/kubernetes-ca.pem
-  - --kubelet-client-certificate=/var/vcap/jobs/kube-apiserver/config/kubernetes.pem
-  - --kubelet-client-key=/var/vcap/jobs/kube-apiserver/config/kubernetes-key.pem
   - --kubelet-https
-  - --repair-malformed-updates=false
   - --secure-port=8443
   - --service-account-key-file=/var/vcap/jobs/kube-apiserver/config/service-account-public-key.pem
   - --service-account-lookup
-  - --service-cluster-ip-range=10.100.200.0/24
+  - --service-cluster-ip-range=<%= p('service-cluster-cidr') %>
   - --service-node-port-range=30000-32767
   - --tls-cert-file=/var/vcap/jobs/kube-apiserver/config/kubernetes.pem
   - --tls-private-key-file=/var/vcap/jobs/kube-apiserver/config/kubernetes-key.pem
@@ -69,13 +62,13 @@ processes:
   - --storage-media-type=application/json
   - --enable-aggregator-routing
   - --v=<%=p('logging-level') %>
-  - --authorization-mode=Node,RBAC
-  - --runtime-config=api/v1,rbac.authorization.k8s.io/v1alpha1
-  - --client-ca-file=/var/vcap/jobs/kube-apiserver/config/kubernetes-ca.pem
+  - --authorization-mode=RBAC
+  - --runtime-config=api/v1
+  - --client-ca-file=/var/vcap/jobs/kube-apiserver/config/kubernetes.pem
   - --proxy-client-cert-file=/var/vcap/jobs/kube-apiserver/config/kubernetes.pem
   - --proxy-client-key-file=/var/vcap/jobs/kube-apiserver/config/kubernetes-key.pem
   - --requestheader-allowed-names=aggregator
-  - --requestheader-client-ca-file=/var/vcap/jobs/kube-apiserver/config/kubernetes-ca.pem
+  - --requestheader-client-ca-file=/var/vcap/jobs/kube-apiserver/config/kubernetes.pem
   - --requestheader-extra-headers-prefix=X-Remote-Extra-
   - --requestheader-group-headers=X-Remote-Group
   - --requestheader-username-headers=X-Remote-User
@@ -94,13 +87,13 @@ processes:
   - --oidc-username-claim=<%= oidc_username_claim %>
   <% end %>
   <% if_p("oidc.username-prefix") do |oidc_username_prefix| %>
-  - --oidc-username-prefix=<%= oidc_username_prefix %>
+  - "--oidc-username-prefix=<%= oidc_username_prefix %>"
   <% end %>
   <% if_p("oidc.groups-claim") do |oidc_groups_claim| %>
   - --oidc-groups-claim=<%= oidc_groups_claim %>
   <% end %>
   <% if_p("oidc.groups-prefix") do |oidc_groups_prefix| %>
-  - --oidc-groups-prefix=<%= oidc_groups_prefix %>
+  - "--oidc-groups-prefix=<%= oidc_groups_prefix %>"
   <% end %>
   <% if_p("oidc.ca") do %>
   - --oidc-ca-file=/var/vcap/jobs/kube-apiserver/config/oidc-ca.pem
