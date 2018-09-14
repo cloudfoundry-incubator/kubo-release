@@ -17,3 +17,5 @@ if (!$infraPodImage)
     cd /var/vcap/jobs/kubelet-windows/config
     docker build -t kubeletwin/pause .
 }
+
+Set-NetFirewallProfile -Profile Domain, Public, Private -Enabled False
