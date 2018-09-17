@@ -123,6 +123,8 @@ spec:
         scheduler.alpha.kubernetes.io/critical-pod: ''
         seccomp.security.alpha.kubernetes.io/pod: 'docker/default'
     spec:
+      nodeSelector:
+        beta.kubernetes.io/os: linux
       priorityClassName: system-cluster-critical
       containers:
       - name: kubernetes-dashboard
