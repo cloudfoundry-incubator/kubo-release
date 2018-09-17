@@ -69,7 +69,7 @@ properties:
     description: The password for the route-sync user
   security-context-deny:
     description: Addmission controller that prevents setting most securityContext properties on a pod spec
-    default: false
+    default: true
   service-cluster-cidr:
     description: The service cluster IP cidr for hosting cluster services
     default: "10.100.200.0/24"
