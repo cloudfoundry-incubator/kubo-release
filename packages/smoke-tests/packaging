@@ -2,7 +2,7 @@
 set -e -x
 exec >&2
 
-export GOROOT=$(readlink -nf /var/vcap/packages/golang-1.10-linux)
+export GOROOT=$(readlink -nf /var/vcap/packages/golang-1.11-linux)
 export GOPATH=$BOSH_INSTALL_TARGET
 export PATH=$GOROOT/bin:$PATH
 
