@@ -30,6 +30,10 @@ container-images/gcr.io_google_containers_metrics-server-amd64:v0.3.0.tgz:
   size: 10897327
   object_id: 908485e6-419b-48d2-7ede-81111b430638
   sha: e79d57f99ed64c1166fb244d7c69b91e64ed08b0
+container-images/gcr.io_google_containers_metrics-server-amd64:v0.3.1.tgz:
+  size: 10895843
+  object_id: 0f2ec738-7b90-4fcd-5efd-895f42b6697d
+  sha: 680b53bd59fae5bd498e5439eb42910bc60fe9de
 container-images/k8s.gcr.io_heapster-amd64:v1.5.4.tgz:
   size: 19797457
   object_id: deb55944-5460-4af5-6b0f-552330fca196
