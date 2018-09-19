@@ -6,8 +6,7 @@ A [BOSH](http://bosh.io/) release for [Kubernetes](http://kubernetes.io).  Forme
 
 ## Prerequisites
 - A BOSH Director configured with UAA, Credhub, and BOSH DNS. We recommend using [BOSH Bootloader](https://github.com/cloudfoundry/bosh-bootloader) for this.
-- [kubo-release](https://github.com/cloudfoundry-incubator/kubo-release)
-- [kubo-deployment](https://github.com/cloudfoundry-incubator/kubo-deployment)
+- [Latest kubo-deployment tarball](https://github.com/cloudfoundry-incubator/kubo-deployment/releases/latest)
 - Accessing the master:
   - **Single Master:** Set up a DNS name pointing to your master's IP address
   - **Multiple Masters:** A TCP load balancer for your master nodes.
@@ -26,10 +25,8 @@ Kubernetes uses etcd as its datastore. The official infrastructure requirements 
 ## Deploying CFCR
 
 1. Upload the [latest Xenial stemcell](https://bosh.io/stemcells/#ubuntu-xenial) to the director.
-1. Upload the latest kubo-release to the director.
-    ```
-    bosh upload-release https://bosh.io/d/github.com/cloudfoundry-incubator/kubo-release
-    ```
+
+1. Untar the kubo-deployment tarball and rename it `kubo-deployment`
 
 1. Deploy
 
