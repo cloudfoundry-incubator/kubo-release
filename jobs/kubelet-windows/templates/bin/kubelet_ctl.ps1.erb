@@ -1,6 +1,18 @@
 $ErrorActionPreference = "Stop";
 trap { $host.SetShouldExit(1) }
 
+<% if_p('cloud-provider') do |cloud_provider| %>
+  $cloud_provider="<%= cloud_provider %>"
+<% end %>
+
+function Get-HostnameOverride
+{
+    if ("gce" -eq $cloud_provider) {
+        return "$(hostname)"
+    } else {
+        return "<%= spec.ip %>"
+    }
+}
 
 C:\var\vcap\packages\kubernetes-windows\bin\kubelet.exe `
     --resolv-conf="" `
@@ -11,7 +23,7 @@ C:\var\vcap\packages\kubernetes-windows\bin\kubelet.exe `
     --cni-bin-dir=/var/vcap/jobs/kubelet-windows/packages/cni-windows/bin `
     --config=/var/vcap/jobs/kubelet-windows/config/kubeletconfig.yml `
     --container-runtime=docker `
-    --hostname-override=<%= spec.ip %> `
+    --hostname-override=$(Get-HostnameOverride) `
     --keep-terminated-pod-volumes=false `
     --kubeconfig=/var/vcap/jobs/kubelet-windows/config/kubeconfig `
     --network-plugin=cni `
