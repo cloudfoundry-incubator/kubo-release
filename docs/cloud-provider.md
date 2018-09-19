@@ -145,18 +145,8 @@ In each example it is assumed that you already have access to a BOSH Director.
 1. Add (if does not exist) a vSphere specific cloud config  with BOSH [generic configs](https://bosh.io/docs/configs/)
 
     ```bash
-    cat << EOF > cfcr-cc-vm_extension-vsphere.yml
-    vm_extensions:
-    - cloud_properties:
-        vmx_options:
-          disk.enableUUID: "1"
-      name: enable-disk-UUID
-    EOF
-    ```
-
-    ```bash
     $ bosh update-config --name cfcr-cc-vm_extension-vsphere \
-    cfcr-cc-vm_extension-vsphere.yml \
+    ${KD}/manifests/cloud-config/iaas/vsphere/use-vm-extensions.yml \
     --type cloud
     ```
 
@@ -164,20 +154,12 @@ In each example it is assumed that you already have access to a BOSH Director.
 1. Deploy CFCR
 
     ```bash
-    cat << EOF > use-vm-extensions-vsphere-only.yml
-    - type: replace
-      path: /instance_groups/name=worker/vm_extensions?/-
-      value: enable-disk-UUID
-    EOF
-    ```
-
-    ```bash
     $ export KD="path to kubo-deployment repo"
 
     $ bosh deploy -d ${deployment_name} \
     ${KD}/manifests/cfcr.yml \
     -o ${KD}/manifests/ops-files/iaas/vsphere/cloud-provider.yml \
-    -o use-vm-extensions-vsphere-only.yml \
+    -o ${KD}/manifests/ops-files/iaas/vsphere/use-vm-extensions.yml \
     -o ${KD}/manifests/ops-files/rename.yml \
     -v deployment_name=${deployment_name} \
     --vars-file ${deployment_name}-vars.yml
