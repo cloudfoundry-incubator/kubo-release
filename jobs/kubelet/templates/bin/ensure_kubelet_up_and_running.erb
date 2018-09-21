@@ -7,6 +7,6 @@ kubectl="/var/vcap/packages/kubernetes/bin/kubectl --kubeconfig=/var/vcap/jobs/k
 # Wait for kubelet to become Ready before we move on to the next node.
 # Scheduling might not be enabled at this time.
 # The node then will be Ready;SchedulingDisabled
-until ${kubectl} get nodes -o wide -L spec.ip | grep -e ' Ready' | grep "<%= spec.ip %>$"; do
+until ${kubectl} get nodes -o wide -L bosh.id | grep -e ' Ready' | grep "<%= spec.id %>$"; do
   sleep 2
 done
