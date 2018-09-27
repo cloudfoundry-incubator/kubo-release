@@ -14,7 +14,6 @@
         cloud_config['project-id'] = cloud_provider.p('cloud-provider.gce.project-id')
         cloud_config['network-name'] = cloud_provider.p('cloud-provider.gce.network-name')
         cloud_provider.if_p('cloud-provider.gce.subnetwork-name') { |path| cloud_config['subnetwork-name'] = path }
-        cloud_provider.if_p('cloud-provider.gce.service_key') { cloud_config['token-url'] = 'nil' }
         cloud_provider.if_p('cloud-provider.gce.worker-node-tag') { |tag| cloud_config['node-tags'] = tag  }
         cloud_config['multizone'] = true
       elsif provider_type == 'vsphere' && spec['name'].include?("master")

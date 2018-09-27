@@ -9,12 +9,9 @@ provides:
   type: cloud-provider
   properties:
   - cloud-provider.type
-  - cloud-provider.aws.access_key_id
-  - cloud-provider.aws.secret_access_key
   - cloud-provider.gce.network-name
   - cloud-provider.gce.subnetwork-name
   - cloud-provider.gce.project-id
-  - cloud-provider.gce.service_key
   - cloud-provider.gce.worker-node-tag
   - cloud-provider.openstack.auth-url
   - cloud-provider.openstack.bs-version
@@ -46,12 +43,6 @@ properties:
     description: "Type of Cloud Provider to use"
     example: gce, vsphere, openstack
 
-  # AWS specific properties
-  cloud-provider.aws.access_key_id:
-    description: AWS access key ID that is used by cloud-provider.
-  cloud-provider.aws.secret_access_key:
-    description: AWS secret access key that is used by cloud-provider.
-
   # GCE specific properties
   cloud-provider.gce.project-id:
     description: Google Cloud project id. Required when cloud-provider.type is gce.
@@ -61,8 +52,6 @@ properties:
     description: Google Cloud subnet name. Optional, used for internal load balancers.
   cloud-provider.gce.worker-node-tag:
     description: Google Cloud tag that identifies only worker nodes in this deployment.
-  cloud-provider.gce.service_key:
-    description: Google Cloud service key that is used by cloud-provider.
 
   # vSphere specific properties
   cloud-provider.vsphere.user:

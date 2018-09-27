@@ -20,7 +20,7 @@ describe 'cloud-provider-ini' do
 
   context 'if cloud provider is gce' do
     let(:properties) { { 'cloud-provider' => { 'type' => 'gce', 'gce' => gce_config } } }
-    let(:gce_config) { { 'project-id' => 'fake-project-id', 'network-name' => 'fake-network-name', 'service_key' => 'foo', 'worker-node-tag' => 'fake-worker-node-tag' } }
+    let(:gce_config) { { 'project-id' => 'fake-project-id', 'network-name' => 'fake-network-name', 'worker-node-tag' => 'fake-worker-node-tag' } }
 
     it 'renders the correct template for gce' do
       expect(rendered_template).to include('project-id=fake-project-id')
@@ -30,18 +30,6 @@ describe 'cloud-provider-ini' do
 
     it 'defines the multi-az property' do
       expect(rendered_template).to include('multizone=true')
-    end
-
-    it 'sets token-url to nil if service_key is set' do
-      expect(rendered_template).to include('token-url=nil')
-    end
-
-    context 'if gce service key not defined' do
-      let(:gce_config) { { 'project-id' => 'fake-project-id', 'network-name' => 'fake-network-name', 'worker-node-tag' => 'fake-worker-node-tag' } }
-
-      it 'does not set token-url to nil' do
-        expect(rendered_template).not_to include('token-url=nil')
-      end
     end
 
     context 'if subnetwork-name is provider' do

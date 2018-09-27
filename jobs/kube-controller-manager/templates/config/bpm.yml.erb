@@ -47,14 +47,3 @@ processes:
     HTTP_PROXY: <%= http_proxy %>
     http_proxy: <%= http_proxy %>
     <% end %>
-    <% if_link('cloud-provider') do |cloud_provider| %>
-    <% cloud_provider.if_p('cloud-provider.gce.service_key') do |service_key| %>
-    GOOGLE_APPLICATION_CREDENTIALS: /var/vcap/jobs/kube-controller-manager/config/service_key.json
-    <% end %>
-    <% cloud_provider.if_p('cloud-provider.aws.access_key_id') do |access_key_id| %>
-    AWS_ACCESS_KEY_ID: <%= access_key_id %>
-    <% end %>
-    <% cloud_provider.if_p('cloud-provider.aws.secret_access_key') do |secret_access_key| %>
-    AWS_SECRET_ACCESS_KEY: <%= secret_access_key %>
-    <% end %>
-    <% end %>
