@@ -10,7 +10,6 @@ templates:
   config/policies/kube_proxy.yml: config/policies/kube_proxy.yml
   config/policies/kubelet.yml: config/policies/kubelet.yml
   config/policies/kubelet_drain.yml: config/policies/kubelet_drain.yml
-  config/policies/route_sync.yml: config/policies/route_sync.yml
   config/policies/vsphere_cloud_provider.yml.erb: config/policies/vsphere_cloud_provider.yml
 
 packages:
