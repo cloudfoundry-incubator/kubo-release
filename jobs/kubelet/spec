@@ -39,18 +39,12 @@ properties:
       duration: 365
   tls.kubelet-client-ca.certificate:
     description: "CA certificate of the authority granting access to kubelet server"
-  backend_port:
-    example: 80
-    default: 6789
   http_proxy:
     description: http_proxy env var for cloud provider interactions, i.e. for the kubelet
   https_proxy:
     description: https_proxy env var for cloud provider interactions, i.e. for the kubelet
   no_proxy:
     description: no_proxy env var for cloud provider interactions, i.e. for the kubelet
-  port:
-    example: 81
-    default: 4567
   labels:
     description: Labels to give node
     default: {}

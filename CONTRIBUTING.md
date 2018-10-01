@@ -40,7 +40,7 @@ If the changes are for BOSH templating logic then please consider adding unit te
 
 ### Running Release Unit Tests
 
-Execute command `./scripts/run_tests` to run unit tests for kubo-release.  These includes tests for [route-sync](src/route-sync) and the [BOSH templating tests](spec/).  Please run these tests before submitting a pull request.
+Execute command `./scripts/run_tests` to run unit tests for kubo-release.  These includes tests for the [BOSH templating tests](spec/).  Please run these tests before submitting a pull request.
 
 ### Integration tests
 

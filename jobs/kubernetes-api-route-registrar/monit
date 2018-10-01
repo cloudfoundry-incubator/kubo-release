@@ -1,5 +1,0 @@
-check process kubernetes-api-route-registrar
-  with pidfile /var/vcap/sys/run/bpm/kubernetes-api-route-registrar/kubernetes-api-route-registrar.pid
-  start program "/var/vcap/jobs/bpm/bin/bpm start kubernetes-api-route-registrar"
-  stop program "/var/vcap/jobs/bpm/bin/bpm stop kubernetes-api-route-registrar"
-  group vcap

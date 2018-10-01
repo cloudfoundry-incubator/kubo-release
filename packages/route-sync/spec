@@ -1,7 +1,0 @@
----
-name: route-sync
-dependencies:
-  - golang-1.11-linux
-files:
-  - route-sync/**/*
-

@@ -65,8 +65,6 @@ properties:
   port:
     example: 81
     default: 1235
-  route-sync-password:
-    description: The password for the route-sync user
   security-context-deny:
     description: Addmission controller that prevents setting most securityContext properties on a pod spec
     default: true
