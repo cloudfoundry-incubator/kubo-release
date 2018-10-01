@@ -110,9 +110,9 @@ metrics.
 ## Deprecations
 
 ### Deployment scripts and docs
-CFCR had a set of scripts, including `deploy_bosh` and `deploy_k8s` that were the primary mechanism we used to deploy BOSH and Kubernetes clusters. We no longer support these and have reomved the corresponding documentation from https://docs-cfcr.cfapps.io
+CFCR had a set of scripts, including `deploy_bosh` and `deploy_k8s`, that were the primary mechanism we supported to deploy BOSH and Kubernetes clusters. We no longer support these and have removed the corresponding documentation from https://docs-cfcr.cfapps.io
 
-The BOSH oriented method documented in this README.md is the main way we promote users to deploy Kubernetes clusters with CFCR.
+The BOSH oriented method documented in this README.md is the supported method to deploy Kubernetes clusters with CFCR.
 
 ### Heapster
 K8s 1.11 release kicked off the deprecation timeline for the Heapster component, see [here](https://github.com/kubernetes/heapster/blob/master/docs/deprecation.md) for more info. As a result, we're in the process of replacing Heapster with [Metrics Server](https://github.com/kubernetes-incubator/metrics-server) in the upcoming releases of kubo-release.
