@@ -137,6 +137,9 @@ kubernetes-windows-1.11.2/kubectl.exe:
 kubernetes-windows-1.11.2/kubelet.exe:
   size: 155528704
   sha: 07b23339f76148242a74ca41c48fd1e3b81e9893
+precompiled-poststart/poststart.exe:
+  size: 32384000
+  sha: 0ec933a788284b6d6263afaeb7cceaea18addf10
 socat-1.7.3.2.tar.gz:
   size: 615818
   object_id: a6f3dcb3-54a0-44a3-4100-f408932aaf8f

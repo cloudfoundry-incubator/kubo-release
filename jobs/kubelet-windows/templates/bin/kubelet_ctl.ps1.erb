@@ -1,9 +1,25 @@
 $ErrorActionPreference = "Stop";
 trap { $host.SetShouldExit(1) }
 
+<% iaas = nil %>
 <% if_p('cloud-provider') do |cloud_provider| %>
+  <% iaas = cloud_provider %>
   $cloud_provider="<%= cloud_provider %>"
 <% end %>
+<%-
+  include_config = false
+  if !iaas.nil? and iaas != "vsphere"
+    if_link('cloud-provider') do
+      include_config = true
+    end
+  end
+-%>
+
+<%
+  labels = ["spec.ip=#{spec.ip}","bosh.id=#{spec.id}","bosh.zone=#{spec.az}"]
+  labels += p("labels").map {|k,v| "#{k}=#{v}"}
+  labels = labels.join(',')
+%>
 
 function Get-HostnameOverride
 {
@@ -14,7 +30,27 @@ function Get-HostnameOverride
     }
 }
 
+<% if_link('cloud-provider') do |cloud_provider| %>
+    $cloud_config="/var/vcap/jobs/kubelet-windows/config/cloud-provider.ini"
+    <% cloud_provider.if_p('cloud-provider.gce.service_key') do |service_key| %>
+      export GOOGLE_APPLICATION_CREDENTIALS="/var/vcap/jobs/kubelet-windows/config/service_key.json"
+    <% end %>
+    <% cloud_provider.if_p('cloud-provider.aws.access_key_id') do |access_key_id| %>
+    export AWS_ACCESS_KEY_ID="<%= access_key_id %>"
+    <% end %>
+    <% cloud_provider.if_p('cloud-provider.aws.secret_access_key') do |secret_access_key| %>
+    export AWS_SECRET_ACCESS_KEY="<%= secret_access_key %>"
+    <% end %>
+<% end %>
+
+$zone_label=""
+if("vsphere" -eq "$cloud_provider") {
+  $zone_label=",failure-domain.beta.kubernetes.io/zone=<%= spec.az %>"
+}
+
 C:\var\vcap\packages\kubernetes-windows\bin\kubelet.exe `
+    <% if include_config -%>--cloud-config=${cloud_config}<% end %> `
+    <% if !iaas.nil? -%>--cloud-provider=${cloud_provider}<% end %> `
     --resolv-conf="" `
     --image-pull-progress-deadline=20m `
     --cgroups-per-qos=false `
@@ -27,13 +63,9 @@ C:\var\vcap\packages\kubernetes-windows\bin\kubelet.exe `
     --keep-terminated-pod-volumes=false `
     --kubeconfig=/var/vcap/jobs/kubelet-windows/config/kubeconfig `
     --network-plugin=cni `
+    --node-labels=<%= labels %>"$zone_label" `
     --pod-infra-container-image=kubeletwin/pause `
     --v=<%=p('logging-level') %> `
     <% if_p('kube-reserved') do |kube_reserved| %>--kube-reserved="<%= kube_reserved %>"<% end %> `
     <% if_p('system-reserved') do |system_reserved| %>--system-reserved="<%= system_reserved %>"<% end %> `
     <% if_p('eviction-hard') do |eviction_hard| %>--eviction-hard="<%= eviction_hard %>"<% end %>
-
-
-#    --cluster-dns=$KubeDnsServiceIp --cluster-domain=cluster.local `
-#    --hairpin-mode=promiscuous-bridge `
-#    --cni-conf-dir "c:\k\cni\config"

@@ -1,0 +1,16 @@
+. ./exiter.ps1
+
+$ErrorActionPreference = "Stop";
+trap { $host.SetShouldExit(1) }
+
+# mkdir ../src
+# copy-item -recurse * ../src/
+# mv ../src/ ./src
+# 
+# mkdir $env:BOSH_INSTALL_TARGET/bin
+# 
+# go build -o $env:BOSH_INSTALL_TARGET/bin/poststart src/kubelet-windows-poststart/main.go
+
+New-Item -Path "${env:BOSH_INSTALL_TARGET}" -Name "bin" -ItemType "directory"
+
+Copy-Item "precompiled-poststart/*" "${env:BOSH_INSTALL_TARGET}/bin"

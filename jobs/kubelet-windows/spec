@@ -3,7 +3,8 @@ name: kubelet-windows
 
 templates:
   bin/kubelet_ctl.ps1.erb: bin/kubelet_ctl.ps1
-  bin/prestart.ps1: bin/pre-start.ps1
+  bin/pre-start.ps1: bin/pre-start.ps1
+  bin/post-start.ps1: bin/post-start.ps1
   config/Dockerfile: config/Dockerfile
   config/apiserver-ca.pem.erb: config/apiserver-ca.pem
   config/kubelet-client-ca.pem.erb: config/kubelet-client-ca.pem
@@ -19,6 +20,7 @@ templates:
 packages:
 - kubernetes-windows
 - cni-windows
+- kubelet-windows-poststart
 
 properties:
   allow_privileged:

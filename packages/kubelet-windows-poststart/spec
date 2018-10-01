@@ -1,0 +1,8 @@
+---
+name: kubelet-windows-poststart
+dependencies:
+# - golang-1.10-windows
+files:
+- precompiled-poststart/*
+- exiter.ps1
+# - kubelet-windows-poststart/**/*

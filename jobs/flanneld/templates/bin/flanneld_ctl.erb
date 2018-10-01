@@ -76,6 +76,7 @@ EOL
 
   flanneld -etcd-endpoints=<%= etcd_endpoints %> \
     --ip-masq \
+    -v 10 \
     --etcd-certfile=/var/vcap/jobs/flanneld/config/etcd-client.crt \
     --etcd-keyfile=/var/vcap/jobs/flanneld/config/etcd-client.key \
     --etcd-cafile=/var/vcap/jobs/flanneld/config/etcd-ca.crt \
