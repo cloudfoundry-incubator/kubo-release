@@ -20,21 +20,45 @@ $confFile= '
 {
   "name": "vxlan0",
   "plugins": [
-	  {
-		  "type": "flannel",
-		  "delegate": {
-			  "hairpinMode": true,
-			  "isDefaultGateway": true,
-			  "type": "overlay",
-			  "AdditionalArgs" : [
-			    {
-			      "Name" : "EndpointPolicy", "Value" : { "Type" : "OutBoundNAT", "ExceptionList": [ "<%= p("pod-network-cidr") %>" ] }
-			    }
-			  ]
-		  }
-	  }
+    {
+      "type": "flannel",
+      "delegate": {
+        "hairpinMode": true,
+        "isDefaultGateway": true,
+        "type": "win-overlay",
+        "policies": [
+          {
+            "Name": "EndpointPolicy",
+            "Value": {
+              "Type": "OutBoundNAT",
+              "ExceptionList": [
+                "<%= p('pod-network-cidr') %>",
+                "10.96.0.0/12"
+              ]
+            }
+          },
+          {
+            "Name": "EndpointPolicy",
+            "Value": {
+              "Type": "ROUTE",
+              "DestinationPrefix": "10.96.0.0/12",
+              "NeedEncap": true
+            }
+          },
+          {
+            "Name": "EndpointPolicy",
+            "Value": {
+              "Type": "ROUTE",
+              "DestinationPrefix": "<%= spec.ip %>/32",
+              "NeedEncap": true
+            }
+          }
+        ]
+      }
+    }
   ]
-}'
+}
+'
 Set-Content -Path /etc/cni/net.d/50-flannel.conflist -Value $confFile
 
 /var/vcap/packages/flanneld-windows/flanneld.exe `

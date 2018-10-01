@@ -1,6 +1,6 @@
 cni-windows/flannel.exe:
-  size: 2967552
-  sha: 27a3dac5e612740008aa03059dcf9c5d98d1a8ba
+  size: 5470208
+  sha: a4b64fc641e86fc0bf7f40d3335f6953db9c016b
 cni-windows/host-local.exe:
   size: 3027968
   sha: cfd94fe406bb116f8456266094e9768eaef9b235
@@ -79,16 +79,16 @@ etcdctl-3.0.7:
   size: 18427584
   object_id: 32221476-5c3d-4ec7-5869-44c989cc3077
   sha: 11f0462cc86bf85332399a2fa584d5bb46d0cb2a
-flanneld-amd64:
-  size: 36459048
-  sha: 7e7cce695e2dff4ef1f302b7768e4d092171ad9b
 flannel-v0.10.0-linux-amd64.tar.gz:
   size: 9706487
   object_id: 36a8e66a-0b6c-4ca2-5f27-c277a7db90c5
   sha: 9d19a56847d6aad207671a349eddd85de87ba560
 flannel-windows/flanneld.exe:
-  size: 41249280
-  sha: 4b7ddf80dd5acd6f72ddb19b3e6d88ef307caccc
+  size: 41508864
+  sha: f84fef7de0b2aeefc553037a5f3e2222da79e5f2
+flanneld-amd64:
+  size: 36459048
+  sha: 7e7cce695e2dff4ef1f302b7768e4d092171ad9b
 ipset/ipset_6.20.1-1_amd64.deb:
   size: 34156
   object_id: 5dfcce8f-366e-49f0-59e6-9e2d48178750

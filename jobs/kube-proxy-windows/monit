@@ -1,0 +1,11 @@
+{
+  "processes": [
+    {
+      "name": "kube-proxy",
+      "executable": "powershell",
+      "args": ["C:\\var\\vcap\\jobs\\kube-proxy-windows\\bin\\kube_proxy_ctl.ps1"],
+      "env": {}
+    }
+  ]
+}
+
