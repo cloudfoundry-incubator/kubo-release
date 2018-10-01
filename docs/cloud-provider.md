@@ -19,11 +19,13 @@ In each example it is assumed that you already have access to a BOSH Director.
     ```bash
     $ export deployment_name="your deployment name"
 
-    $ cat ${deployment_name}-cc-vars.yml
+    $ cat << EOF > ${deployment_name}-cc-vars.yml
 
     cfcr_master_service_account_address: <master-service-account-email>
     cfcr_worker_service_account_address: <worker-service-account-email>
     deployment_name: <deployment-name>
+    cfcr_backend_service: <backend-service>
+    EOF
     ```
 
 1. Add a cloud config for the deployment with BOSH [generic configs](https://bosh.io/docs/configs/)
@@ -72,13 +74,14 @@ In each example it is assumed that you already have access to a BOSH Director.
     ```bash
     $ export deployment_name="your deployment name"
 
-    $ cat ${deployment_name}-cc-vars.yml
+    $ cat << EOF > ${deployment_name}-cc-vars.yml
 
     master_iam_instance_profile: <master-iam-profile-name>
     worker_iam_instance_profile: <worker-iam-profile-name>
     cfcr_master_target_pool: <list-of-elbs-for-master>
     kubernetes_cluster_tag: <tag-for-k8s-cluster-components>
     deployment_name: <deployment-name>
+    EOF
     ```
 
 1. Add a cloud config for the deployment with BOSH [generic configs](https://bosh.io/docs/configs/)
@@ -127,7 +130,7 @@ In each example it is assumed that you already have access to a BOSH Director.
     ```bash
     $ export deployment_name="your deployment name"
 
-    $ cat ${deployment_name}-vars.yml
+    $ cat << EOF > ${deployment_name}-vars.yml
     vcenter_master_user: <user>
     vcenter_master_password: <password>
     vcenter_ip: <vsphere.server>
@@ -136,6 +139,7 @@ In each example it is assumed that you already have access to a BOSH Director.
     vcenter_vms: <vsphere.vm_folder>
     director_uuid: <BOSH director UUID>
     deployment_name: <deployment-name>
+    EOF
     ```
 
     See for mode details at [spec](../jobs/cloud-provider/spec) and at [vSphere
@@ -209,13 +213,14 @@ In each example it is assumed that you already have access to a BOSH Director.
     ```bash
     $ export deployment_name="your deployment name"
 
-    $ cat ${deployment_name}-vars.yml
+    $ cat << EOF > ${deployment_name}-vars.yml
     auth_url: < authentication URL >
     openstack_domain: < domain >
     openstack_project_id: < tenant id >
     region: < region >
     openstack_username: < admin username >
     openstack_password: < admin user password >
+    EOF
     ```
 
     See for mode details at [spec](../jobs/cloud-provider/spec).
