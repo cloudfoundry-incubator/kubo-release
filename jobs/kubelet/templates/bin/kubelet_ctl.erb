@@ -65,7 +65,8 @@ export NO_PROXY=<%= no_proxy %>
 <% end %>
 
 delete_stale_drained_node() {
-  local node_name=$(kubectl --kubeconfig /var/vcap/jobs/kubelet/config/kubeconfig-drain get nodes -o wide -L spec.ip | grep "<%= spec.ip %>" | grep "NotReady" | awk '{print $1}')
+  local node_name
+  node_name=$(kubectl --kubeconfig /var/vcap/jobs/kubelet/config/kubeconfig-drain get nodes -o wide -L bosh.id | grep "<%= spec.id %>" | grep "NotReady" | awk '{print $1}')
   if [[ ! -z "${node_name}" ]]; then
     kubectl --kubeconfig /var/vcap/jobs/kubelet/config/kubeconfig-drain delete node "${node_name}" --ignore-not-found
   fi
