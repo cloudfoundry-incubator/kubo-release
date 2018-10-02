@@ -1,6 +1,6 @@
 cni-windows/flannel.exe:
   size: 5470208
-  object_id: 98c3be2a-030a-48c3-656c-87dcfa4bb002
+  object_id: 490a8ca4-1237-4dcd-5179-339a115dd21d
   sha: a4b64fc641e86fc0bf7f40d3335f6953db9c016b
 cni-windows/host-local.exe:
   size: 3248640
@@ -88,8 +88,8 @@ flannel-v0.10.0-linux-amd64.tar.gz:
   sha: 9d19a56847d6aad207671a349eddd85de87ba560
 flannel-windows/flanneld.exe:
   size: 25336320
-  object_id: 83cadebb-d5cb-46cf-7003-bf2bfba2f108
-  sha: c7b2e1f6540cfd15df0dfc1e3e6e4754c22a0196
+  object_id: cbe49699-9664-4af3-4475-ca7f3008a4ce
+  sha: f31c4cf615f9ae2caab9efe22a92040b7ace7ee9
 flanneld-amd64:
   size: 36454952
   object_id: c1099a69-9d61-4705-759f-51f11c62589e
