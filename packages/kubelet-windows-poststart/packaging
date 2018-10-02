@@ -3,14 +3,12 @@
 $ErrorActionPreference = "Stop";
 trap { $host.SetShouldExit(1) }
 
-# mkdir ../src
-# copy-item -recurse * ../src/
-# mv ../src/ ./src
-# 
-# mkdir $env:BOSH_INSTALL_TARGET/bin
-# 
-# go build -o $env:BOSH_INSTALL_TARGET/bin/poststart src/kubelet-windows-poststart/main.go
+. C:\var\vcap\packages\golang-1.10-windows\bosh\compile.ps1
 
-New-Item -Path "${env:BOSH_INSTALL_TARGET}" -Name "bin" -ItemType "directory"
+mkdir ../src
+copy-item -recurse * ../src/
+mv ../src/ ./src
 
-Copy-Item "precompiled-poststart/*" "${env:BOSH_INSTALL_TARGET}/bin"
+mkdir $env:BOSH_INSTALL_TARGET/bin
+
+go build -o $env:BOSH_INSTALL_TARGET/bin/poststart.exe src/kubelet-windows-poststart/main.go

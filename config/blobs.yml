@@ -1,11 +1,14 @@
 cni-windows/flannel.exe:
   size: 5470208
+  object_id: 98c3be2a-030a-48c3-656c-87dcfa4bb002
   sha: a4b64fc641e86fc0bf7f40d3335f6953db9c016b
 cni-windows/host-local.exe:
-  size: 3027968
-  sha: cfd94fe406bb116f8456266094e9768eaef9b235
-cni-windows/overlay.exe:
+  size: 3248640
+  object_id: 627e15b3-f485-4470-568c-2fb229badc9a
+  sha: db82d2dcc3eba21c772c201ea845567fe0e1fc73
+cni-windows/win-overlay.exe:
   size: 3584000
+  object_id: b80da60a-fca2-4de7-6ece-2c0f83a59ac3
   sha: 0b984e2c5c32ebd84c790d5d40ca2c64340c1a71
 cni/cni-plugins-amd64-v0.7.1.tgz:
   size: 17108856
@@ -84,11 +87,13 @@ flannel-v0.10.0-linux-amd64.tar.gz:
   object_id: 36a8e66a-0b6c-4ca2-5f27-c277a7db90c5
   sha: 9d19a56847d6aad207671a349eddd85de87ba560
 flannel-windows/flanneld.exe:
-  size: 41508864
-  sha: f84fef7de0b2aeefc553037a5f3e2222da79e5f2
+  size: 25336320
+  object_id: 83cadebb-d5cb-46cf-7003-bf2bfba2f108
+  sha: c7b2e1f6540cfd15df0dfc1e3e6e4754c22a0196
 flanneld-amd64:
-  size: 36459048
-  sha: 7e7cce695e2dff4ef1f302b7768e4d092171ad9b
+  size: 36454952
+  object_id: c1099a69-9d61-4705-759f-51f11c62589e
+  sha: 9139637bd24c85a971bd10233d984b111672fcd2
 ipset/ipset_6.20.1-1_amd64.deb:
   size: 34156
   object_id: 5dfcce8f-366e-49f0-59e6-9e2d48178750
@@ -127,19 +132,20 @@ kubernetes-1.11.3/kubelet:
   sha: 2c24374244482fc629776366df4f416a1b25ade4
 kubernetes-windows-1.11.2/kube-proxy.exe:
   size: 51215360
+  object_id: 0765ae01-82b1-42c1-50cc-20b40a2e5ca9
   sha: 5f51582ef9a7e5280f7e189b2a38160534525d12
 kubernetes-windows-1.11.2/kubeadm.exe:
   size: 57282048
+  object_id: 591ca036-945b-4632-6eea-ec2bdf437a51
   sha: 3f307ab0a37829f86b4a3fc970068c64416cbbe8
 kubernetes-windows-1.11.2/kubectl.exe:
   size: 55677952
+  object_id: f730c3a0-edd5-42d9-7ec2-7a01c496a2bc
   sha: 64ab92775b455f1c7ab857b40b78322bf3a717b1
 kubernetes-windows-1.11.2/kubelet.exe:
   size: 155528704
+  object_id: 456abff3-ee47-4f43-6b68-973d84a37891
   sha: 07b23339f76148242a74ca41c48fd1e3b81e9893
-precompiled-poststart/poststart.exe:
-  size: 32384000
-  sha: 0ec933a788284b6d6263afaeb7cceaea18addf10
 socat-1.7.3.2.tar.gz:
   size: 615818
   object_id: a6f3dcb3-54a0-44a3-4100-f408932aaf8f
