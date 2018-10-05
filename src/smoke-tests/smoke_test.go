@@ -47,7 +47,7 @@ var _ = Describe("CFCR Smoke Tests", func() {
 
 		BeforeEach(func() {
 			deploymentName = randSeq(10)
-			args := []string{"run", deploymentName, "--image=nginx:1.13-alpine", "--image-pull-policy=Never", "-l", "app=" + deploymentName}
+			args := []string{"run", deploymentName, "--image=nginx:1.15-alpine", "--image-pull-policy=Never", "-l", "app=" + deploymentName}
 			session := k8sRunner.RunKubectlCommand(args...)
 			Eventually(session, "60s").Should(gexec.Exit(0))
 
