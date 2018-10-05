@@ -14,7 +14,10 @@ In each example it is assumed that you already have access to a BOSH Director.
 
    **Note: The service accounts should be used per CFCR deployment (NOT per director)**
 
-1. Save the service account email addresses into a vars file that will be used to create the cloud-config
+1. Save the service account email addresses and the loadbalancer backend service into a vars file that will be used to create the cloud-config.
+
+   If your loadbalancer uses **target pools** instead, you will need to customize
+   the vars file and the ops-file in the next step.
 
     ```bash
     $ export deployment_name="your deployment name"
