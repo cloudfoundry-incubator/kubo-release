@@ -33,7 +33,7 @@ $confFile= '
               "Type": "OutBoundNAT",
               "ExceptionList": [
                 "<%= p('pod-network-cidr') %>",
-                "10.96.0.0/12"
+                "10.100.200.0/12"
               ]
             }
           },
@@ -41,7 +41,7 @@ $confFile= '
             "Name": "EndpointPolicy",
             "Value": {
               "Type": "ROUTE",
-              "DestinationPrefix": "10.96.0.0/12",
+              "DestinationPrefix": "10.100.200.0/24",
               "NeedEncap": true
             }
           },
