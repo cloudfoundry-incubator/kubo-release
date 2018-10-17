@@ -108,6 +108,7 @@ start_kubelet() {
     --allow-privileged=<%= p('allow_privileged') %> \
     <% if include_config -%>--cloud-config=${cloud_config}<% end %> \
     <% if !iaas.nil? -%>--cloud-provider=${cloud_provider}<% end %> \
+    --root-dir=/var/vcap/data/kubelet \
     --cni-bin-dir=/var/vcap/jobs/kubelet/packages/cni/bin \
     --config=/var/vcap/jobs/kubelet/config/kubeletconfig.yml \
     --container-runtime=docker \
