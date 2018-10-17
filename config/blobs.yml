@@ -130,22 +130,18 @@ kubernetes-1.11.3/kubelet:
   size: 163041864
   object_id: 39062b5b-80c6-4fe8-4ac3-12c2121f15ad
   sha: 2c24374244482fc629776366df4f416a1b25ade4
-kubernetes-windows-1.11.2/kube-proxy.exe:
-  size: 51215360
-  object_id: 0765ae01-82b1-42c1-50cc-20b40a2e5ca9
-  sha: 5f51582ef9a7e5280f7e189b2a38160534525d12
-kubernetes-windows-1.11.2/kubeadm.exe:
-  size: 57282048
-  object_id: 591ca036-945b-4632-6eea-ec2bdf437a51
-  sha: 3f307ab0a37829f86b4a3fc970068c64416cbbe8
-kubernetes-windows-1.11.2/kubectl.exe:
-  size: 55677952
-  object_id: f730c3a0-edd5-42d9-7ec2-7a01c496a2bc
-  sha: 64ab92775b455f1c7ab857b40b78322bf3a717b1
-kubernetes-windows-1.11.2/kubelet.exe:
-  size: 155528704
-  object_id: 456abff3-ee47-4f43-6b68-973d84a37891
-  sha: 07b23339f76148242a74ca41c48fd1e3b81e9893
+kubernetes-windows-1.11.3/kube-proxy.exe:
+  size: 51224576
+  sha: eeb1f3f18f683520b193caa39c5d1b86acae9122
+kubernetes-windows-1.11.3/kubeadm.exe:
+  size: 57290752
+  sha: 4d00dd853d727f769a1432ca48caf7a50da86e1f
+kubernetes-windows-1.11.3/kubectl.exe:
+  size: 55686656
+  sha: 94fdf0f22da29c0ab870234a61da4f606e1233cc
+kubernetes-windows-1.11.3/kubelet.exe:
+  size: 155562496
+  sha: c9a1b1333a30212cf0644ba0f01fe66c448a531f
 socat-1.7.3.2.tar.gz:
   size: 615818
   object_id: a6f3dcb3-54a0-44a3-4100-f408932aaf8f
