@@ -53,6 +53,22 @@ provides:
   - cloud-provider.azure.network-security-group-name
   - cloud-provider.azure.route-table-name
   - cloud-provider.azure.availability-set
+  - cloud-provider.azure.vm-type
+  - cloud-provider.azure.primary-scale-set-name
+  - cloud-provider.azure.cloud-provider-back-off
+  - cloud-provider.azure.cloud-provider-backoff-retries
+  - cloud-provider.azure.cloud-provider-backoff-exponent
+  - cloud-provider.azure.cloud-provider-backoff-duration
+  - cloud-provider.azure.cloud-provider-backoff-jitter
+  - cloud-provider.azure.cloud-provider-rate-limit
+  - cloud-provider.azure.cloud-provider-rate-limit-qps
+  - cloud-provider.azure.cloud-provider-rate-limit-bucket
+  - cloud-provider.azure.cloud-provider-rate-limit-qps-write
+  - cloud-provider.azure.cloud-provider-rate-limit-bucket-write
+  - cloud-provider.azure.use-instance-metadata
+  - cloud-provider.azure.load-balancer-sku
+  - cloud-provider.azure.exclude-master-from-standardlb
+  - cloud-provider.azure.maximum-load-balancer-rule-count
 
 properties:
   cloud-provider.type:
@@ -105,6 +121,54 @@ properties:
     description: Microsoft Azure route table that is attached to the subnet.  Used for managed routes.  Optional when cloud-provider.type is azure
   cloud-provider.azure.availability-set:
     description: Microsoft Azure availability set for the cluster worker nodes.  Required when cloud-provider.type is azure
+  cloud-provider.azure.vm-type:
+    description: The type of azure nodes, Candidate values are vmss and standard.
+    default: standard
+  cloud-provider.azure.primary-scale-set-name:
+    description: The name of the scale set that should be used as the load balancer backend.
+    default: ''
+  cloud-provider.azure.cloud-provider-back-off:
+    description: Enable exponential backoff to manage resource request retries
+    default: false
+  cloud-provider.azure.cloud-provider-backoff-retries:
+    description: Backoff retry limit
+    default: 0
+  cloud-provider.azure.cloud-provider-backoff-exponent:
+    description: Backoff exponent
+    default: 0
+  cloud-provider.azure.cloud-provider-backoff-duration:
+    description: Backoff duration
+    default: 0
+  cloud-provider.azure.cloud-provider-backoff-jitter:
+    description: Backoff jitter
+    default: 0
+  cloud-provider.azure.cloud-provider-rate-limit:
+    description: Enable rate limiting
+    default: false
+  cloud-provider.azure.cloud-provider-rate-limit-qps:
+    description: Rate limit QPS (Read)
+    default: 0
+  cloud-provider.azure.cloud-provider-rate-limit-bucket:
+    description: Rate limit Bucket Size
+    default: 0
+  cloud-provider.azure.cloud-provider-rate-limit-qps-write:
+    description: Rate limit QPS (Write)
+    default: 0
+  cloud-provider.azure.cloud-provider-rate-limit-bucket-write:
+    description: Rate limit Bucket Size
+    default: 0
+  cloud-provider.azure.use-instance-metadata:
+    description: Use instance metadata service where possible
+    default: false
+  cloud-provider.azure.load-balancer-sku:
+    description: Sku of Load Balancer and Public IP. Candidate values are basic and standard.
+    default: basic
+  cloud-provider.azure.exclude-master-from-standardlb:
+    description: ExcludeMasterFromStandardLB excludes master nodes from standard load balancer.
+    default: true
+  cloud-provider.azure.maximum-load-balancer-rule-count:
+    description: Maximum allowed LoadBalancer Rule Count is the limit enforced by Azure Load balancer
+    default: 148
 
   # vSphere specific properties
   cloud-provider.vsphere.user:

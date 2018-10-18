@@ -57,6 +57,23 @@
         cloud_config['securityGroupName'] = cloud_provider.p('cloud-provider.azure.network-security-group-name')
         cloud_config['useInstanceMetadata'] = true
         cloud_config['primaryAvailabilitySetName'] = cloud_provider.p('cloud-provider.azure.availability-set')
+        cloud_config['vmType'] = cloud_provider.p('cloud-provider.azure.vm-type')
+        cloud_config['primaryScaleSetName'] = cloud_provider.p('cloud-provider.azure.primary-scale-set-name')
+        cloud_config['cloudProviderBackoff'] = cloud_provider.p('cloud-provider.azure.cloud-provider-back-off')
+        cloud_config['cloudProviderBackoffRetries'] = cloud_provider.p('cloud-provider.azure.cloud-provider-backoff-retries')
+        cloud_config['cloudProviderBackoffExponent'] = cloud_provider.p('cloud-provider.azure.cloud-provider-backoff-exponent')
+        cloud_config['cloudProviderBackoffDuration'] = cloud_provider.p('cloud-provider.azure.cloud-provider-backoff-duration')
+        cloud_config['cloudProviderBackoffJitter'] = cloud_provider.p('cloud-provider.azure.cloud-provider-backoff-jitter')
+        cloud_config['cloudProviderRateLimit'] = cloud_provider.p('cloud-provider.azure.cloud-provider-rate-limit')
+        cloud_config['cloudProviderRateLimitQPS'] = cloud_provider.p('cloud-provider.azure.cloud-provider-rate-limit-qps')
+        cloud_config['cloudProviderRateLimitBucket'] = cloud_provider.p('cloud-provider.azure.cloud-provider-rate-limit-bucket')
+        cloud_config['cloudProviderRateLimitQPSWrite'] = cloud_provider.p('cloud-provider.azure.cloud-provider-rate-limit-qps-write')
+        cloud_config['cloudProviderRateLimitBucketWrite'] = cloud_provider.p('cloud-provider.azure.cloud-provider-rate-limit-bucket-write')
+        cloud_config['useInstanceMetadata'] = cloud_provider.p('cloud-provider.azure.use-instance-metadata')
+        cloud_config['loadBalancerSku'] = cloud_provider.p('cloud-provider.azure.load-balancer-sku')
+        cloud_config['excludeMasterFromStandardLB'] = cloud_provider.p('cloud-provider.azure.exclude-master-from-standardlb')
+        cloud_config['maximumLoadBalancerRuleCount'] = cloud_provider.p('cloud-provider.azure.maximum-load-balancer-rule-count')
+
       elsif provider_type == 'openstack'
         cloud_config['auth-url'] = cloud_provider.p('cloud-provider.openstack.auth-url')
         cloud_config['username'] = cloud_provider.p('cloud-provider.openstack.username')
