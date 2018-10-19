@@ -46,6 +46,7 @@ provides:
   - cloud-provider.azure.service-principal-id
   - cloud-provider.azure.service-principal-secret
   - cloud-provider.azure.location
+  - cloud-provider.azure.use-managed-identity-extension
   - cloud-provider.azure.resource-group-name
   - cloud-provider.azure.vnet-resource-group-name
   - cloud-provider.azure.vnet-name
@@ -107,6 +108,9 @@ properties:
     description: Microsoft Azure service principal secret.  Required when cloud-provider.type is azure
   cloud-provider.azure.location:
     description: Microsoft Azure datacenter location for the Kubernetes cluster.  Required when cloud-provider.type is azure
+  cloud-provider.azure.use-managed-identity-extension:
+    description: Use managed service identity for the virtual machine to access Azure ARM APIs
+    default: false
   cloud-provider.azure.resource-group-name:
     description: Microsoft Azure resource group name for the Kubernetes cluster.  Disks and Load Balancers will be created here.  Required when cloud-provider.type is azure
   cloud-provider.azure.vnet-resource-group-name:

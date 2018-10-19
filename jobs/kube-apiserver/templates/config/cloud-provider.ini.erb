@@ -51,6 +51,7 @@
         cloud_config['subscriptionId'] = cloud_provider.p('cloud-provider.azure.subscription-id')
         cloud_config['resourceGroup'] = cloud_provider.p('cloud-provider.azure.resource-group-name')
         cloud_config['location'] = cloud_provider.p('cloud-provider.azure.location')
+        cloud_config['useManagedIdentityExtension'] = cloud_provider.p('cloud-provider.azure.use-managed-identity-extension')
         cloud_config['vnetName'] = cloud_provider.p('cloud-provider.azure.vnet-name')
         cloud_config['vnetResourceGroup'] = cloud_provider.p('cloud-provider.azure.vnet-resource-group-name')
         cloud_config['subnetName'] = cloud_provider.p('cloud-provider.azure.subnet-name')
