@@ -1,3 +1,11 @@
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: influxdb
+  namespace: kube-system
+---
+
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
@@ -34,7 +42,7 @@ spec:
       - name: influxdb-certs
         secret:
           secretName: influxdb-certs
-      serviceAccountName: heapster
+      serviceAccountName: influxdb
 
 ---
 
