@@ -1,222 +1,30 @@
 ---
 name: cloud-provider
 
-packages:
-- pid_utils
-
 provides:
 - name: cloud-provider
   type: cloud-provider
   properties:
+  - cloud-config
+  - cloud-provider
   - cloud-provider.type
-  - cloud-provider.aws.access_key_id
-  - cloud-provider.aws.secret_access_key
-  - cloud-provider.gce.network-name
-  - cloud-provider.gce.subnetwork-name
-  - cloud-provider.gce.project-id
-  - cloud-provider.gce.service_key
-  - cloud-provider.gce.worker-node-tag
-  - cloud-provider.openstack.auth-url
-  - cloud-provider.openstack.bs-version
-  - cloud-provider.openstack.ca-file
-  - cloud-provider.openstack.domain-id
-  - cloud-provider.openstack.domain-name
-  - cloud-provider.openstack.ignore-volume-az
-  - cloud-provider.openstack.password
-  - cloud-provider.openstack.region
-  - cloud-provider.openstack.tenant-id
-  - cloud-provider.openstack.tenant-name
-  - cloud-provider.openstack.trust-device-path
-  - cloud-provider.openstack.trust-id
-  - cloud-provider.openstack.username
-  - cloud-provider.vsphere.datacenter
-  - cloud-provider.vsphere.datastore
-  - cloud-provider.vsphere.insecure-flag
-  - cloud-provider.vsphere.password
-  - cloud-provider.vsphere.port
-  - cloud-provider.vsphere.resourcepool-path
-  - cloud-provider.vsphere.scsicontrollertype
-  - cloud-provider.vsphere.server
-  - cloud-provider.vsphere.user
-  - cloud-provider.vsphere.vm-uuid
-  - cloud-provider.vsphere.working-dir
-  - cloud-provider.azure.cloud
-  - cloud-provider.azure.subscription-id
-  - cloud-provider.azure.tenant-id
-  - cloud-provider.azure.service-principal-id
-  - cloud-provider.azure.service-principal-secret
-  - cloud-provider.azure.location
-  - cloud-provider.azure.use-managed-identity-extension
-  - cloud-provider.azure.resource-group-name
-  - cloud-provider.azure.vnet-resource-group-name
-  - cloud-provider.azure.vnet-name
-  - cloud-provider.azure.subnet-name
-  - cloud-provider.azure.network-security-group-name
-  - cloud-provider.azure.route-table-name
-  - cloud-provider.azure.availability-set
-  - cloud-provider.azure.vm-type
-  - cloud-provider.azure.primary-scale-set-name
-  - cloud-provider.azure.cloud-provider-back-off
-  - cloud-provider.azure.cloud-provider-backoff-retries
-  - cloud-provider.azure.cloud-provider-backoff-exponent
-  - cloud-provider.azure.cloud-provider-backoff-duration
-  - cloud-provider.azure.cloud-provider-backoff-jitter
-  - cloud-provider.azure.cloud-provider-rate-limit
-  - cloud-provider.azure.cloud-provider-rate-limit-qps
-  - cloud-provider.azure.cloud-provider-rate-limit-bucket
-  - cloud-provider.azure.cloud-provider-rate-limit-qps-write
-  - cloud-provider.azure.cloud-provider-rate-limit-bucket-write
-  - cloud-provider.azure.use-instance-metadata
-  - cloud-provider.azure.load-balancer-sku
-  - cloud-provider.azure.exclude-master-from-standardlb
-  - cloud-provider.azure.maximum-load-balancer-rule-count
 
 properties:
+  cloud-config:
+    description: "The properties to be placed into the cloud-config. The first level is a header, the second level the properties under the header"
+    example: |
+      Global:
+        user: <username>
+        password: <password>
+        port: <port>
+  cloud-provider:
+    description: "The generic properties used on a per-cloud basis"
+    example: |
+      cloud-provider:
+        type: aws
+        aws:
+          access_key_id: <access key>
+          secret_access_key: <secret key>
   cloud-provider.type:
-    description: "Type of Cloud Provider to use"
-    example: gce, vsphere, openstack
-
-  # AWS specific properties
-  cloud-provider.aws.access_key_id:
-    description: AWS access key ID that is used by cloud-provider.
-  cloud-provider.aws.secret_access_key:
-    description: AWS secret access key that is used by cloud-provider.
-
-  # GCE specific properties
-  cloud-provider.gce.project-id:
-    description: Google Cloud project id. Required when cloud-provider.type is gce.
-  cloud-provider.gce.network-name:
-    description: Google Cloud network name. Required when cloud-provider.type is gce.
-  cloud-provider.gce.subnetwork-name:
-    description: Google Cloud subnet name. Optional, used for internal load balancers.
-  cloud-provider.gce.worker-node-tag:
-    description: Google Cloud tag that identifies only worker nodes in this deployment.
-  cloud-provider.gce.service_key:
-    description: Google Cloud service key that is used by cloud-provider.
-
-  # Azure specific properties
-  cloud-provider.azure.cloud:
-    description: Microsoft Azure cloud id. Defaults to AzurePublicCloud, can also be AzureUSGovernmentCloud, AzureChinaCloud, or AzureGermanCloud. Required when cloud-provider.type is azure
-    default: "AzurePublicCloud"
-  cloud-provider.azure.subscription-id:
-    description: Microsoft Azure subscription id.  Required when cloud-provider.type is azure
-  cloud-provider.azure.tenant-id:
-    description: Microsoft Azure tenant id.  Required when cloud-provider.type is azure
-  cloud-provider.azure.service-principal-id:
-    description: Microsoft Azure service principal uuid.  Required when cloud-provider.type is azure
-  cloud-provider.azure.service-principal-secret:
-    description: Microsoft Azure service principal secret.  Required when cloud-provider.type is azure
-  cloud-provider.azure.location:
-    description: Microsoft Azure datacenter location for the Kubernetes cluster.  Required when cloud-provider.type is azure
-  cloud-provider.azure.use-managed-identity-extension:
-    description: Use managed service identity for the virtual machine to access Azure ARM APIs
-  cloud-provider.azure.resource-group-name:
-    description: Microsoft Azure resource group name for the Kubernetes cluster.  Disks and Load Balancers will be created here.  Required when cloud-provider.type is azure
-  cloud-provider.azure.vnet-resource-group-name:
-    description: Microsoft Azure resource group that includes the Virtual Network.  Required when cloud-provider.type is azure
-  cloud-provider.azure.vnet-name:
-    description: Microsoft Azure Virtual Network name.  Optionally prefixed with resource group name, i.e. "resource_group.vnet_name". Required when cloud-provider.type is azure
-  cloud-provider.azure.subnet-name:
-    description: Microsoft Azure subnet name.  Must be part of the virtual network.   required when cloud-provider.type is azure
-  cloud-provider.azure.network-security-group-name:
-    description: Microsoft Azure network security group that is attached to the subnet.  This will be be used to manage rules for Load Balancers.  Required when cloud-provider.type is azure
-  cloud-provider.azure.route-table-name:
-    description: Microsoft Azure route table that is attached to the subnet.  Used for managed routes.  Optional when cloud-provider.type is azure
-  cloud-provider.azure.availability-set:
-    description: Microsoft Azure availability set for the cluster worker nodes.  Required when cloud-provider.type is azure
-  cloud-provider.azure.vm-type:
-    description: The type of azure nodes, Candidate values are vmss and standard.
-  cloud-provider.azure.primary-scale-set-name:
-    description: The name of the scale set that should be used as the load balancer backend.
-  cloud-provider.azure.cloud-provider-back-off:
-    description: Enable exponential backoff to manage resource request retries
-  cloud-provider.azure.cloud-provider-backoff-retries:
-    description: Backoff retry limit
-  cloud-provider.azure.cloud-provider-backoff-exponent:
-    description: Backoff exponent
-  cloud-provider.azure.cloud-provider-backoff-duration:
-    description: Backoff duration
-  cloud-provider.azure.cloud-provider-backoff-jitter:
-    description: Backoff jitter
-  cloud-provider.azure.cloud-provider-rate-limit:
-    description: Enable rate limiting
-  cloud-provider.azure.cloud-provider-rate-limit-qps:
-    description: Rate limit QPS (Read)
-  cloud-provider.azure.cloud-provider-rate-limit-bucket:
-    description: Rate limit Bucket Size
-  cloud-provider.azure.cloud-provider-rate-limit-qps-write:
-    description: Rate limit QPS (Write)
-  cloud-provider.azure.cloud-provider-rate-limit-bucket-write:
-    description: Rate limit Bucket Size
-  cloud-provider.azure.use-instance-metadata:
-    description: Use instance metadata service where possible
-  cloud-provider.azure.load-balancer-sku:
-    description: Sku of Load Balancer and Public IP. Candidate values are basic and standard.
-  cloud-provider.azure.exclude-master-from-standardlb:
-    description: ExcludeMasterFromStandardLB excludes master nodes from standard load balancer.
-  cloud-provider.azure.maximum-load-balancer-rule-count:
-    description: Maximum allowed LoadBalancer Rule Count is the limit enforced by Azure Load balancer
-
-  # vSphere specific properties
-  cloud-provider.vsphere.user:
-    description: User name for vCenter
-  cloud-provider.vsphere.password:
-    description: Password for vCenter
-  cloud-provider.vsphere.server:
-    description: IP/URL for vCenter
-  cloud-provider.vsphere.port:
-    description: Default 443 for vCenter
-    default: 443
-  cloud-provider.vsphere.insecure-flag:
-    description: set to 1 if the host above uses a self-signed cert
-    default: 0
-  cloud-provider.vsphere.datacenter:
-    description: Datacenter to be used
-  cloud-provider.vsphere.datastore:
-    description: Datastore to use for provisioning volumes using storage classes/dynamic provisioning
-  cloud-provider.vsphere.working-dir:
-    description: Folder in which VMs are provisioned
-  cloud-provider.vsphere.vm-uuid:
-    description: VM Instance UUID of virtual machine which can be retrieved from instanceUuid property in VmConfigInfo, or also set as vc.uuid in VMX file. If empty, will be retrieved from sysfs (requires root)
-  cloud-provider.vsphere.scsicontrollertype:
-    description: vSphere vSCSI adapter type name
-    default: pvscsi
-  cloud-provider.vsphere.resourcepool-path:
-    description: Path to resource pool for volume creation
-    example: /data_center/host/cluster
-
-  # OpenStack specific properties
-  cloud-provider.openstack.auth-url:
-    description: The URL of the keystone API used to authenticate.
-  cloud-provider.openstack.username:
-    description: Refers to the username of a valid user set in keystone.
-  cloud-provider.openstack.password:
-    description: Refers to the password of a valid user set in keystone.
-  cloud-provider.openstack.tenant-id:
-    description: Used to specify the id of the project where you want to create your resources.
-  cloud-provider.openstack.tenant-name:
-    description: Used to specify the name of the project where you want to create your resources (Optional).
-    default: ''
-  cloud-provider.openstack.trust-id:
-    description: Used to specify the identifier of the trust to use for authorization (Optional).
-    default: ''
-  cloud-provider.openstack.domain-id:
-    description: Used to specify the id of the domain your user belongs to (Optional).
-    default: ''
-  cloud-provider.openstack.domain-name:
-    description: Used to specify the name of the domain your user belongs to (Optional).
-    default: ''
-  cloud-provider.openstack.region:
-    description: Used to specify the identifier of the region to use when running on a multi-region OpenStack cloud (Optional).
-    default: ''
-  cloud-provider.openstack.ca-file:
-    description: CA file to connect to your OpenStack cluster (Optional).
-  cloud-provider.openstack.bs-version:
-    description: Block-storage version. Valid values are v1, v2, v3 and auto. Default to auto (Optional).
-    default: auto
-  cloud-provider.openstack.trust-device-path:
-    description: By default block device names provided by Cinder (e.g. /dev/vda) can not be trusted. True toggle this behavior (Optional).
-    default: false
-  cloud-provider.openstack.ignore-volume-az:
-    description: When Nova and Cinder have different availability zones, this should be set to true. Default to false (Optional).
-    default: false
+    description: "The type of cloud-provider to use"
+    example: AWS, GCE, OpenStack, vSphere, etc.
