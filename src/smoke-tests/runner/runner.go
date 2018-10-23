@@ -11,9 +11,8 @@ import (
 )
 
 type KubectlRunner struct {
-	configPath string
-	namespace  string
-	Timeout    string
+	namespace string
+	Timeout   string
 }
 
 func NewKubectlRunner() *KubectlRunner {
@@ -35,6 +34,7 @@ func (runner KubectlRunner) RunKubectlCommandInNamespace(namespace string, args 
 	Expect(err).NotTo(HaveOccurred())
 	return session
 }
+
 func (runner KubectlRunner) Namespace() string {
 	return runner.namespace
 }
