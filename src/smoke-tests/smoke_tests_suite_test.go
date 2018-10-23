@@ -71,7 +71,7 @@ func templatePSPWithNamespace(tmpDir, namespace string) string {
 
 var _ = AfterSuite(func() {
 	if k8sRunner != nil {
-		k8sRunner.RunKubectlCommand("delete", "namespace", k8sRunner.Namespace()).Wait("60s")
 		k8sRunner.RunKubectlCommand("delete", "-f", pspSpec).Wait("60s")
+		k8sRunner.RunKubectlCommand("delete", "namespace", k8sRunner.Namespace()).Wait("60s")
 	}
 })
