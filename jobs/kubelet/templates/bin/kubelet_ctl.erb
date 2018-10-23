@@ -8,7 +8,6 @@ RUN_DIR=/var/vcap/sys/run/kubernetes
 PIDFILE=$RUN_DIR/kubelet.pid
 LOG_DIR=/var/vcap/sys/log/kubelet
 DATA_DIR=/var/vcap/store/kubernetes
-DOCKER_SOCKET=unix:///var/vcap/sys/run/docker/docker.sock
 
 <% iaas = nil %>
 <% if_p('cloud-provider') do |cloud_provider| %>
@@ -31,7 +30,12 @@ DOCKER_SOCKET=unix:///var/vcap/sys/run/docker/docker.sock
 
 <%
   labels = ["spec.ip=#{spec.ip}","bosh.id=#{spec.id}","bosh.zone=#{spec.az}"]
-  labels += p("labels").map {|k,v| "#{k}=#{v}"}
+  if iaas=="vsphere"
+    labels << "failure-domain.beta.kubernetes.io/zone=#{spec.az}"
+  end
+  if_p("labels") do |node_labels|
+    labels += node_labels.map {|k,v| "#{k}=#{v}"}
+  end
   labels = labels.join(',')
 %>
 
@@ -89,12 +93,6 @@ get_hostname_override() {
 start_kubelet() {
   ln -s -f /var/vcap/jobs/kubelet/packages/cni/bin/nsenter /usr/bin/nsenter
 
-  zone_label=""
-
-  if [[ "vsphere" == "$cloud_provider"  ]]; then
-    zone_label=",failure-domain.beta.kubernetes.io/zone=<%= spec.az %>"
-  fi
-
   <%-
     include_config = false
     if !iaas.nil? and iaas != "vsphere"
@@ -104,24 +102,29 @@ start_kubelet() {
     end
   -%>
 
-  kubelet \
-    --allow-privileged=<%= p('allow_privileged') %> \
+  kubelet \<% if_p('k8s-args') do
+    p('k8s-args').each do |flag, value|
+      if_p('k8s-args.'+flag) do |v|
+        argString = "--#{flag}"
+        if v
+          if v.is_a? Array
+            values = v.join(",")
+          elsif v.is_a? Hash
+            values = v.map { |k,v| "#{k}=#{v}" }.join(",")
+          else
+            values = v
+          end
+          argString += "=#{values}" %>
+    <%= argString %> \<%
+        end
+      end
+    end
+  end %>
     <% if include_config -%>--cloud-config=${cloud_config}<% end %> \
     <% if !iaas.nil? -%>--cloud-provider=${cloud_provider}<% end %> \
-    --cni-bin-dir=/var/vcap/jobs/kubelet/packages/cni/bin \
-    --config=/var/vcap/jobs/kubelet/config/kubeletconfig.yml \
-    --container-runtime=docker \
-    --docker-endpoint="${DOCKER_SOCKET}" \
-    --docker="${DOCKER_SOCKET}" \
     --hostname-override=$(get_hostname_override) \
-    --keep-terminated-pod-volumes=false \
-    --kubeconfig=/var/vcap/jobs/kubelet/config/kubeconfig \
-    --network-plugin=cni \
-    --node-labels=<%= labels %>"$zone_label" \
-    --v=<%=p('logging-level') %> \
-    <% if_p('kube-reserved') do |kube_reserved| %>--kube-reserved="<%= kube_reserved %>"<% end %> \
-    <% if_p('system-reserved') do |system_reserved| %>--system-reserved="<%= system_reserved %>"<% end %> \
-    <% if_p('eviction-hard') do |eviction_hard| %>--eviction-hard="<%= eviction_hard %>"<% end %> \
+    --node-labels=<%= labels %> \
+    --config="/var/vcap/jobs/kubelet/config/kubeletconfig.yml"
   1>> $LOG_DIR/kubelet.stdout.log \
   2>> $LOG_DIR/kubelet.stderr.log
 }

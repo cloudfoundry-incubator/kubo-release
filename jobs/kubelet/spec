@@ -1,81 +1,588 @@
----
 name: kubelet
-
 templates:
   bin/drain.erb: bin/drain
   bin/ensure_kubelet_up_and_running.erb: bin/ensure_kubelet_up_and_running
   bin/kubelet_ctl.erb: bin/kubelet_ctl
   bin/post-start.erb: bin/post-start
   config/apiserver-ca.pem.erb: config/apiserver-ca.pem
-  config/kubelet-client-ca.pem.erb: config/kubelet-client-ca.pem
   config/cloud-provider.ini.erb: config/cloud-provider.ini
   config/kubeconfig-drain.erb: config/kubeconfig-drain
   config/kubeconfig.erb: config/kubeconfig
+  config/kubelet-client-ca.pem.erb: config/kubelet-client-ca.pem
   config/kubelet-key.pem.erb: config/kubelet-key.pem
   config/kubelet.pem.erb: config/kubelet.pem
   config/kubeletconfig.yml.erb: config/kubeletconfig.yml
   config/openstack-ca.crt.erb: config/openstack-ca.crt
   config/service_key.json.erb: config/service_key.json
-
 packages:
 - pid_utils
 - kubernetes
 - cni
 - socat
-
 properties:
-  allow_privileged:
-    description: Allows privileged containers for the Kubernetes cluster
-    default: false
+  api-token:
+    description: The token to access Kubernetes API
   cloud-provider:
     description: "The type of cloud-provider that is being deployed"
-  tls.kubernetes:
-      description: "Certificate and private key for the Kubernetes master"
-  tls.kubelet:
-    description: "Certificate and private key for the Kubernetes worker"
-    type: certificate
-    parameters:
-      key_length: 4096
-      duration: 365
-  tls.kubelet-client-ca.certificate:
-    description: "CA certificate of the authority granting access to kubelet server"
+  drain-api-token:
+    description: The token to access Kubernetes API used to drain the kubelet.
   http_proxy:
-    description: http_proxy env var for cloud provider interactions, i.e. for the kubelet
+    description: http_proxy env var for cloud provider interactions, i.e. for the
+      kubelet
   https_proxy:
-    description: https_proxy env var for cloud provider interactions, i.e. for the kubelet
+    description: https_proxy env var for cloud provider interactions, i.e. for the
+      kubelet
+  kubelet-configuration:
+    description: The Kubelet will load its initial configuration from this.
+      Omit this to use the built-in default configuration values.
+      Command-line flags override configuration.
+  k8s-args:
+    address:
+      description: The IP address for the Kubelet to serve on (set to `0.0.0.0` for
+        all IPv4 interfaces and `::` for all IPv6 interfaces)
+    allow-privileged:
+      description: 'If true, allow containers to request privileged mode. Default:
+        true'
+    allowed-unsafe-sysctls:
+      description: Comma-separated whitelist of unsafe sysctls or unsafe sysctl patterns
+        (ending in *). Use these at your own risk. Sysctls feature gate is enabled
+        by default.
+    alsologtostderr:
+      description: log to standard error as well as files
+    anonymous-auth:
+      description: Enables anonymous requests to the Kubelet server. Requests that
+        are not rejected by another authentication method are treated as anonymous
+        requests. Anonymous requests have a username of system:anonymous, and a group
+        name of system:unauthenticated.
+    authentication-token-webhook:
+      description: Use the TokenReview API to determine authentication for bearer
+        tokens.
+    authentication-token-webhook-cache-ttl:
+      description: The duration to cache responses from the webhook token authenticator.
+    authorization-mode:
+      description: Authorization mode for Kubelet server. Valid options are AlwaysAllow
+        or Webhook. Webhook mode uses the SubjectAccessReview API to determine authorization.
+    authorization-webhook-cache-authorized-ttl:
+      description: The duration to cache 'authorized' responses from the webhook authorizer.
+    authorization-webhook-cache-unauthorized-ttl:
+      description: The duration to cache 'unauthorized' responses from the webhook
+        authorizer.
+    bootstrap-checkpoint-path:
+      description: '<Warning: Alpha feature> Path to to the directory where the checkpoints
+        are stored'
+    bootstrap-kubeconfig:
+      description: Path to a kubeconfig file that will be used to get client certificate
+        for kubelet. If the file specified by --kubeconfig does not exist, the bootstrap
+        kubeconfig is used to request a client certificate from the API server. On
+        success, a kubeconfig file referencing the generated client certificate and
+        key is written to the path specified by --kubeconfig. The client certificate
+        and key file will be stored in the directory pointed by --cert-dir.
+    cadvisor-port:
+      description: The port of the localhost cAdvisor endpoint (set to 0 to disable)
+    cert-dir:
+      description: The directory where the TLS certs are located. If --tls-cert-file
+        and --tls-private-key-file are provided, this flag will be ignored.
+    cgroup-driver:
+      description: 'Driver that the kubelet uses to manipulate cgroups on the host.  Possible
+        values: ''cgroupfs'', ''systemd'''
+    cgroup-root:
+      description: 'Optional root cgroup to use for pods. This is handled by the container
+        runtime on a best effort basis. Default: '''', which means use the container
+        runtime default.'
+    cgroups-per-qos:
+      description: Enable creation of QoS cgroup hierarchy, if true top level QoS
+        and pod cgroups are created.
+    chaos-chance:
+      description: If > 0.0, introduce random client errors and latency. Intended
+        for testing.
+    client-ca-file:
+      description: If set, any request presenting a client certificate signed by one
+        of the authorities in the client-ca-file is authenticated with an identity
+        corresponding to the CommonName of the client certificate.
+    cloud-provider-gce-lb-src-cidrs:
+      description: CIDRs opened in GCE firewall for LB traffic proxy & health checks
+    cluster-dns:
+      description: 'Comma-separated list of DNS server IP address.  This value is
+        used for containers DNS server in case of Pods with "dnsPolicy=ClusterFirst".
+        Note: all DNS servers appearing in the list MUST serve the same set of records
+        otherwise name resolution within the cluster may not work correctly. There
+        is no guarantee as to which DNS server may be contacted for name resolution.'
+    cluster-domain:
+      description: Domain for this cluster.  If set, kubelet will configure all containers
+        to search this domain in addition to the host's search domains
+    cni-bin-dir:
+      description: '<Warning: Alpha feature> A comma-separated list of full paths
+        of directories in which to search for CNI plugin binaries. Default: /opt/cni/bin.
+        This docker-specific flag only works when container-runtime is set to docker.'
+    cni-conf-dir:
+      description: '<Warning: Alpha feature> The full path of the directory in which
+        to search for CNI config files. Default: /etc/cni/net.d. This docker-specific
+        flag only works when container-runtime is set to docker.'
+    container-log-max-files:
+      description: '<Warning: Beta feature> Set the maximum number of container log
+        files that can be present for a container. The number must be >= 2. This flag
+        can only be used with --container-runtime=remote.'
+    container-log-max-size:
+      description: '<Warning: Beta feature> Set the maximum size (e.g. 10Mi) of container
+        log file before it is rotated. This flag can only be used with --container-runtime=remote.'
+    container-runtime:
+      description: 'The container runtime to use. Possible values: ''docker'', ''remote'',
+        ''rkt (deprecated)''.'
+    container-runtime-endpoint:
+      description: '[Experimental] The endpoint of remote runtime service. Currently
+        unix socket is supported on Linux, and tcp is supported on windows.  Examples:''unix:///var/run/dockershim.sock'',
+        ''tcp://localhost:3735'''
+    containerized:
+      description: Running kubelet in a container.
+    contention-profiling:
+      description: Enable lock contention profiling, if profiling is enabled
+    cpu-cfs-quota:
+      description: Enable CPU CFS quota enforcement for containers that specify CPU
+        limits
+    cpu-manager-policy:
+      description: 'CPU Manager policy to use. Possible values: ''none'', ''static''.
+        Default: ''none'''
+    cpu-manager-reconcile-period:
+      description: '<Warning: Alpha feature> CPU Manager reconciliation period. Examples:
+        ''10s'', or ''1m''. If not supplied, defaults to `NodeStatusUpdateFrequency`'
+    default-not-ready-toleration-seconds:
+      description: Indicates the tolerationSeconds of the toleration for notReady:NoExecute
+        that is added by default to every pod that does not already have such a toleration.
+    default-unreachable-toleration-seconds:
+      description: Indicates the tolerationSeconds of the toleration for unreachable:NoExecute
+        that is added by default to every pod that does not already have such a toleration.
+    docker-disable-shared-pid:
+      description: Setting this to false causes Kubernetes to create pods using a
+        shared process namespace for containers in a pod when running with Docker
+        1.13.1 or higher. A future Kubernetes release will make this configurable
+        instead in the API. This docker-specific flag only works when container-runtime
+        is set to docker.
+    docker-endpoint:
+      description: Use this for the docker endpoint to communicate with This docker-specific
+        flag only works when container-runtime is set to docker.
+    dynamic-config-dir:
+      description: The Kubelet will use this directory for checkpointing downloaded
+        configurations and tracking configuration health. The Kubelet will create
+        this directory if it does not already exist. The path may be absolute or relative;
+        relative paths start at the Kubelet's current working directory. Providing
+        this flag enables dynamic Kubelet configuration. The DynamicKubeletConfig
+        feature gate must be enabled to pass this flag; this gate currently defaults
+        to true because the feature is beta.
+    enable-controller-attach-detach:
+      description: Enables the Attach/Detach controller to manage attachment/detachment
+        of volumes scheduled to this node, and disables kubelet from executing any
+        attach/detach operations
+    enable-debugging-handlers:
+      description: Enables server endpoints for log collection and local running of
+        containers and commands
+    enable-server:
+      description: Enable the Kubelet's server
+    enforce-node-allocatable:
+      description: A comma separated list of levels of node allocatable enforcement
+        to be enforced by kubelet. Acceptable options are 'none', 'pods', 'system-reserved',
+        and 'kube-reserved'. If the latter two options are specified, '--system-reserved-cgroup'
+        and '--kube-reserved-cgroup' must also be set, respectively. If 'none' is
+        specified, no additional options should be set. See https://kubernetes.io/docs/tasks/administer-cluster/reserve-compute-resources/
+        for more details.
+    event-burst:
+      description: Maximum size of a bursty event records, temporarily allows event
+        records to burst to this number, while still not exceeding event-qps. Only
+        used if --event-qps > 0
+    event-qps:
+      description: If > 0, limit event creations per second to this value. If 0, unlimited.
+    eviction-hard:
+      description: A set of eviction thresholds (e.g. memory.available<1Gi) that if
+        met would trigger a pod eviction.
+    eviction-max-pod-grace-period:
+      description: Maximum allowed grace period (in seconds) to use when terminating
+        pods in response to a soft eviction threshold being met.  If negative, defer
+        to pod specified value.
+    eviction-minimum-reclaim:
+      description: A set of minimum reclaims (e.g. imagefs.available=2Gi) that describes
+        the minimum amount of resource the kubelet will reclaim when performing a
+        pod eviction if that resource is under pressure.
+    eviction-pressure-transition-period:
+      description: Duration for which the kubelet has to wait before transitioning
+        out of an eviction pressure condition.
+    eviction-soft:
+      description: A set of eviction thresholds (e.g. memory.available<1.5Gi) that
+        if met over a corresponding grace period would trigger a pod eviction.
+    eviction-soft-grace-period:
+      description: A set of eviction grace periods (e.g. memory.available=1m30s) that
+        correspond to how long a soft eviction threshold must hold before triggering
+        a pod eviction.
+    exit-on-lock-contention:
+      description: Whether kubelet should exit upon lock-file contention.
+    experimental-allocatable-ignore-eviction:
+      description: When set to 'true', Hard Eviction Thresholds will be ignored while
+        calculating Node Allocatable. See https://kubernetes.io/docs/tasks/administer-cluster/reserve-compute-resources/
+        for more details. [default=false]
+    experimental-bootstrap-kubeconfig: {}
+    experimental-check-node-capabilities-before-mount:
+      description: '[Experimental] if set true, the kubelet will check the underlying
+        node for required components (binaries, etc.) before performing the mount'
+    experimental-dockershim:
+      description: Enable dockershim only mode. In this mode, kubelet will only start
+        dockershim without any other functionalities. This flag only serves test purpose,
+        please do not use it unless you are conscious of what you are doing. [default=false]
+    experimental-dockershim-root-directory:
+      description: Path to the dockershim root directory.
+    experimental-fail-swap-on:
+      description: 'DEPRECATED: please use --fail-swap-on instead.'
+    experimental-kernel-memcg-notification:
+      description: If enabled, the kubelet will integrate with the kernel memcg notification
+        to determine if memory eviction thresholds are crossed rather than polling.
+    experimental-mounter-path:
+      description: '[Experimental] Path of mounter binary. Leave empty to use the
+        default mount.'
+    fail-swap-on:
+      description: 'Makes the Kubelet fail to start if swap is enabled on the node. '
+    feature-gates:
+      description: |-
+        A set of key=value pairs that describe feature gates for alpha/experimental features. Options are:
+        APIListChunking=true|false (BETA - default=true)
+        APIResponseCompression=true|false (ALPHA - default=false)
+        AdvancedAuditing=true|false (BETA - default=true)
+        AllAlpha=true|false (ALPHA - default=false)
+        AppArmor=true|false (BETA - default=true)
+        AttachVolumeLimit=true|false (ALPHA - default=false)
+        BalanceAttachedNodeVolumes=true|false (ALPHA - default=false)
+        BlockVolume=true|false (ALPHA - default=false)
+        CPUManager=true|false (BETA - default=true)
+        CRIContainerLogRotation=true|false (BETA - default=true)
+        CSIBlockVolume=true|false (ALPHA - default=false)
+        CSIPersistentVolume=true|false (BETA - default=true)
+        CustomPodDNS=true|false (BETA - default=true)
+        CustomResourceSubresources=true|false (BETA - default=true)
+        CustomResourceValidation=true|false (BETA - default=true)
+        DebugContainers=true|false (ALPHA - default=false)
+        DevicePlugins=true|false (BETA - default=true)
+        DynamicKubeletConfig=true|false (BETA - default=true)
+        DynamicProvisioningScheduling=true|false (ALPHA - default=false)
+        EnableEquivalenceClassCache=true|false (ALPHA - default=false)
+        ExpandInUsePersistentVolumes=true|false (ALPHA - default=false)
+        ExpandPersistentVolumes=true|false (BETA - default=true)
+        ExperimentalCriticalPodAnnotation=true|false (ALPHA - default=false)
+        ExperimentalHostUserNamespaceDefaulting=true|false (BETA - default=false)
+        GCERegionalPersistentDisk=true|false (BETA - default=true)
+        HugePages=true|false (BETA - default=true)
+        HyperVContainer=true|false (ALPHA - default=false)
+        Initializers=true|false (ALPHA - default=false)
+        KubeletPluginsWatcher=true|false (ALPHA - default=false)
+        LocalStorageCapacityIsolation=true|false (BETA - default=true)
+        MountContainers=true|false (ALPHA - default=false)
+        MountPropagation=true|false (BETA - default=true)
+        PersistentLocalVolumes=true|false (BETA - default=true)
+        PodPriority=true|false (BETA - default=true)
+        PodReadinessGates=true|false (BETA - default=false)
+        PodShareProcessNamespace=true|false (ALPHA - default=false)
+        QOSReserved=true|false (ALPHA - default=false)
+        ReadOnlyAPIDataVolumes=true|false (DEPRECATED - default=true)
+        ResourceLimitsPriorityFunction=true|false (ALPHA - default=false)
+        ResourceQuotaScopeSelectors=true|false (ALPHA - default=false)
+        RotateKubeletClientCertificate=true|false (BETA - default=true)
+        RotateKubeletServerCertificate=true|false (ALPHA - default=false)
+        RunAsGroup=true|false (ALPHA - default=false)
+        ScheduleDaemonSetPods=true|false (ALPHA - default=false)
+        ServiceNodeExclusion=true|false (ALPHA - default=false)
+        ServiceProxyAllowExternalIPs=true|false (DEPRECATED - default=false)
+        StorageObjectInUseProtection=true|false (default=true)
+        StreamingProxyRedirects=true|false (BETA - default=true)
+        SupportIPVSProxyMode=true|false (default=true)
+        SupportPodPidsLimit=true|false (ALPHA - default=false)
+        Sysctls=true|false (BETA - default=true)
+        TaintBasedEvictions=true|false (ALPHA - default=false)
+        TaintNodesByCondition=true|false (ALPHA - default=false)
+        TokenRequest=true|false (ALPHA - default=false)
+        TokenRequestProjection=true|false (ALPHA - default=false)
+        VolumeScheduling=true|false (BETA - default=true)
+        VolumeSubpath=true|false (default=true)
+        VolumeSubpathEnvExpansion=true|false (ALPHA - default=false)
+    file-check-frequency:
+      description: Duration between checking config files for new data
+    hairpin-mode:
+      description: How should the kubelet setup hairpin NAT. This allows endpoints
+        of a Service to loadbalance back to themselves if they should try to access
+        their own Service. Valid values are "promiscuous-bridge", "hairpin-veth" and
+        "none".
+    healthz-bind-address:
+      description: The IP address for the healthz server to serve on (set to `0.0.0.0`
+        for all IPv4 interfaces and `::` for all IPv6 interfaces)
+    healthz-port:
+      description: The port of the localhost healthz endpoint (set to 0 to disable)
+    host-ipc-sources:
+      description: Comma-separated list of sources from which the Kubelet allows pods
+        to use the host ipc namespace.
+    host-network-sources:
+      description: Comma-separated list of sources from which the Kubelet allows pods
+        to use of host network.
+    host-pid-sources:
+      description: Comma-separated list of sources from which the Kubelet allows pods
+        to use the host pid namespace.
+    http-check-frequency:
+      description: Duration between checking http for new data
+    image-gc-high-threshold:
+      description: 'The percent of disk usage after which image garbage collection
+        is always run. Values must be within the range [0, 100], To disable image
+        garbage collection, set to 100. '
+    image-gc-low-threshold:
+      description: The percent of disk usage before which image garbage collection
+        is never run. Lowest disk usage to garbage collect to. Values must be within
+        the range [0, 100] and should not be larger than that of --image-gc-high-threshold.
+    image-pull-progress-deadline:
+      description: If no pulling progress is made before this deadline, the image
+        pulling will be cancelled. This docker-specific flag only works when container-runtime
+        is set to docker.
+    image-service-endpoint:
+      description: '[Experimental] The endpoint of remote image service. If not specified,
+        it will be the same with container-runtime-endpoint by default. Currently
+        unix socket is supported on Linux, and tcp is supported on windows.  Examples:''unix:///var/run/dockershim.sock'',
+        ''tcp://localhost:3735'''
+    iptables-drop-bit:
+      description: The bit of the fwmark space to mark packets for dropping. Must
+        be within the range [0, 31].
+    iptables-masquerade-bit:
+      description: The bit of the fwmark space to mark packets for SNAT. Must be within
+        the range [0, 31]. Please match this parameter with corresponding parameter
+        in kube-proxy.
+    keep-terminated-pod-volumes:
+      description: Keep terminated pod volumes mounted to the node after the pod terminates.  Can
+        be useful for debugging volume related issues.
+    kube-api-burst:
+      description: Burst to use while talking with kubernetes apiserver
+    kube-api-content-type:
+      description: Content type of requests sent to apiserver.
+    kube-api-qps:
+      description: QPS to use while talking with kubernetes apiserver
+    kube-reserved:
+      description: A set of ResourceName=ResourceQuantity (e.g. cpu=200m,memory=500Mi,ephemeral-storage=1Gi)
+        pairs that describe resources reserved for kubernetes system components. Currently
+        cpu, memory and local ephemeral storage for root file system are supported.
+        See http://kubernetes.io/docs/user-guide/compute-resources for more detail.
+        [default=none]
+    kube-reserved-cgroup:
+      description: Absolute name of the top level cgroup that is used to manage kubernetes
+        components for which compute resources were reserved via '--kube-reserved'
+        flag. Ex. '/kube-reserved'. [default='']
+    kubeconfig:
+      description: Path to a kubeconfig file, specifying how to connect to the API
+        server. Providing --kubeconfig enables API server mode, omitting --kubeconfig
+        enables standalone mode.
+    kubelet-cgroups:
+      description: Optional absolute name of cgroups to create and run the Kubelet
+        in.
+    lock-file:
+      description: '<Warning: Alpha feature> The path to file for kubelet to use as
+        a lock file.'
+    log_backtrace_at:
+      description: when logging hits line file:N, emit a stack trace
+    log_dir:
+      description: If non-empty, write log files in this directory
+    logtostderr:
+      description: log to standard error instead of files
+    make-iptables-util-chains:
+      description: If true, kubelet will ensure iptables utility rules are present
+        on host.
+    manifest-url:
+      description: URL for accessing additional Pod specifications to run
+    manifest-url-header:
+      description: 'Comma-separated list of HTTP headers to use when accessing the
+        url provided to --manifest-url. Multiple headers with the same name will be
+        added in the same order provided. This flag can be repeatedly invoked. For
+        example: `--manifest-url-header ''a:hello,b:again,c:world'' --manifest-url-header
+        ''b:beautiful''`'
+    master-service-namespace:
+      description: The namespace from which the kubernetes master services should
+        be injected into pods
+    max-open-files:
+      description: Number of files that can be opened by Kubelet process.
+    max-pods:
+      description: Number of Pods that can run on this Kubelet.
+    maximum-dead-containers:
+      description: Maximum number of old instances of containers to retain globally.  Each
+        container takes up some disk space. To disable, set to a negative number.
+    maximum-dead-containers-per-container:
+      description: Maximum number of old instances to retain per container.  Each
+        container takes up some disk space.
+    minimum-container-ttl-duration:
+      description: 'Minimum age for a finished container before it is garbage collected.  Examples:
+        ''300ms'', ''10s'' or ''2h45m'''
+    minimum-image-ttl-duration:
+      description: 'Minimum age for an unused image before it is garbage collected.  Examples:
+        ''300ms'', ''10s'' or ''2h45m''.'
+    network-plugin:
+      description: '<Warning: Alpha feature> The name of the network plugin to be
+        invoked for various events in kubelet/pod lifecycle. This docker-specific
+        flag only works when container-runtime is set to docker.'
+    network-plugin-mtu:
+      description: '<Warning: Alpha feature> The MTU to be passed to the network plugin,
+        to override the default. Set to 0 to use the default 1460 MTU. This docker-specific
+        flag only works when container-runtime is set to docker.'
+    node-ip:
+      description: IP address of the node. If set, kubelet will use this IP address
+        for the node
+    node-status-max-images:
+      description: '<Warning: Alpha feature> The maximum number of images to report
+        in Node.Status.Images. If -1 is specified, no cap will be applied. Default:
+        50'
+    node-status-update-frequency:
+      description: 'Specifies how often kubelet posts node status to master. Note:
+        be cautious when changing the constant, it must work with nodeMonitorGracePeriod
+        in nodecontroller.'
+    non-masquerade-cidr:
+      description: Traffic to IPs outside this range will use IP masquerade. Set to
+        '0.0.0.0/0' to never masquerade.
+    oom-score-adj:
+      description: The oom-score-adj value for kubelet process. Values must be within
+        the range [-1000, 1000]
+    pod-cidr:
+      description: The CIDR to use for pod IP addresses, only used in standalone mode.  In
+        cluster mode, this is obtained from the master. For IPv6, the maximum number
+        of IP's allocated is 65536
+    pod-infra-container-image:
+      description: The image whose network/ipc namespaces containers in each pod will
+        use. This docker-specific flag only works when container-runtime is set to
+        docker.
+    pod-manifest-path:
+      description: Path to the directory containing static pod files to run, or the
+        path to a single static pod file. Files starting with dots will be ignored.
+    pod-max-pids:
+      description: '<Warning: Alpha feature> Set the maximum number of processes per
+        pod.'
+    pods-per-core:
+      description: Number of Pods per core that can run on this Kubelet. The total
+        number of Pods on this Kubelet cannot exceed max-pods, so max-pods will be
+        used if this calculation results in a larger number of Pods allowed on the
+        Kubelet. A value of 0 disables this limit.
+    port:
+      description: The port for the Kubelet to serve on.
+    protect-kernel-defaults:
+      description: Default kubelet behaviour for kernel tuning. If set, kubelet errors
+        if any of kernel tunables is different than kubelet defaults.
+    provider-id:
+      description: Unique identifier for identifying the node in a machine database,
+        i.e cloudprovider
+    qos-reserved:
+      description: '<Warning: Alpha feature> A set of ResourceName=Percentage (e.g.
+        memory=50%) pairs that describe how pod resource requests are reserved at
+        the QoS level. Currently only memory is supported. Requires the QOSReserved
+        feature gate to be enabled.'
+    read-only-port:
+      description: The read-only port for the Kubelet to serve on with no authentication/authorization
+        (set to 0 to disable)
+    really-crash-for-testing:
+      description: If true, when panics occur crash. Intended for testing.
+    redirect-container-streaming:
+      description: Enables container streaming redirect. If false, kubelet will proxy
+        container streaming data between apiserver and container runtime; if true,
+        kubelet will return an http redirect to apiserver, and apiserver will access
+        container runtime directly. The proxy approach is more secure, but introduces
+        some overhead. The redirect approach is more performant, but less secure because
+        the connection between apiserver and container runtime may not be authenticated.
+    register-node:
+      description: Register the node with the apiserver. If --kubeconfig is not provided,
+        this flag is irrelevant, as the Kubelet won't have an apiserver to register
+        with. Default=true.
+    register-schedulable:
+      description: Register the node as schedulable. Won't have any effect if register-node
+        is false.
+    register-with-taints:
+      description: Register the node with the given list of taints (comma separated
+        "<key>=<value>:<effect>"). No-op if register-node is false.
+    registry-burst:
+      description: Maximum size of a bursty pulls, temporarily allows pulls to burst
+        to this number, while still not exceeding registry-qps. Only used if --registry-qps
+        > 0
+    registry-qps:
+      description: If > 0, limit registry pull QPS to this value.  If 0, unlimited.
+    resolv-conf:
+      description: Resolver configuration file used as the basis for the container
+        DNS resolution configuration.
+    root-dir:
+      description: Directory path for managing kubelet files (volume mounts,etc).
+    rotate-certificates:
+      description: '<Warning: Beta feature> Auto rotate the kubelet client certificates
+        by requesting new certificates from the kube-apiserver when the certificate
+        expiration approaches.'
+    runonce:
+      description: If true, exit after spawning pods from static pod files or remote
+        urls. Exclusive with --enable-server
+    runtime-cgroups:
+      description: Optional absolute name of cgroups to create and run the runtime
+        in.
+    runtime-request-timeout:
+      description: Timeout of all runtime requests except long running request - pull,
+        logs, exec and attach. When timeout exceeded, kubelet will cancel the request,
+        throw out an error and retry later.
+    seccomp-profile-root:
+      description: '<Warning: Alpha feature> Directory path for seccomp profiles.'
+    serialize-image-pulls:
+      description: 'Pull images one at a time. We recommend *not* changing the default
+        value on nodes that run docker daemon with version < 1.9 or an Aufs storage
+        backend. Issue #10959 has more details.'
+    stderrthreshold:
+      description: logs at or above this threshold go to stderr
+    streaming-connection-idle-timeout:
+      description: 'Maximum time a streaming connection can be idle before the connection
+        is automatically closed. 0 indicates no timeout. Example: ''5m'''
+    sync-frequency:
+      description: Max period between synchronizing running containers and config
+    system-cgroups:
+      description: Optional absolute name of cgroups in which to place all non-kernel
+        processes that are not already inside a cgroup under `/`. Empty for no container.
+        Rolling back the flag requires a reboot.
+    system-reserved:
+      description: A set of ResourceName=ResourceQuantity (e.g. cpu=200m,memory=500Mi,ephemeral-storage=1Gi)
+        pairs that describe resources reserved for non-kubernetes components. Currently
+        only cpu and memory are supported. See http://kubernetes.io/docs/user-guide/compute-resources
+        for more detail. [default=none]
+    system-reserved-cgroup:
+      description: Absolute name of the top level cgroup that is used to manage non-kubernetes
+        components for which compute resources were reserved via '--system-reserved'
+        flag. Ex. '/system-reserved'. [default='']
+    tls-cert-file:
+      description: File containing x509 Certificate used for serving HTTPS (with intermediate
+        certs, if any, concatenated after server cert). If --tls-cert-file and --tls-private-key-file
+        are not provided, a self-signed certificate and key are generated for the
+        public address and saved to the directory passed to --cert-dir.
+    tls-cipher-suites:
+      description: 'Comma-separated list of cipher suites for the server. If omitted,
+        the default Go cipher suites will be used. Possible values: TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA,TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256,TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA,TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305,TLS_ECDHE_ECDSA_WITH_RC4_128_SHA,TLS_ECDHE_RSA_WITH_3DES_EDE_CBC_SHA,TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA,TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA,TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305,TLS_ECDHE_RSA_WITH_RC4_128_SHA,TLS_RSA_WITH_3DES_EDE_CBC_SHA,TLS_RSA_WITH_AES_128_CBC_SHA,TLS_RSA_WITH_AES_128_CBC_SHA256,TLS_RSA_WITH_AES_128_GCM_SHA256,TLS_RSA_WITH_AES_256_CBC_SHA,TLS_RSA_WITH_AES_256_GCM_SHA384,TLS_RSA_WITH_RC4_128_SHA'
+    tls-min-version:
+      description: 'Minimum TLS version supported. Possible values: VersionTLS10,
+        VersionTLS11, VersionTLS12'
+    tls-private-key-file:
+      description: File containing x509 private key matching --tls-cert-file.
+    v:
+      description: log level for V logs
+    vmodule:
+      description: comma-separated list of pattern=N settings for file-filtered logging
+    volume-plugin-dir:
+      description: The full path of the directory in which to search for additional
+        third party volume plugins
+    volume-stats-agg-period:
+      description: Specifies interval for kubelet to calculate and cache the volume
+        disk usage for all pods and volumes.  To disable volume calculations, set
+        to 0.
   no_proxy:
     description: no_proxy env var for cloud provider interactions, i.e. for the kubelet
   labels:
-    description: Labels to give node
-    default: {}
-    example:
-      node-type: router
-      gpu: true
-  kube-reserved:
-    description: Resource reservations for kubernetes system daemons
-    example: "cpu=1,memory=2Gi,storage=1Gi"
-  system-reserved:
-    description: Resource reservations for OS system daemons
-    example: "cpu=500m,memory=1Gi,storage=1Gi"
-  eviction-hard:
-    description: Node eviction thresholds
-    example: "memory.available<500Mi,nodefs.available<10%"
-  api-token:
-    description: The token to access Kubernetes API
-  drain-api-token:
-    description: The token to access Kubernetes API used to drain the kubelet.
-  logging-level:
-    description: "V-leveled logging at the specified level. See https://github.com/golang/glog"
-    default: 2
-  kubedns-service-ip:
-    description: The service IP for kube-dns, must match what is configured for kube-dns
-    default: "10.100.200.10"
-
+    description: '<Warning: Alpha feature> Labels to add when registering the node
+      in the cluster.  Labels must be key=value pairs separated by '',''.'
+  tls.kubelet:
+    description: Certificate and private key for the Kubernetes worker
+    parameters:
+      duration: {}
+      key_length: {}
+    type: {}
+  tls.kubelet-client-ca.certificate:
+    description: CA certificate of the authority granting access to kubelet server
+  tls.kubernetes:
+    description: Certificate and private key for the Kubernetes master
 consumes:
 - name: cloud-provider
-  type: cloud-provider
   optional: true
-
+  type: cloud-provider
 provides:
 - name: kubernetes-workers
   type: kubernetes-workers

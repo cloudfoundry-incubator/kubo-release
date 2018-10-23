@@ -10,12 +10,8 @@ describe 'kubelet_ctl' do
     compiled_template('kubelet', 'bin/kubelet_ctl', {}, {}, {}, 'z1', 'fake-bosh-ip', 'fake-bosh-id')
   end
 
-  it 'should specify a kubeconfig path' do
-    expect(rendered_template).to include('--kubeconfig=/var/vcap/jobs/kubelet/config/kubeconfig')
-  end
-
   it 'labels the kubelet with its own az' do
-    expect(rendered_template).to include(',failure-domain.beta.kubernetes.io/zone=z1')
+    expect(rendered_template).to include(',bosh.zone=z1')
   end
 
   it 'labels the kubelet with the spec ip' do
@@ -178,6 +174,14 @@ context 'when cloud provider is vsphere' do
     rendered_kubelet_ctl = compiled_template('kubelet', 'bin/kubelet_ctl', manifest_properties, test_link)
     expect(rendered_kubelet_ctl).not_to include('--cloud-config')
     expect(rendered_kubelet_ctl).to include('cloud_provider="vsphere"')
+  end
+
+  it 'labels the kubelet with its own failure-domain' do
+    manifest_properties = {
+      'cloud-provider' => 'vsphere'
+    }
+    rendered_kubelet_ctl = compiled_template('kubelet', 'bin/kubelet_ctl', manifest_properties, {}, {}, 'z1')
+    expect(rendered_kubelet_ctl).to include(',failure-domain.beta.kubernetes.io/zone=z1')
   end
 end
 
