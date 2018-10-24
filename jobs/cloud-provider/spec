@@ -11,14 +11,14 @@ provides:
 
 properties:
   cloud-config:
-    description: "The properties to be placed into the cloud-config. The first level is a header, the second level the properties under the header"
+    description: The properties to be placed into the cloud-config. The first level is a header, the second level the properties under the header
     example: |
       Global:
         user: <username>
         password: <password>
         port: <port>
   cloud-provider:
-    description: "The generic properties used on a per-cloud basis"
+    description: The generic properties used on a per-cloud basis
     example: |
       cloud-provider:
         type: aws
@@ -26,5 +26,5 @@ properties:
           access_key_id: <access key>
           secret_access_key: <secret key>
   cloud-provider.type:
-    description: "The type of cloud-provider to use"
+    description: The type of cloud-provider to use
     example: AWS, GCE, OpenStack, vSphere, etc.
