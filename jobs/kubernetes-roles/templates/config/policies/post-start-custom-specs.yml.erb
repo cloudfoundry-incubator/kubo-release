@@ -1,7 +1,0 @@
-<%=
-  psps = []
-  if_p('post-start-custom-specs') do |p|
-    p.each { |spec| spec['value'].each {|value| psps << value } }
-  end
-  psps.inject(:merge).to_yaml
-%>
