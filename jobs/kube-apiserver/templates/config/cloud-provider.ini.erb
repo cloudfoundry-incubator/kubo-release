@@ -1,11 +1,14 @@
-<%=
+<%
+  cloud_config=""
+
   if_link('cloud-provider') do |cloud_provider|
     cloud_provider.p('cloud-config').each do |header, properties|
-      puts "[#{header}]"
+      cloud_config += "[#{header}]\n"
       properties.each do |property, value|
         raise "Invalid value of type #{value.class} for property \"#{property}\"" unless value.is_a? String
-        puts "#{property}=#{value}"
+        cloud_config += "#{property}=#{value}\n"
       end
     end
   end
 %>
+<%= cloud_config %>
