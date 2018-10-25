@@ -7,5 +7,6 @@ templates:
 packages:
 - conntrack
 - ipset
+- nfs
 
 properties: {}

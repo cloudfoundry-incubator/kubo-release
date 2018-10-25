@@ -110,6 +110,10 @@ kubernetes-1.11.3/kubelet:
   size: 163041864
   object_id: 39062b5b-80c6-4fe8-4ac3-12c2121f15ad
   sha: 2c24374244482fc629776366df4f416a1b25ade4
+nfs/nfs-common_1.2.8-9ubuntu12_amd64.deb:
+  size: 184538
+  object_id: d05d14a5-cba8-4ec9-5b9d-fe76128ca5be
+  sha: 2977e5a1e86615e268cc518f04c9dd2cc832b263
 socat-1.7.3.2.tar.gz:
   size: 615818
   object_id: a6f3dcb3-54a0-44a3-4100-f408932aaf8f

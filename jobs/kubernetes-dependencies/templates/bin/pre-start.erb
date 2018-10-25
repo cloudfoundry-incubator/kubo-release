@@ -4,6 +4,7 @@ set -euxo pipefail
 
 CONNTRACK_PACKAGES=/var/vcap/packages/conntrack
 IPSET_PACKAGES=/var/vcap/packages/ipset
+NFS_PACKAGES=/var/vcap/packages/nfs
 
 install_package() {
   local package=$1
@@ -21,3 +22,5 @@ install_package "${CONNTRACK_PACKAGES:?}/conntrack_1.4.1-1.deb"
 
 install_package "${IPSET_PACKAGES:?}/libipset3_6.20.1-1_amd64.deb"
 install_package "${IPSET_PACKAGES:?}/ipset_6.20.1-1_amd64.deb"
+
+install_package "${NFS_PACKAGES:?}/nfs-common_1.2.8-9ubuntu12_amd64.deb"
