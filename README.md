@@ -18,7 +18,7 @@ A [BOSH](http://bosh.io/) release for [Kubernetes](http://kubernetes.io).  Forme
   - three availability zones `azs` named `z1`,`z2`,`z3`
 
   Note: the cloud-config properties can be customized by applying ops-files. See `manifests/ops-files` for some examples.
-  
+
   If using loadbalancers then apply the `vm_extension` called `cfcr-master-loadbalancer` to the cloud-config to add the instances to your loadbalancers. See [BOSH documentation](https://bosh.io/docs/cloud-config/#vm-extensions) for information on how to configure loadbalancers.
 
 #### Hardware Requirements
@@ -42,6 +42,8 @@ Kubernetes uses etcd as its datastore. The official infrastructure requirements 
 	  -o manifests/ops-files/add-hostname-to-master-certificate.yml \
 	  -v api-hostname=[DNS-NAME]
 	```
+
+If your BOSH environment has a runtime config that adds the `bosh-dns` job to all instances, it will be necessary to include the `use-runtime-config-bosh-dns.yml` ops-file. See [deploying cfcr](https://github.com/cloudfoundry-incubator/kubo-deployment/blob/master/manifests/README.md#deploying-cfcr) for additional information.
 
     ##### Option 2. Three Masters
 
@@ -100,7 +102,7 @@ We use [BBR](https://github.com/cloudfoundry-incubator/bosh-backup-and-restore) 
 
 To run the `bbr` cli against a CFCR cluster, follow the steps under "BOSH Deployment" on the BBR [documentation page](https://docs.cloudfoundry.org/bbr/#bosh-deployment).
 
-*Note: this feature is currently available for single master deployments only. Work for BBR support on multi-master clusters is underway.* 
+*Note: this feature is currently available for single master deployments only. Work for BBR support on multi-master clusters is underway.*
 
 ## Monitoring
 
