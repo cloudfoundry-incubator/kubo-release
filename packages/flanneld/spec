@@ -4,4 +4,4 @@ name: flanneld
 dependencies:
 
 files:
-- flanneld-amd64
+- flannel-v0.10.0-linux-amd64.tar.gz

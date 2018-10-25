@@ -1,6 +1,6 @@
 set -e
 
 FLANNELD_VERSION="0.10.0"
-
-cp -a flanneld-amd64 "${BOSH_INSTALL_TARGET:?}/flanneld"
+tar xvf flannel-v${FLANNELD_VERSION}-linux-amd64.tar.gz
+cp -a flanneld "${BOSH_INSTALL_TARGET:?}/flanneld"
 chmod +x "${BOSH_INSTALL_TARGET:?}/flanneld"

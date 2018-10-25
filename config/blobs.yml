@@ -92,10 +92,6 @@ flannel-v0.10.0-linux-amd64.tar.gz:
 flannel-windows/flanneld.exe:
   size: 38109184
   sha: 1c262aa101d0a1549fb315c0afb923f1a2a3295f
-flanneld-amd64:
-  size: 36454952
-  object_id: c1099a69-9d61-4705-759f-51f11c62589e
-  sha: 9139637bd24c85a971bd10233d984b111672fcd2
 ipset/ipset_6.20.1-1_amd64.deb:
   size: 34156
   object_id: 5dfcce8f-366e-49f0-59e6-9e2d48178750
