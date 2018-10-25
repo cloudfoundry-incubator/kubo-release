@@ -1,3 +1,13 @@
+<%
+  hostname = ""
+  if_p('cloud-provider') do |cloud_provider|
+    if cloud_provider != "gce"
+      hostname = spec.ip
+    end
+  end.else do
+    hostname = spec.ip
+  end
+%>
 apiVersion: kubeproxy.config.k8s.io/v1alpha1
 bindAddress: 0.0.0.0
 clientConnection:
@@ -15,8 +25,9 @@ conntrack:
   tcpCloseWaitTimeout: 1h0m0s
   tcpEstablishedTimeout: 24h0m0s
 enableProfiling: false
-featureGates: 
+featureGates:
 healthzBindAddress: 0.0.0.0:10256
+hostnameOverride: <%= hostname %>
 ipvs:
   minSyncPeriod: 0s
   scheduler: ""

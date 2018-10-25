@@ -2,7 +2,12 @@ $ErrorActionPreference = "Stop";
 trap { $host.SetShouldExit(1) }
 
 # add back GCP / AWS metadata server
- while (!(Get-HNSNetwork | ? Name -Eq "vxlan0"))
+<% if p("backend-type") == "win-overlay" %>
+  <% name = "vxlan0" %>
+<% else %>
+  <% name = "cbr0" %>
+<% end %>
+while (!(Get-HNSNetwork | ? Name -Eq "<%= name %>"))
 {
     Write-Host "Waiting for overlay network to be enabled"
     Start-Sleep -sec 1

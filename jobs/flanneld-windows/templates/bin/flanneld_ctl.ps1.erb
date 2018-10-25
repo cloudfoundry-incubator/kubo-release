@@ -16,16 +16,25 @@ trap { $host.SetShouldExit(1) }
 <% etcd_endpoints = link('etcd').instances.map { |server| get_url(server, 2379) }.join(",") %>
 
 mkdir -force /etc/cni/net.d
+<% if p("backend-type") == "win-overlay" %>
+  <% name = "vxlan0" %>
+<% else %>
+  <% name = "cbr0" %>
+<% end %>
 $confFile= '
 {
-  "name": "vxlan0",
+  "name": "<%= name %>",
   "plugins": [
     {
       "type": "flannel",
       "delegate": {
         "hairpinMode": true,
         "isDefaultGateway": true,
-        "type": "win-overlay",
+        "type": "<%= p('backend-type') %>",
+        "dns": {
+          "nameservers": ["10.100.200.10"],
+          "search": ["svc.cluster.local"]
+        },
         "policies": [
           {
             "Name": "EndpointPolicy",

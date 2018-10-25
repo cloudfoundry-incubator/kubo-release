@@ -1,24 +1,13 @@
 $ErrorActionPreference = "Stop";
 trap { $host.SetShouldExit(1) }
 
-<% if_p('cloud-provider') do |cloud_provider| %>
-  $cloud_provider="<%= cloud_provider %>"
-<% end %>
-
-function Get-HostnameOverride
-{
-    if ("gce" -eq $cloud_provider) {
-        return "$(hostname)"
-    } else {
-        return "<%= spec.ip %>"
-    }
-}
-
+<% if link('flanneld-windows').p("backend-type") == "win-overlay" %>
 $network = Get-HnsNetwork | ? Type -Eq Overlay
+<% else %>
+$network = Get-HnsNetwork | ? Type -Eq L2Bridge
+<% end %>
 $env:KUBE_NETWORK = $network.Name
-
 
 C:\var\vcap\packages\kubernetes-windows\bin\kube-proxy.exe `
   --config /var/vcap/jobs/kube-proxy-windows/config/config.yml `
-  --v=<%= p('logging-level') %> `
-  --hostname-override=$(Get-HostnameOverride)
+  --v=<%= p('logging-level') %>

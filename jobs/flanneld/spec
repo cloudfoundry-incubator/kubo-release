@@ -17,6 +17,9 @@ properties:
   pod-network-cidr:
     description: The pod networking cidr for pod network overlay
     default: "10.200.0.0/16"
+  backend-type:
+    description: The network backend to use
+    default: "vxlan"
 
 consumes:
 - name: etcd

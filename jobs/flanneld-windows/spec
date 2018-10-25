@@ -16,7 +16,16 @@ properties:
   pod-network-cidr:
     description: The pod networking cidr for pod network overlay
     default: "10.200.0.0/16"
+  backend-type:
+    description: The network backend to use
+    default: "win-overlay"
 
 consumes:
 - name: etcd
   type: etcd
+
+provides:
+- name: flanneld-windows
+  type: flanneld-windows
+  properties:
+  - backend-type

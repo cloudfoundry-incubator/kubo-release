@@ -6,6 +6,9 @@ cni-windows/host-local.exe:
   size: 3248640
   object_id: 627e15b3-f485-4470-568c-2fb229badc9a
   sha: db82d2dcc3eba21c772c201ea845567fe0e1fc73
+cni-windows/win-bridge.exe:
+  size: 5637632
+  sha: 2f7547cca3c5ffffa596aa13821e3f27b6370fe7
 cni-windows/win-overlay.exe:
   size: 3584000
   object_id: b80da60a-fca2-4de7-6ece-2c0f83a59ac3
@@ -87,9 +90,8 @@ flannel-v0.10.0-linux-amd64.tar.gz:
   object_id: 36a8e66a-0b6c-4ca2-5f27-c277a7db90c5
   sha: 9d19a56847d6aad207671a349eddd85de87ba560
 flannel-windows/flanneld.exe:
-  size: 25336320
-  object_id: cbe49699-9664-4af3-4475-ca7f3008a4ce
-  sha: f31c4cf615f9ae2caab9efe22a92040b7ace7ee9
+  size: 38109184
+  sha: 1c262aa101d0a1549fb315c0afb923f1a2a3295f
 flanneld-amd64:
   size: 36454952
   object_id: c1099a69-9d61-4705-759f-51f11c62589e
