@@ -106,6 +106,9 @@ properties:
     description: Microsoft Azure route table that is attached to the subnet.  Used for managed routes.  Optional when cloud-provider.type is azure
   cloud-provider.azure.availability-set:
     description: Microsoft Azure availability set for the cluster worker nodes.  Required when cloud-provider.type is azure
+  cloud-provider.azure.loadBalancerSku:
+    default: standard
+
 
   # vSphere specific properties
   cloud-provider.vsphere.user:
