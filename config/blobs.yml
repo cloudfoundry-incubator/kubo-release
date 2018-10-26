@@ -78,30 +78,30 @@ jq-linux64-1.5:
   size: 3027945
   object_id: 41eb1cd1-0377-4e08-5602-51e0af8b9b52
   sha: d8e36831c3c94bb58be34dd544f44a6c6cb88568
-kubernetes-1.11.3/kube-apiserver:
-  size: 185513792
-  object_id: 1c24dced-69c1-45d3-7303-a9276e72724e
-  sha: 1d92823bcfe71d0c694f219961276405286766be
-kubernetes-1.11.3/kube-controller-manager:
-  size: 154113026
-  object_id: 54888856-772a-4b69-42ea-07b59399e0f5
-  sha: cddddf92038341053a2ac84a71ce2f147c453604
-kubernetes-1.11.3/kube-proxy:
-  size: 52068695
-  object_id: af4a8162-f1be-4a0b-5e32-17a22aed3036
-  sha: b3c7f41171986bd45eeac5d841cee07b89544888
-kubernetes-1.11.3/kube-scheduler:
+kubernetes-1.11.4/kube-apiserver:
+  size: 185551157
+  object_id: 68dc0927-7560-4cdc-6ff4-746bae32d60a
+  sha: 5ab365547b8779c676a72684f7489e6667c1caae
+kubernetes-1.11.4/kube-controller-manager:
+  size: 154138117
+  object_id: 2e9a4aa2-931f-4f4c-68fa-02aeb0cc31ff
+  sha: 3cddf443a916bd4b34dc36263d58f09842a6b7eb
+kubernetes-1.11.4/kube-proxy:
+  size: 52068777
+  object_id: 0b9f8f54-c5c9-4fdb-735a-650490301c5b
+  sha: 890acf16d5d7f38b8092c79667623aa45353f68e
+kubernetes-1.11.4/kube-scheduler:
   size: 55636875
-  object_id: d7af87bb-a045-43a9-42ba-4f8e775a6b76
-  sha: 2a7d78c8354a38add1971dca957d28945eab10d7
-kubernetes-1.11.3/kubectl:
-  size: 55414436
-  object_id: 1bc626ff-0f29-40d7-6efc-70d242a2a509
-  sha: 5a336ea470a0053b1893fda89a538b6197566137
-kubernetes-1.11.3/kubelet:
-  size: 163041864
-  object_id: 17fd8fab-c38d-442e-483d-1889b0d4ca2d
-  sha: 2c24374244482fc629776366df4f416a1b25ade4
+  object_id: a15f92a2-bf8f-4b48-584b-f607fede3603
+  sha: 59e5536acf0127dd2c7b47c2d5cc4479c280bc85
+kubernetes-1.11.4/kubectl:
+  size: 55422633
+  object_id: 9b3251e8-cdd3-4093-7e5d-b464325e2a7d
+  sha: 4e34219d35ba4f7306871417dfe5d91d05c559a0
+kubernetes-1.11.4/kubelet:
+  size: 163078960
+  object_id: 7ef33f66-023f-497d-710f-e056cd360ab1
+  sha: e13c3fb622900d3d421619dbe7d8dfc2dfe6130b
 socat-1.7.3.2.tar.gz:
   size: 615818
   object_id: a6f3dcb3-54a0-44a3-4100-f408932aaf8f
