@@ -86,30 +86,22 @@ jq-linux64-1.5:
   size: 3027945
   object_id: 41eb1cd1-0377-4e08-5602-51e0af8b9b52
   sha: d8e36831c3c94bb58be34dd544f44a6c6cb88568
-kubernetes-1.11.3/kube-apiserver:
-  size: 185513792
-  object_id: 4c880436-6ded-49a1-4758-99584145da4a
-  sha: 1d92823bcfe71d0c694f219961276405286766be
-kubernetes-1.11.3/kube-controller-manager:
-  size: 154113026
-  object_id: 0d790d64-378a-47cc-7982-1ee222c3809d
-  sha: cddddf92038341053a2ac84a71ce2f147c453604
-kubernetes-1.11.3/kube-proxy:
-  size: 52068695
-  object_id: ecb11b3c-0ef0-4953-5602-6b7547fd4a5d
-  sha: b3c7f41171986bd45eeac5d841cee07b89544888
-kubernetes-1.11.3/kube-scheduler:
+kubernetes-1.11.4/kube-apiserver:
+  size: 185551157
+  object_id: 9dd037cd-6da2-4523-574a-5b69cd07193d
+  sha: 5ab365547b8779c676a72684f7489e6667c1caae
+kubernetes-1.11.4/kube-controller-manager:
+  size: 154138117
+  object_id: 4ce4caa9-a450-4c45-6c67-b9e0729849b4
+  sha: 3cddf443a916bd4b34dc36263d58f09842a6b7eb
+kubernetes-1.11.4/kube-proxy:
+  size: 52068777
+  object_id: f89dbbb2-be4b-4bf6-4905-998543b8d261
+  sha: 890acf16d5d7f38b8092c79667623aa45353f68e
+kubernetes-1.11.4/kube-scheduler:
   size: 55636875
   object_id: 7cfc98ef-6f87-44fe-4cf1-718bf785420e
   sha: 2a7d78c8354a38add1971dca957d28945eab10d7
-kubernetes-1.11.3/kubectl:
-  size: 55414436
-  object_id: 916cb124-bea1-4428-528d-89da5e4b7758
-  sha: 5a336ea470a0053b1893fda89a538b6197566137
-kubernetes-1.11.3/kubelet:
-  size: 163041864
-  object_id: 39062b5b-80c6-4fe8-4ac3-12c2121f15ad
-  sha: 2c24374244482fc629776366df4f416a1b25ade4
 nfs/keyutils_1.5.9-8ubuntu1_amd64.deb:
   size: 47054
   object_id: e1b42c34-4e88-426b-7268-99d1bdfd40c1
@@ -130,6 +122,14 @@ nfs/rpcbind_0.2.3-0.2_amd64.deb:
   size: 40252
   object_id: 56ad455e-38be-40da-7815-a9d4774d55e4
   sha: 8fa58cfcb1862c6d337d10496fada5f1a6e94a03
+kubernetes-1.11.4/kubectl:
+  size: 55422633
+  object_id: b20e7314-4382-4cb6-71b2-d7f402129973
+  sha: 4e34219d35ba4f7306871417dfe5d91d05c559a0
+kubernetes-1.11.4/kubelet:
+  size: 163078960
+  object_id: d5f91026-ca86-47b4-6a53-0e2ec8c13108
+  sha: e13c3fb622900d3d421619dbe7d8dfc2dfe6130b
 socat-1.7.3.2.tar.gz:
   size: 615818
   object_id: a6f3dcb3-54a0-44a3-4100-f408932aaf8f

@@ -63,6 +63,8 @@ properties:
         Requests that are not rejected by another authentication method are treated
         as anonymous requests. Anonymous requests have a username of system:anonymous,
         and a group name of system:unauthenticated.
+    application_metrics_count_limit:
+      description: Max number of application metrics to store (per container)
     audit-log-batch-buffer-size:
       description: The size of the buffer to store events before batching and writing.
         Only used in batch mode.
@@ -184,6 +186,9 @@ properties:
         The associated interface(s) must be reachable by the rest of the cluster,
         and by CLI/web clients. If blank, all interfaces will be used (0.0.0.0 for
         all IPv4 interfaces and :: for all IPv6 interfaces).'
+    boot_id_file:
+      description: Comma-separated list of files to check for boot-id. Use the first
+        one that exists.
     cert-dir:
       description: The directory where the TLS certs are located. If --tls-cert-file
         and --tls-private-key-file are provided, this flag will be ignored.
@@ -193,6 +198,10 @@ properties:
         corresponding to the CommonName of the client certificate.
     cloud-provider-gce-lb-src-cidrs:
       description: CIDRs opened in GCE firewall for LB traffic proxy & health checks
+    container_hints:
+      description: location of the container hints file
+    containerd:
+      description: containerd endpoint
     contention-profiling:
       description: Enable lock contention profiling, if profiling is enabled
     cors-allowed-origins:
@@ -224,6 +233,24 @@ properties:
         PersistentVolumeLabel, PodNodeSelector, PodPreset, PodSecurityPolicy, PodTolerationRestriction,
         Priority, ResourceQuota, SecurityContextDeny, ServiceAccount, StorageObjectInUseProtection,
         ValidatingAdmissionWebhook. The order of plugins in this flag does not matter.'
+    docker:
+      description: docker endpoint
+    docker-tls:
+      description: use TLS to connect to docker
+    docker-tls-ca:
+      description: path to trusted CA
+    docker-tls-cert:
+      description: path to client certificate
+    docker-tls-key:
+      description: path to private key
+    docker_env_metadata_whitelist:
+      description: a comma-separated list of environment variable keys that needs
+        to be collected for docker containers
+    docker_only:
+      description: Only report docker containers in addition to root stats
+    docker_root:
+      description: 'DEPRECATED: docker root is read from docker info (this is a fallback,
+        default: /var/lib/docker)'
     enable-admission-plugins:
       description: 'admission plugins that should be enabled in addition to default
         enabled ones. Comma-delimited list of admission plugins: AlwaysAdmit, AlwaysDeny,
@@ -248,6 +275,8 @@ properties:
       description: If true, install a /logs handler for the apiserver logs.
     enable-swagger-ui:
       description: Enables swagger ui on the apiserver at /swagger-ui
+    enable_load_reader:
+      description: Whether to enable cpu load reader
     endpoint-reconciler-type:
       description: Use an endpoint reconciler (master-count, lease, none)
     etcd-cafile:
@@ -276,6 +305,16 @@ properties:
         separated.'
     event-ttl:
       description: Amount of time to retain events.
+    event_storage_age_limit:
+      description: 'Max length of time for which to store events (per type). Value
+        is a comma separated list of key values, where the keys are event types (e.g.:
+        creation, oom) or "default" and the value is a duration. Default is applied
+        to all non-specified event types'
+    event_storage_event_limit:
+      description: 'Max number of events to store (per type). Value is a comma separated
+        list of key values, where the keys are event types (e.g.: creation, oom) or
+        "default" and the value is an integer. Default is applied to all non-specified
+        event types'
     experimental-encryption-provider-config:
       description: The file containing configuration for encryption providers to be
         used for storing secrets in etcd
@@ -343,6 +382,10 @@ properties:
         VolumeScheduling=true|false (BETA - default=true)
         VolumeSubpath=true|false (default=true)
         VolumeSubpathEnvExpansion=true|false (ALPHA - default=false)
+    global_housekeeping_interval:
+      description: Interval between global housekeepings
+    housekeeping_interval:
+      description: Interval between container housekeepings
     http2-max-streams-per-connection:
       description: The limit that the server gives to clients for the maximum number
         of streams in an HTTP/2 connection. Zero means to use golang's default.
@@ -377,10 +420,15 @@ properties:
         Kubernetes master service will be of type ClusterIP.
     log_backtrace_at:
       description: when logging hits line file:N, emit a stack trace
+    log_cadvisor_usage:
+      description: Whether to log the usage of the cAdvisor container
     log_dir:
       description: If non-empty, write log files in this directory
     logtostderr:
       description: log to standard error instead of files
+    machine_id_file:
+      description: Comma-separated list of files to check for machine-id. Use the
+        first one that exists.
     master-service-namespace:
       description: 'DEPRECATED: the namespace from which the kubernetes master services
         should be injected into pods.'
@@ -534,6 +582,21 @@ properties:
         from one group to the other, you may specify the format "group1=group2/v1beta1,group3/v1beta1,...".
         You only need to pass the groups you wish to change from the defaults. It
         defaults to a list of preferred versions of all known groups.
+    storage_driver_buffer_duration:
+      description: Writes in the storage driver will be buffered for this duration,
+        and committed to the non memory backends as a single transaction
+    storage_driver_db:
+      description: database name
+    storage_driver_host:
+      description: database host:port
+    storage_driver_password:
+      description: database password
+    storage_driver_secure:
+      description: use secure connection with database
+    storage_driver_table:
+      description: table name
+    storage_driver_user:
+      description: database username
     target-ram-mb:
       description: Memory limit for apiserver in MB (used to configure sizes of caches,
         etc.)

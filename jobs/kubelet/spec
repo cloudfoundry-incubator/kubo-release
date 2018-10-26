@@ -23,7 +23,7 @@ properties:
   api-token:
     description: The token to access Kubernetes API
   cloud-provider:
-    description: "The type of cloud-provider that is being deployed"
+    description: The type of cloud-provider that is being deployed
   drain-api-token:
     description: The token to access Kubernetes API used to drain the kubelet.
   http_proxy:
@@ -32,10 +32,6 @@ properties:
   https_proxy:
     description: https_proxy env var for cloud provider interactions, i.e. for the
       kubelet
-  kubelet-configuration:
-    description: The Kubelet will load its initial configuration from this.
-      Omit this to use the built-in default configuration values.
-      Command-line flags override configuration.
   k8s-args:
     address:
       description: The IP address for the Kubelet to serve on (set to `0.0.0.0` for
@@ -54,6 +50,8 @@ properties:
         are not rejected by another authentication method are treated as anonymous
         requests. Anonymous requests have a username of system:anonymous, and a group
         name of system:unauthenticated.
+    application_metrics_count_limit:
+      description: Max number of application metrics to store (per container)
     authentication-token-webhook:
       description: Use the TokenReview API to determine authentication for bearer
         tokens.
@@ -67,6 +65,9 @@ properties:
     authorization-webhook-cache-unauthorized-ttl:
       description: The duration to cache 'unauthorized' responses from the webhook
         authorizer.
+    boot_id_file:
+      description: Comma-separated list of files to check for boot-id. Use the first
+        one that exists.
     bootstrap-checkpoint-path:
       description: '<Warning: Alpha feature> Path to to the directory where the checkpoints
         are stored'
@@ -132,6 +133,10 @@ properties:
       description: '[Experimental] The endpoint of remote runtime service. Currently
         unix socket is supported on Linux, and tcp is supported on windows.  Examples:''unix:///var/run/dockershim.sock'',
         ''tcp://localhost:3735'''
+    container_hints:
+      description: location of the container hints file
+    containerd:
+      description: containerd endpoint
     containerized:
       description: Running kubelet in a container.
     contention-profiling:
@@ -151,6 +156,8 @@ properties:
     default-unreachable-toleration-seconds:
       description: Indicates the tolerationSeconds of the toleration for unreachable:NoExecute
         that is added by default to every pod that does not already have such a toleration.
+    docker:
+      description: docker endpoint
     docker-disable-shared-pid:
       description: Setting this to false causes Kubernetes to create pods using a
         shared process namespace for containers in a pod when running with Docker
@@ -160,6 +167,22 @@ properties:
     docker-endpoint:
       description: Use this for the docker endpoint to communicate with This docker-specific
         flag only works when container-runtime is set to docker.
+    docker-tls:
+      description: use TLS to connect to docker
+    docker-tls-ca:
+      description: path to trusted CA
+    docker-tls-cert:
+      description: path to client certificate
+    docker-tls-key:
+      description: path to private key
+    docker_env_metadata_whitelist:
+      description: a comma-separated list of environment variable keys that needs
+        to be collected for docker containers
+    docker_only:
+      description: Only report docker containers in addition to root stats
+    docker_root:
+      description: 'DEPRECATED: docker root is read from docker info (this is a fallback,
+        default: /var/lib/docker)'
     dynamic-config-dir:
       description: The Kubelet will use this directory for checkpointing downloaded
         configurations and tracking configuration health. The Kubelet will create
@@ -177,6 +200,8 @@ properties:
         containers and commands
     enable-server:
       description: Enable the Kubelet's server
+    enable_load_reader:
+      description: Whether to enable cpu load reader
     enforce-node-allocatable:
       description: A comma separated list of levels of node allocatable enforcement
         to be enforced by kubelet. Acceptable options are 'none', 'pods', 'system-reserved',
@@ -190,6 +215,16 @@ properties:
         used if --event-qps > 0
     event-qps:
       description: If > 0, limit event creations per second to this value. If 0, unlimited.
+    event_storage_age_limit:
+      description: 'Max length of time for which to store events (per type). Value
+        is a comma separated list of key values, where the keys are event types (e.g.:
+        creation, oom) or "default" and the value is a duration. Default is applied
+        to all non-specified event types'
+    event_storage_event_limit:
+      description: 'Max number of events to store (per type). Value is a comma separated
+        list of key values, where the keys are event types (e.g.: creation, oom) or
+        "default" and the value is an integer. Default is applied to all non-specified
+        event types'
     eviction-hard:
       description: A set of eviction thresholds (e.g. memory.available<1Gi) that if
         met would trigger a pod eviction.
@@ -300,6 +335,8 @@ properties:
         VolumeSubpathEnvExpansion=true|false (ALPHA - default=false)
     file-check-frequency:
       description: Duration between checking config files for new data
+    global_housekeeping_interval:
+      description: Interval between global housekeepings
     hairpin-mode:
       description: How should the kubelet setup hairpin NAT. This allows endpoints
         of a Service to loadbalance back to themselves if they should try to access
@@ -319,6 +356,8 @@ properties:
     host-pid-sources:
       description: Comma-separated list of sources from which the Kubelet allows pods
         to use the host pid namespace.
+    housekeeping_interval:
+      description: Interval between container housekeepings
     http-check-frequency:
       description: Duration between checking http for new data
     image-gc-high-threshold:
@@ -376,10 +415,15 @@ properties:
         a lock file.'
     log_backtrace_at:
       description: when logging hits line file:N, emit a stack trace
+    log_cadvisor_usage:
+      description: Whether to log the usage of the cAdvisor container
     log_dir:
       description: If non-empty, write log files in this directory
     logtostderr:
       description: log to standard error instead of files
+    machine_id_file:
+      description: Comma-separated list of files to check for machine-id. Use the
+        first one that exists.
     make-iptables-util-chains:
       description: If true, kubelet will ensure iptables utility rules are present
         on host.
@@ -522,6 +566,21 @@ properties:
         backend. Issue #10959 has more details.'
     stderrthreshold:
       description: logs at or above this threshold go to stderr
+    storage_driver_buffer_duration:
+      description: Writes in the storage driver will be buffered for this duration,
+        and committed to the non memory backends as a single transaction
+    storage_driver_db:
+      description: database name
+    storage_driver_host:
+      description: database host:port
+    storage_driver_password:
+      description: database password
+    storage_driver_secure:
+      description: use secure connection with database
+    storage_driver_table:
+      description: table name
+    storage_driver_user:
+      description: database username
     streaming-connection-idle-timeout:
       description: 'Maximum time a streaming connection can be idle before the connection
         is automatically closed. 0 indicates no timeout. Example: ''5m'''
@@ -564,11 +623,15 @@ properties:
       description: Specifies interval for kubelet to calculate and cache the volume
         disk usage for all pods and volumes.  To disable volume calculations, set
         to 0.
-  no_proxy:
-    description: no_proxy env var for cloud provider interactions, i.e. for the kubelet
+  kubelet-configuration:
+    description: The Kubelet will load its initial configuration from this. Omit this
+      to use the built-in default configuration values. Command-line flags override
+      configuration.
   labels:
     description: '<Warning: Alpha feature> Labels to add when registering the node
       in the cluster.  Labels must be key=value pairs separated by '',''.'
+  no_proxy:
+    description: no_proxy env var for cloud provider interactions, i.e. for the kubelet
   tls.kubelet:
     description: Certificate and private key for the Kubernetes worker
     parameters:
