@@ -24,7 +24,7 @@ trap { $host.SetShouldExit(1) }
 function Get-HostnameOverride
 {
     if ("gce" -eq $cloud_provider) {
-        return "$(hostname)"
+        return ""
     } else {
         return "<%= spec.ip %>"
     }
