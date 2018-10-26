@@ -11,8 +11,8 @@ We encourage contributors to have discussion around design and implmentation wit
 1. Fork the project on [GitHub](https://github.com/cloudfoundry-incubator/kubo-release)
 1. Make your feature addition or bug fix. Please make sure there is appropriate [test coverage](#writing-the-tests).
 1. [Run tests](#running-the-tests).
-1. Make sure your fork is up to date with `master`.
-1. Send a pull request.
+1. Make sure your fork is up to date with `develop`.
+1. Send a pull request for a `develop` branch.
 1. The team will triage the pull request and assign it to a team member.
 1. A team member will approve the pull request or make suggestions for changes.
 
