@@ -1,7 +1,7 @@
 ---
 name: kubelet-windows-poststart
 dependencies:
-- golang-1.10-windows
+- golang-1.11-windows
 files:
 - kubelet-windows-poststart/**/*
 - exiter.ps1
