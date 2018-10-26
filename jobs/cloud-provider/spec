@@ -8,6 +8,51 @@ provides:
   - cloud-config
   - cloud-provider
   - cloud-provider.type
+  - cloud-provider.aws.access_key_id
+  - cloud-provider.aws.secret_access_key
+  - cloud-provider.gce.network-name
+  - cloud-provider.gce.subnetwork-name
+  - cloud-provider.gce.project-id
+  - cloud-provider.gce.service_key
+  - cloud-provider.gce.worker-node-tag
+  - cloud-provider.openstack.auth-url
+  - cloud-provider.openstack.bs-version
+  - cloud-provider.openstack.ca-file
+  - cloud-provider.openstack.domain-id
+  - cloud-provider.openstack.domain-name
+  - cloud-provider.openstack.ignore-volume-az
+  - cloud-provider.openstack.password
+  - cloud-provider.openstack.region
+  - cloud-provider.openstack.tenant-id
+  - cloud-provider.openstack.tenant-name
+  - cloud-provider.openstack.trust-device-path
+  - cloud-provider.openstack.trust-id
+  - cloud-provider.openstack.username
+  - cloud-provider.vsphere.datacenter
+  - cloud-provider.vsphere.datastore
+  - cloud-provider.vsphere.insecure-flag
+  - cloud-provider.vsphere.password
+  - cloud-provider.vsphere.port
+  - cloud-provider.vsphere.resourcepool-path
+  - cloud-provider.vsphere.scsicontrollertype
+  - cloud-provider.vsphere.server
+  - cloud-provider.vsphere.user
+  - cloud-provider.vsphere.vm-uuid
+  - cloud-provider.vsphere.working-dir
+  - cloud-provider.azure.cloud
+  - cloud-provider.azure.subscription-id
+  - cloud-provider.azure.tenant-id
+  - cloud-provider.azure.service-principal-id
+  - cloud-provider.azure.service-principal-secret
+  - cloud-provider.azure.location
+  - cloud-provider.azure.resource-group-name
+  - cloud-provider.azure.vnet-resource-group-name
+  - cloud-provider.azure.vnet-name
+  - cloud-provider.azure.subnet-name
+  - cloud-provider.azure.network-security-group-name
+  - cloud-provider.azure.route-table-name
+  - cloud-provider.azure.availability-set
+  - cloud-provider.azure.loadBalancerSku
 
 properties:
   cloud-config:
