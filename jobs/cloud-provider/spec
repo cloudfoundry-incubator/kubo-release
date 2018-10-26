@@ -53,6 +53,7 @@ provides:
   - cloud-provider.azure.network-security-group-name
   - cloud-provider.azure.route-table-name
   - cloud-provider.azure.availability-set
+  - cloud-provider.azure.loadBalancerSku
 
 properties:
   cloud-provider.type:
