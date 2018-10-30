@@ -8,4 +8,7 @@ packages:
 - conntrack
 - ipset
 
-properties: {}
+properties:
+  nfs:
+    description: If set to true will install packages to enable nfs mounting
+    default: false
