@@ -110,10 +110,26 @@ kubernetes-1.11.3/kubelet:
   size: 163041864
   object_id: 39062b5b-80c6-4fe8-4ac3-12c2121f15ad
   sha: 2c24374244482fc629776366df4f416a1b25ade4
+nfs/keyutils_1.5.9-8ubuntu1_amd64.deb:
+  size: 47054
+  object_id: e1b42c34-4e88-426b-7268-99d1bdfd40c1
+  sha: ec2e96e73feb5215605c9f0254cad05d9cc5688a
+nfs/libevent-2.0-5_2.0.21-stable-2ubuntu0.16.04.1_amd64.deb:
+  size: 114014
+  object_id: cbdc50ad-e7f5-4a3b-6115-77392061bd76
+  sha: 57d69f44f3e058e48a7b79595d36076eb21f5942
+nfs/libnfsidmap2_0.25-5_amd64.deb:
+  size: 32182
+  object_id: 59ba4d66-fb63-4a62-75da-8502169d85cd
+  sha: f28b7370542daaf81cefb44d9057fa9b3fb43064
 nfs/nfs-common_1.2.8-9ubuntu12_amd64.deb:
   size: 184538
   object_id: d05d14a5-cba8-4ec9-5b9d-fe76128ca5be
   sha: 2977e5a1e86615e268cc518f04c9dd2cc832b263
+nfs/rpcbind_0.2.3-0.2_amd64.deb:
+  size: 40252
+  object_id: 56ad455e-38be-40da-7815-a9d4774d55e4
+  sha: 8fa58cfcb1862c6d337d10496fada5f1a6e94a03
 socat-1.7.3.2.tar.gz:
   size: 615818
   object_id: a6f3dcb3-54a0-44a3-4100-f408932aaf8f
