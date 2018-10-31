@@ -8,7 +8,7 @@
       cloud_provider.p('cloud-config', {}).each do |header, properties|
         cloud_config += "[#{header}]\n"
         properties.each do |property, value|
-          raise TypeError, "Invalid value of type #{value.class} for property \"#{property}\"" unless value.is_a? String
+          raise TypeError, "Invalid value of type #{value.class} for property \"#{property}\"" if value.is_a? Enumerable
           cloud_config += "#{property}=#{value}\n"
         end
       end
