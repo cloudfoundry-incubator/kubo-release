@@ -13,6 +13,7 @@ import (
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	"github.com/onsi/gomega/gexec"
 )
 
 func TestK8SCluster(t *testing.T) {
@@ -71,7 +72,7 @@ func templatePSPWithNamespace(tmpDir, namespace string) string {
 
 var _ = AfterSuite(func() {
 	if k8sRunner != nil {
-		k8sRunner.RunKubectlCommand("delete", "-f", pspSpec).Wait("60s")
-		k8sRunner.RunKubectlCommand("delete", "namespace", k8sRunner.Namespace()).Wait("60s")
+		Eventually(k8sRunner.RunKubectlCommand("delete", "-f", pspSpec), "60s").Should(gexec.Exit(0))
+		Eventually(k8sRunner.RunKubectlCommand("delete", "namespace", k8sRunner.Namespace()), "60s").Should(gexec.Exit(0))
 	}
 })
