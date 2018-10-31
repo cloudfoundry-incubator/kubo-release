@@ -36,8 +36,10 @@ properties:
     description: Kubernetes specs to be applied at post-start
     example:
     - name: psp1
-      value:
-      - apiVersion: policy/v1beta1
+      value: |
+        ---
+        apiVersion: policy/v1beta1
         kind: PodSecurityPolicy
-      - apiVersion: rbac.authorization.k8s.io/v1
+        ---
+        apiVersion: rbac.authorization.k8s.io/v1
         kind: Role
