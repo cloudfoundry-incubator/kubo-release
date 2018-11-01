@@ -22,14 +22,6 @@ container-images/coredns_coredns:1.2.0.tgz:
   size: 9997810
   object_id: aa4d0f19-0dea-4cc0-561e-2c665b0e849c
   sha: 34fd25c3a1140b4d59390f57bd17977a64af26c9
-container-images/gcr.io_google_containers_metrics-server-amd64:v0.2.1.tgz:
-  size: 11355068
-  object_id: 4dbed951-4fca-4708-4853-69264963ffcd
-  sha: bc9e58c1fc0ce46648a595ad5041a36abca779ab
-container-images/gcr.io_google_containers_metrics-server-amd64:v0.3.0.tgz:
-  size: 10897327
-  object_id: 908485e6-419b-48d2-7ede-81111b430638
-  sha: e79d57f99ed64c1166fb244d7c69b91e64ed08b0
 container-images/gcr.io_google_containers_metrics-server-amd64:v0.3.1.tgz:
   size: 10895843
   object_id: 0f2ec738-7b90-4fcd-5efd-895f42b6697d
