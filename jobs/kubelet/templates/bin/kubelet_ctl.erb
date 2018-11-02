@@ -103,7 +103,7 @@ start_kubelet() {
   -%>
 
   kubelet \
-  <%
+  <%-
     if_p('k8s-args') do |args|
       args.each do |flag, value|
         valueString = ""
@@ -117,12 +117,12 @@ start_kubelet() {
         else
           valueString = "=#{value}"
         end
-  %>
+  -%>
     <%= "--#{flag}#{valueString}" %> \
-  <%
+  <%-
       end
     end
-  %>
+  -%>
     <% if include_config -%>--cloud-config=${cloud_config}<% end %> \
     <% if !iaas.nil? -%>--cloud-provider=${cloud_provider}<% end %> \
     --hostname-override=$(get_hostname_override) \
