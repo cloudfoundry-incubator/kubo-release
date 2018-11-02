@@ -32,7 +32,7 @@ properties:
   service-account-private-key:
     description: "Private key used to sign generated tokens"
   k8s-args:
-    description: "Pass-through options for Kubernetes runtime arguments. See https://v1-11.docs.kubernetes.io/docs/reference/command-line-tools-reference/kube-controller-manager/ for reference."
+    description: "Pass-through options for Kubernetes runtime arguments. See https://kubernetes.io/docs/reference/command-line-tools-reference/kube-controller-manager/ for reference."
     example: |
       k8s-args:
         bind-address: 0.0.0.0
