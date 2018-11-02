@@ -10,12 +10,12 @@ describe 'kube_controller_manager' do
       rendered_kube_controller_manager_bpm_yml = compiled_template(
         'kube-controller-manager',
         'config/bpm.yml',
-        'horizontal-pod-autoscaler' => {
-          'downscale-delay' => '2m0s',
-          'upscale-delay' => '2m0s',
-          'sync-period' => '40s',
-          'tolerance' => '0.2',
-          'use-rest-clients' => false
+        'k8s-args' => {
+          'horizontal-pod-autoscaler-downscale-delay' => '2m0s',
+          'horizontal-pod-autoscaler-upscale-delay' => '2m0s',
+          'horizontal-pod-autoscaler-sync-period' => '40s',
+          'horizontal-pod-autoscaler-tolerance' => '0.2',
+          'horizontal-pod-autoscaler-use-rest-clients' => false
         }
       )
 

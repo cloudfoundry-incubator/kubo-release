@@ -2,36 +2,29 @@
 processes:
 - name: kube-controller-manager
   executable: /var/vcap/packages/kubernetes/bin/kube-controller-manager
-  args:
+  args: 
+  <% 
+    if_p('k8s-args') do |args|
+      args.each do |flag, value|
+        valueString = ""
+
+        if value.is_a? Array
+          valueString = value.join(",")
+        elsif value.is_a? Hash
+          valueString = value.map { |k,v| "#{k}=#{v}" }.join(",")
+        else
+          valueString = value
+        end
+  %>
+  - <%= "--#{flag}=#{value}" %>
+  <%
+      end
+    end
+  %>
   <%- if_link('cloud-provider') do |cloud_provider| -%>
   - --cloud-provider=<%= cloud_provider.p('cloud-provider.type') %>
   - --cloud-config=/var/vcap/jobs/kube-controller-manager/config/cloud-provider.ini
   <%- end -%>
-  - --cluster-name=<%=p('cluster-name') %>
-  - --cluster-signing-cert-file=/var/vcap/jobs/kube-controller-manager/config/cluster-signing-ca.pem
-  - --cluster-signing-key-file=/var/vcap/jobs/kube-controller-manager/config/cluster-signing-key.pem
-  <%- if_p('horizontal-pod-autoscaler.downscale-delay') do |delay| -%>
-  - --horizontal-pod-autoscaler-downscale-delay=<%= delay %>
-  <%- end -%>
-  <%- if_p('horizontal-pod-autoscaler.sync-period') do |sync| -%>
-  - --horizontal-pod-autoscaler-sync-period=<%= sync %>
-  <%- end -%>
-  <%- if_p('horizontal-pod-autoscaler.tolerance') do |tolerance| -%>
-  - --horizontal-pod-autoscaler-tolerance=<%= tolerance %>
-  <%- end -%>
-  <%- if_p('horizontal-pod-autoscaler.upscale-delay') do |delay| -%>
-  - --horizontal-pod-autoscaler-upscale-delay=<%= delay %>
-  <%- end -%>
-  <%- if_p('horizontal-pod-autoscaler.use-rest-clients') do |client| -%>
-  - --horizontal-pod-autoscaler-use-rest-clients=<%= client %>
-  <%- end -%>
-  - --kubeconfig=/var/vcap/jobs/kube-controller-manager/config/kubeconfig
-  - --leader-elect
-  - --root-ca-file=/var/vcap/jobs/kube-controller-manager/config/ca.pem
-  - --service-account-private-key-file=/var/vcap/jobs/kube-controller-manager/config/service-account-private-key.pem
-  - --terminated-pod-gc-threshold=100
-  - --use-service-account-credentials
-  - --v=<%=p('logging-level') %>
   hooks:
     pre_start: /var/vcap/jobs/kube-controller-manager/bin/chmod-product-serial
   env:
