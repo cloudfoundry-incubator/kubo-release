@@ -8,15 +8,17 @@ processes:
       args.each do |flag, value|
         valueString = ""
 
-        if value.is_a? Array
-          valueString = value.join(",")
+        if value.nil?
+          # Do nothing to supports args-less flags (--example)
+        elsif value.is_a? Array
+          valueString = "=#{value.join(",")}"
         elsif value.is_a? Hash
-          valueString = value.map { |k,v| "#{k}=#{v}" }.join(",")
+          valueString = "=#{value.map { |k,v| "#{k}=#{v}" }.join(",")}"
         else
-          valueString = value
+          valueString = "=#{value}"
         end
   %>
-  - <%= "--#{flag}=#{value}" %>
+  - "<%= "--#{flag}#{valueString}" %>"
   <%
       end
     end

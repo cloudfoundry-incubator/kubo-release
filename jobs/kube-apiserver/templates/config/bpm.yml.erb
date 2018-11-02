@@ -9,9 +9,9 @@
     end
   end
 
-  etcd_servers_property_set=FALSE
+  etcd_servers_property_set=false
   if_p("k8s-args.etcd-servers") do |dummy|
-    etcd_servers_property_set=TRUE
+    etcd_servers_property_set=true
   end
 
   if !etcd_servers_property_set
@@ -21,24 +21,27 @@
 processes:
 - name: kube-apiserver
   executable: /var/vcap/packages/kubernetes/bin/kube-apiserver
-  args: <% if_p('k8s-args') do
-    p('k8s-args').each do |flag, value|
-      if_p('k8s-args.'+flag) do |v|
-        argString = "--#{flag}"
-        if v
-          if v.is_a? Array
-            values = v.join(",")
-          elsif v.is_a? Hash
-            values = v.map { |k,v| "#{k}=#{v}" }.join(",")
-          else
-            values = v
-          end
-          argString += "=#{values}" %>
-  - <%= '"' + argString + '"' %><%
+  args:
+  <%
+    if_p('k8s-args') do |args|
+      args.each do |flag, value|
+        valueString = ""
+
+        if value.nil?
+          # Do nothing to supports args-less flags (--example)
+        elsif value.is_a? Array
+          valueString = "=#{value.join(",")}"
+        elsif value.is_a? Hash
+          valueString = "=#{value.map { |k,v| "#{k}=#{v}" }.join(",")}"
+        else
+          valueString = "=#{value}"
         end
+  %>
+  - "<%= "--#{flag}#{valueString}" %>"
+  <%
       end
     end
-  end %>
+  %>
   - --apiserver-count=<%= link('kube-apiserver').instances.size %>
   <% if_link('cloud-provider') do |cloud_provider| %>
   - --cloud-provider=<%= cloud_provider.p('cloud-provider.type') %>
