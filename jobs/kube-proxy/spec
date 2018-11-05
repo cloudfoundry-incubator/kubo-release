@@ -13,15 +13,28 @@ packages:
 - conntrack
 
 properties:
-  cloud-provider:
-    description: "The type of cloud-provider that is being deployed"
-  tls.kubernetes:
-    description: "Certificate and private key for the Kubernetes master"
   api-token:
     description: The password for the kube-proxy user
-  logging-level:
-    description: "V-leveled logging at the specified level. See https://github.com/golang/glog"
-    default: 2
-  pod-network-cidr:
-    description: The pod networking cidr for pod network overlay
-    default: "10.200.0.0/16"
+  cloud-provider:
+    description: The type of cloud-provider that is being deployed
+  tls.kubernetes:
+    description: Certificate and private key for the Kubernetes master
+  kube-proxy-configuration:
+    description: The Kube-proxy will load its initial configuration from this.
+      Omit this to use the built-in default configuration values.
+      Command-line flags override configuration.
+      This is the recommended way to configure kube-proxy as the command line flags for kube-proxy are being deprecated.
+    example: |
+      kube-proxy-configuration:
+        feature-gates:
+          CPUManager: true
+          DryRun: false
+        cleanup: false
+  k8s-args:
+    description: Pass-through options for Kubernetes runtime arguments. See docs https://kubernetes.io/docs/reference/command-line-tools-reference/kube-proxy/ for reference.
+    example: |
+      k8s-args:
+        feature-gates:
+          CPUManager: true
+          DryRun: false
+        cleanup: false

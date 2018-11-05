@@ -101,4 +101,15 @@ describe 'flag_generation_tests' do
       test_ctl(kubelet)
     end
   end
+
+  context 'kube-proxy' do
+    it 'passes through args correctly' do
+      kube_proxy = compiled_template(
+        'kube-proxy',
+        'bin/kube_proxy_ctl',
+        k8s_args)
+
+      test_ctl(kube_proxy)
+    end
+  end
 end
