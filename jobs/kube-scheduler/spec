@@ -15,6 +15,13 @@ properties:
     description: The token to access kubernetes API
   tls.kubernetes:
     description: "Certificate and private key for the Kubernetes master"
-  logging-level:
-    description: "V-leveled logging at the specified level. See https://github.com/golang/glog"
-    default: 2
+  kube-scheduler-configuration:
+    description: The Kube-scheduler will load its initial configuration from this.
+      Omit this to use the built-in default configuration values.
+      Command-line flags override configuration.
+  k8s-args:
+    description: "Pass-through options for Kubernetes runtime arguments. See docs https://kubernetes.io/docs/reference/command-line-tools-reference/kube-scheduler/ for reference."
+    example: |
+      k8s-args:
+        leader-elect: false
+        log-flush-frequency: 30s

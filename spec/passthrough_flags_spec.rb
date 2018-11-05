@@ -112,4 +112,15 @@ describe 'flag_generation_tests' do
       test_ctl(kube_proxy)
     end
   end
+
+  context 'kube-scheduler' do
+    it 'passes through args correctly' do
+      kube_scheduler = compiled_template(
+        'kube-scheduler',
+        'config/bpm.yml',
+        k8s_args)
+
+      test_bpm(kube_scheduler)
+    end
+  end
 end

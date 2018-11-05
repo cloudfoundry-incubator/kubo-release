@@ -67,7 +67,7 @@ start_kubernetes_proxy() {
       end
     end
   -%>
-  --config /var/vcap/jobs/kube-proxy/config/config.yml \
+  --config=/var/vcap/jobs/kube-proxy/config/config.yml \
   1>> $LOG_DIR/kube_proxy.stdout.log \
   2>> $LOG_DIR/kube_proxy.stderr.log
 }
