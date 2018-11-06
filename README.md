@@ -69,6 +69,8 @@ Kubernetes uses etcd as its datastore. The official infrastructure requirements 
     ```bash
     bosh -d cfcr run-errand smoke-tests
     ```
+### Configuring CFCR
+Please check out our manifest and ops-files in kube-deployment for examples on how to configure kubo-release. Additionally, we have a [doc page](docs/configuring-kubernetes-properties.md) to describe how to configure Kubernetes components for the release.
 
 ### BOSH Lite
 CFCR clusters on BOSH Lite are intended for development. We run the [deploy_cfcr_lite](https://github.com/cloudfoundry-incubator/kubo-deployment/blob/master/bin/deploy_cfcr_lite) script to provision a cluster with the latest stemcell and master of kubo-release.
