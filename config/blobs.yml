@@ -80,21 +80,27 @@ jq-linux64-1.5:
   sha: d8e36831c3c94bb58be34dd544f44a6c6cb88568
 kubernetes-1.12.2/kube-apiserver:
   size: 192781649
+  object_id: 054a68f6-f80a-4a10-5ccb-d583271f051d
   sha: 5a6e66f81789ead2939828902b972f1eecf17883
 kubernetes-1.12.2/kube-controller-manager:
   size: 162961401
+  object_id: 5f9d38dc-4753-48b9-4e65-dd832f72169f
   sha: 4c3900a39a6741be421611b680785148e4abddf8
 kubernetes-1.12.2/kube-proxy:
   size: 50330867
+  object_id: 3d767ea4-bb95-4b1e-53cc-fca0d190bc8d
   sha: f6245de636667f9e010f16b1a4d493135460a307
 kubernetes-1.12.2/kube-scheduler:
   size: 57184656
+  object_id: 4abd91ad-d779-4a2e-719f-1a61d155b672
   sha: a03c9e111635aef68e71235323043e90479885ae
 kubernetes-1.12.2/kubectl:
   size: 57352138
+  object_id: 4a4fd6bc-10fa-445f-4afe-477918b22f7c
   sha: 8e94e8bafdcd919a183143d6f3364b75278e277d
 kubernetes-1.12.2/kubelet:
   size: 176648680
+  object_id: 0f398cc8-47d3-4b00-6a9a-d067c2fbd751
   sha: a82ca0bb1c7d838ec83070f92ddda9671ee02f90
 nfs/keyutils_1.5.9-8ubuntu1_amd64.deb:
   size: 47054
