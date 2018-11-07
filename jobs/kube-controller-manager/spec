@@ -12,6 +12,8 @@ templates:
   config/service_key.json.erb: config/service_key.json
   config/cluster-signing-ca.pem.erb: config/cluster-signing-ca.pem
   config/cluster-signing-key.pem.erb: config/cluster-signing-key.pem
+  config/kube-controller-manager-cert.pem.erb: config/kube-controller-manager-cert.pem
+  config/kube-controller-manager-private-key.pem.erb: config/kube-controller-manager-private-key.pem
 
 packages:
 - kubernetes
@@ -29,6 +31,8 @@ properties:
     description: no_proxy env var for cloud provider interactions, i.e. for the kubelet
   tls.kubernetes:
     description: "Certificate and private key for the Kubernetes master"
+  tls.kube-controller-manager:
+    description: "Certificate and private key for serving HTTPS from kube-controller-manager"
   service-account-private-key:
     description: "Private key used to sign generated tokens"
   k8s-args:
