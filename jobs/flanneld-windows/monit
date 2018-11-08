@@ -1,0 +1,11 @@
+{
+  "processes": [
+    {
+      "name": "flanneld",
+      "executable": "powershell",
+      "args": ["C:\\var\\vcap\\jobs\\flanneld-windows\\bin\\flanneld_ctl.ps1"],
+      "env": {}
+    }
+  ]
+}
+

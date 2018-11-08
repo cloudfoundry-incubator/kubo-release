@@ -1,0 +1,10 @@
+. ./exiter.ps1
+
+$ErrorActionPreference = "Stop";
+trap { $host.SetShouldExit(1) }
+
+$KUBERNETES_VERSION="1.11.3"
+
+New-Item -Path "${env:BOSH_INSTALL_TARGET}" -Name "bin" -ItemType "directory"
+
+Copy-Item "kubernetes-windows-${KUBERNETES_VERSION}/*" "${env:BOSH_INSTALL_TARGET}/bin"

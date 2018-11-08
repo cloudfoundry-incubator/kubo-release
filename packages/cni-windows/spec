@@ -1,0 +1,6 @@
+---
+name: cni-windows
+
+files:
+- cni-windows/*
+- exiter.ps1

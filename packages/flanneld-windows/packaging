@@ -1,0 +1,6 @@
+. ./exiter.ps1
+
+$ErrorActionPreference = "Stop";
+trap { $host.SetShouldExit(1) }
+
+Copy-Item flannel-windows\flanneld.exe "${env:BOSH_INSTALL_TARGET}/flanneld.exe"
