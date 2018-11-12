@@ -54,7 +54,7 @@ Integration tests are located in [kubo-ci](https://github.com/cloudfoundry-incub
 1. Run integration tests:
 
   ```
-  GOPATH=$PWD ginkgo -skipPackage addons -keepGoing -r src/tests/integration_tests
+  GOPATH=$PWD ginkgo -skipPackage addons -keepGoing -r src/tests/integration-tests
   ```
   
 **Note** Tests will create load balancers and persistent disks. Some tests require direct access to the kubelet nodes, but most of them just require access to Kubernetes API.
