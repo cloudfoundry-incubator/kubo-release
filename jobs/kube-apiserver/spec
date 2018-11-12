@@ -59,6 +59,8 @@ properties:
     description: Certificate for the Kubernetes master
   tls.kubernetes.private_key:
     description: Private key for the Kubernetes master
+  oidc.ca:
+    description: Certificate for the CA that signed your identity provider’s web certificate
 consumes:
 - name: etcd
   type: etcd
