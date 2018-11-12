@@ -12,15 +12,19 @@ cifs-utils-6.7.tar.bz2:
   sha: 9ba5091d7c2418a90773c861f04a3f4a36854c14
 cni-windows/flannel.exe:
   size: 5249536
+  object_id: ccc31fe9-de3c-4457-7e1a-22654401ee0b
   sha: 3db750b5f63ce8d486173bd53119a2c390c443f6
 cni-windows/host-local.exe:
   size: 3139072
+  object_id: c92f7f24-1f8d-467b-685d-6f6094ad525d
   sha: 157e164e3e1eef93b54f672001de35909ba20b5a
 cni-windows/win-bridge.exe:
   size: 5641216
+  object_id: dccb0c2e-bfaf-4ae3-7171-4dbbed23dcf8
   sha: 0de1ca9ff3dc122274b7068debf97791c9a2022b
 cni-windows/win-overlay.exe:
   size: 5642240
+  object_id: cd9371e2-edf2-47bc-5797-48407e17d993
   sha: 6d7c580517a061e04c3ec034f13c742d2d430cf6
 cni/cni-plugins-amd64-v0.7.1.tgz:
   size: 17108856
@@ -88,6 +92,7 @@ flannel-v0.10.0-linux-amd64.tar.gz:
   sha: 9d19a56847d6aad207671a349eddd85de87ba560
 flannel-windows/flanneld.exe:
   size: 28959744
+  object_id: abcd2381-2be5-4a41-69f8-d5f9cb3e6e99
   sha: ca4aca030b49ff03bd59567084164da312143b44
 ipset/ipset_6.20.1-1_amd64.deb:
   size: 34156
@@ -135,15 +140,19 @@ libtool-2.4.6.tar.gz:
   sha: 25b6931265230a06f0fc2146df64c04e5ae6ec33
 kubernetes-windows-1.11.3/kube-proxy.exe:
   size: 51224576
+  object_id: ff308fa1-3483-4cce-4a06-fe36267c0795
   sha: eeb1f3f18f683520b193caa39c5d1b86acae9122
 kubernetes-windows-1.11.3/kubeadm.exe:
   size: 57290752
+  object_id: 4efc30c5-7694-4165-6ef2-aa3eb39d8bbf
   sha: 4d00dd853d727f769a1432ca48caf7a50da86e1f
 kubernetes-windows-1.11.3/kubectl.exe:
   size: 55686656
+  object_id: 9aaa8d3e-1a43-4b80-7e5d-0d6e1e8ec64d
   sha: 94fdf0f22da29c0ab870234a61da4f606e1233cc
 kubernetes-windows-1.11.3/kubelet.exe:
   size: 155562496
+  object_id: a937aacb-d62d-47d6-44b8-9502596efa68
   sha: c9a1b1333a30212cf0644ba0f01fe66c448a531f
 nfs-debs/keyutils_1.5.9-8ubuntu1_amd64.deb:
   size: 47054
