@@ -1,7 +1,7 @@
 set -exu
 
 mkdir -p ${BOSH_INSTALL_TARGET}/bin
-tar -xzf cni/cni-amd64*.tgz -C ${BOSH_INSTALL_TARGET}/bin/
+tar -xzf cni/cni-plugins-amd64*.tgz -C ${BOSH_INSTALL_TARGET}/bin/
 
 mkdir -p utillocal
 dpkg -x cni/util-linux*.deb utillocal/

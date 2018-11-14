@@ -1,0 +1,10 @@
+---
+name: bbr-kube-apiserver
+
+templates:
+  pre-restore-lock.erb: bin/bbr/pre-restore-lock
+  post-restore-unlock.erb: bin/bbr/post-restore-unlock
+
+packages: []
+
+properties: {}

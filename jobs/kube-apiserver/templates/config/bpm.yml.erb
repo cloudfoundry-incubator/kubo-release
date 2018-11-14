@@ -9,95 +9,46 @@
     end
   end
 
-  etcd_endpoints = link('etcd').instances.map { |server| get_url(server, 2379) }.join(",")
-
-  admission_control_options = [
-    "LimitRanger",
-    "DefaultTolerationSeconds", "ValidatingAdmissionWebhook",
-    "NamespaceLifecycle","ResourceQuota","ServiceAccount",
-    "DefaultStorageClass", "MutatingAdmissionWebhook"]
-
-  if p('deny_escalating_exec')
-    admission_control_options.push("DenyEscalatingExec")
+  etcd_servers_property_set=false
+  if_p("k8s-args.etcd-servers") do |dummy|
+    etcd_servers_property_set=true
   end
 
-  if !p('allow_privileged')
-    admission_control_options.push("SecurityContextDeny")
+  if !etcd_servers_property_set
+    etcd_endpoints = link('etcd').instances.map { |server| get_url(server, 2379) }.join(",")
   end
 %>
 processes:
 - name: kube-apiserver
   executable: /var/vcap/packages/kubernetes/bin/kube-apiserver
   args:
-  - --anonymous-auth=<%= p('anonymous_auth') %>
-  - --allow-privileged=<%= p('allow_privileged') %>
+  <%
+    if_p('k8s-args') do |args|
+      args.each do |flag, value|
+        valueString = ""
+
+        if value.nil?
+          # Do nothing to supports args-less flags (--example)
+        elsif value.is_a? Array
+          valueString = "=#{value.join(",")}"
+        elsif value.is_a? Hash
+          valueString = "=#{value.map { |k,v| "#{k}=#{v}" }.join(",")}"
+        else
+          valueString = "=#{value}"
+        end
+  %>
+  - "<%= "--#{flag}#{valueString}" %>"
+  <%
+      end
+    end
+  %>
   - --apiserver-count=<%= link('kube-apiserver').instances.size %>
-  - --bind-address=0.0.0.0
   <% if_link('cloud-provider') do |cloud_provider| %>
   - --cloud-provider=<%= cloud_provider.p('cloud-provider.type') %>
   - --cloud-config=/var/vcap/jobs/kube-apiserver/config/cloud-provider.ini
   <% end %>
-  - --kubelet-client-key=/var/vcap/jobs/kube-apiserver/config/kubelet-client-key.pem
-  - --kubelet-client-certificate=/var/vcap/jobs/kube-apiserver/config/kubelet-client-cert.pem
-  - --enable-admission-plugins=<%= admission_control_options.join(",") %>
-  - --disable-admission-plugins=PersistentVolumeLabel
-  - --enable-bootstrap-token-auth
-  - --enable-swagger-ui
+  <% if !etcd_servers_property_set %>
   - --etcd-servers=<%= etcd_endpoints %>
-  - --etcd-cafile=/var/vcap/jobs/kube-apiserver/config/etcd-ca.crt
-  - <% if_p('feature_gates') do |feature_gates| %>
-  - --feature-gates=<%= feature_gates.flat_map {|k,v| "#{k}=#{v}"}.join(",") %>
-  - <% end %>
-  - --etcd-certfile=/var/vcap/jobs/kube-apiserver/config/etcd-client.crt
-  - --etcd-keyfile=/var/vcap/jobs/kube-apiserver/config/etcd-client.key
-  - --kubelet-https
-  - --repair-malformed-updates=false
-  - --secure-port=8443
-  - --service-account-key-file=/var/vcap/jobs/kube-apiserver/config/service-account-public-key.pem
-  - --service-account-lookup
-  - --service-cluster-ip-range=<%= p('service-cluster-cidr') %>
-  - --service-node-port-range=30000-32767
-  - --tls-cert-file=/var/vcap/jobs/kube-apiserver/config/kubernetes.pem
-  - --tls-private-key-file=/var/vcap/jobs/kube-apiserver/config/kubernetes-key.pem
-  - --token-auth-file=/var/vcap/jobs/kube-apiserver/config/tokens.csv
-  - --storage-media-type=application/json
-  - --enable-aggregator-routing
-  - --v=<%=p('logging-level') %>
-  - --authorization-mode=RBAC
-  - --runtime-config=api/v1,rbac.authorization.k8s.io/v1alpha1
-  - --client-ca-file=/var/vcap/jobs/kube-apiserver/config/kubernetes.pem
-  - --proxy-client-cert-file=/var/vcap/jobs/kube-apiserver/config/kubernetes.pem
-  - --proxy-client-key-file=/var/vcap/jobs/kube-apiserver/config/kubernetes-key.pem
-  - --requestheader-allowed-names=aggregator
-  - --requestheader-client-ca-file=/var/vcap/jobs/kube-apiserver/config/kubernetes.pem
-  - --requestheader-extra-headers-prefix=X-Remote-Extra-
-  - --requestheader-group-headers=X-Remote-Group
-  - --requestheader-username-headers=X-Remote-User
-  <% if p('enable_audit_logs') %>
-  - --audit-log-path=/var/vcap/sys/log/kube-apiserver/audit.log
-  - --audit-log-maxage=0
-  - --audit-log-maxsize=0
-  - --audit-log-maxbackup=0
-  - --audit-policy-file=/var/vcap/jobs/kube-apiserver/config/audit_policy.yml
-  <% end %>
-  <% if_p("oidc.issuer-url", "oidc.client-id") do |oidc_issuer_url, oidc_client_id| %>
-  - --oidc-issuer-url=<%= oidc_issuer_url %>
-  - --oidc-client-id=<%= oidc_client_id %>
-  <% end %>
-  <% if_p("oidc.username-claim") do |oidc_username_claim| %>
-  - --oidc-username-claim=<%= oidc_username_claim %>
-  <% end %>
-  <% if_p("oidc.username-prefix") do |oidc_username_prefix| %>
-  - --oidc-username-prefix=<%= oidc_username_prefix %>
-  <% end %>
-  <% if_p("oidc.groups-claim") do |oidc_groups_claim| %>
-  - --oidc-groups-claim=<%= oidc_groups_claim %>
-  <% end %>
-  <% if_p("oidc.groups-prefix") do |oidc_groups_prefix| %>
-  - --oidc-groups-prefix=<%= oidc_groups_prefix %>
-  <% end %>
-  <% if_p("oidc.ca") do %>
-  - --oidc-ca-file=/var/vcap/jobs/kube-apiserver/config/oidc-ca.pem
   <% end %>
   env:
     <% if_p('no_proxy') do |no_proxy| %>

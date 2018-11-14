@@ -31,86 +31,6 @@ describe 'kube-apiserver' do
     }
   end
 
-  it 'configures audit logging by default' do
-    rendered_kube_apiserver_bpm_yml = compiled_template(
-      'kube-apiserver',
-      'config/bpm.yml',
-      {},
-      link_spec
-    )
-
-    bpm_yml = YAML.safe_load(rendered_kube_apiserver_bpm_yml)
-    expect(bpm_yml['processes'][0]['args']).to include('--audit-log-path=/var/vcap/sys/log/kube-apiserver/audit.log')
-    expect(bpm_yml['processes'][0]['args']).to include('--audit-log-maxage=0')
-    expect(bpm_yml['processes'][0]['args']).to include('--audit-log-maxsize=0')
-    expect(bpm_yml['processes'][0]['args']).to include('--audit-log-maxbackup=0')
-    expect(bpm_yml['processes'][0]['args']).to include('--audit-policy-file=/var/vcap/jobs/kube-apiserver/config/audit_policy.yml')
-  end
-
-  it 'does not configure audit logging when enable audit logs is false' do
-    rendered_kube_apiserver_bpm_yml = compiled_template(
-      'kube-apiserver',
-      'config/bpm.yml',
-      { 'enable_audit_logs' => false },
-      link_spec
-    )
-
-    bpm_yml = YAML.safe_load(rendered_kube_apiserver_bpm_yml)
-    expect(bpm_yml['processes'][0]['args']).to_not include('--audit-log-path=/var/vcap/sys/log/kube-apiserver/audit.log')
-    expect(bpm_yml['processes'][0]['args']).to_not include('--audit-log-maxage=0')
-    expect(bpm_yml['processes'][0]['args']).to_not include('--audit-log-maxsize=0')
-    expect(bpm_yml['processes'][0]['args']).to_not include('--audit-log-maxbackup=0')
-    expect(bpm_yml['processes'][0]['args']).to_not include('--audit-policy-file=/var/vcap/jobs/kube-apiserver/config/audit_policy.yml')
-  end
-
-  it 'configures audit logging when enable audit logs is true' do
-    rendered_kube_apiserver_bpm_yml = compiled_template(
-      'kube-apiserver',
-      'config/bpm.yml',
-      { 'enable_audit_logs' => true },
-      link_spec
-    )
-
-    bpm_yml = YAML.safe_load(rendered_kube_apiserver_bpm_yml)
-    expect(bpm_yml['processes'][0]['args']).to include('--audit-log-path=/var/vcap/sys/log/kube-apiserver/audit.log')
-    expect(bpm_yml['processes'][0]['args']).to include('--audit-log-maxage=0')
-    expect(bpm_yml['processes'][0]['args']).to include('--audit-log-maxsize=0')
-    expect(bpm_yml['processes'][0]['args']).to include('--audit-log-maxbackup=0')
-    expect(bpm_yml['processes'][0]['args']).to include('--audit-policy-file=/var/vcap/jobs/kube-apiserver/config/audit_policy.yml')
-  end
-
-  it 'has no security context deny when privileged containers are enabled and deny is disabled' do
-    rendered_kube_apiserver_bpm_yml = compiled_template(
-      'kube-apiserver',
-      'config/bpm.yml',
-      {
-        'allow_privileged' => true,
-        'disable_deny_escalating_exec' => true
-      },
-      link_spec
-    )
-
-    bpm_yml = YAML.safe_load(rendered_kube_apiserver_bpm_yml)
-    expect(bpm_yml['processes'][0]['args']).to include(
-      '--enable-admission-plugins=LimitRanger,' \
-      'DefaultTolerationSeconds,ValidatingAdmissionWebhook,' \
-      'NamespaceLifecycle,ResourceQuota,' \
-      'ServiceAccount,DefaultStorageClass,MutatingAdmissionWebhook,DenyEscalatingExec'
-    )
-  end
-
-  it 'denies security context when privileged containers are not enabled' do
-    rendered_kube_apiserver_bpm_yml = compiled_template(
-      'kube-apiserver',
-      'config/bpm.yml',
-      {},
-      link_spec
-    )
-
-    bpm_yml = YAML.safe_load(rendered_kube_apiserver_bpm_yml)
-    expect(bpm_yml['processes'][0]['args']).to include(match(/--enable-admission-plugins=.*,SecurityContextDeny/))
-  end
-
   it 'has no http proxy when no proxy is defined' do
     rendered_kube_apiserver_bpm_yml = compiled_template(
       'kube-apiserver',
@@ -173,9 +93,11 @@ describe 'kube-apiserver' do
       'kube-apiserver',
       'config/bpm.yml',
       {
-        'feature_gates' => {
-          'CustomFeature1' => true,
-          'CustomFeature2' => false
+        'k8s-args' => {
+          'feature-gates' => {
+            'CustomFeature1' => true,
+            'CustomFeature2' => false
+          }
         }
       },
       link_spec
@@ -183,5 +105,23 @@ describe 'kube-apiserver' do
 
     bpm_yml = YAML.safe_load(rendered_kube_apiserver_bpm_yml)
     expect(bpm_yml['processes'][0]['args']).to include('--feature-gates=CustomFeature1=true,CustomFeature2=false')
+  end
+
+  it 'set oidc properties' do
+    rendered_kube_apiserver_bpm_yml = compiled_template(
+      'kube-apiserver',
+      'config/bpm.yml',
+      {
+        'k8s-args' => {
+          'oidc-username-prefix' => 'oidc:',
+          'oidc-groups-prefix' => 'oidc:'
+        }
+      },
+      link_spec
+    )
+
+    bpm_yml = YAML.safe_load(rendered_kube_apiserver_bpm_yml)
+    expect(bpm_yml['processes'][0]['args']).to include('--oidc-username-prefix=oidc:')
+    expect(bpm_yml['processes'][0]['args']).to include('--oidc-groups-prefix=oidc:')
   end
 end

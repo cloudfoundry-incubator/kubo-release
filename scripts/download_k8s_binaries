@@ -24,11 +24,22 @@ main() {
   )
 
   pushd "$(dirname "${BASH_SOURCE[0]}")/.."
+    existing_k8s_spec=$(bosh blobs --column path | grep kubelet | grep -o -E 'kubernetes-([0-9]+\.)+[0-9]+')
+    existing_k8s_version=$(echo "$existing_k8s_spec" | grep -o -E '([0-9]+\.)+[0-9]+')
 
-    for binary in "${binaries[@]}"; do
-      download "${binary}" "${staging_dir}" "${kubernetes_version}"
-      add_blob "${binary}" "${staging_dir}" "${kubernetes_version}"
-    done
+    if [ "$existing_k8s_version" == "$kubernetes_version" ]; then
+        echo "Kubernetes version already up-to-date."
+    else
+      pushd packages/kubernetes
+        sed -E -i -e "s/([0-9]+\.)+[0-9]+/${kubernetes_version}/" packaging
+        sed -E -i -e "s/${existing_k8s_spec}/kubernetes-${kubernetes_version}/" spec
+      popd
+
+      for binary in "${binaries[@]}"; do
+        download "${binary}" "${staging_dir}" "${kubernetes_version}"
+        add_blob "${binary}" "${staging_dir}" "${kubernetes_version}"
+      done
+    fi
 
   popd
 }

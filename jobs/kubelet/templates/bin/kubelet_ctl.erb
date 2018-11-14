@@ -8,7 +8,6 @@ RUN_DIR=/var/vcap/sys/run/kubernetes
 PIDFILE=$RUN_DIR/kubelet.pid
 LOG_DIR=/var/vcap/sys/log/kubelet
 DATA_DIR=/var/vcap/store/kubernetes
-DOCKER_SOCKET=unix:///var/vcap/sys/run/docker/docker.sock
 
 <% iaas = nil %>
 <% if_p('cloud-provider') do |cloud_provider| %>
@@ -31,7 +30,12 @@ DOCKER_SOCKET=unix:///var/vcap/sys/run/docker/docker.sock
 
 <%
   labels = ["spec.ip=#{spec.ip}","bosh.id=#{spec.id}","bosh.zone=#{spec.az}"]
-  labels += p("labels").map {|k,v| "#{k}=#{v}"}
+  if iaas=="vsphere"
+    labels << "failure-domain.beta.kubernetes.io/zone=#{spec.az}"
+  end
+  if_p("labels") do |node_labels|
+    labels += node_labels.map {|k,v| "#{k}=#{v}"}
+  end
   labels = labels.join(',')
 %>
 
@@ -65,7 +69,8 @@ export NO_PROXY=<%= no_proxy %>
 <% end %>
 
 delete_stale_drained_node() {
-  local node_name=$(kubectl --kubeconfig /var/vcap/jobs/kubelet/config/kubeconfig-drain get nodes -o wide -L spec.ip | grep "<%= spec.ip %>" | grep "NotReady" | awk '{print $1}')
+  local node_name
+  node_name=$(kubectl --kubeconfig /var/vcap/jobs/kubelet/config/kubeconfig-drain get nodes -o wide -L bosh.id | grep "<%= spec.id %>" | grep "NotReady" | awk '{print $1}')
   if [[ ! -z "${node_name}" ]]; then
     kubectl --kubeconfig /var/vcap/jobs/kubelet/config/kubeconfig-drain delete node "${node_name}" --ignore-not-found
   fi
@@ -75,6 +80,9 @@ get_hostname_override() {
   if [[ "gce" == "$cloud_provider" ]]; then
     # The hostname needs to be set to the instance name so the gce cloud provider can manage the instance
     hostname_override=$(curl http://metadata.google.internal/computeMetadata/v1/instance/name -H "Metadata-Flavor: Google")
+  elif [[ "azure" == "$cloud_provider" ]]; then
+    # K8s 1.9 Azure provider assumes  the hostname == nodename and is required to resolve the VM instance ID
+    hostname_override=
   else
     hostname_override=<%= spec.ip %>
   fi
@@ -84,12 +92,6 @@ get_hostname_override() {
 
 start_kubelet() {
   ln -s -f /var/vcap/jobs/kubelet/packages/cni/bin/nsenter /usr/bin/nsenter
-
-  zone_label=""
-
-  if [[ "vsphere" == "$cloud_provider"  ]]; then
-    zone_label=",failure-domain.beta.kubernetes.io/zone=<%= spec.az %>"
-  fi
 
   <%-
     include_config = false
@@ -101,26 +103,31 @@ start_kubelet() {
   -%>
 
   kubelet \
-    --allow-privileged=<%= p('allow_privileged') %> \
-    --cadvisor-port=0 \
+  <%-
+    if_p('k8s-args') do |args|
+      args.each do |flag, value|
+        valueString = ""
+
+        if value.nil?
+          # Do nothing to supports args-less flags (--example)
+        elsif value.is_a? Array
+          valueString = "=#{value.join(",")}"
+        elsif value.is_a? Hash
+          valueString = "=#{value.map { |k,v| "#{k}=#{v}" }.join(",")}"
+        else
+          valueString = "=#{value}"
+        end
+  -%>
+    <%= "--#{flag}#{valueString}" %> \
+  <%-
+      end
+    end
+  -%>
     <% if include_config -%>--cloud-config=${cloud_config}<% end %> \
     <% if !iaas.nil? -%>--cloud-provider=${cloud_provider}<% end %> \
-    --cni-bin-dir=/var/vcap/jobs/kubelet/packages/cni/bin \
-    --config=/var/vcap/jobs/kubelet/config/kubeletconfig.yml \
-    --container-runtime=docker \
-    --docker-endpoint="${DOCKER_SOCKET}" \
-    --docker="${DOCKER_SOCKET}" \
-    --fail-swap-on=false \
     --hostname-override=$(get_hostname_override) \
-    --keep-terminated-pod-volumes=false \
-    --kubeconfig=/var/vcap/jobs/kubelet/config/kubeconfig \
-    --network-plugin=cni \
-    --node-labels=<%= labels %>"$zone_label" \
-    --client-ca-file=/var/vcap/jobs/kubelet/config/kubelet-client-ca.pem \
-    --v=<%=p('logging-level') %> \
-    <% if_p('kube-reserved') do |kube_reserved| %>--kube-reserved="<%= kube_reserved %>"<% end %> \
-    <% if_p('system-reserved') do |system_reserved| %>--system-reserved="<%= system_reserved %>"<% end %> \
-    <% if_p('eviction-hard') do |eviction_hard| %>--eviction-hard="<%= eviction_hard %>"<% end %> \
+    --node-labels=<%= labels %> \
+    --config="/var/vcap/jobs/kubelet/config/kubeletconfig.yml"
   1>> $LOG_DIR/kubelet.stdout.log \
   2>> $LOG_DIR/kubelet.stderr.log
 }

@@ -1,0 +1,13 @@
+#!/bin/bash
+
+set -euo pipefail
+
+exec 1>&2
+
+/var/vcap/bosh/bin/monit unmonitor kube-apiserver
+/var/vcap/jobs/bpm/bin/bpm stop kube-apiserver
+
+while /var/vcap/jobs/bpm/bin/bpm pid kube-apiserver; do
+    echo "Waiting for kube-apiserver to exit"
+    sleep 1
+done

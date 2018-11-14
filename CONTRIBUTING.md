@@ -11,8 +11,8 @@ We encourage contributors to have discussion around design and implmentation wit
 1. Fork the project on [GitHub](https://github.com/cloudfoundry-incubator/kubo-release)
 1. Make your feature addition or bug fix. Please make sure there is appropriate [test coverage](#writing-the-tests).
 1. [Run tests](#running-the-tests).
-1. Make sure your fork is up to date with `master`.
-1. Send a pull request.
+1. Make sure your fork is up to date with `develop`.
+1. Send a pull request for a `develop` branch.
 1. The team will triage the pull request and assign it to a team member.
 1. A team member will approve the pull request or make suggestions for changes.
 
@@ -40,7 +40,24 @@ If the changes are for BOSH templating logic then please consider adding unit te
 
 ### Running Release Unit Tests
 
-Execute command `./scripts/run_tests` to run unit tests for kubo-release.  These includes tests for [route-sync](src/route-sync) and the [BOSH templating tests](spec/).  Please run these tests before submitting a pull request.
+Execute command `./scripts/run_tests` to run unit tests for kubo-release.  These includes tests for the [BOSH templating tests](spec/).  Please run these tests before submitting a pull request.
+
+### Integration tests
+
+Integration tests are located in [kubo-ci](https://github.com/cloudfoundry-incubator/kubo-ci).
+
+1. Install [Go](https://golang.org/doc/install)
+1. Install [Ginkgo](https://onsi.github.io/ginkgo/)
+1. Clone kubo-ci repository
+1. Point kubeconfig to the cluster under test.
+1. Go inside kubo-ci repository.
+1. Run integration tests:
+
+  ```
+  GOPATH=$PWD ginkgo -skipPackage addons -keepGoing -r src/tests/integration_tests
+  ```
+  
+**Note** Tests will create load balancers and persistent disks. Some tests require direct access to the kubelet nodes, but most of them just require access to Kubernetes API.
 
 ## Optional tools to deploy
 

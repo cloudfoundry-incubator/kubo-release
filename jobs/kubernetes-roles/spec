@@ -2,7 +2,7 @@
 name: kubernetes-roles
 
 templates:
-  bin/apply_rbac.erb: bin/apply_rbac
+  bin/apply_policies.erb: bin/apply_policies
   bin/post-start.erb: bin/post-start
   config/ca.pem.erb: config/ca.pem
   config/kubeconfig.erb: config/kubeconfig
@@ -10,8 +10,10 @@ templates:
   config/policies/kube_proxy.yml: config/policies/kube_proxy.yml
   config/policies/kubelet.yml: config/policies/kubelet.yml
   config/policies/kubelet_drain.yml: config/policies/kubelet_drain.yml
-  config/policies/route_sync.yml: config/policies/route_sync.yml
   config/policies/vsphere_cloud_provider.yml.erb: config/policies/vsphere_cloud_provider.yml
+  config/policies/azure_cloud_provider.yml.erb: config/policies/azure_cloud_provider.yml
+  config/policies/kube-system-podsecuritypolicy.yml: config/policies/kube-system-podsecuritypolicy.yml
+  config/policies/post-start-custom-specs.yml.erb: config/policies/post-start-custom-specs.yml
 
 packages:
 - kubernetes
@@ -30,3 +32,14 @@ properties:
     description: The admin password for the Kubernetes cluster
   tls.kubernetes:
     description: Certificate and private key for the Kubernetes master
+  post-start-custom-specs:
+    description: Kubernetes specs to be applied at post-start
+    example:
+    - name: psp1
+      value: |
+        ---
+        apiVersion: policy/v1beta1
+        kind: PodSecurityPolicy
+        ---
+        apiVersion: rbac.authorization.k8s.io/v1
+        kind: Role
