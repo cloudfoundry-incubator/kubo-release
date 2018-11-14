@@ -127,7 +127,7 @@ start_kubelet() {
     <% if !iaas.nil? -%>--cloud-provider=${cloud_provider}<% end %> \
     --hostname-override=$(get_hostname_override) \
     --node-labels=<%= labels %> \
-    --config="/var/vcap/jobs/kubelet/config/kubeletconfig.yml"
+    --config="/var/vcap/jobs/kubelet/config/kubeletconfig.yml" \
   1>> $LOG_DIR/kubelet.stdout.log \
   2>> $LOG_DIR/kubelet.stderr.log
 }
