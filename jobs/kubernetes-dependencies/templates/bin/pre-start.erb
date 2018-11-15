@@ -4,6 +4,7 @@ set -euxo pipefail
 
 CONNTRACK_PACKAGES=/var/vcap/packages/conntrack
 IPSET_PACKAGES=/var/vcap/packages/ipset
+NFS_PACKAGES=/var/vcap/packages/nfs
 
 install_package() {
   local package=$1
