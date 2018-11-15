@@ -12,6 +12,7 @@ A [BOSH](http://bosh.io/) release for [Kubernetes](http://kubernetes.io).  Forme
   - **Multiple Masters:** A TCP load balancer for your master nodes.
     - Use a TCP load balancer configured to connect to the master nodes on port 8443.
     - Add healthchecks using either a TCP dial or HTTP by looking for a `200 OK` response from `/healthz`.
+    - if you have used [BOSH Bootloader](https://github.com/cloudfoundry/bosh-bootloader) on GCP then you need to manually create a firewall rule.  Allow access to port TCP 8443 to VMs in your BBL network tagged `cfcr-master` from your load balancer's IP.
 - Cloud Config with
   - `vm_types` named `minimal`, `small`, and `small-highmem` (See [cf-deployment](https://github.com/cloudfoundry/cf-deployment) for reference)
   - `network` named `default`
