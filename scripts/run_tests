@@ -16,11 +16,6 @@ run_go_tests() {
   popd > /dev/null
 }
 
-test_route_sync() {
-  echo "Testing route-sync"
-  run_go_tests ${project_root}/src/route-sync
-}
-
 test_release_specs() {
   pushd "${project_root}" > /dev/null
     bundle install
@@ -29,7 +24,6 @@ test_release_specs() {
 
 }
 
-test_route_sync
 test_release_specs
 
 exit 0

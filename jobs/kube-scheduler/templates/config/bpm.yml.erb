@@ -3,7 +3,24 @@ processes:
 - name: kube-scheduler
   executable: /var/vcap/packages/kubernetes/bin/kube-scheduler
   args:
-  - --v
-  - <%= p('logging-level') %>
-  - --config
-  - /var/vcap/jobs/kube-scheduler/config/config.yml
+  <%
+    if_p('k8s-args') do |args|
+      args.each do |flag, value|
+        valueString = ""
+
+        if value.nil?
+          # Do nothing to supports args-less flags (--example)
+        elsif value.is_a? Array
+          valueString = "=#{value.join(",")}"
+        elsif value.is_a? Hash
+          valueString = "=#{value.map { |k,v| "#{k}=#{v}" }.join(",")}"
+        else
+          valueString = "=#{value}"
+        end
+  %>
+  - "<%= "--#{flag}#{valueString}" %>"
+  <%
+      end
+    end
+  %>
+  - --config=/var/vcap/jobs/kube-scheduler/config/config.yml

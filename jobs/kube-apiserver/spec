@@ -1,6 +1,4 @@
----
 name: kube-apiserver
-
 templates:
   bin/ensure_apiserver_healthy.erb: bin/ensure_apiserver_healthy
   bin/post-start.erb: bin/post-start
@@ -10,115 +8,69 @@ templates:
   config/etcd-ca.crt.erb: config/etcd-ca.crt
   config/etcd-client.crt.erb: config/etcd-client.crt
   config/etcd-client.key.erb: config/etcd-client.key
+  config/kubelet-client-cert.pem.erb: config/kubelet-client-cert.pem
+  config/kubelet-client-key.pem.erb: config/kubelet-client-key.pem
   config/kubernetes-key.pem.erb: config/kubernetes-key.pem
   config/kubernetes.pem.erb: config/kubernetes.pem
-  config/kubelet-client-key.pem.erb: config/kubelet-client-key.pem
-  config/kubelet-client-cert.pem.erb: config/kubelet-client-cert.pem
   config/oidc-ca.pem.erb: config/oidc-ca.pem
   config/openstack-ca.crt.erb: config/openstack-ca.crt
   config/service-account-public-key.pem.erb: config/service-account-public-key.pem
   config/service_key.json.erb: config/service_key.json
   config/tokens.csv.erb: config/tokens.csv
-
 packages:
 - kubernetes
-
 properties:
-  admin-username:
-    description: The admin username for the Kubernetes cluster
   admin-password:
     description: The password for the admin account
-  allow_privileged:
-    description: Allows privileged containers for the Kubernetes cluster
-    default: false
-  anonymous_auth:
-    description: |
-      Allows anonymous authentication for the API server. This is often useful
-      to allow unauthenticated users to view discovery endpoints such as
-      `/healthz` or `/version`. This is also useful when configuring load
-      balancer health checks against the TLS port.
-    default: true
-  deny_escalating_exec:
-    description: Enable the `DenyEscalatingExec` admission controller.
-    default: true
-  enable_audit_logs:
-    description: Enables audit logs
-    default: true
-  feature_gates:
-    description: A map of key=value pairs that describe alpha or experimental features.
+  admin-username:
+    description: The admin username for the Kubernetes cluster
   http_proxy:
-    description: http_proxy env var for the kubernetes-api binary (i.e. for cloud provider interactions)
+    description: http_proxy env var for the kubernetes-api binary (i.e. for cloud
+      provider interactions)
   https_proxy:
-    description: https_proxy env var for the kubernetes-api binary (i.e. for cloud provider interactions)
-  no_proxy:
-    description: no_proxy env var for the kubernetes-api binary (i.e. for cloud provider interactions)
+    description: https_proxy env var for the kubernetes-api binary (i.e. for cloud
+      provider interactions)
+  k8s-args:
+    description: "Pass-through options for Kubernetes runtime arguments. See docs https://kubernetes.io/docs/reference/command-line-tools-reference/kube-apiserver/ for reference."
+    example: |
+      k8s-args:
+        anonymous-auth: false
+        bind-address: 10.0.0.1
   kube-controller-manager-password:
     description: The password for the system:kube-controller-manager user
-  kubelet-password:
-    description: The password for the kubelet user
-  kubelet-drain-password:
-    description: The password for the kubelet drain user
   kube-proxy-password:
     description: The password for the kube-proxy user
   kube-scheduler-password:
     description: The password for the system:kube-scheduler user
-  port:
-    example: 81
-    default: 1235
-  route-sync-password:
-    description: The password for the route-sync user
-  security-context-deny:
-    description: Addmission controller that prevents setting most securityContext properties on a pod spec
-    default: false
-  service-cluster-cidr:
-    description: The service cluster IP cidr for hosting cluster services
-    default: "10.100.200.0/24"
-  tls.kubernetes.ca:
-    description: "CA Certificate for the Kubernetes master"
-  tls.kubernetes.certificate:
-    description: "Certificate for the Kubernetes master"
-  tls.kubernetes.private_key:
-    description: "Private key for the Kubernetes master"
+  kubelet-drain-password:
+    description: The password for the kubelet drain user
+  kubelet-password:
+    description: The password for the kubelet user
+  no_proxy:
+    description: no_proxy env var for the kubernetes-api binary (i.e. for cloud provider
+      interactions)
+  service-account-public-key:
+    description: Public key used to verify service account tokens
   tls.kubelet-client:
     description: kubelet client cert
-  service-account-public-key:
-    description: "Public key used to verify service account tokens"
-  logging-level:
-    description: "V-leveled logging at the specified level. See https://github.com/golang/glog"
-    default: 2
-  oidc.issuer-url:
-    description: "URL of the provider which allows the API server to discover public signing keys"
-  oidc.client-id:
-    example: "kubernetes"
-    description: "A client id that all tokens must be issued for"
-  oidc.username-claim:
-    example: "sub"
-    description: "JWT claim to use as the user name"
-  oidc.username-prefix:
-    example: "oidc:"
-    description: "Prefix prepended to username claims to prevent clashes"
-  oidc.groups-claim:
-    example: "groups"
-    description: "JWT claim to use as the user’s group"
-  oidc.groups-prefix:
-    example: "oidc:"
-    description: "Prefix prepended to group claims to prevent clashes"
-  oidc.ca:
-    description: "Certificate for the CA that signed your identity provider’s web certificate"
-
+  tls.kubernetes.ca:
+    description: CA Certificate for the Kubernetes master
+  tls.kubernetes.certificate:
+    description: Certificate for the Kubernetes master
+  tls.kubernetes.private_key:
+    description: Private key for the Kubernetes master
 consumes:
 - name: etcd
   type: etcd
 - name: kube-apiserver
   type: kube-apiserver
 - name: cloud-provider
-  type: cloud-provider
   optional: true
-
+  type: cloud-provider
 provides:
 - name: kube-apiserver
-  type: kube-apiserver
   properties:
   - admin-username
   - admin-password
   - tls.kubernetes.ca
+  type: kube-apiserver

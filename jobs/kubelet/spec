@@ -1,90 +1,69 @@
----
 name: kubelet
-
 templates:
   bin/drain.erb: bin/drain
   bin/ensure_kubelet_up_and_running.erb: bin/ensure_kubelet_up_and_running
   bin/kubelet_ctl.erb: bin/kubelet_ctl
   bin/post-start.erb: bin/post-start
   config/apiserver-ca.pem.erb: config/apiserver-ca.pem
-  config/kubelet-client-ca.pem.erb: config/kubelet-client-ca.pem
   config/cloud-provider.ini.erb: config/cloud-provider.ini
   config/kubeconfig-drain.erb: config/kubeconfig-drain
   config/kubeconfig.erb: config/kubeconfig
+  config/kubelet-client-ca.pem.erb: config/kubelet-client-ca.pem
   config/kubelet-key.pem.erb: config/kubelet-key.pem
   config/kubelet.pem.erb: config/kubelet.pem
   config/kubeletconfig.yml.erb: config/kubeletconfig.yml
   config/openstack-ca.crt.erb: config/openstack-ca.crt
   config/service_key.json.erb: config/service_key.json
-
 packages:
 - pid_utils
 - kubernetes
 - cni
 - socat
-
 properties:
-  allow_privileged:
-    description: Allows privileged containers for the Kubernetes cluster
-    default: false
-  cloud-provider:
-    description: "The type of cloud-provider that is being deployed"
-  tls.kubernetes:
-      description: "Certificate and private key for the Kubernetes master"
-  tls.kubelet:
-    description: "Certificate and private key for the Kubernetes worker"
-    type: certificate
-    parameters:
-      key_length: 4096
-      duration: 365
-  tls.kubelet-client-ca.certificate:
-    description: "CA certificate of the authority granting access to kubelet server"
-  backend_port:
-    example: 80
-    default: 6789
-  http_proxy:
-    description: http_proxy env var for cloud provider interactions, i.e. for the kubelet
-  https_proxy:
-    description: https_proxy env var for cloud provider interactions, i.e. for the kubelet
-  no_proxy:
-    description: no_proxy env var for cloud provider interactions, i.e. for the kubelet
-  port:
-    example: 81
-    default: 4567
-  labels:
-    description: Labels to give node
-    default: {}
-    example:
-      node-type: router
-      gpu: true
-  kube-reserved:
-    description: Resource reservations for kubernetes system daemons
-    example: "cpu=1,memory=2Gi,storage=1Gi"
-  system-reserved:
-    description: Resource reservations for OS system daemons
-    example: "cpu=500m,memory=1Gi,storage=1Gi"
-  eviction-hard:
-    description: Node eviction thresholds
-    example: "memory.available<500Mi,nodefs.available<10%"
   api-token:
     description: The token to access Kubernetes API
+  cloud-provider:
+    description: "The type of cloud-provider that is being deployed"
   drain-api-token:
     description: The token to access Kubernetes API used to drain the kubelet.
-  logging-level:
-    description: "V-leveled logging at the specified level. See https://github.com/golang/glog"
-    default: 2
+  http_proxy:
+    description: http_proxy env var for cloud provider interactions, i.e. for the
+      kubelet
+  https_proxy:
+    description: https_proxy env var for cloud provider interactions, i.e. for the
+      kubelet
+  kubelet-configuration:
+    description: The Kubelet will load its initial configuration from this.
+      Omit this to use the built-in default configuration values.
+      Command-line flags override configuration.
   kubectl-drain-timeout:
     description: "The length of time to wait before giving up draining a node, zero means infinite"
     default: "0s"
-  kubedns-service-ip:
-    description: The service IP for kube-dns, must match what is configured for kube-dns
-    default: "10.100.200.10"
-
+  k8s-args:
+    description: "Pass-through options for Kubernetes runtime arguments. See docs https://kubernetes.io/docs/reference/command-line-tools-reference/kubelet/ for reference."
+    example: |
+      k8s-args:
+        address: 10.0.0.1
+        docker-only: null
+  no_proxy:
+    description: no_proxy env var for cloud provider interactions, i.e. for the kubelet
+  labels:
+    description: '<Warning: Alpha feature> Labels to add when registering the node
+      in the cluster.  Labels must be key=value pairs separated by '',''.'
+  tls.kubelet:
+    description: Certificate and private key for the Kubernetes worker
+    parameters:
+      duration: {}
+      key_length: {}
+    type: {}
+  tls.kubelet-client-ca.certificate:
+    description: CA certificate of the authority granting access to kubelet server
+  tls.kubernetes:
+    description: Certificate and private key for the Kubernetes master
 consumes:
 - name: cloud-provider
-  type: cloud-provider
   optional: true
-
+  type: cloud-provider
 provides:
 - name: kubernetes-workers
   type: kubernetes-workers

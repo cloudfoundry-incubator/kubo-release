@@ -6,8 +6,7 @@ A [BOSH](http://bosh.io/) release for [Kubernetes](http://kubernetes.io).  Forme
 
 ## Prerequisites
 - A BOSH Director configured with UAA, Credhub, and BOSH DNS. We recommend using [BOSH Bootloader](https://github.com/cloudfoundry/bosh-bootloader) for this.
-- [kubo-release](https://github.com/cloudfoundry-incubator/kubo-release)
-- [kubo-deployment](https://github.com/cloudfoundry-incubator/kubo-deployment)
+- [Latest kubo-deployment tarball](https://github.com/cloudfoundry-incubator/kubo-deployment/releases/latest)
 - Accessing the master:
   - **Single Master:** Set up a DNS name pointing to your master's IP address
   - **Multiple Masters:** A TCP load balancer for your master nodes.
@@ -16,9 +15,11 @@ A [BOSH](http://bosh.io/) release for [Kubernetes](http://kubernetes.io).  Forme
 - Cloud Config with
   - `vm_types` named `minimal`, `small`, and `small-highmem` (See [cf-deployment](https://github.com/cloudfoundry/cf-deployment) for reference)
   - `network` named `default`
-  - There are three availability zones `azs`, and they are named `z1`,`z2`,`z3`
-  - Note: the cloud-config properties can be customized by applying ops-files. See `manifests/ops-files` for some examples
-  - If using loadbalancers then apply this `vm_extension` called `cfcr-master-loadbalancer` to the cloud-config to add the instances to your loadbalancers. See [BOSH documentation](https://bosh.io/docs/cloud-config/#vm-extensions) for information on how to configure loadbalancers.
+  - three availability zones `azs` named `z1`,`z2`,`z3`
+
+  Note: the cloud-config properties can be customized by applying ops-files. See `manifests/ops-files` for some examples.
+  
+  If using loadbalancers then apply the `vm_extension` called `cfcr-master-loadbalancer` to the cloud-config to add the instances to your loadbalancers. See [BOSH documentation](https://bosh.io/docs/cloud-config/#vm-extensions) for information on how to configure loadbalancers.
 
 #### Hardware Requirements
 Kubernetes uses etcd as its datastore. The official infrastructure requirements and example configurations for the etcd cluster can be found [here](https://github.com/etcd-io/etcd/blob/master/Documentation/op-guide/hardware.md).
@@ -26,10 +27,8 @@ Kubernetes uses etcd as its datastore. The official infrastructure requirements 
 ## Deploying CFCR
 
 1. Upload the [latest Xenial stemcell](https://bosh.io/stemcells/#ubuntu-xenial) to the director.
-1. Upload the latest kubo-release to the director.
-    ```
-    bosh upload-release https://bosh.io/d/github.com/cloudfoundry-incubator/kubo-release
-    ```
+
+1. Untar the kubo-deployment tarball and rename it `kubo-deployment`
 
 1. Deploy
 
@@ -70,6 +69,8 @@ Kubernetes uses etcd as its datastore. The official infrastructure requirements 
     ```bash
     bosh -d cfcr run-errand smoke-tests
     ```
+### Configuring CFCR
+Please check out our manifest and ops-files in kube-deployment for examples on how to configure kubo-release. Additionally, we have a [doc page](docs/configuring-kubernetes-properties.md) to describe how to configure Kubernetes components for the release.
 
 ### BOSH Lite
 CFCR clusters on BOSH Lite are intended for development. We run the [deploy_cfcr_lite](https://github.com/cloudfoundry-incubator/kubo-deployment/blob/master/bin/deploy_cfcr_lite) script to provision a cluster with the latest stemcell and master of kubo-release.
@@ -110,13 +111,10 @@ metrics.
 
 ## Deprecations
 
-### CFCR Docs
-We are no longer supporting the following documentation for deploying BOSH and CFCR
-* https://docs-cfcr.cfapps.io
+### Deployment scripts and docs
+CFCR had a set of scripts, including `deploy_bosh` and `deploy_k8s`, that were the primary mechanism we supported to deploy BOSH and Kubernetes clusters. We no longer support these and have removed the corresponding documentation from https://docs-cfcr.cfapps.io
 
-The [deploy_bosh](https://github.com/cloudfoundry-incubator/kubo-deployment/blob/master/bin/deploy_bosh)
-and [deploy_k8s](https://github.com/cloudfoundry-incubator/kubo-deployment/blob/master/bin/deploy_k8s)
-scripts in the `kubo-deployment` repository are now deprecated.
+The BOSH oriented method documented in this README.md is the supported method to deploy Kubernetes clusters with CFCR.
 
 ### Heapster
 K8s 1.11 release kicked off the deprecation timeline for the Heapster component, see [here](https://github.com/kubernetes/heapster/blob/master/docs/deprecation.md) for more info. As a result, we're in the process of replacing Heapster with [Metrics Server](https://github.com/kubernetes-incubator/metrics-server) in the upcoming releases of kubo-release.

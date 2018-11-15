@@ -19,7 +19,12 @@ def run_get_hostname_override(rendered_contents, executable_path)
 end
 
 describe 'kube-proxy can set hostnameOverride' do
-  let(:rendered_template) { compiled_template('kube-proxy', 'config/config.yml', {}, {}) }
+  let(:config_properties) do
+  {
+    'kube-proxy-configuration' => { 'mode': 'iptables' }
+  }
+  end
+  let(:rendered_template) { compiled_template('kube-proxy', 'config/config.yml', config_properties, {}) }
 
   # Check that the config file has HOSTNAMEOVERRIDE so that start script can find
   # and replace it at runtime

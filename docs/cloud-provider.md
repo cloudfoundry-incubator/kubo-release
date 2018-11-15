@@ -14,16 +14,21 @@ In each example it is assumed that you already have access to a BOSH Director.
 
    **Note: The service accounts should be used per CFCR deployment (NOT per director)**
 
-1. Save the service account email addresses into a vars file that will be used to create the cloud-config
+1. Save the service account email addresses and the loadbalancer backend service into a vars file that will be used to create the cloud-config.
+
+   If your loadbalancer uses **target pools** instead, you will need to customize
+   the vars file and the ops-file in the next step.
 
     ```bash
     $ export deployment_name="your deployment name"
 
-    $ cat ${deployment_name}-cc-vars.yml
+    $ cat << EOF > ${deployment_name}-cc-vars.yml
 
     cfcr_master_service_account_address: <master-service-account-email>
     cfcr_worker_service_account_address: <worker-service-account-email>
     deployment_name: <deployment-name>
+    cfcr_backend_service: <backend-service>
+    EOF
     ```
 
 1. Add a cloud config for the deployment with BOSH [generic configs](https://bosh.io/docs/configs/)
@@ -72,13 +77,14 @@ In each example it is assumed that you already have access to a BOSH Director.
     ```bash
     $ export deployment_name="your deployment name"
 
-    $ cat ${deployment_name}-cc-vars.yml
+    $ cat << EOF > ${deployment_name}-cc-vars.yml
 
     master_iam_instance_profile: <master-iam-profile-name>
     worker_iam_instance_profile: <worker-iam-profile-name>
     cfcr_master_target_pool: <list-of-elbs-for-master>
     kubernetes_cluster_tag: <tag-for-k8s-cluster-components>
     deployment_name: <deployment-name>
+    EOF
     ```
 
 1. Add a cloud config for the deployment with BOSH [generic configs](https://bosh.io/docs/configs/)
@@ -127,7 +133,7 @@ In each example it is assumed that you already have access to a BOSH Director.
     ```bash
     $ export deployment_name="your deployment name"
 
-    $ cat ${deployment_name}-vars.yml
+    $ cat << EOF > ${deployment_name}-vars.yml
     vcenter_master_user: <user>
     vcenter_master_password: <password>
     vcenter_ip: <vsphere.server>
@@ -136,6 +142,7 @@ In each example it is assumed that you already have access to a BOSH Director.
     vcenter_vms: <vsphere.vm_folder>
     director_uuid: <BOSH director UUID>
     deployment_name: <deployment-name>
+    EOF
     ```
 
     See for mode details at [spec](../jobs/cloud-provider/spec) and at [vSphere
@@ -145,18 +152,8 @@ In each example it is assumed that you already have access to a BOSH Director.
 1. Add (if does not exist) a vSphere specific cloud config  with BOSH [generic configs](https://bosh.io/docs/configs/)
 
     ```bash
-    cat << EOF > cfcr-cc-vm_extension-vsphere.yml
-    vm_extensions:
-    - cloud_properties:
-        vmx_options:
-          disk.enableUUID: "1"
-      name: enable-disk-UUID
-    EOF
-    ```
-
-    ```bash
     $ bosh update-config --name cfcr-cc-vm_extension-vsphere \
-    cfcr-cc-vm_extension-vsphere.yml \
+    ${KD}/manifests/cloud-config/iaas/vsphere/use-vm-extensions.yml \
     --type cloud
     ```
 
@@ -164,20 +161,12 @@ In each example it is assumed that you already have access to a BOSH Director.
 1. Deploy CFCR
 
     ```bash
-    cat << EOF > use-vm-extensions-vsphere-only.yml
-    - type: replace
-      path: /instance_groups/name=worker/vm_extensions?/-
-      value: enable-disk-UUID
-    EOF
-    ```
-
-    ```bash
     $ export KD="path to kubo-deployment repo"
 
     $ bosh deploy -d ${deployment_name} \
     ${KD}/manifests/cfcr.yml \
     -o ${KD}/manifests/ops-files/iaas/vsphere/cloud-provider.yml \
-    -o use-vm-extensions-vsphere-only.yml \
+    -o ${KD}/manifests/ops-files/iaas/vsphere/use-vm-extensions.yml \
     -o ${KD}/manifests/ops-files/rename.yml \
     -v deployment_name=${deployment_name} \
     --vars-file ${deployment_name}-vars.yml
@@ -227,13 +216,14 @@ In each example it is assumed that you already have access to a BOSH Director.
     ```bash
     $ export deployment_name="your deployment name"
 
-    $ cat ${deployment_name}-vars.yml
+    $ cat << EOF > ${deployment_name}-vars.yml
     auth_url: < authentication URL >
     openstack_domain: < domain >
     openstack_project_id: < tenant id >
     region: < region >
     openstack_username: < admin username >
     openstack_password: < admin user password >
+    EOF
     ```
 
     See for mode details at [spec](../jobs/cloud-provider/spec).

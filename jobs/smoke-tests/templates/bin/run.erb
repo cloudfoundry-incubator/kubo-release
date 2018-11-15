@@ -1,8 +1,9 @@
 #!/bin/bash
+set -eu
 
 kubectl="/var/vcap/packages/kubernetes/bin/"
 export PATH=${kubectl}:$PATH
 export KUBECONFIG="/var/vcap/jobs/smoke-tests/config/kubeconfig"
 
 echo "Running smoke tests"
-/var/vcap/packages/smoke-tests/bin/run-smoke-tests -ginkgo.randomizeAllSpecs -ginkgo.failOnPending  -ginkgo.v
+/var/vcap/packages/smoke-tests/run-smoke-tests -ginkgo.randomizeAllSpecs -ginkgo.failOnPending  -ginkgo.v

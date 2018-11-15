@@ -9,7 +9,7 @@ templates:
 
 packages:
 - smoke-tests
-- golang-1.10-linux
+- golang-1.11-linux
 
 consumes:
 - name: kube-apiserver

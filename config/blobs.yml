@@ -22,14 +22,10 @@ container-images/coredns_coredns:1.2.0.tgz:
   size: 9997810
   object_id: aa4d0f19-0dea-4cc0-561e-2c665b0e849c
   sha: 34fd25c3a1140b4d59390f57bd17977a64af26c9
-container-images/gcr.io_google_containers_metrics-server-amd64:v0.2.1.tgz:
-  size: 11355068
-  object_id: 4dbed951-4fca-4708-4853-69264963ffcd
-  sha: bc9e58c1fc0ce46648a595ad5041a36abca779ab
-container-images/gcr.io_google_containers_metrics-server-amd64:v0.3.0.tgz:
-  size: 10897327
-  object_id: 908485e6-419b-48d2-7ede-81111b430638
-  sha: e79d57f99ed64c1166fb244d7c69b91e64ed08b0
+container-images/gcr.io_google_containers_metrics-server-amd64:v0.3.1.tgz:
+  size: 10895843
+  object_id: 0f2ec738-7b90-4fcd-5efd-895f42b6697d
+  sha: 680b53bd59fae5bd498e5439eb42910bc60fe9de
 container-images/k8s.gcr.io_heapster-amd64:v1.5.4.tgz:
   size: 19797457
   object_id: deb55944-5460-4af5-6b0f-552330fca196
@@ -58,10 +54,10 @@ container-images/k8s.gcr.io_pause:3.1.tgz:
   size: 315592
   object_id: f6ba8b90-9a60-454d-73e0-cab4b1c4a554
   sha: d4095b6513b3d5ef770c44d651ae5601878906d8
-container-images/nginx:1.13-alpine.tgz:
-  size: 7633579
-  object_id: e23764f0-27cf-49fe-7cc3-04d3b90b2cca
-  sha: 16b664282f0010b441587dd3c0d2d3587661ab31
+container-images/nginx:1.15-alpine.tgz:
+  size: 7495305
+  object_id: 44d3bd3c-7554-4e68-75ad-ac61a012c507
+  sha: cc219863d71c09e568b59516eed0c53fccda445f
 etcdctl-3.0.7:
   size: 18427584
   object_id: 32221476-5c3d-4ec7-5869-44c989cc3077
@@ -106,6 +102,26 @@ kubernetes-1.11.3/kubelet:
   size: 163041864
   object_id: 39062b5b-80c6-4fe8-4ac3-12c2121f15ad
   sha: 2c24374244482fc629776366df4f416a1b25ade4
+nfs/keyutils_1.5.9-8ubuntu1_amd64.deb:
+  size: 47054
+  object_id: e1b42c34-4e88-426b-7268-99d1bdfd40c1
+  sha: ec2e96e73feb5215605c9f0254cad05d9cc5688a
+nfs/libevent-2.0-5_2.0.21-stable-2ubuntu0.16.04.1_amd64.deb:
+  size: 114014
+  object_id: cbdc50ad-e7f5-4a3b-6115-77392061bd76
+  sha: 57d69f44f3e058e48a7b79595d36076eb21f5942
+nfs/libnfsidmap2_0.25-5_amd64.deb:
+  size: 32182
+  object_id: 59ba4d66-fb63-4a62-75da-8502169d85cd
+  sha: f28b7370542daaf81cefb44d9057fa9b3fb43064
+nfs/nfs-common_1.2.8-9ubuntu12_amd64.deb:
+  size: 184538
+  object_id: d05d14a5-cba8-4ec9-5b9d-fe76128ca5be
+  sha: 2977e5a1e86615e268cc518f04c9dd2cc832b263
+nfs/rpcbind_0.2.3-0.2_amd64.deb:
+  size: 40252
+  object_id: 56ad455e-38be-40da-7815-a9d4774d55e4
+  sha: 8fa58cfcb1862c6d337d10496fada5f1a6e94a03
 socat-1.7.3.2.tar.gz:
   size: 615818
   object_id: a6f3dcb3-54a0-44a3-4100-f408932aaf8f

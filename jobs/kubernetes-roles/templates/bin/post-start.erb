@@ -4,11 +4,11 @@ set -e
 
 TIMEOUT=120
 
-echo 'Applying the RBAC policy'
-if timeout "$TIMEOUT" /var/vcap/jobs/kubernetes-roles/bin/apply_rbac; then
-  echo "Applied the RBAC policy"
+echo 'Applying policies'
+if timeout "$TIMEOUT" /var/vcap/jobs/kubernetes-roles/bin/apply_policies; then
+  echo "Applied all policies"
 else
-  echo "Failed to apply the RBAC policy after $TIMEOUT with exit code $?"
+  echo "Failed to apply policies after $TIMEOUT with exit code $?"
   exit 1
 fi
 
