@@ -5,3 +5,4 @@ dependencies:
 
 files:
 - conntrack/*
+- libmnl0*
