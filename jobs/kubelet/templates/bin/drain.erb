@@ -13,8 +13,8 @@ PIDFILE=/var/vcap/sys/run/kubernetes/kubelet.pid
 trap ensure_safe_exit EXIT
 
 main() {
-  send_process_stdout_to_logfile_and_syslog
-  send_process_stderr_to_logfile_and_syslog
+  send_process_stdout_to_logfile
+  send_process_stderr_to_logfile
   check_if_pidfile_exists
   check_if_pid_is_running
 
@@ -80,12 +80,12 @@ save_stdout_to_fd3() {
   exec 3>&1
 }
 
-send_process_stdout_to_logfile_and_syslog() {
+send_process_stdout_to_logfile() {
   save_stdout_to_fd3
   exec 1>> "$LOG_DIR/drain.stdout.log"
 }
 
-send_process_stderr_to_logfile_and_syslog() {
+send_process_stderr_to_logfile() {
   exec 2>> "$LOG_DIR/drain.stderr.log"
 }
 
