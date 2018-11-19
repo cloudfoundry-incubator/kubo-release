@@ -19,3 +19,13 @@ if (!$infraPodImage)
 }
 
 Set-NetFirewallProfile -Profile Domain, Public, Private -Enabled False
+
+# Override the hostname to work around
+# vSphere cloud provider ignoring hostname override
+# and kubernetes requiring all-lowercase node names
+$ComputerName = (cat C:\var\vcap\bosh\settings.json | ConvertFrom-Json).agent_id
+Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" -name "Hostname" -value $ComputerName
+
+# Needed until https://github.com/kubernetes/kubernetes/pull/71147 is merged
+mkdir -force /sys/class/dmi/id
+(wmic csproduct get IdentifyingNumber).Split([Environment]::Newline)[2] | Out-File -Encoding ASCII /sys/class/dmi/id/product_serial
