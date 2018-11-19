@@ -3,9 +3,9 @@ set -e
 temp_path=${PWD}/temp
 mkdir $temp_path
 
-tar xf docker/autoconf-2.69.tar.gz
+tar xf autoconf-2.69.tar.gz
 
-pushd docker/autoconf-2.69
+pushd autoconf-2.69
   ./configure --prefix=${temp_path}
   make
   make install
