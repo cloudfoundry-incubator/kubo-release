@@ -58,7 +58,8 @@ function retry($name, $func) {
 }
 
 function kubelet_is_running() {
-   return ((get-service "kubelet" -ErrorAction SilentlyContinue).Status -eq "Running")
+  curl.exe --fail http://localhost:10248/healthz
+  return $?
 }
 
 main
