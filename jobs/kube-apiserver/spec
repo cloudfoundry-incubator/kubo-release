@@ -17,6 +17,7 @@ templates:
   config/service-account-public-key.pem.erb: config/service-account-public-key.pem
   config/service_key.json.erb: config/service_key.json
   config/tokens.csv.erb: config/tokens.csv
+  config/encryption-config.yml.erb: config/encryption-config.yml
 packages:
 - kubernetes
 properties:
@@ -59,6 +60,8 @@ properties:
     description: Certificate for the Kubernetes master
   tls.kubernetes.private_key:
     description: Private key for the Kubernetes master
+  encryption-config:
+    description: Encryption Configuration file to encrypt secret data at rest
 consumes:
 - name: etcd
   type: etcd
