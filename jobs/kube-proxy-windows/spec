@@ -1,0 +1,25 @@
+---
+name: kube-proxy-windows
+
+templates:
+  bin/kube_proxy_ctl.ps1.erb: bin/kube_proxy_ctl.ps1
+  config/kubeconfig.erb: config/kubeconfig
+  config/config.yml.erb: config/config.yml
+  config/ca.pem.erb: config/ca.pem
+
+packages:
+- kubernetes-windows
+
+properties:
+  cloud-provider:
+    description: "The type of cloud-provider that is being deployed"
+  tls.kubernetes:
+    description: "Certificate and private key for the Kubernetes master"
+  api-token:
+    description: The password for the kube-proxy user
+  logging-level:
+    description: "V-leveled logging at the specified level. See https://github.com/golang/glog"
+    default: 2
+  pod-network-cidr:
+    description: The pod networking cidr for pod network overlay
+    default: "10.200.0.0/16"

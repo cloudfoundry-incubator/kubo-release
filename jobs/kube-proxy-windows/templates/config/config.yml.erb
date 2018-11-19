@@ -1,0 +1,42 @@
+<%
+  hostname = ""
+  if_p('cloud-provider') do |cloud_provider|
+    if cloud_provider == "gce" || cloud_provider == "azure"
+    else
+      hostname = spec.ip
+    end
+  end.else do
+    hostname = spec.ip
+  end
+%>
+apiVersion: kubeproxy.config.k8s.io/v1alpha1
+bindAddress: 0.0.0.0
+clientConnection:
+  acceptContentTypes: ""
+  burst: 10
+  contentType: application/vnd.kubernetes.protobuf
+  kubeconfig: /var/vcap/jobs/kube-proxy-windows/config/kubeconfig
+  qps: 5
+clusterCIDR: <%= p('pod-network-cidr') %>
+configSyncPeriod: 15m0s
+conntrack:
+  max: 0
+  maxPerCore: 32768
+  min: 131072
+  tcpCloseWaitTimeout: 1h0m0s
+  tcpEstablishedTimeout: 24h0m0s
+enableProfiling: false
+featureGates:
+healthzBindAddress: 0.0.0.0:10256
+ipvs:
+  minSyncPeriod: 0s
+  scheduler: ""
+  syncPeriod: 30s
+kind: KubeProxyConfiguration
+metricsBindAddress: 127.0.0.1:10249
+mode: kernelspace
+oomScoreAdj: -999
+portRange: ""
+resourceContainer: /kube-proxy
+udpTimeoutMilliseconds: 250ms
+hostnameOverride: <%= hostname %>
