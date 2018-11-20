@@ -12,4 +12,4 @@ packages:
 properties:
   nfs:
     description: If set to true will install packages to enable nfs mounting
-    default: true
+    default: false
