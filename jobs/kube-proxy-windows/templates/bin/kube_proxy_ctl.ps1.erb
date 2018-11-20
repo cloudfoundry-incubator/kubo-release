@@ -5,5 +5,4 @@ $network = Get-HnsNetwork | ? Type -Eq L2Bridge
 $env:KUBE_NETWORK = $network.Name
 
 C:\var\vcap\packages\kubernetes-windows\bin\kube-proxy.exe `
-  --config /var/vcap/jobs/kube-proxy-windows/config/config.yml `
-  --v=<%= p('logging-level') %>
+  --config /var/vcap/jobs/kube-proxy-windows/config/config.yml

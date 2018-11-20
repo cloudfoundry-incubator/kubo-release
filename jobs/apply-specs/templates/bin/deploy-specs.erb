@@ -60,16 +60,8 @@ create_dashboard_secrets() {
   -n ${namespace}
 }
 
-taint_windows_nodes() {
-  nodes=$(${kubectl} get nodes -o json | jq -r '.items[] | select(.status.nodeInfo.operatingSystem == "windows") | .metadata.name')
-  for n in $nodes; do
-    ${kubectl} taint node $n windows=1803:NoSchedule
-  done
-}
-
 main() {
 
-taint_windows_nodes
 <%
   supported_addons = ['kube-dns', 'coredns', 'metrics-server', 'heapster', 'kubernetes-dashboard']
 
