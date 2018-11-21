@@ -93,10 +93,20 @@ describe 'kubelet_ctl setting of --hostname-override property' do
     FileUtils.remove_dir(test_context['mock_dir'], true)
   end
 
-  describe 'when cloud-provider is NOT gce' do
+  describe 'when cloud-provider is empty' do
     it 'sets hostname_override to IP address of container IP' do
       expected_spec_ip = '1111'
-      rendered_kubelet_ctl = compiled_template('kubelet', 'bin/kubelet_ctl', { 'cloud-provider' => 'nonsense' }, {}, {}, 'az1', expected_spec_ip)
+      rendered_kubelet_ctl = compiled_template('kubelet', 'bin/kubelet_ctl', { 'cloud-provider' => '' }, {}, {}, 'az1', expected_spec_ip)
+      result = call_get_hostname_override(rendered_kubelet_ctl, test_context['kubelet_ctl_file'])
+
+      expect(result).to include(expected_spec_ip)
+    end
+  end
+
+  describe 'when cloud-provider is openstack' do
+    it 'sets hostname_override to IP address of container IP' do
+      expected_spec_ip = '1111'
+      rendered_kubelet_ctl = compiled_template('kubelet', 'bin/kubelet_ctl', { 'cloud-provider' => 'openstack' }, {}, {}, 'az1', expected_spec_ip)
       result = call_get_hostname_override(rendered_kubelet_ctl, test_context['kubelet_ctl_file'])
 
       expect(result).to include(expected_spec_ip)
