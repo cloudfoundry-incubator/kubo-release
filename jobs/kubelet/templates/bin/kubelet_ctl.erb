@@ -77,10 +77,13 @@ delete_stale_drained_node() {
 }
 
 get_hostname_override() {
-  if [[ "" == "$cloud_provider" || "openstack" == "$cloud_provider" ]]; then
-    hostname_override=<%= spec.ip %>
-  else
+  if [[ "gce" == "$cloud_provider" ]]; then
     hostname_override=""
+  elif [[ "azure" == "$cloud_provider" ]]; then
+    # K8s 1.9 Azure provider assumes  the hostname == nodename and is required to resolve the VM instance ID
+    hostname_override=
+  else
+    hostname_override=<%= spec.ip %>
   fi
 
   echo $hostname_override
