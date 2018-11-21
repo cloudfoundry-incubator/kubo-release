@@ -46,23 +46,44 @@ describe 'kube_proxy_ctl setting of hostnameOverride property' do
     FileUtils.remove_dir(test_context['mock_dir'], true)
   end
 
-  describe 'when cloud-provider is empty' do
+  describe 'when cloud-provider is NOT gce' do
     it 'sets hostname_override to IP address of container IP' do
       expected_spec_ip = '1111'
-      rendered_kube_proxy_ctl = compiled_template('kube-proxy', 'bin/kube_proxy_ctl', { 'cloud-provider' => '' }, {}, {}, 'az1', expected_spec_ip)
+      rendered_kube_proxy_ctl = compiled_template('kube-proxy', 'bin/kube_proxy_ctl', { 'cloud-provider' => 'nonsense' }, {}, {}, 'az1', expected_spec_ip)
       result = run_get_hostname_override(rendered_kube_proxy_ctl, test_context['kube_proxy_ctl_file'])
 
       expect(result).to include(expected_spec_ip)
     end
   end
 
-  describe 'when cloud-provider is openstack' do
-    it 'sets hostname_override to IP address of container IP' do
-      expected_spec_ip = '1111'
-      rendered_kube_proxy_ctl = compiled_template('kube-proxy', 'bin/kube_proxy_ctl', { 'cloud-provider' => 'openstack' }, {}, {}, 'az1', expected_spec_ip)
+  describe 'when cloud-provider is gce' do
+    it 'sets hostname_override to google container hostname' do
+      expected_google_hostname = 'foohost'
+
+      echo_mock_file = test_context['mock_dir'] + '/curl'
+      File.open(echo_mock_file, 'w', 0o777) do |f|
+        f.write("#!/bin/bash\n")
+        f.write("echo #{expected_google_hostname}")
+      end
+
+      test_link = { 'cloud-provider' => {
+        'instances' => [],
+        'properties' => {
+          'cloud-provider' => {
+            'type' => 'gce',
+            'gce' => {
+              'project-id' => 'f',
+              'network-name' => 'ff',
+              'worker-node-tag' => 'fff',
+              'service_key' => 'ffff'
+            }
+          }
+        }
+      } }
+      rendered_kube_proxy_ctl = compiled_template('kube-proxy', 'bin/kube_proxy_ctl', { 'cloud-provider' => 'gce' }, test_link)
       result = run_get_hostname_override(rendered_kube_proxy_ctl, test_context['kube_proxy_ctl_file'])
 
-      expect(result).to include(expected_spec_ip)
+      expect(result).to include(expected_google_hostname)
     end
   end
 end
