@@ -4,4 +4,4 @@ name: nfs
 dependencies: []
 
 files:
-- nfs/*
+- nfs-debs/*

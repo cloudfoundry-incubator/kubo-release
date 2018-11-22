@@ -78,8 +78,7 @@ delete_stale_drained_node() {
 
 get_hostname_override() {
   if [[ "gce" == "$cloud_provider" ]]; then
-    # The hostname needs to be set to the instance name so the gce cloud provider can manage the instance
-    hostname_override=$(curl http://metadata.google.internal/computeMetadata/v1/instance/name -H "Metadata-Flavor: Google")
+    hostname_override=""
   elif [[ "azure" == "$cloud_provider" ]]; then
     # K8s 1.9 Azure provider assumes  the hostname == nodename and is required to resolve the VM instance ID
     hostname_override=
@@ -127,7 +126,7 @@ start_kubelet() {
     <% if !iaas.nil? -%>--cloud-provider=${cloud_provider}<% end %> \
     --hostname-override=$(get_hostname_override) \
     --node-labels=<%= labels %> \
-    --config="/var/vcap/jobs/kubelet/config/kubeletconfig.yml"
+    --config="/var/vcap/jobs/kubelet/config/kubeletconfig.yml" \
   1>> $LOG_DIR/kubelet.stdout.log \
   2>> $LOG_DIR/kubelet.stderr.log
 }

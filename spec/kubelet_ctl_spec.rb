@@ -104,8 +104,8 @@ describe 'kubelet_ctl setting of --hostname-override property' do
   end
 
   describe 'when cloud-provider is gce' do
-    it 'sets hostname_override to google container hostname' do
-      expected_google_hostname = 'foohost'
+    it 'sets hostname_override to empty' do
+      expected_google_hostname = ''
 
       # mock out curl because this code path will try to use it.
       echo_mock_file = test_context['mock_dir'] + '/curl'

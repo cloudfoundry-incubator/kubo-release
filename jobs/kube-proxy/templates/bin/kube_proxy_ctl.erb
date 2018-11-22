@@ -28,24 +28,7 @@ send_process_stderr_to_logfile() {
   exec 2>> "$LOG_DIR/$NAME.stderr.log"
 }
 
-get_hostname_override() {
-  if [[ "gce" == "$cloud_provider" ]]; then
-    # The hostname needs to be set to the instance name so the gce cloud provider can manage the instance
-    hostname_override=$(curl http://metadata.google.internal/computeMetadata/v1/instance/name -H "Metadata-Flavor: Google")
-  elif [[ "azure" == "$cloud_provider" ]]; then
-    # K8s Azure provider assumes  the hostname == nodename and is required to resolve the VM instance ID
-    hostname_override=
-  else
-    hostname_override=<%= spec.ip %>
-  fi
-
-  echo $hostname_override
-}
-
 start_kubernetes_proxy() {
-
-  sed -i "s|HOSTNAMEOVERRIDE|$(get_hostname_override)|g"  /var/vcap/jobs/kube-proxy/config/config.yml
-
  kube-proxy \
   <%-
     if_p('k8s-args') do |args|

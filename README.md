@@ -12,6 +12,7 @@ A [BOSH](http://bosh.io/) release for [Kubernetes](http://kubernetes.io).  Forme
   - **Multiple Masters:** A TCP load balancer for your master nodes.
     - Use a TCP load balancer configured to connect to the master nodes on port 8443.
     - Add healthchecks using either a TCP dial or HTTP by looking for a `200 OK` response from `/healthz`.
+    - if you have used [BOSH Bootloader](https://github.com/cloudfoundry/bosh-bootloader) on GCP then you need to manually create a firewall rule.  Allow access to port TCP 8443 to VMs in your BBL network tagged `cfcr-master` from your load balancer's IP.
 - Cloud Config with
   - `vm_types` named `minimal`, `small`, and `small-highmem` (See [cf-deployment](https://github.com/cloudfoundry/cf-deployment) for reference)
   - `network` named `default`
@@ -69,6 +70,8 @@ Kubernetes uses etcd as its datastore. The official infrastructure requirements 
     ```bash
     bosh -d cfcr run-errand smoke-tests
     ```
+### Configuring CFCR
+Please check out our manifest and ops-files in kube-deployment for examples on how to configure kubo-release. Additionally, we have a [doc page](docs/configuring-kubernetes-properties.md) to describe how to configure Kubernetes components for the release.
 
 ### BOSH Lite
 CFCR clusters on BOSH Lite are intended for development. We run the [deploy_cfcr_lite](https://github.com/cloudfoundry-incubator/kubo-deployment/blob/master/bin/deploy_cfcr_lite) script to provision a cluster with the latest stemcell and master of kubo-release.
@@ -94,13 +97,11 @@ cd kubo-deployment
 	./bin/set_kubeconfig <DIRECTOR_NAME>/cfcr https://[DNS-NAME-OR-LOADBALANCER-ADDRESS]:8443
 	```
 ## Backup & Restore
-We use [BBR](https://github.com/cloudfoundry-incubator/bosh-backup-and-restore) to perform backups and restores of the etcd node within a CFCR cluster. Our backup currently takes an etcd snapshot without interruptions to the cluster. However, for restore we take both the kube-apiserver and etcd offline to restore the cluster with the specified snapshot. Restore is a destructive operation that will completely overwrite any existing data on the cluster. For a closer look at the bbr scripts, check out:
+We use [BBR](https://github.com/cloudfoundry-incubator/bosh-backup-and-restore) to perform backups and restores of the etcd node within a CFCR cluster, for both single and three master deployments. Our backup currently takes an etcd snapshot without interruptions to the cluster. However, for restore we take both the kube-apiserver and etcd offline to restore the cluster with the specified snapshot. Restore is a destructive operation that will completely overwrite any existing data on the cluster. For a closer look at the bbr scripts, check out:
 - [cfcr-etcd-release](https://github.com/cloudfoundry-incubator/cfcr-etcd-release/tree/master/jobs/bbr-etcd)
 - [kubo-release](https://github.com/cloudfoundry-incubator/kubo-release/tree/master/jobs/bbr-kube-apiserver)
 
 To run the `bbr` cli against a CFCR cluster, follow the steps under "BOSH Deployment" on the BBR [documentation page](https://docs.cloudfoundry.org/bbr/#bosh-deployment).
-
-*Note: this feature is currently available for single master deployments only. Work for BBR support on multi-master clusters is underway.* 
 
 ## Monitoring
 
