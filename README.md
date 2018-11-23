@@ -5,7 +5,7 @@ A [BOSH](http://bosh.io/) release for [Kubernetes](http://kubernetes.io).  Forme
 - **Pivotal Tracker**: https://www.pivotaltracker.com/n/projects/2093412
 
 ## Prerequisites
-- A BOSH Director configured with UAA, Credhub, and BOSH DNS. We recommend using [BOSH Bootloader](https://github.com/cloudfoundry/bosh-bootloader) for this.
+- A BOSH Director configured with UAA, Credhub, and [BOSH DNS runtime config](https://raw.githubusercontent.com/cloudfoundry/bosh-deployment/master/runtime-configs/dns.yml). We recommend using [BOSH Bootloader](https://github.com/cloudfoundry/bosh-bootloader) for this.
 - [Latest kubo-deployment tarball](https://github.com/cloudfoundry-incubator/kubo-deployment/releases/latest)
 - Accessing the master:
   - **Single Master:** Set up a DNS name pointing to your master's IP address
