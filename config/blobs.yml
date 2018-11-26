@@ -1,3 +1,7 @@
+autoconf-2.69.tar.gz:
+  size: 1927468
+  object_id: 2e4a01bd-aa1e-4fbc-5f56-80aa40d805e3
+  sha: 562471cbcb0dd0fa42a76665acf0dbb68479b78a
 automake-1.15.tar.gz:
   size: 2244206
   object_id: 50feb35a-e388-4fb0-4313-3a47e82fad22
@@ -62,10 +66,6 @@ container-images/nginx:1.15-alpine.tgz:
   size: 7495305
   object_id: 44d3bd3c-7554-4e68-75ad-ac61a012c507
   sha: cc219863d71c09e568b59516eed0c53fccda445f
-autoconf-2.69.tar.gz:
-  size: 1927468
-  object_id: 2e4a01bd-aa1e-4fbc-5f56-80aa40d805e3
-  sha: 562471cbcb0dd0fa42a76665acf0dbb68479b78a
 etcdctl-3.0.7:
   size: 18427584
   object_id: 32221476-5c3d-4ec7-5869-44c989cc3077
@@ -86,30 +86,30 @@ jq-linux64-1.5:
   size: 3027945
   object_id: 41eb1cd1-0377-4e08-5602-51e0af8b9b52
   sha: d8e36831c3c94bb58be34dd544f44a6c6cb88568
-kubernetes-1.12.2/kube-apiserver:
-  size: 192781649
-  object_id: 054a68f6-f80a-4a10-5ccb-d583271f051d
-  sha: 5a6e66f81789ead2939828902b972f1eecf17883
-kubernetes-1.12.2/kube-controller-manager:
-  size: 162961401
-  object_id: 5f9d38dc-4753-48b9-4e65-dd832f72169f
-  sha: 4c3900a39a6741be421611b680785148e4abddf8
-kubernetes-1.12.2/kube-proxy:
+kubernetes-1.12.3/kube-apiserver:
+  size: 192793815
+  object_id: 78478764-ca0a-449b-5a3e-5918bf5c75d7
+  sha: 63224081d6d09b597c6d564b16cde1046c92df63
+kubernetes-1.12.3/kube-controller-manager:
+  size: 162973612
+  object_id: 4a8f7d26-5908-4578-648d-68fe933d4bbb
+  sha: 5002a2058757bdf1d366075e44871963f999e735
+kubernetes-1.12.3/kube-proxy:
   size: 50330867
-  object_id: 3d767ea4-bb95-4b1e-53cc-fca0d190bc8d
-  sha: f6245de636667f9e010f16b1a4d493135460a307
-kubernetes-1.12.2/kube-scheduler:
+  object_id: 75e56b2c-8e96-4812-66a1-c9662db84715
+  sha: 9a2e5bb49408b9a2c44b2015119b3f5300453b84
+kubernetes-1.12.3/kube-scheduler:
   size: 57184656
-  object_id: 4abd91ad-d779-4a2e-719f-1a61d155b672
-  sha: a03c9e111635aef68e71235323043e90479885ae
-kubernetes-1.12.2/kubectl:
-  size: 57352138
-  object_id: 4a4fd6bc-10fa-445f-4afe-477918b22f7c
-  sha: 8e94e8bafdcd919a183143d6f3364b75278e277d
-kubernetes-1.12.2/kubelet:
-  size: 176648680
-  object_id: 0f398cc8-47d3-4b00-6a9a-d067c2fbd751
-  sha: a82ca0bb1c7d838ec83070f92ddda9671ee02f90
+  object_id: db80edae-7b41-4d72-7487-173aeff29599
+  sha: 96f55caba67a218591cd6717560405e780f245aa
+kubernetes-1.12.3/kubectl:
+  size: 57356334
+  object_id: d452e961-542f-4cbd-7696-72db6fcff91c
+  sha: 4248b9e621af7e902c9d23bf772a2ee8e50146c5
+kubernetes-1.12.3/kubelet:
+  size: 176661512
+  object_id: 70459020-e95a-44db-41f3-8eb14edbc5f4
+  sha: 7dfe9b7665a4e60feafbc320dcec39833e41837b
 libmnl0_1.0.3-3.deb:
   size: 11416
   object_id: 245e085f-1ad2-447d-67bb-1894b960c571
