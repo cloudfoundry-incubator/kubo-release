@@ -12,7 +12,9 @@ When deploying your cluster using BOSH, ensure the following operations file is 
 
 This will add the `PodSecurityPolicy` entry to the `enable-admission-plugins` property in the manifest for the `kube-apiserver`.
 
-:exclamation: **Warning:** You must ensure appropriate policies are applied and bound to exsting workloads before enabling the PodSecurityPolicy in admission controllers. Any existing workloads will **stop working** if they are not bound to a policy, or the policy does not have the right permissions. :exclamation:
+:exclamation: **Warning:** You must ensure appropriate policies are applied and bound to exsting workloads before enabling the PodSecurityPolicy in admission controllers. Any existing workloads will likely **stop working** if they are not bound to a policy, or the policy does not have the right permissions. :exclamation:
+
+_Note: utilising PodSecurityPolicy should be enabled in place of SecurityContextDeny admission controller, as SecurityContextDeny will override the benefits of PodSecurityPolicies, as it is cluster wide._
 
 ## Apply a policy and binding
 
@@ -71,7 +73,7 @@ spec:
   readOnlyRootFilesystem: false
   ```
 `$ kubectl apply -f restricted-psp.yaml`
-
+ 
 ### 2. Apply the role binding
 
 ```
