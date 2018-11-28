@@ -114,10 +114,10 @@ nfs-debs/libnfsidmap2_0.25-5_amd64.deb:
   size: 32182
   object_id: faf42090-60af-4c2c-6976-819670fcce5f
   sha: f28b7370542daaf81cefb44d9057fa9b3fb43064
-nfs-debs/nfs-common_1.2.8-9ubuntu12_amd64.deb:
-  size: 184538
-  object_id: 57a5a202-622e-4bfc-4493-007fc30f63f8
-  sha: 2977e5a1e86615e268cc518f04c9dd2cc832b263
+nfs-debs/nfs-common_1:1.2.8-9ubuntu12.1_amd64.deb:
+  size: 184334
+  object_id: 66ce3b31-ea7a-4e23-75b4-a1155f501885
+  sha: 38f7234fade7c15ffecf4c043c877b01ead92d3d
 nfs-debs/rpcbind_0.2.3-0.2_amd64.deb:
   size: 40252
   object_id: c6f4f716-1ecc-4ea0-7913-eceac2dd93c2
