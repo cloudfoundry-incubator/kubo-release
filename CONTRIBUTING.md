@@ -32,7 +32,7 @@ If the changes are for BOSH templating logic then please consider adding unit te
 1. Install [Ruby](https://www.ruby-lang.org/en/documentation/installation/)
 1. Install Bundler: `gem install bundler`
 
-### Running Release Unit Tests
+### Running Kubo-Release Unit Tests
 
 Execute command `./scripts/run_tests` to run unit tests for kubo-release.  These includes tests for the [BOSH templating tests](spec/).  Please run these tests before submitting a pull request.
 
@@ -42,7 +42,7 @@ Integration tests are located in [kubo-ci](https://github.com/cloudfoundry-incub
 
 1. Install [Go](https://golang.org/doc/install)
 1. Install [Ginkgo](https://onsi.github.io/ginkgo/)
-1. Have a kubeconfig to your CFCR cluster saved at `~/.kube/config`, or set `export KUBECONFIG=/path/to/your/kubeconfig`
+1. Have a kubeconfig to your running CFCR cluster saved at `~/.kube/config`, or set `export KUBECONFIG=/path/to/your/kubeconfig`
 1. Clone the [kubo-ci](https://github.com/cloudfoundry-incubator/kubo-ci) repository
 1. Run
 ```
@@ -57,10 +57,17 @@ Where `${skipped_packages}` is a comma-delimited string of zero, one or more of:
 
 Some tests will require additional ops-files to be applied when deploying your cluster. We’d recommend reading the [Continuous Integration configuration files](https://github.com/cloudfoundry-incubator/kubo-ci/tree/master/templates) and the integration test source code.
 
-## Optional tools to deploy
+### KDRATs tests
+KDRATs (kubo-disaster-recovery-acceptance-tests) test disaster recovery of CFCR using BOSH backup and restore (BBR).
+Follow [these instructions](https://github.com/cloudfoundry-incubator/kubo-disaster-recovery-acceptance-tests/blob/master/README.md) from the kubo-disaster-recovery-acceptance-tests repository.
 
-### Kubo-deployment
-
-[Kubo-deployment](https://github.com/cloudfoundry-incubator/kubo-deployment) helps users to deploy CFCR using a set of helper scripts and manifest generation tools. If your change includes deployment level changes and update to the BOSH manifest, please also update `kubo-deployment` repository. Follow the steps mentioned in project's [`CONTRIBUTING.md`](https://github.com/cloudfoundry-incubator/kubo-deployment/blob/master/CONTRIBUTING.md) doc as well.
-
-It is advisable for the Contributor to run [integration tests](https://github.com/cloudfoundry-incubator/kubo-deployment/blob/master/CONTRIBUTING.md#running-integration-tests) before submitting.
+### Turbulence Tests
+Turbulence tests are tests that introduce failure scenarios via the turbulence release to verify resilience.
+1. Clone the kubo-ci repository
+1. Your BOSH director must be deployed with turbulence.
+  1. Please use the [turbulence ops-file](https://github.com/cloudfoundry/bosh-deployment/blob/master/turbulence.yml), and the [CFCR ops-file](https://github.com/cloudfoundry-incubator/kubo-ci/blob/master/manifests/ops-files/use-dev-turbulence.yml) which applies a development version of turbulence. This is unfortunately required until [this bug](https://github.com/cppforlife/turbulence-release/issues/22) is resolved.
+  1. Upload the [turbulence runtime config](https://github.com/cloudfoundry-incubator/kubo-ci/blob/master/manifests/turbulence/runtime-config.yml) to your director, and name it turbulence. More details can be found in [this CI script](https://github.com/cloudfoundry-incubator/kubo-ci/blob/master/scripts/configure-bosh.sh).  This ensures a turbulence client is deployed on your CFCR cluster VMs.
+1. Deploy CFCR
+1. Have a kubeconfig to your running CFCR cluster saved at `~/.kube/config`, or set `export KUBECONFIG=/path/to/your/kubeconfig`
+1. Create a [json test config file](https://github.com/cloudfoundry-incubator/kubo-ci/blob/master/scripts/generate-test-config.sh#L119-L132).  Refer to the [turbulence test script](https://github.com/cloudfoundry-incubator/kubo-ci/blob/master/scripts/run-k8s-turbulence-tests.sh) for further hints.
+1. Run `CONFIG="/path/to/testconfig" ginkgo -failFast -progress -r "./kubo-ci/src/tests/turbulence-tests/"`
