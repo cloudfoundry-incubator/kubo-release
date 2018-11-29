@@ -71,3 +71,12 @@ Turbulence tests are tests that introduce failure scenarios via the turbulence r
 1. Have a kubeconfig to your running CFCR cluster saved at `~/.kube/config`, or set `export KUBECONFIG=/path/to/your/kubeconfig`
 1. Create a [json test config file](https://github.com/cloudfoundry-incubator/kubo-ci/blob/master/scripts/generate-test-config.sh#L119-L132).  Refer to the [turbulence test script](https://github.com/cloudfoundry-incubator/kubo-ci/blob/master/scripts/run-k8s-turbulence-tests.sh) for further hints.
 1. Run `CONFIG="/path/to/testconfig" ginkgo -failFast -progress -r "./kubo-ci/src/tests/turbulence-tests/"`
+
+### Upgrade Tests
+Upgrade tests determine whether BOSH can automatically upgrade from the previous released version of CFCR to the latest version.
+1. Clone the kubo-ci repository
+1. Deploy CFCR with the previously released version of CFCR
+1. Create a bash script containing the `bosh deploy -n` instructions you just used to deploy CFCR
+1. Upload the latest release to the BOSH director
+1. Create a json testconfig file with [IaaS](https://github.com/cloudfoundry-incubator/kubo-ci/blob/master/scripts/generate-test-config.sh#L108), [BOSH](https://github.com/cloudfoundry-incubator/kubo-ci/blob/master/scripts/generate-test-config.sh#L112-L118), and [upgrade flags](https://github.com/cloudfoundry-incubator/kubo-ci/blob/master/scripts/generate-test-config.sh#L109-L111)
+1. Run `BOSH_DEPLOY_COMMAND="path/to/your/bosh-deploy-script.sh" CONFIG="/path/to/your/testconfig" ginkgo -r -v -progress "./kubo-ci/src/tests/upgrade-tests/"`
