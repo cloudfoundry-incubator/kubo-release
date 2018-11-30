@@ -2,7 +2,7 @@ name: kube-apiserver
 templates:
   bin/ensure_apiserver_healthy.erb: bin/ensure_apiserver_healthy
   bin/post-start.erb: bin/post-start
-  config/audit_policy.yml: config/audit_policy.yml
+  config/audit_policy.yml.erb: config/audit_policy.yml
   config/bpm.yml.erb: config/bpm.yml
   config/cloud-provider.ini.erb: config/cloud-provider.ini
   config/etcd-ca.crt.erb: config/etcd-ca.crt
@@ -25,6 +25,8 @@ properties:
     description: The password for the admin account
   admin-username:
     description: The admin username for the Kubernetes cluster
+  audit-policy:
+    description: The file contents for the API server's audit policy
   http_proxy:
     description: http_proxy env var for the kubernetes-api binary (i.e. for cloud
       provider interactions)
