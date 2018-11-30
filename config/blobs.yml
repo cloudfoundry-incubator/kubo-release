@@ -62,10 +62,9 @@ container-images/k8s.gcr.io_pause:3.1.tgz:
   size: 315592
   object_id: f6ba8b90-9a60-454d-73e0-cab4b1c4a554
   sha: d4095b6513b3d5ef770c44d651ae5601878906d8
-container-images/pcfkubo_cfcr-nginx-bionic:v1.0.0.tgz:
-  size: 77649715
-  object_id: 9b6d0545-6548-4db0-63ff-7eb860affbdb
-  sha: bf29fc8214b600350260730fdc7d759138910e5c
+container-images/pcfkubo_nginx-bionic:1.0.0.tgz:
+  size: 77661967
+  sha: feae41f69466e870c5546c55b8946a90cb199c1d
 etcdctl-3.0.7:
   size: 18427584
   object_id: 32221476-5c3d-4ec7-5869-44c989cc3077
