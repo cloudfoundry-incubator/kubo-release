@@ -75,7 +75,7 @@ processes:
   <% if p('enable_audit_logs') %>
   - --audit-log-path=/var/vcap/sys/log/kube-apiserver/audit.log
   - --audit-log-maxage=0
-  - --audit-log-maxsize=0
+  - --audit-log-maxsize=10000000
   - --audit-log-maxbackup=0
   - --audit-policy-file=/var/vcap/jobs/kube-apiserver/config/audit_policy.yml
   <% end %>
