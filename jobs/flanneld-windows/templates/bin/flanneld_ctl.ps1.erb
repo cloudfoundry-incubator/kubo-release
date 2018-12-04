@@ -46,7 +46,8 @@ function start_flanneld {
               "Type": "OutBoundNAT",
               "ExceptionList": [
                 "<%= p('pod-network-cidr') %>",
-                "10.100.200.0/12"
+                "10.100.200.0/12",
+                "<%= spec.ip %>/24"
               ]
             }
           },
