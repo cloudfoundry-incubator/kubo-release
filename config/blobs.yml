@@ -62,10 +62,10 @@ container-images/k8s.gcr.io_pause:3.1.tgz:
   size: 315592
   object_id: f6ba8b90-9a60-454d-73e0-cab4b1c4a554
   sha: d4095b6513b3d5ef770c44d651ae5601878906d8
-container-images/nginx:1.15-alpine.tgz:
-  size: 7495305
-  object_id: 44d3bd3c-7554-4e68-75ad-ac61a012c507
-  sha: cc219863d71c09e568b59516eed0c53fccda445f
+container-images/pcfkubo_nginx-bionic:1.0.0.tgz:
+  size: 77661967
+  object_id: f2575255-59f6-442e-5f69-d10e5a24e178
+  sha: c677df2c93e1a15604285ea0f32b121011dcacdd
 etcdctl-3.0.7:
   size: 18427584
   object_id: 32221476-5c3d-4ec7-5869-44c989cc3077
