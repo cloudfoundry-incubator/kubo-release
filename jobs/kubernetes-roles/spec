@@ -4,10 +4,11 @@ name: kubernetes-roles
 templates:
   bin/apply_policies.erb: bin/apply_policies
   bin/post-start.erb: bin/post-start
-  config/ca.pem.erb: config/ca.pem
+  config/admin-user-cert.pem.erb: config/admin-user-cert.pem
+  config/admin-user-key.pem.erb: config/admin-user-key.pem
   config/kubeconfig.erb: config/kubeconfig
+  config/ca.pem.erb: config/ca.pem
   config/policies/cluster_admin.yml: config/policies/cluster_admin.yml
-  config/policies/kube_proxy.yml: config/policies/kube_proxy.yml
   config/policies/kubelet.yml: config/policies/kubelet.yml
   config/policies/kubelet_drain.yml: config/policies/kubelet_drain.yml
   config/policies/vsphere_cloud_provider.yml.erb: config/policies/vsphere_cloud_provider.yml
@@ -28,8 +29,6 @@ consumes:
 properties:
   admin-username:
     description: The admin username for the Kubernetes cluster
-  admin-password:
-    description: The admin password for the Kubernetes cluster
   tls.kubernetes:
     description: Certificate and private key for the Kubernetes master
   post-start-custom-specs:

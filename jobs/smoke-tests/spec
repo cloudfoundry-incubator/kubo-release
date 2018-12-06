@@ -3,6 +3,8 @@ name: smoke-tests
 
 templates:
   bin/run.erb: bin/run
+  config/admin-user-cert.pem.erb: config/admin-user-cert.pem
+  config/admin-user-key.pem.erb: config/admin-user-key.pem
   config/ca.pem.erb: config/ca.pem
   config/kubeconfig.erb: config/kubeconfig
   config/test-config.json: config/test-config.json

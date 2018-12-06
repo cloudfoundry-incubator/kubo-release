@@ -3,6 +3,8 @@ name: apply-specs
 templates:
   bin/deploy-specs.erb: bin/deploy-specs
   bin/run.erb: bin/run
+  config/admin-user-cert.pem.erb: config/admin-user-cert.pem
+  config/admin-user-key.pem.erb: config/admin-user-key.pem
   config/kubeconfig.erb: config/kubeconfig
   config/ca.pem.erb: config/ca.pem
   config/heapster/ca.pem.erb: config/heapster/ca.pem
@@ -38,10 +40,6 @@ properties:
     default: ""
   admin-username:
     description: The admin username for the Kubernetes cluster
-  admin-password:
-    description: The admin password for the Kubernetes cluster
-  api-token:
-    description: The token to access Kubernetes API
   kubedns-service-ip:
     description: The service cluster IP for kube-dns, must reside within service-cluster-cidr set for kube-apiserver
     default: "10.100.200.10"

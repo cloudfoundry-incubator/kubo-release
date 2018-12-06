@@ -12,6 +12,8 @@ templates:
   config/kubelet-key.pem.erb: config/kubelet-key.pem
   config/kubelet.pem.erb: config/kubelet.pem
   config/kubeletconfig.yml.erb: config/kubeletconfig.yml
+  config/kubelet-user-cert.pem.erb: config/kubelet-user-cert.pem
+  config/kubelet-user-key.pem.erb: config/kubelet-user-key.pem
   config/openstack-ca.crt.erb: config/openstack-ca.crt
   config/service_key.json.erb: config/service_key.json
 packages:
@@ -20,8 +22,6 @@ packages:
 - cni
 - socat
 properties:
-  api-token:
-    description: The token to access Kubernetes API
   cloud-provider:
     description: "The type of cloud-provider that is being deployed"
   drain-api-token:
@@ -39,6 +39,8 @@ properties:
   kubectl-drain-timeout:
     description: "The length of time to wait before giving up draining a node, zero means infinite"
     default: "0s"
+  kubelet-user-credentials:
+    description: Certificate and private key used to configure the Kubeconfig for kubelet interactions with the Kube API Server
   k8s-args:
     description: "Pass-through options for Kubernetes runtime arguments. See docs https://kubernetes.io/docs/reference/command-line-tools-reference/kubelet/ for reference."
     example: |

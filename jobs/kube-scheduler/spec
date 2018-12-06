@@ -6,19 +6,21 @@ templates:
   config/ca.pem.erb: config/ca.pem
   config/kubeconfig.erb: config/kubeconfig
   config/config.yml: config/config.yml
+  config/kube-scheduler-user-cert.pem.erb: config/kube-scheduler-user-cert.pem
+  config/kube-scheduler-user-key.pem.erb: config/kube-scheduler-user-key.pem
 
 packages:
 - kubernetes
 
 properties:
-  api-token:
-    description: The token to access kubernetes API
   tls.kubernetes:
     description: "Certificate and private key for the Kubernetes master"
   kube-scheduler-configuration:
     description: The Kube-scheduler will load its initial configuration from this.
       Omit this to use the built-in default configuration values.
       Command-line flags override configuration.
+  kube-scheduler-user-credentials:
+    description: Certificate and private key for Kube Scheduler's Kubeconfig
   k8s-args:
     description: "Pass-through options for Kubernetes runtime arguments. See docs https://kubernetes.io/docs/reference/command-line-tools-reference/kube-scheduler/ for reference."
     example: |

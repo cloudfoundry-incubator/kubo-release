@@ -11,7 +11,6 @@ describe 'apply-specs' do
         'instances' => [],
         'properties' => {
           'admin-username' => 'meatloaf',
-          'admin-password' => 'madagascar-TEST',
           'port' => '2034'
         }
       }
@@ -29,10 +28,6 @@ describe 'apply-specs' do
     expect(kubeconfig_user['name']).to eq('meatloaf')
   end
 
-  it 'uses the token from the kube-apiserver link' do
-    expect(kubeconfig_user['user']['token']).to eq('madagascar-TEST')
-  end
-
   it 'constructs the URL using the kube-apiserver link' do
     expect(rendered_kubeconfig['clusters'][0]['cluster']['server']).to eq('https://master.cfcr.internal:8443')
   end
@@ -40,8 +35,7 @@ describe 'apply-specs' do
   let(:link_spec) { {} }
   let(:default_properties) do
     {
-      'addons' => ["kube-dns", "metrics-server", "heapster", "kubernetes-dashboard"],
-      'admin-password' => '1234'
+      'addons' => ["kube-dns", "metrics-server", "heapster", "kubernetes-dashboard"]
     }
   end
   let(:rendered_deploy_specs) do
@@ -60,7 +54,6 @@ describe 'apply-specs' do
     let(:default_properties) do
       {
         'addons' => ["kube-dns", "metrics-server", "heapster", "kubernetes-dashboard"],
-        'admin-password' => '1234',
         'timeout-sec' => '1122'
       }
     end
@@ -87,7 +80,6 @@ describe 'apply-specs' do
         },
         'addons' => ["kube-dns", "metrics-server", "heapster", "kubernetes-dashboard"],
         'admin-username' => 'meatloaf',
-        'admin-password' => 'madagascar-TEST',
         'port' => '2034'
       }
     end

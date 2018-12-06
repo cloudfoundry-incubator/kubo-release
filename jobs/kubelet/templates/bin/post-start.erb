@@ -58,9 +58,9 @@ v="$(cat <<-EOF
 EOF
 )"
 
-  KUBE_TOKEN=$($kubectl  config view -o jsonpath='{.users[?(@.name == "kubelet")].user.token}')
   /usr/bin/curl -sS --cacert /var/vcap/jobs/kubelet/config/apiserver-ca.pem \
-  -H "Authorization: Bearer ${KUBE_TOKEN}" \
+  --cert /var/vcap/jobs/kubelet/config/kubelet-user-cert.pem \
+  --key /var/vcap/jobs/kubelet/config/kubelet-user-key.pem \
   -H "Accept: application/json" \
   -H "Content-Type: application/strategic-merge-patch+json" \
   -X PATCH \

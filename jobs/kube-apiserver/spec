@@ -3,6 +3,8 @@ templates:
   bin/ensure_apiserver_healthy.erb: bin/ensure_apiserver_healthy
   bin/post-start.erb: bin/post-start
   config/audit_policy.yml.erb: config/audit_policy.yml
+  config/admin-user-cert.pem.erb: config/admin-user-cert.pem
+  config/admin-user-key.pem.erb: config/admin-user-key.pem
   config/bpm.yml.erb: config/bpm.yml
   config/cloud-provider.ini.erb: config/cloud-provider.ini
   config/etcd-ca.crt.erb: config/etcd-ca.crt
@@ -21,8 +23,8 @@ templates:
 packages:
 - kubernetes
 properties:
-  admin-password:
-    description: The password for the admin account
+  admin-user-credentials:
+    description: Certificate and private key for the cluster admin user
   admin-username:
     description: The admin username for the Kubernetes cluster
   audit-policy:
@@ -39,16 +41,8 @@ properties:
       k8s-args:
         anonymous-auth: false
         bind-address: 10.0.0.1
-  kube-controller-manager-password:
-    description: The password for the system:kube-controller-manager user
-  kube-proxy-password:
-    description: The password for the kube-proxy user
-  kube-scheduler-password:
-    description: The password for the system:kube-scheduler user
   kubelet-drain-password:
     description: The password for the kubelet drain user
-  kubelet-password:
-    description: The password for the kubelet user
   no_proxy:
     description: no_proxy env var for the kubernetes-api binary (i.e. for cloud provider
       interactions)
@@ -77,7 +71,7 @@ consumes:
 provides:
 - name: kube-apiserver
   properties:
+  - admin-user-credentials
   - admin-username
-  - admin-password
   - tls.kubernetes.ca
   type: kube-apiserver

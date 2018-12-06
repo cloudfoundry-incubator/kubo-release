@@ -5,6 +5,8 @@ templates:
   bin/kube_proxy_ctl.erb: bin/kube_proxy_ctl
   config/kubeconfig.erb: config/kubeconfig
   config/config.yml.erb: config/config.yml
+  config/kube-proxy-user-cert.pem.erb: config/kube-proxy-user-cert.pem
+  config/kube-proxy-user-key.pem.erb: config/kube-proxy-user-key.pem
   config/ca.pem.erb: config/ca.pem
 
 packages:
@@ -13,8 +15,6 @@ packages:
 - conntrack
 
 properties:
-  api-token:
-    description: The password for the kube-proxy user
   cloud-provider:
     description: The type of cloud-provider that is being deployed
   tls.kubernetes:
@@ -30,6 +30,8 @@ properties:
           CPUManager: true
           DryRun: false
         cleanup: false
+  kube-proxy-user-credentials:
+    description: Certificate and private key used for the kube-proxy Kubeconfig
   k8s-args:
     description: Pass-through options for Kubernetes runtime arguments. See docs https://kubernetes.io/docs/reference/command-line-tools-reference/kube-proxy/ for reference.
     example: |

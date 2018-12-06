@@ -14,13 +14,13 @@ templates:
   config/cluster-signing-key.pem.erb: config/cluster-signing-key.pem
   config/kube-controller-manager-cert.pem.erb: config/kube-controller-manager-cert.pem
   config/kube-controller-manager-private-key.pem.erb: config/kube-controller-manager-private-key.pem
+  config/kube-controller-manager-user-cert.pem.erb: config/kube-controller-manager-user-cert.pem
+  config/kube-controller-manager-user-key.pem.erb: config/kube-controller-manager-user-key.pem
 
 packages:
 - kubernetes
 
 properties:
-  api-token:
-    description: "API Token for the system:kube-controller-manager user"
   cluster-signing:
     description: "CA Certificate and private key for the certificate controller to issue certificates"
   http_proxy:
@@ -35,6 +35,8 @@ properties:
     description: "Certificate and private key for serving HTTPS from kube-controller-manager"
   service-account-private-key:
     description: "Private key used to sign generated tokens"
+  kube-controller-manager-user-credentials:
+    description: Certificate and private key for Kube Controller Manager's Kubeconfig
   k8s-args:
     description: "Pass-through options for Kubernetes runtime arguments. See https://kubernetes.io/docs/reference/command-line-tools-reference/kube-controller-manager/ for reference."
     example: |

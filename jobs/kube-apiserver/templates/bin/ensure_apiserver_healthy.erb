@@ -3,11 +3,12 @@
 [ -z "$DEBUG" ] || set -x
 
 apiserver="https://master.cfcr.internal:8443"
-token="<%= p("admin-password") %>"
-cert=/var/vcap/jobs/kube-apiserver/config/kubernetes.pem
+ca_cert=/var/vcap/jobs/kube-apiserver/config/kubernetes.pem
+admin_cert=/var/vcap/jobs/kube-apiserver/config/admin-user-cert.pem
+admin_key=/var/vcap/jobs/kube-apiserver/config/admin-user-key.pem
 
 interval="2"
 
-until $(curl -X GET --fail -s -o /dev/null   ${apiserver}/healthz --header "Authorization: Bearer ${token}" --cacert ${cert}); do
+until $(curl --fail -s -o /dev/null ${apiserver}/healthz --cacert ${ca_cert} --cert ${admin_cert} --key ${admin_key}); do
   sleep $interval
 done
