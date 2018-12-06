@@ -32,7 +32,7 @@ spec:
            secretName: metrics-server-certs
       containers:
       - name: metrics-server
-        image: gcr.io/google_containers/metrics-server-amd64:v0.3.1
+        image: gcr.io/google_containers/metrics-server-amd64:v0.3.1-cfcr-dev1
         imagePullPolicy: IfNotPresent
         command:
         - /metrics-server

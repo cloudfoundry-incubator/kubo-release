@@ -30,10 +30,10 @@ container-images/coredns_coredns:1.2.0.tgz:
   size: 9997810
   object_id: aa4d0f19-0dea-4cc0-561e-2c665b0e849c
   sha: 34fd25c3a1140b4d59390f57bd17977a64af26c9
-container-images/gcr.io_google_containers_metrics-server-amd64:v0.3.1.tgz:
-  size: 10895843
-  object_id: 0f2ec738-7b90-4fcd-5efd-895f42b6697d
-  sha: 680b53bd59fae5bd498e5439eb42910bc60fe9de
+container-images/gcr.io_google_containers_metrics-server-amd64:v0.3.1-cfcr-dev1.tgz:
+  size: 39616000
+  object_id: 972916b4-c048-4368-4290-022ced5daaf4
+  sha: 68ea331bd116304200ca03f0c8f5c9344b08ba5a
 container-images/k8s.gcr.io_heapster-amd64:v1.5.4.tgz:
   size: 19797457
   object_id: deb55944-5460-4af5-6b0f-552330fca196
