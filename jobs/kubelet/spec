@@ -36,6 +36,9 @@ properties:
     description: The Kubelet will load its initial configuration from this.
       Omit this to use the built-in default configuration values.
       Command-line flags override configuration.
+  kubectl-drain-timeout:
+    description: "The length of time to wait before giving up draining a node, zero means infinite"
+    default: "0s"
   k8s-args:
     description: "Pass-through options for Kubernetes runtime arguments. See docs https://kubernetes.io/docs/reference/command-line-tools-reference/kubelet/ for reference."
     example: |
