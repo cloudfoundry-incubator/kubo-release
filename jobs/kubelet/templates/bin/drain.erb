@@ -18,34 +18,54 @@ main() {
   check_if_pidfile_exists
   check_if_pid_is_running
 
-  retry drain_kubelet
-  watch_disks
+  retry cordon_node
+  k8s_disks=$(get_k8s_disks)
+  echo "Mounted volumes: $k8s_disks"
+  retry drain_node
+  if [[ -z "${k8s_disks}" ]]; then
+    echo "No attached PVs"
+  else
+    watch_disks "${k8s_disks}"
+  fi
   retry delete_drained_node
 }
 
-drain_kubelet() {
-  local node_name
-  node_name=$(kubectl --kubeconfig /var/vcap/jobs/kubelet/config/kubeconfig-drain get nodes -o wide -L bosh.id | grep "<%= spec.id %>$" | awk '{print $1}')
-  kubectl --kubeconfig /var/vcap/jobs/kubelet/config/kubeconfig-drain drain "${node_name}" --grace-period 10 --force --delete-local-data  --ignore-daemonsets --timeout <%= p("kubectl-drain-timeout") %>
+cordon_node() {
+  kubectl --kubeconfig /var/vcap/jobs/kubelet/config/kubeconfig-drain cordon -l "bosh.id=<%= spec.id %>"
+}
+
+drain_node() {
+  kubectl --kubeconfig /var/vcap/jobs/kubelet/config/kubeconfig-drain drain \
+    -l "bosh.id=<%= spec.id %>" \
+    --grace-period 10 \
+    --force \
+    --delete-local-data \
+    --ignore-daemonsets \
+    --timeout <%= p("kubectl-drain-timeout") %>
+}
+
+get_k8s_disks() {
+  disks=$(lsblk -dnl -o NAME,TYPE,MOUNTPOINT | awk '/var\/lib\/kubelet/ {print $1}')
+  echo ${disks[@]} | tr " " "|"
 }
 
 watch_disks() {
   echo "$(date): checking for attached PVs..."
-  ndisks=$(lsblk -dnl -o NAME,TYPE,MOUNTPOINT | awk '/var\/lib\/kubelet/{if($2 == "disk") {print $1, $3}}' | wc -l)
+  ndisks=$(lsblk -dnl -o NAME | grep -E "$1" | wc -l)
   while (( ndisks != 0 ))
   do
-    echo "$(date): ${ndisks} still attached"
+    echo "$(date): ${ndisks} disks still attached"
     sleep 2
 
     echo "$(date): checking for attached PVs..."
-    ndisks=$(lsblk -dnl -o NAME,TYPE,MOUNTPOINT | awk '/var\/lib\/kubelet/{if($2 == "disk") {print $1, $3}}' | wc -l)
+    ndisks=$(lsblk -dnl -o NAME | grep -E "$1" | wc -l)
   done
 }
 
 delete_drained_node() {
-  local node_name
-  node_name=$(kubectl --kubeconfig /var/vcap/jobs/kubelet/config/kubeconfig-drain get nodes -o wide -L bosh.id | grep "<%= spec.id %>$" | awk '{print $1}')
-  kubectl --kubeconfig /var/vcap/jobs/kubelet/config/kubeconfig-drain delete node "${node_name}" --ignore-not-found
+  kubectl --kubeconfig /var/vcap/jobs/kubelet/config/kubeconfig-drain delete node \
+    -l "bosh.id=<%= spec.id %>" \
+    --ignore-not-found
 }
 
 retry() {
