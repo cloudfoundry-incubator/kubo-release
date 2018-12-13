@@ -70,4 +70,28 @@ describe 'kube_proxy_ctl setting of hostnameOverride property' do
       expect(result).to include(expected_aws_hostname)
     end
   end
+  describe 'when cloud-provider is GCP' do
+    it 'sets hostname_override to gcp cloud id' do
+      expected_gcp_hostname = '123456'
+
+      echo_mock_file = test_context['mock_dir'] + '/curl'
+      File.open(echo_mock_file, 'w', 0o777) do |f|
+        f.write("#!/bin/bash\n")
+        f.write("echo #{expected_gcp_hostname}")
+      end
+
+      test_link = { 'cloud-provider' => {
+        'instances' => [],
+        'properties' => {
+          'cloud-provider' => {
+            'type' => 'gce',
+          }
+        }
+      } }
+      rendered_kube_proxy_ctl = compiled_template('kube-proxy', 'bin/kube_proxy_ctl', { 'cloud-provider' => 'gce' }, test_link)
+      result = run_get_hostname_override(rendered_kube_proxy_ctl, test_context['kube_proxy_ctl_file'])
+
+      expect(result).to include(expected_gcp_hostname)
+    end
+  end
 end
