@@ -82,10 +82,10 @@ ipset/libipset3_6.20.1-1_amd64.deb:
   size: 50812
   object_id: 67efec49-e111-45fc-701d-7d55dbe66660
   sha: e4daa1ac22b2775d1c334aa6fe055ca8dcccc185
-jq-linux64-1.5:
-  size: 3027945
-  object_id: 41eb1cd1-0377-4e08-5602-51e0af8b9b52
-  sha: d8e36831c3c94bb58be34dd544f44a6c6cb88568
+jq-linux64-1.6:
+  size: 3953824
+  object_id: efdcc8cd-7155-47d4-65c9-d3d74700633f
+  sha: 056ba5d6bbc617c29d37158ce11fd5a443093949
 kubernetes-1.12.3/kube-apiserver:
   size: 192793815
   object_id: 78478764-ca0a-449b-5a3e-5918bf5c75d7
