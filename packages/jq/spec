@@ -2,4 +2,4 @@
 name: jq
 dependencies: []
 files:
-- jq-linux64-1.5
+- jq-linux64-1.6
