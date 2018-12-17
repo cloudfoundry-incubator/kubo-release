@@ -1,7 +1,7 @@
 <%
   hostname = ""
   if_p('cloud-provider') do |cloud_provider|
-    if cloud_provider == "gce" || cloud_provider == "azure"
+    if cloud_provider == "gce" || cloud_provider == "azure" || cloud_provider == "vsphere"
     else
       hostname = spec.ip
     end

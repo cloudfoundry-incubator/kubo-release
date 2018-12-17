@@ -93,13 +93,30 @@ function start_kubelet {
   -%>
     <% if include_config -%>--cloud-config=${cloud_config}<% end %> `
     <% if !iaas.nil? -%>--cloud-provider=${cloud_provider}<% end %> `
-    --hostname-override=$(get_hostname_override) `
     --node-labels=<%= labels %> `
     --config="/var/vcap/jobs/kubelet-windows/config/kubeletconfig.yml"
 }
 
+function check_for_networking {
+  $subnetConfig="/run/flannel/subnet.env"
+
+  if (-not ([System.IO.File]::Exists($subnetConfig)))
+  {
+    throw "$subnetConfig does not exist, waiting for flannel initialization"
+  }
+}
+
+function ensure_kubeproxy_is_running {
+  curl.exe --fail http://localhost:10256/healthz
+  if (-not $?) {
+    throw "kube-proxy is not available"
+  }
+}
+
 function main {
+  ensure_kubeproxy_is_running
   delete_stale_drained_node
+  check_for_networking
   start_kubelet
 }
 

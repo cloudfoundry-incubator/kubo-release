@@ -11,21 +11,17 @@ cifs-utils-6.7.tar.bz2:
   object_id: c529967d-57fa-4b41-685e-ff0a507ffaad
   sha: 9ba5091d7c2418a90773c861f04a3f4a36854c14
 cni-windows/flannel.exe:
-  size: 5249536
-  object_id: ccc31fe9-de3c-4457-7e1a-22654401ee0b
-  sha: 3db750b5f63ce8d486173bd53119a2c390c443f6
+  size: 5261824
+  sha: 0c77350ec8b9c80930d77244f65b8153c8588557
 cni-windows/host-local.exe:
-  size: 3139072
-  object_id: c92f7f24-1f8d-467b-685d-6f6094ad525d
-  sha: 157e164e3e1eef93b54f672001de35909ba20b5a
+  size: 3140608
+  sha: 83d4f221fc96e44c7c032f785cec95ec7ad0f605
 cni-windows/win-bridge.exe:
-  size: 5641216
-  object_id: dccb0c2e-bfaf-4ae3-7171-4dbbed23dcf8
-  sha: 0de1ca9ff3dc122274b7068debf97791c9a2022b
+  size: 5809664
+  sha: c585394fcf00bf99dc3bd3150eb5a67d2b00c5af
 cni-windows/win-overlay.exe:
-  size: 5642240
-  object_id: cd9371e2-edf2-47bc-5797-48407e17d993
-  sha: 6d7c580517a061e04c3ec034f13c742d2d430cf6
+  size: 5682688
+  sha: 6e8fd504fbc6706e7bd8253ed8a548761a922c31
 cni/cni-plugins-amd64-v0.7.1.tgz:
   size: 17108856
   object_id: 50dc58eb-107d-483a-4e37-5a243ffed520
@@ -139,9 +135,8 @@ libtool-2.4.6.tar.gz:
   object_id: 670cc8a2-75d8-4fb5-465f-270395cb9373
   sha: 25b6931265230a06f0fc2146df64c04e5ae6ec33
 kubernetes-windows-1.11.3/kube-proxy.exe:
-  size: 51224576
-  object_id: ff308fa1-3483-4cce-4a06-fe36267c0795
-  sha: eeb1f3f18f683520b193caa39c5d1b86acae9122
+  size: 46113792
+  sha: cce58ba13e2c2e308703f333096daa97136d0bc1
 kubernetes-windows-1.11.3/kubeadm.exe:
   size: 57290752
   object_id: 4efc30c5-7694-4165-6ef2-aa3eb39d8bbf
@@ -154,6 +149,14 @@ kubernetes-windows-1.11.3/kubelet.exe:
   size: 155562496
   object_id: a937aacb-d62d-47d6-44b8-9502596efa68
   sha: c9a1b1333a30212cf0644ba0f01fe66c448a531f
+libmnl0_1.0.3-3.deb:
+  size: 11416
+  object_id: 245e085f-1ad2-447d-67bb-1894b960c571
+  sha: dcb0b572f1207ad192d8cb1a9010fc6dd22d0000
+libtool-2.4.6.tar.gz:
+  size: 1806697
+  object_id: 670cc8a2-75d8-4fb5-465f-270395cb9373
+  sha: 25b6931265230a06f0fc2146df64c04e5ae6ec33
 nfs-debs/keyutils_1.5.9-8ubuntu1_amd64.deb:
   size: 47054
   object_id: e1b42c34-4e88-426b-7268-99d1bdfd40c1

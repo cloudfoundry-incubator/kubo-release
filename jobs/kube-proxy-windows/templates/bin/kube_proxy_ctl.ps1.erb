@@ -1,8 +1,35 @@
 $ErrorActionPreference = "Stop";
 trap { $host.SetShouldExit(1) }
 
-$network = Get-HnsNetwork | ? Type -Eq L2Bridge
-$env:KUBE_NETWORK = $network.Name
+function ensure_kubelet_is_running {
+  curl.exe --fail http://localhost:10248/healthz
+  if (-not $?) {
+    throw "kubelet is not available"
+  }
+}
 
-C:\var\vcap\packages\kubernetes-windows\bin\kube-proxy.exe `
-  --config /var/vcap/jobs/kube-proxy-windows/config/config.yml
+function start_kube_proxy {
+  $network = Get-HnsNetwork | ? Type -Eq L2Bridge
+  $env:KUBE_NETWORK = $network.Name
+
+  # for vsphere
+  $nodename = get-hostname
+
+  C:\var\vcap\packages\kubernetes-windows\bin\kube-proxy.exe -v 5 --nodename-override=$nodename --config /var/vcap/jobs/kube-proxy-windows/config/config.yml
+}
+
+function check_for_networking {
+  $subnetConfig="/run/flannel/subnet.env"
+
+  if (-not ([System.IO.File]::Exists($subnetConfig)))
+  {
+    throw "$subnetConfig does not exist, waiting for flannel initialization"
+  }
+}
+
+function main() {
+  check_for_networking
+  start_kube_proxy
+}
+
+main
