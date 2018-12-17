@@ -40,8 +40,7 @@ drain_node() {
     --grace-period 10 \
     --force \
     --delete-local-data \
-    --ignore-daemonsets \
-    --timeout <%= p("kubectl-drain-timeout") %>
+    --ignore-daemonsets 
 }
 
 get_k8s_disks() {
