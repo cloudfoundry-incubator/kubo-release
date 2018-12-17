@@ -12,10 +12,7 @@ function start_kube_proxy {
   $network = Get-HnsNetwork | ? Type -Eq L2Bridge
   $env:KUBE_NETWORK = $network.Name
 
-  # for vsphere
-  $nodename = get-hostname
-
-  C:\var\vcap\packages\kubernetes-windows\bin\kube-proxy.exe -v 5 --nodename-override=$nodename --config /var/vcap/jobs/kube-proxy-windows/config/config.yml
+  C:\var\vcap\packages\kubernetes-windows\bin\kube-proxy.exe -v 5 --config /var/vcap/jobs/kube-proxy-windows/config/config.yml
 }
 
 function check_for_networking {

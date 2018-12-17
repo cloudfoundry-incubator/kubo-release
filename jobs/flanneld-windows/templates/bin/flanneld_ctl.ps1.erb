@@ -47,7 +47,7 @@ function start_flanneld {
               "ExceptionList": [
                 "<%= p('pod-network-cidr') %>",
                 "10.100.200.0/12",
-                "<%= spec.ip %>/24"
+                "<%= spec.ip.split(".")[0...-1].append(0).join(".") %>/24"
               ]
             }
           },

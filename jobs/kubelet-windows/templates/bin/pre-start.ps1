@@ -1,6 +1,12 @@
 $ErrorActionPreference = "Stop";
 trap { $host.SetShouldExit(1) }
 
+$env:PATH+=";C:\var\vcap\packages\docker\docker\;"
+
+# Temporary workaround until we bring our own images
+docker pull microsoft/nanoserver:1803
+docker pull microsoft/windowsservercore:1803
+
 if (!(docker images microsoft/nanoserver:latest -q))
 {
     docker tag (docker images microsoft/nanoserver -q) microsoft/nanoserver
