@@ -54,10 +54,10 @@ container-images/k8s.gcr.io_k8s-dns-sidecar-amd64:1.14.10.tgz:
   size: 11294008
   object_id: bbb7dfd6-6ddb-473d-5b78-d75c1fc709a9
   sha: 2197e413d8f22419e01924485c99c0d744a140e7
-container-images/k8s.gcr.io_kubernetes-dashboard-amd64:v1.10.0.tgz:
-  size: 44899678
-  object_id: 437d2094-3906-4125-6277-49d79dce0ad7
-  sha: 9a43488d7fd90ef4db2322f87ab3dbb2b32b805f
+container-images/k8s.gcr.io_kubernetes-dashboard-amd64:v1.10.1.tgz:
+  size: 44852477
+  object_id: 1d8fdcd7-fe1e-431d-5d90-2032b97d8ad0
+  sha: 8a19204a0a3f75c5a4f495b1cd3bb1c7d604fa6c
 container-images/k8s.gcr.io_pause:3.1.tgz:
   size: 315592
   object_id: f6ba8b90-9a60-454d-73e0-cab4b1c4a554
