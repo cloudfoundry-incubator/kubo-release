@@ -12,6 +12,8 @@ templates:
   config/kubelet-key.pem.erb: config/kubelet-key.pem
   config/kubelet.pem.erb: config/kubelet.pem
   config/kubeletconfig.yml.erb: config/kubeletconfig.yml
+  config/kubelet-drain-user-cert.pem.erb: config/kubelet-drain-user-cert.pem
+  config/kubelet-drain-user-key.pem.erb: config/kubelet-drain-user-key.pem
   config/kubelet-user-cert.pem.erb: config/kubelet-user-cert.pem
   config/kubelet-user-key.pem.erb: config/kubelet-user-key.pem
   config/openstack-ca.crt.erb: config/openstack-ca.crt
@@ -39,6 +41,8 @@ properties:
   kubectl-drain-timeout:
     description: "The length of time to wait before giving up draining a node, zero means infinite"
     default: "0s"
+  kubelet-drain-user-credentials:
+    description: Certificate and private key used to configure the Kubeconfig for kubelet interactions with the Kube API Server
   kubelet-user-credentials:
     description: Certificate and private key used to configure the Kubeconfig for kubelet interactions with the Kube API Server
   k8s-args:
