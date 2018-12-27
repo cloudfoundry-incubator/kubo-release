@@ -75,8 +75,8 @@ processes:
   <% if p('enable_audit_logs') %>
   - --audit-log-path=/var/vcap/sys/log/kube-apiserver/audit.log
   - --audit-log-maxage=0
-  - --audit-log-maxsize=10000000
-  - --audit-log-maxbackup=0
+  - --audit-log-maxsize=49
+  - --audit-log-maxbackup=7
   - --audit-policy-file=/var/vcap/jobs/kube-apiserver/config/audit_policy.yml
   <% end %>
   <% if_p("oidc.issuer-url", "oidc.client-id") do |oidc_issuer_url, oidc_client_id| %>
