@@ -123,30 +123,30 @@ function ensure_docker_is_running {
   }
 }
 
-function fetch_base_images {
+function load_base_images {
   # Temporary workaround until we bring our own images
   docker version
   if (-not $?) {
     throw "docker is not available"
   }
-  docker pull microsoft/nanoserver:1803
-  docker pull microsoft/windowsservercore:1803
+  docker pull mcr.microsoft.com/windows/nanoserver:1803
+  docker pull mcr.microsoft.com/windows/servercore:1803
 
-  if (!(docker images microsoft/nanoserver:latest -q))
+  if (!(docker images mcr.microsoft.com/windows/nanoserver:latest -q))
   {
-      docker tag (docker images microsoft/nanoserver -q) microsoft/nanoserver
+    docker tag (docker images mcr.microsoft.com/windows/nanoserver -q) mcr.microsoft.com/windows/nanoserver
   }
 
-  if (!(docker images microsoft/windowsservercore:latest -q))
+  if (!(docker images mcr.microsoft.com/windows/servercore:latest -q))
   {
-      docker tag (docker images microsoft/windowsservercore -q) microsoft/windowsservercore
+    docker tag (docker images mcr.microsoft.com/windows/servercore -q) mcr.microsoft.com/windows/servercore
   }
 
   $infraPodImage=docker images kubeletwin/pause -q
   if (!$infraPodImage)
   {
-      cd /var/vcap/jobs/kubelet-windows/config
-      docker build -t kubeletwin/pause .
+    cd /var/vcap/jobs/kubelet-windows/config
+    docker build -t kubeletwin/pause .
   }
 }
 
@@ -155,7 +155,7 @@ function main {
   check_for_networking
   ensure_docker_is_running
   ensure_kubeproxy_is_running
-  fetch_base_images
+  load_base_images
   start_kubelet
 }
 

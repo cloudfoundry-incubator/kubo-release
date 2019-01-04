@@ -11,17 +11,21 @@ cifs-utils-6.7.tar.bz2:
   object_id: c529967d-57fa-4b41-685e-ff0a507ffaad
   sha: 9ba5091d7c2418a90773c861f04a3f4a36854c14
 cni-windows/flannel.exe:
-  size: 5261824
-  sha: 0c77350ec8b9c80930d77244f65b8153c8588557
+  size: 5248512
+  object_id: 52d24c3c-0717-4cfd-784f-b40ac6ccd3c1
+  sha: 0265a33b8767035efcd86a448adbdc94812f0039
 cni-windows/host-local.exe:
-  size: 3140608
-  sha: 83d4f221fc96e44c7c032f785cec95ec7ad0f605
+  size: 3139072
+  object_id: bcef532d-b56a-4a0c-65d8-7a651ba2b672
+  sha: 9557686ffdc3f7ce63e3d5be976c9541902e66d4
 cni-windows/win-bridge.exe:
-  size: 5809664
-  sha: c585394fcf00bf99dc3bd3150eb5a67d2b00c5af
+  size: 5640704
+  object_id: 9474adcb-399f-4076-71ec-8f4c7a45aaa8
+  sha: 8de546f50a0addc7b4c9162ce99d26be71214336
 cni-windows/win-overlay.exe:
-  size: 5682688
-  sha: 6e8fd504fbc6706e7bd8253ed8a548761a922c31
+  size: 5642752
+  object_id: f705c5ad-2849-4bbd-5cbd-e7e33bec314d
+  sha: d598484f9ab652adc76cac6bca312b276c486d55
 cni/cni-plugins-amd64-v0.7.1.tgz:
   size: 17108856
   object_id: 50dc58eb-107d-483a-4e37-5a243ffed520
@@ -126,29 +130,22 @@ kubernetes-1.12.4/kubelet:
   size: 176685072
   object_id: 8c39822c-4b09-4088-68c1-1e07b2003913
   sha: 268ba0ded6190f8263c12b3e9a82721cc2a4506c
-libmnl0_1.0.3-3.deb:
-  size: 11416
-  object_id: 245e085f-1ad2-447d-67bb-1894b960c571
-  sha: dcb0b572f1207ad192d8cb1a9010fc6dd22d0000
-libtool-2.4.6.tar.gz:
-  size: 1806697
-  object_id: 670cc8a2-75d8-4fb5-465f-270395cb9373
-  sha: 25b6931265230a06f0fc2146df64c04e5ae6ec33
-kubernetes-windows-1.11.3/kube-proxy.exe:
-  size: 46113792
-  sha: cce58ba13e2c2e308703f333096daa97136d0bc1
-kubernetes-windows-1.11.3/kubeadm.exe:
-  size: 57290752
-  object_id: 4efc30c5-7694-4165-6ef2-aa3eb39d8bbf
-  sha: 4d00dd853d727f769a1432ca48caf7a50da86e1f
-kubernetes-windows-1.11.3/kubectl.exe:
-  size: 55686656
-  object_id: 9aaa8d3e-1a43-4b80-7e5d-0d6e1e8ec64d
-  sha: 94fdf0f22da29c0ab870234a61da4f606e1233cc
-kubernetes-windows-1.11.3/kubelet.exe:
-  size: 155562496
-  object_id: a937aacb-d62d-47d6-44b8-9502596efa68
-  sha: c9a1b1333a30212cf0644ba0f01fe66c448a531f
+kubernetes-windows-1.12.3/kube-proxy.exe:
+  size: 49583104
+  object_id: 11c49cba-6143-4711-6856-bb45a0b3ceda
+  sha: 51c64417fc057340a7f92d839e7c2d99d48bfe48
+kubernetes-windows-1.12.3/kubeadm.exe:
+  size: 53927936
+  object_id: b7952275-fe1d-4a3b-4e8d-da0eb79b765d
+  sha: 993f3569c18705395e33883731bf26676143fd38
+kubernetes-windows-1.12.3/kubectl.exe:
+  size: 57621504
+  object_id: 7dbcdc84-14a7-495d-5943-7dfc6f979f92
+  sha: ee6e2821ab207802ff2bc03bfc0334bd79a1b6ff
+kubernetes-windows-1.12.3/kubelet.exe:
+  size: 160776192
+  object_id: 40845e94-4cd8-46b1-4bd6-6719d67e0064
+  sha: e8c057be575849237483339162af58cf08a0e30a
 libmnl0_1.0.3-3.deb:
   size: 11416
   object_id: 245e085f-1ad2-447d-67bb-1894b960c571
