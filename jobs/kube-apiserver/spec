@@ -10,6 +10,7 @@ templates:
   config/etcd-client.key.erb: config/etcd-client.key
   config/kubelet-client-cert.pem.erb: config/kubelet-client-cert.pem
   config/kubelet-client-key.pem.erb: config/kubelet-client-key.pem
+  config/kubernetes-ca.pem.erb: config/kubernetes-ca.pem
   config/kubernetes-key.pem.erb: config/kubernetes-key.pem
   config/kubernetes.pem.erb: config/kubernetes.pem
   config/oidc-ca.pem.erb: config/oidc-ca.pem
