@@ -1,0 +1,64 @@
+name: kubelet-windows
+templates:
+  bin/drain.ps1.erb: bin/drain.ps1
+  bin/kubelet_ctl.ps1.erb: bin/kubelet_ctl.ps1
+  config/apiserver-ca.pem.erb: config/apiserver-ca.pem
+  config/cloud-provider.ini.erb: config/cloud-provider.ini
+  config/Dockerfile: config/Dockerfile
+  config/kubeconfig-drain.erb: config/kubeconfig-drain
+  config/kubeconfig.erb: config/kubeconfig
+  config/kubelet-client-ca.pem.erb: config/kubelet-client-ca.pem
+  config/kubelet-key.pem.erb: config/kubelet-key.pem
+  config/kubelet.pem.erb: config/kubelet.pem
+  config/kubeletconfig.yml.erb: config/kubeletconfig.yml
+  config/openstack-ca.crt.erb: config/openstack-ca.crt
+  config/service_key.json.erb: config/service_key.json
+packages:
+- kubernetes-windows
+- cni-windows
+properties:
+  api-token:
+    description: The token to access Kubernetes API
+  cloud-provider:
+    description: "The type of cloud-provider that is being deployed"
+  drain-api-token:
+    description: The token to access Kubernetes API used to drain the kubelet.
+  http_proxy:
+    description: http_proxy env var for cloud provider interactions, i.e. for the
+      kubelet
+  https_proxy:
+    description: https_proxy env var for cloud provider interactions, i.e. for the
+      kubelet
+  kubelet-configuration:
+    description: The Kubelet will load its initial configuration from this.
+      Omit this to use the built-in default configuration values.
+      Command-line flags override configuration.
+  k8s-args:
+    description: "Pass-through options for Kubernetes runtime arguments. See docs https://kubernetes.io/docs/reference/command-line-tools-reference/kubelet/ for reference."
+    example: |
+      k8s-args:
+        address: 10.0.0.1
+        docker-only: null
+  no_proxy:
+    description: no_proxy env var for cloud provider interactions, i.e. for the kubelet
+  labels:
+    description: '<Warning: Alpha feature> Labels to add when registering the node
+      in the cluster.  Labels must be key=value pairs separated by '',''.'
+  tls.kubelet:
+    description: Certificate and private key for the Kubernetes worker
+    parameters:
+      duration: {}
+      key_length: {}
+    type: {}
+  tls.kubelet-client-ca.certificate:
+    description: CA certificate of the authority granting access to kubelet server
+  tls.kubernetes:
+    description: Certificate and private key for the Kubernetes master
+consumes:
+- name: cloud-provider
+  optional: true
+  type: cloud-provider
+provides:
+- name: kubernetes-workers
+  type: kubernetes-workers
+

@@ -1,0 +1,38 @@
+---
+name: kube-proxy-windows
+
+templates:
+  bin/kube_proxy_ctl.ps1.erb: bin/kube_proxy_ctl.ps1
+  config/kubeconfig.erb: config/kubeconfig
+  config/config.yml.erb: config/config.yml
+  config/ca.pem.erb: config/ca.pem
+
+packages:
+- kubernetes-windows
+
+properties:
+  api-token:
+    description: The password for the kube-proxy user
+  cloud-provider:
+    description: The type of cloud-provider that is being deployed
+  tls.kubernetes:
+    description: Certificate and private key for the Kubernetes master
+  kube-proxy-configuration:
+    description: The Kube-proxy will load its initial configuration from this.
+      Omit this to use the built-in default configuration values.
+      Command-line flags override configuration.
+      This is the recommended way to configure kube-proxy as the command line flags for kube-proxy are being deprecated.
+    example: |
+      kube-proxy-configuration:
+        feature-gates:
+          CPUManager: true
+          DryRun: false
+        cleanup: false
+  k8s-args:
+    description: Pass-through options for Kubernetes runtime arguments. See docs https://kubernetes.io/docs/reference/command-line-tools-reference/kube-proxy/ for reference.
+    example: |
+      k8s-args:
+        feature-gates:
+          CPUManager: true
+          DryRun: false
+        cleanup: false
