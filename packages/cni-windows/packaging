@@ -1,0 +1,7 @@
+. ./exiter.ps1
+
+$ErrorActionPreference = "Stop";
+trap { $host.SetShouldExit(1) }
+
+mkdir ${env:BOSH_INSTALL_TARGET}/bin
+tar -xzf cni/cni-plugins-windows-amd64*.tgz -C ${env:BOSH_INSTALL_TARGET}/bin/

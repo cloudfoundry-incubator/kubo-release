@@ -1,0 +1,6 @@
+---
+name: cni-windows
+
+files:
+- cni/cni-plugins-windows-amd64-c74e0e996.tgz
+- exiter.ps1
