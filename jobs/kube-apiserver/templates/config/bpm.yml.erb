@@ -64,7 +64,7 @@ processes:
   - --v=<%=p('logging-level') %>
   - --authorization-mode=RBAC
   - --runtime-config=api/v1
-  - --client-ca-file=/var/vcap/jobs/kube-apiserver/config/kubernetes.pem
+  - --client-ca-file=/var/vcap/jobs/kube-apiserver/config/kubernetes-ca.pem
   - --proxy-client-cert-file=/var/vcap/jobs/kube-apiserver/config/kubernetes.pem
   - --proxy-client-key-file=/var/vcap/jobs/kube-apiserver/config/kubernetes-key.pem
   - --requestheader-allowed-names=aggregator
