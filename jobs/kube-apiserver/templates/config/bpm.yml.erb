@@ -68,7 +68,7 @@ processes:
   - --proxy-client-cert-file=/var/vcap/jobs/kube-apiserver/config/kubernetes.pem
   - --proxy-client-key-file=/var/vcap/jobs/kube-apiserver/config/kubernetes-key.pem
   - --requestheader-allowed-names=aggregator
-  - --requestheader-client-ca-file=/var/vcap/jobs/kube-apiserver/config/kubernetes.pem
+  - --requestheader-client-ca-file=/var/vcap/jobs/kube-apiserver/config/kubernetes-ca.pem
   - --requestheader-extra-headers-prefix=X-Remote-Extra-
   - --requestheader-group-headers=X-Remote-Group
   - --requestheader-username-headers=X-Remote-User
