@@ -1,10 +1,28 @@
-# Cloud Foundry Container Runtime
+<!-- vscode-markdown-toc -->
+* [Prerequisites](#Prerequisites)
+  * [Hardware Requirements](#HardwareRequirements)
+* [Deploying CFCR](#DeployingCFCR)
+  * [Configuring CFCR](#ConfiguringCFCR)
+  * [BOSH Lite](#BOSHLite)
+* [Accessing the CFCR Cluster with kubectl](#AccessingtheCFCRClusterwithkubectl)
+* [Backup & Restore](#BackupRestore)
+* [Monitoring](#Monitoring)
+* [DNS](#DNS)
+* [Deprecations](#Deprecations)
+  * [Deployment scripts and docs](#Deploymentscriptsanddocs)
+  * [Heapster](#Heapster)
+
+<!-- vscode-markdown-toc-config
+	numbering=true
+	autoSave=true
+	/vscode-markdown-toc-config -->
+<!-- /vscode-markdown-toc --># Cloud Foundry Container Runtime
 A [BOSH](http://bosh.io/) release for [Kubernetes](http://kubernetes.io).  Formerly named **kubo**.
 
 - **Slack**: #cfcr on https://slack.cloudfoundry.org
 - **Pivotal Tracker**: https://www.pivotaltracker.com/n/projects/2093412
 
-## Prerequisites
+##  <a name='Prerequisites'></a>Prerequisites
 - A BOSH Director configured with UAA, Credhub, and [BOSH DNS runtime config](https://raw.githubusercontent.com/cloudfoundry/bosh-deployment/master/runtime-configs/dns.yml). We recommend using [BOSH Bootloader](https://github.com/cloudfoundry/bosh-bootloader) for this.
 - [Latest kubo-deployment tarball](https://github.com/cloudfoundry-incubator/kubo-deployment/releases/latest)
 - Accessing the master:
@@ -22,10 +40,10 @@ A [BOSH](http://bosh.io/) release for [Kubernetes](http://kubernetes.io).  Forme
   
   If using loadbalancers then apply the `vm_extension` called `cfcr-master-loadbalancer` to the cloud-config to add the instances to your loadbalancers. See [BOSH documentation](https://bosh.io/docs/cloud-config/#vm-extensions) for information on how to configure loadbalancers.
 
-#### Hardware Requirements
+####  <a name='HardwareRequirements'></a>Hardware Requirements
 Kubernetes uses etcd as its datastore. The official infrastructure requirements and example configurations for the etcd cluster can be found [here](https://github.com/etcd-io/etcd/blob/master/Documentation/op-guide/hardware.md).
 
-## Deploying CFCR
+##  <a name='DeployingCFCR'></a>Deploying CFCR
 
 1. Upload the [latest Xenial stemcell](https://bosh.io/stemcells/#ubuntu-xenial) to the director.
 
@@ -70,17 +88,17 @@ Kubernetes uses etcd as its datastore. The official infrastructure requirements 
     ```bash
     bosh -d cfcr run-errand smoke-tests
     ```
-### Configuring CFCR
+###  <a name='ConfiguringCFCR'></a>Configuring CFCR
 Please check out our manifest and ops-files in kube-deployment for examples on how to configure kubo-release. Additionally, we have a [doc page](docs/configuring-kubernetes-properties.md) to describe how to configure Kubernetes components for the release.
 
-### BOSH Lite
+###  <a name='BOSHLite'></a>BOSH Lite
 CFCR clusters on BOSH Lite are intended for development. We run the [deploy_cfcr_lite](https://github.com/cloudfoundry-incubator/kubo-deployment/blob/master/bin/deploy_cfcr_lite) script to provision a cluster with the latest stemcell and master of kubo-release.  This requires that the cloned kubo-release repository can be found from `cd ../kubo-release` from within the kubo-deployment directory.
 
 ```
 cd kubo-deployment
 ./bin/deploy_cfcr_lite
 ```
-## Accessing the CFCR Cluster with kubectl
+##  <a name='AccessingtheCFCRClusterwithkubectl'></a>Accessing the CFCR Cluster with kubectl
 
 1. Login to the Credhub Server that stores the cluster's credentials:
 	```
@@ -96,24 +114,34 @@ cd kubo-deployment
 
 	./bin/set_kubeconfig <DIRECTOR_NAME>/cfcr https://[DNS-NAME-OR-LOADBALANCER-ADDRESS]:8443
 	```
-## Backup & Restore
+##  <a name='BackupRestore'></a>Backup & Restore
 We use [BBR](https://github.com/cloudfoundry-incubator/bosh-backup-and-restore) to perform backups and restores of the etcd node within a CFCR cluster, for both single and three master deployments. Our backup currently takes an etcd snapshot without interruptions to the cluster. However, for restore we take both the kube-apiserver and etcd offline to restore the cluster with the specified snapshot. Restore is a destructive operation that will completely overwrite any existing data on the cluster. For a closer look at the bbr scripts, check out:
 - [cfcr-etcd-release](https://github.com/cloudfoundry-incubator/cfcr-etcd-release/tree/master/jobs/bbr-etcd)
 - [kubo-release](https://github.com/cloudfoundry-incubator/kubo-release/tree/master/jobs/bbr-kube-apiserver)
 
 To run the `bbr` cli against a CFCR cluster, follow the steps under "BOSH Deployment" on the BBR [documentation page](https://docs.cloudfoundry.org/bbr/#bosh-deployment).
 
-## Monitoring
+##  <a name='Monitoring'></a>Monitoring
 
 Follow the recommendations in [etcd's documentation](https://github.com/etcd-io/etcd/blob/master/Documentation/metrics.md) for monitoring etcd
 metrics.
 
-## Deprecations
+##  <a name='DNS'></a>DNS
 
-### Deployment scripts and docs
+By default CFCR runs with CoreDNS in preference of Kube-DNS.
+
+Kube-DNS can be removed by running: 
+
+`kubectl delete deployment -n kube-system kube-dns`
+
+If CoreDNS is also deployed the kube-dns service remains, as this is also required by the CoreDNS spec.
+
+##  <a name='Deprecations'></a>Deprecations
+
+###  <a name='Deploymentscriptsanddocs'></a>Deployment scripts and docs
 CFCR had a set of scripts, including `deploy_bosh` and `deploy_k8s`, that were the primary mechanism we supported to deploy BOSH and Kubernetes clusters. We no longer support these and have removed the corresponding documentation from https://docs-cfcr.cfapps.io
 
 The BOSH oriented method documented in this README.md is the supported method to deploy Kubernetes clusters with CFCR.
 
-### Heapster
+###  <a name='Heapster'></a>Heapster
 K8s 1.11 release kicked off the deprecation timeline for the Heapster component, see [here](https://github.com/kubernetes/heapster/blob/master/docs/deprecation.md) for more info. As a result, we're in the process of replacing Heapster with [Metrics Server](https://github.com/kubernetes-incubator/metrics-server) in the upcoming releases of kubo-release.
