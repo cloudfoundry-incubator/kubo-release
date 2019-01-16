@@ -4,6 +4,7 @@ A [BOSH](http://bosh.io/) release for [Kubernetes](http://kubernetes.io).  Forme
 - **Slack**: #cfcr on https://slack.cloudfoundry.org
 - **Pivotal Tracker**: https://www.pivotaltracker.com/n/projects/2093412
 
+# Table of Contents
 <!-- vscode-markdown-toc -->
 * [Prerequisites](#Prerequisites)
   * [Hardware Requirements](#HardwareRequirements)
