@@ -1,3 +1,9 @@
+# Cloud Foundry Container Runtime
+A [BOSH](http://bosh.io/) release for [Kubernetes](http://kubernetes.io).  Formerly named **kubo**.
+
+- **Slack**: #cfcr on https://slack.cloudfoundry.org
+- **Pivotal Tracker**: https://www.pivotaltracker.com/n/projects/2093412
+
 <!-- vscode-markdown-toc -->
 * [Prerequisites](#Prerequisites)
   * [Hardware Requirements](#HardwareRequirements)
@@ -16,11 +22,7 @@
 	numbering=true
 	autoSave=true
 	/vscode-markdown-toc-config -->
-<!-- /vscode-markdown-toc --># Cloud Foundry Container Runtime
-A [BOSH](http://bosh.io/) release for [Kubernetes](http://kubernetes.io).  Formerly named **kubo**.
-
-- **Slack**: #cfcr on https://slack.cloudfoundry.org
-- **Pivotal Tracker**: https://www.pivotaltracker.com/n/projects/2093412
+<!-- /vscode-markdown-toc -->
 
 ##  <a name='Prerequisites'></a>Prerequisites
 - A BOSH Director configured with UAA, Credhub, and [BOSH DNS runtime config](https://raw.githubusercontent.com/cloudfoundry/bosh-deployment/master/runtime-configs/dns.yml). We recommend using [BOSH Bootloader](https://github.com/cloudfoundry/bosh-bootloader) for this.
