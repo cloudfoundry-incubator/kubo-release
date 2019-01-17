@@ -71,11 +71,7 @@ subjects:
 - kind: ServiceAccount
   name: coredns
 - kind: ServiceAccount
-  name: heapster
-- kind: ServiceAccount
   name: metrics-server
-- kind: ServiceAccount
-  name: influxdb
 - kind: ServiceAccount
   name: kube-dns
 - kind: ServiceAccount

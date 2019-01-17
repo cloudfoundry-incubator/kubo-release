@@ -5,17 +5,10 @@ templates:
   bin/run.erb: bin/run
   config/kubeconfig.erb: config/kubeconfig
   config/ca.pem.erb: config/ca.pem
-  config/heapster/ca.pem.erb: config/heapster/ca.pem
-  config/heapster/heapster.crt.erb: config/heapster/heapster.crt
-  config/heapster/heapster.key.erb: config/heapster/heapster.key
-  config/influxdb/influxdb.crt.erb: config/influxdb/influxdb.crt
-  config/influxdb/influxdb.key.erb: config/influxdb/influxdb.key
   config/kubernetes-dashboard/kubernetes-dashboard.crt.erb: config/kubernetes-dashboard/kubernetes-dashboard.crt
   config/kubernetes-dashboard/kubernetes-dashboard.key.erb: config/kubernetes-dashboard/kubernetes-dashboard.key
   specs/addon-spec.yml.erb: specs/addon-spec.yml
   specs/coredns.yml.erb: specs/coredns.yml
-  specs/heapster.yml.erb: specs/heapster.yml
-  specs/influxdb.yml.erb: specs/influxdb.yml
   specs/kube-dns.yml.erb: specs/kube-dns.yml
   specs/kubernetes-dashboard.yml.erb: specs/kubernetes-dashboard.yml
   specs/metrics-server/auth-delegator.yml: specs/metrics-server/auth-delegator.yml
@@ -52,12 +45,8 @@ properties:
     description: "Certificate authority, certificate, and private key for the Kubernetes master"
   tls.kubernetes-dashboard:
     description: "Certificate authority, certificate, and private key for the Kubernetes dashboard"
-  tls.heapster:
-    description: "Certificate authority, certificate, and private key for Heapster"
   tls.metrics-server:
     description: "Certificate authority, certificate, and private key for Metrics Server"
-  tls.influxdb:
-    description: "Certificate and private key for InfluxDB"
 
 consumes:
 - name: kube-apiserver
