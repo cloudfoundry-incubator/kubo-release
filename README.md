@@ -148,3 +148,7 @@ The BOSH oriented method documented in this README.md is the supported method to
 
 ###  <a name='Heapster'></a>Heapster
 K8s 1.11 release kicked off the deprecation timeline for the Heapster component, see [here](https://github.com/kubernetes/heapster/blob/master/docs/deprecation.md) for more info. As a result, we're in the process of replacing Heapster with [Metrics Server](https://github.com/kubernetes-incubator/metrics-server) in the upcoming releases of kubo-release.
+
+Heapster can be removed by running: 
+
+`kubectl delete deployment -n kube-system heapster`

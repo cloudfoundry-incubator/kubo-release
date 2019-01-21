@@ -55,15 +55,6 @@ rules:
   resources: ["configmaps"]
   resourceNames: ["kubernetes-dashboard-settings"]
   verbs: ["get", "update"]
-  # Allow Dashboard to get metrics from heapster.
-- apiGroups: [""]
-  resources: ["services"]
-  resourceNames: ["heapster"]
-  verbs: ["proxy"]
-- apiGroups: [""]
-  resources: ["services/proxy"]
-  resourceNames: ["heapster", "http:heapster:", "https:heapster:"]
-  verbs: ["get"]
 
 ---
 apiVersion: rbac.authorization.k8s.io/v1
@@ -94,9 +85,6 @@ metadata:
   labels:
     k8s-app: kubernetes-dashboard
     addonmanager.kubernetes.io/mode: EnsureExists
-data:
-  ca.pem: |
-<%= p("tls.heapster.ca").lines.map! { |line| line.prepend("    ") }.join -%>
 ---
 # ------------------- Dashboard Deployment ------------------- #
 
@@ -138,7 +126,6 @@ spec:
         - containerPort: 8443
           protocol: TCP
         args:
-          - --heapster-host=https://heapster.kube-system.svc.cluster.local:8443
           - --default-cert-dir=/certs
           - --tls-cert-file=kubernetes-dashboard-cert
           - --tls-key-file=kubernetes-dashboard-key
@@ -149,9 +136,6 @@ spec:
           name: tmp-volume
         - mountPath: /certs
           name: kubernetes-dashboard-certs
-          readOnly: true
-        - mountPath: /etc/ssl/certs/
-          name: heapster-ca
           readOnly: true
         livenessProbe:
           httpGet:
@@ -166,12 +150,6 @@ spec:
           secretName: kubernetes-dashboard-certs
       - name: tmp-volume
         emptyDir: {}
-      - name: heapster-ca
-        configMap:
-          name: kubernetes-dashboard-settings
-          items:
-          - key: ca.pem
-            path: ca-certificates.crt
       serviceAccountName: kubernetes-dashboard
       tolerations:
       - key: "CriticalAddonsOnly"

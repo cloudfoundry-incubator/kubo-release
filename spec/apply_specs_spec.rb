@@ -40,7 +40,7 @@ describe 'apply-specs' do
   let(:link_spec) { {} }
   let(:default_properties) do
     {
-      'addons' => ["kube-dns", "metrics-server", "heapster", "kubernetes-dashboard"],
+      'addons' => ["kube-dns", "metrics-server", "kubernetes-dashboard"],
       'admin-password' => '1234'
     }
   end
@@ -59,7 +59,7 @@ describe 'apply-specs' do
   context 'when errand run timeout is re-configured' do
     let(:default_properties) do
       {
-        'addons' => ["kube-dns", "metrics-server", "heapster", "kubernetes-dashboard"],
+        'addons' => ["kube-dns", "metrics-server", "kubernetes-dashboard"],
         'admin-password' => '1234',
         'timeout-sec' => '1122'
       }
@@ -72,34 +72,6 @@ describe 'apply-specs' do
 
   it 'does not apply the standard storage class by default' do
     expect(rendered_deploy_specs).to_not include('apply_spec "storage-class-gce.yml"')
-  end
-
-  context 'Mutiple CAs' do
-    let(:manifest_properties) do
-      {
-        'tls' => {
-          'kubernetes' => {
-            'ca' => 'All scabbards desire scurvy, misty krakens.'
-          },
-          'heapster' => {
-            'ca' => 'Heapster CA'
-          }
-        },
-        'addons' => ["kube-dns", "metrics-server", "heapster", "kubernetes-dashboard"],
-        'admin-username' => 'meatloaf',
-        'admin-password' => 'madagascar-TEST',
-        'port' => '2034'
-      }
-    end
-
-    let(:rendered_dashboard_spec) do
-      compiled_template('apply-specs', 'specs/kubernetes-dashboard.yml', manifest_properties)
-    end
-
-    it 'uses the heapster CA in dashboard ConfigMap' do
-      expect(rendered_dashboard_spec).to include('Heapster CA')
-    end
-
   end
 
   context 'on GCE' do
@@ -158,13 +130,20 @@ describe 'apply-specs' do
   context 'when addons are configured' do
     let(:default_properties) do
       {
-        'addons' => ['heapster']
+        'addons' => ['metrics-server']
       }
     end
 
-    it 'deploys only those specified' do
+    it 'deploys only specified addons' do
       rendered = rendered_deploy_specs
-      expect(rendered).to_not match(/apply_spec (?!"heapster.yml"|"influxdb.yml")/)
+      expect(rendered).to match(/apply_spec "metrics-server\/"/)
+    end
+
+    it 'does not deploy unspecified addons' do
+      rendered = rendered_deploy_specs
+      expect(rendered).to_not match(/apply_spec "coredns.yml"/)
+      expect(rendered).to_not match(/apply_spec "kubernetes-dashboard.yml"/)
+      expect(rendered).to_not match(/apply_spec "i-should-not-be-here.yml"/)
     end
   end
 
