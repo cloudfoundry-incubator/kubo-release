@@ -78,30 +78,30 @@ jq-linux64-1.5:
   size: 3027945
   object_id: 41eb1cd1-0377-4e08-5602-51e0af8b9b52
   sha: d8e36831c3c94bb58be34dd544f44a6c6cb88568
-kubernetes-1.11.6/kube-apiserver:
-  size: 185582521
-  object_id: 52cfa7bb-b2fe-48d0-6971-1d2f75d5efb9
-  sha: de92e5d5108e14f7d569351cf3c619f544dad399
-kubernetes-1.11.6/kube-controller-manager:
-  size: 154177944
-  object_id: ad51b586-1ac1-40b0-552d-3506cf328c5d
-  sha: 26c75873d4e500e8caa4e789113b4dc941c6a416
-kubernetes-1.11.6/kube-proxy:
-  size: 51981723
-  object_id: 9140ceaa-1c23-40c5-6e87-f7dd0cd0297f
-  sha: 8b81631d5489448ab98d2d476bf3eca3cf19d3a0
-kubernetes-1.11.6/kube-scheduler:
-  size: 55660057
-  object_id: b27e5c38-e3ed-4ec3-7c1a-f33e32154260
-  sha: a9e96ca65fee4136a1d81d1bd5c808b67836358d
-kubernetes-1.11.6/kubectl:
-  size: 55444612
-  object_id: 817500d5-7f57-49e3-4b0e-e486012502d2
-  sha: c3f7fbab5ba39e3ec20b32f0e7bcad6cc0704792
-kubernetes-1.11.6/kubelet:
-  size: 163020960
-  object_id: 446dfadf-816c-44fc-5e27-f967018dc56e
-  sha: a006b4680640e5c88742e22b904623a77257f416
+kubernetes-1.11.7/kube-apiserver:
+  size: 185603554
+  object_id: 0891e6d1-9de9-45be-769c-90efdc621f5d
+  sha: f1572e3a51ae86b27cf221ee7d2b72caa90328b7
+kubernetes-1.11.7/kube-controller-manager:
+  size: 154186928
+  object_id: d7d3182f-44c2-4bb6-6cd1-3e5570fee413
+  sha: 6fa21361265d9b7c7b8420f593f615db3b2a320b
+kubernetes-1.11.7/kube-proxy:
+  size: 51994593
+  object_id: 99678b00-5f52-4062-4444-7e856db8fe8e
+  sha: 41b6215cf6e40c6e482272ff29cdceea76a700a0
+kubernetes-1.11.7/kube-scheduler:
+  size: 55686438
+  object_id: 920a5a1c-7faf-49c7-5e73-a7d39b9a6efb
+  sha: 4adf5d29c31feae4818feacb1b964786d58ebceb
+kubernetes-1.11.7/kubectl:
+  size: 55448559
+  object_id: 1d8f1b05-a5d5-42ab-5872-96da8bbc116e
+  sha: 142b72418855b985b8a89e81f17df9d5fb88f1a9
+kubernetes-1.11.7/kubelet:
+  size: 163040216
+  object_id: 48958968-14f1-4514-5241-17c3dec56fce
+  sha: be55c02936004fb54487e65a18650d9ec17585cb
 nfs-debs/keyutils_1.5.9-8ubuntu1_amd64.deb:
   size: 47054
   object_id: 722ce869-6b1c-4cb2-7df1-38c57ed14261
