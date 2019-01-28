@@ -38,10 +38,10 @@ container-images/k8s.gcr.io_k8s-dns-kube-dns-amd64:1.14.10.tgz:
   size: 13175585
   object_id: 6d36c105-d8f0-45df-61ea-1032c875f77a
   sha: b7b2f482b0c7d92fd8a3ec875af37ae17c1f6bda
-container-images/k8s.gcr.io_k8s-dns-sidecar-amd64:1.14.10.tgz:
-  size: 11294008
-  object_id: bbb7dfd6-6ddb-473d-5b78-d75c1fc709a9
-  sha: 2197e413d8f22419e01924485c99c0d744a140e7
+container-images/k8s.gcr.io_k8s-dns-sidecar-amd64:1.15.1.tgz:
+  size: 16462404
+  object_id: 69e66a44-4042-4feb-71af-15d537e71937
+  sha: a7b755cfb95f6147a934504a9f50a38e738d1429
 container-images/k8s.gcr.io_kubernetes-dashboard-amd64:v1.10.1.tgz:
   size: 44852477
   object_id: 1d8fdcd7-fe1e-431d-5d90-2032b97d8ad0
