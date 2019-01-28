@@ -12,6 +12,7 @@ metadata:
   namespace: kube-system
   labels:
     k8s-app: metrics-server
+    version: v0.3.1
 spec:
   selector:
     matchLabels:
@@ -32,7 +33,7 @@ spec:
            secretName: metrics-server-certs
       containers:
       - name: metrics-server
-        image: gcr.io/google_containers/metrics-server-amd64:v0.3.1
+        image: k8s.gcr.io/metrics-server-amd64:v0.3.1
         imagePullPolicy: IfNotPresent
         command:
         - /metrics-server
@@ -42,9 +43,15 @@ spec:
         - --requestheader-client-ca-file=/var/run/kubernetes/requestheader-client-ca.crt
         - --tls-cert-file=/var/run/kubernetes/client.crt
         - --tls-private-key-file=/var/run/kubernetes/client.key
+        ports:
+        - containerPort: 443
+          name: https
+          protocol: TCP
         volumeMounts:
         - name: tmp-dir
           mountPath: /tmp
         - name: metrics-server-secrets
           mountPath: /var/run/kubernetes
-
+      tolerations:
+        - key: "CriticalAddonsOnly"
+          operator: "Exists"

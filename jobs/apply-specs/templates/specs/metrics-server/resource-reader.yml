@@ -15,13 +15,6 @@ rules:
   - list
   - watch
 - apiGroups:
-  - ""
-  resources:
-  - nodes/stats
-  verbs:
-  - create
-  - get
-- apiGroups:
   - "extensions"
   resources:
   - deployments
