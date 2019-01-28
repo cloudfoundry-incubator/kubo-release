@@ -136,7 +136,7 @@ spec:
         - name: kube-dns-config
           mountPath: /kube-dns-config
       - name: dnsmasq
-        image: k8s.gcr.io/k8s-dns-dnsmasq-nanny-amd64:1.14.10
+        image: k8s.gcr.io/k8s-dns-dnsmasq-nanny-amd64:1.15.1
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:

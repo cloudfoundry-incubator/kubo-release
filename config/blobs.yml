@@ -30,10 +30,10 @@ container-images/coredns_coredns:1.3.1.tgz:
   size: 12119185
   object_id: 063dda42-b382-45ef-6121-ad5f05dbaa91
   sha: 9a137c153a37d51377fa78199346b4e0551a2799
-container-images/k8s.gcr.io_k8s-dns-dnsmasq-nanny-amd64:1.14.10.tgz:
-  size: 10980438
-  object_id: 7eb4cfb4-d834-4e86-5660-b59c5aa5144c
-  sha: c87f66f8332c5cf5d78441458ef323c2599c0b96
+container-images/k8s.gcr.io_k8s-dns-dnsmasq-nanny-amd64:1.15.1.tgz:
+  size: 15796383
+  object_id: b62722f9-fea9-414c-717c-b3edba3d579a
+  sha: c16138ade988d101e90ed06f0ba1edac848f79b0
 container-images/k8s.gcr.io_k8s-dns-kube-dns-amd64:1.15.1.tgz:
   size: 19286895
   object_id: 5703922e-d25f-47f7-6513-072c2fbc9c4d
