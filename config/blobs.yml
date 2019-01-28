@@ -34,10 +34,10 @@ container-images/k8s.gcr.io_k8s-dns-dnsmasq-nanny-amd64:1.14.10.tgz:
   size: 10980438
   object_id: 7eb4cfb4-d834-4e86-5660-b59c5aa5144c
   sha: c87f66f8332c5cf5d78441458ef323c2599c0b96
-container-images/k8s.gcr.io_k8s-dns-kube-dns-amd64:1.14.10.tgz:
-  size: 13175585
-  object_id: 6d36c105-d8f0-45df-61ea-1032c875f77a
-  sha: b7b2f482b0c7d92fd8a3ec875af37ae17c1f6bda
+container-images/k8s.gcr.io_k8s-dns-kube-dns-amd64:1.15.1.tgz:
+  size: 19286895
+  object_id: 5703922e-d25f-47f7-6513-072c2fbc9c4d
+  sha: 195d9996bafb1b1035cfc83ded390c2cea4a68b7
 container-images/k8s.gcr.io_k8s-dns-sidecar-amd64:1.15.1.tgz:
   size: 16462404
   object_id: 69e66a44-4042-4feb-71af-15d537e71937

@@ -84,7 +84,7 @@ spec:
           optional: true
       containers:
       - name: kubedns
-        image: k8s.gcr.io/k8s-dns-kube-dns-amd64:1.14.10
+        image: k8s.gcr.io/k8s-dns-kube-dns-amd64:1.15.1
         imagePullPolicy: IfNotPresent
         resources:
           # TODO: Set memory limits when we've profiled the container for large
