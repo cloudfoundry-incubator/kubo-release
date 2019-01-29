@@ -53,7 +53,7 @@ metadata:
   namespace: kube-system
 data:
   Corefile: |
-    .:10053 {
+    .:53 {
         errors
         health
         kubernetes cluster.local in-addr.arpa ip6.arpa {
@@ -116,10 +116,10 @@ spec:
           mountPath: /etc/coredns
           readOnly: true
         ports:
-        - containerPort: 10053
+        - containerPort: 53
           name: dns
           protocol: UDP
-        - containerPort: 10053
+        - containerPort: 53
           name: dns-tcp
           protocol: TCP
         - containerPort: 9153
