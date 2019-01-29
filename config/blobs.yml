@@ -62,10 +62,10 @@ etcdctl-3.0.7:
   size: 18427584
   object_id: 32221476-5c3d-4ec7-5869-44c989cc3077
   sha: 11f0462cc86bf85332399a2fa584d5bb46d0cb2a
-flannel-v0.10.0-linux-amd64.tar.gz:
-  size: 9706487
-  object_id: 36a8e66a-0b6c-4ca2-5f27-c277a7db90c5
-  sha: 9d19a56847d6aad207671a349eddd85de87ba560
+flannel-v0.11.0-linux-amd64.tar.gz:
+  size: 9565743
+  object_id: 83064ebe-b45d-4d41-694a-b1e61a781250
+  sha: 3024034b2202d5940acf5353037161ea1770a9c5
 ipset/ipset_6.20.1-1_amd64.deb:
   size: 34156
   object_id: 5dfcce8f-366e-49f0-59e6-9e2d48178750
