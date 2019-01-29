@@ -7,6 +7,13 @@ rules:
 - apiGroups:
   - ""
   resources:
+  - nodes/stats
+  verbs:
+  - create
+  - get
+- apiGroups:
+  - ""
+  resources:
   - pods
   - nodes
   - namespaces
