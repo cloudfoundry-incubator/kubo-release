@@ -39,6 +39,11 @@ metadata:
   name: kubernetes-dashboard-minimal
   namespace: kube-system
 rules:
+  # Allow Dashboard to create 'kubernetes-dashboard-key-holder' secret. Added separately from Addons Spec
+- apiGroups: [""]
+  resources: ["secrets"]
+  verbs: ["create"]
+
   # Allow Dashboard to get, update and delete Dashboard exclusive secrets.
 - apiGroups: [""]
   resources: ["secrets"]
