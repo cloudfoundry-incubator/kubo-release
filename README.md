@@ -10,6 +10,7 @@ A [BOSH](http://bosh.io/) release for [Kubernetes](http://kubernetes.io).  Forme
   * [Hardware Requirements](#HardwareRequirements)
 * [Deploying CFCR](#DeployingCFCR)
   * [Configuring CFCR](#ConfiguringCFCR)
+  * [Using Proxy with CFCR](#ProxyWithCFCR)
   * [BOSH Lite](#BOSHLite)
 * [Accessing the CFCR Cluster with kubectl](#AccessingtheCFCRClusterwithkubectl)
 * [Backup & Restore](#BackupRestore)
@@ -92,7 +93,15 @@ Kubernetes uses etcd as its datastore. The official infrastructure requirements 
     bosh -d cfcr run-errand smoke-tests
     ```
 ###  <a name='ConfiguringCFCR'></a>Configuring CFCR
-Please check out our manifest and ops-files in kube-deployment for examples on how to configure kubo-release. Additionally, we have a [doc page](docs/configuring-kubernetes-properties.md) to describe how to configure Kubernetes components for the release.
+Please check out our manifest and ops-files in kube-deployment for examples on how to configure kubo-release.
+Additionally, we have a [doc page](docs/configuring-kubernetes-properties.md) to describe how to configure Kubernetes components for the release.
+
+CFCR can be deployed with Pod Security Policies. Check for more details in [the
+doc](docs/pod-security-policy-walkthrough.md)
+
+####  <a name='ProxyWithCFCR'></a>Configuring Proxy for CFCR
+CFCR allows you to configure proxy for all components. Check [recommendations
+for no proxy settings](docs/using-proxy.md) first.
 
 ###  <a name='BOSHLite'></a>BOSH Lite
 CFCR clusters on BOSH Lite are intended for development. We run the [deploy_cfcr_lite](https://github.com/cloudfoundry-incubator/kubo-deployment/blob/master/bin/deploy_cfcr_lite) script to provision a cluster with the latest stemcell and master of kubo-release.  This requires that the cloned kubo-release repository can be found from `cd ../kubo-release` from within the kubo-deployment directory.
