@@ -142,11 +142,11 @@ metrics.
 
 By default CFCR runs with CoreDNS in preference of Kube-DNS.
 
-Kube-DNS can be removed by running: 
+If you are migrating from an earlier version of CFCR, Kube-DNS can be removed by running: 
 
 `kubectl delete deployment -n kube-system kube-dns`
 
-If CoreDNS is also deployed the kube-dns service remains, as this is also required by the CoreDNS spec.
+You may notice that a `kube-dns` service remains, this is also required by the CoreDNS spec.
 
 ##  <a name='Deprecations'></a>Deprecations
 

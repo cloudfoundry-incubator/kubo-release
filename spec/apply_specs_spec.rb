@@ -40,7 +40,7 @@ describe 'apply-specs' do
   let(:link_spec) { {} }
   let(:default_properties) do
     {
-      'addons' => ["kube-dns", "metrics-server", "kubernetes-dashboard"],
+      'addons' => ["metrics-server", "kubernetes-dashboard"],
       'admin-password' => '1234'
     }
   end
@@ -59,7 +59,7 @@ describe 'apply-specs' do
   context 'when errand run timeout is re-configured' do
     let(:default_properties) do
       {
-        'addons' => ["kube-dns", "metrics-server", "kubernetes-dashboard"],
+        'addons' => ["metrics-server", "kubernetes-dashboard"],
         'admin-password' => '1234',
         'timeout-sec' => '1122'
       }
