@@ -128,25 +128,14 @@ function load_base_images {
   if (-not $?) {
     throw "docker is not available"
   }
-  docker pull mcr.microsoft.com/windows/nanoserver:1803
-  docker pull mcr.microsoft.com/windows/servercore:1803
 
-  if (!(docker images mcr.microsoft.com/windows/nanoserver:latest -q))
-  {
-    docker tag (docker images mcr.microsoft.com/windows/nanoserver -q) mcr.microsoft.com/windows/nanoserver
-  }
+  docker pull mcr.microsoft.com/windows/nanoserver:1809
+  docker pull mcr.microsoft.com/windows/servercore:ltsc2019
 
-  if (!(docker images mcr.microsoft.com/windows/servercore:latest -q))
-  {
-    docker tag (docker images mcr.microsoft.com/windows/servercore -q) mcr.microsoft.com/windows/servercore
-  }
+  docker tag (docker images mcr.microsoft.com/windows/nanoserver:1809 -q) mcr.microsoft.com/windows/nanoserver
+  docker tag (docker images mcr.microsoft.com/windows/servercore:ltsc2019 -q) mcr.microsoft.com/windows/servercore
 
-  $infraPodImage=docker images kubeletwin/pause -q
-  if (!$infraPodImage)
-  {
-    cd /var/vcap/jobs/kubelet-windows/config
-    docker build -t kubeletwin/pause .
-  }
+  docker build -t kubeletwin/pause /var/vcap/jobs/kubelet-windows/config
 }
 
 function main {
