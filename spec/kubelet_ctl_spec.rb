@@ -22,6 +22,18 @@ describe 'kubelet_ctl' do
     expect(rendered_template).to include(',bosh.id=fake-bosh-id')
   end
 
+  it 'labels the kubelet with custom labels' do
+    manifest_properties = {
+      'k8s-args' => {
+        'node-labels' => 'foo=bar,k8s.node=custom'
+      }
+    }
+    rendered_kubelet_ctl = compiled_template('kubelet', 'bin/kubelet_ctl', manifest_properties, {}, {}, 'z1', 'fake-bosh-ip', 'fake-bosh-id')
+    expect(rendered_kubelet_ctl).to include(',bosh.id=fake-bosh-id')
+    expect(rendered_kubelet_ctl).to include(',k8s.node=custom')
+    expect(rendered_kubelet_ctl).to include('foo=bar')
+  end
+
   it 'has no http proxy when no proxy is defined' do
     rendered_kubelet_ctl = compiled_template(
       'kubelet',

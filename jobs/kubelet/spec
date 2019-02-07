@@ -47,9 +47,6 @@ properties:
         docker-only: null
   no_proxy:
     description: no_proxy env var for cloud provider interactions, i.e. for the kubelet
-  labels:
-    description: '<Warning: Alpha feature> Labels to add when registering the node
-      in the cluster.  Labels must be key=value pairs separated by '',''.'
   tls.kubelet:
     description: Certificate and private key for the Kubernetes worker
     parameters:
