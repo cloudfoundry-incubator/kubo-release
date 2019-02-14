@@ -74,13 +74,7 @@ EOL
     --ca-file /var/vcap/jobs/flanneld/config/etcd-ca.crt \
     set /coreos.com/network/config '{"Network":"<%= p('pod-network-cidr') %>","Backend":{"Type":"vxlan"}}'
 
-  flanneld -etcd-endpoints=<%= etcd_endpoints %> \
-    --ip-masq \
-    --etcd-certfile=/var/vcap/jobs/flanneld/config/etcd-client.crt \
-    --etcd-keyfile=/var/vcap/jobs/flanneld/config/etcd-client.key \
-    --etcd-cafile=/var/vcap/jobs/flanneld/config/etcd-ca.crt \
-    1>> $LOG_DIR/flanneld.stdout.log \
-    2>> $LOG_DIR/flanneld.stderr.log
+  while true; do sleep 10000; done
 }
 
 stop_flanneld() {
