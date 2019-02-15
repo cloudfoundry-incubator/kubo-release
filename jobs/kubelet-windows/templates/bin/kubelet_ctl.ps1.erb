@@ -70,6 +70,7 @@ function start_kubelet {
       end
     end
   -%>
+  mkdir -force C:\tmp # workaround for conformance tests
 
   /var/vcap/packages/kubernetes-windows/bin/kubelet `
   <%-
@@ -138,12 +139,20 @@ function load_base_images {
   docker build -t kubeletwin/pause /var/vcap/jobs/kubelet-windows/config
 }
 
+function set_acls {
+  $ar = New-Object System.Security.AccessControl.FileSystemAccessRule("BUILTIN\Users", "ReadAndExecute,CreateFiles,AppendData", "ContainerInherit, ObjectInherit", "None", "Allow")
+  $acl = Get-Acl C:\var
+  $acl.SetAccessRule($ar)
+  Set-Acl C:\var $acl
+}
+
 function main {
   delete_stale_drained_node
   check_for_networking
   ensure_docker_is_running
   ensure_kubeproxy_is_running
   load_base_images
+  set_acls
   start_kubelet
 }
 
