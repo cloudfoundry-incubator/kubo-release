@@ -116,13 +116,6 @@ function ensure_kubeproxy_is_running {
   }
 }
 
-function ensure_docker_is_running {
-  curl.exe --fail http://localhost:10256/healthz
-  if (-not $?) {
-    throw "kube-proxy is not available"
-  }
-}
-
 function load_base_images {
   # Temporary workaround until we bring our own images
   docker version
@@ -149,8 +142,7 @@ function set_acls {
 function main {
   delete_stale_drained_node
   check_for_networking
-  ensure_docker_is_running
-  ensure_kubeproxy_is_running
+  #ensure_kubeproxy_is_running
   load_base_images
   set_acls
   start_kubelet
