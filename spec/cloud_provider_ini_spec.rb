@@ -24,10 +24,20 @@ describe 'cloud-provider-ini' do
 
     it 'renders the cloud-config options into the ini format' do
       expect(rendered_template).to include('[Global]')
-      expect(rendered_template).to include('foo=bar')
-      expect(rendered_template).to include('thing=another')
+      expect(rendered_template).to include('foo="bar"')
+      expect(rendered_template).to include('thing="another"')
       expect(rendered_template).to include('[Random]')
-      expect(rendered_template).to include('junk=food')
+      expect(rendered_template).to include('junk="food"')
+    end
+  end
+
+  context 'strings are quoted and escaped where necessary in INI' do
+    let(:properties) { { 'cloud-provider' => { 'type' => 'garbage' }, 'cloud-config' => cloud_config } }
+    let(:cloud_config) { { 'Global' => { 'foo' => 'bar#123\\"' } } }
+
+    it 'quotes the value and escapes quotation marks and backslashes in the string' do
+      expect(rendered_template).to include('foo="bar#123\\\\\""')
+      puts rendered_template
     end
   end
 
@@ -48,5 +58,4 @@ describe 'cloud-provider-ini' do
       expect { YAML::parse(rendered_template) }.not_to raise_error()
     end
   end
-
 end
