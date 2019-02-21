@@ -1,4 +1,12 @@
 <%
+  def escape(value)
+    if value.kind_of? String
+      return value.gsub("\\", "\\\\\\").gsub("\"", "\\\"")
+    else
+      value
+    end
+  end
+
   cloud_config=""
 
   if_link('cloud-provider') do |cloud_provider|
@@ -9,7 +17,7 @@
         cloud_config += "[#{header}]\n"
         properties.each do |property, value|
           raise TypeError, "Invalid value of type #{value.class} for property \"#{property}\"" if value.is_a? Enumerable
-          cloud_config += "#{property}=#{value}\n"
+          cloud_config += "#{property}=\"#{escape(value)}\"\n"
         end
       end
     end
