@@ -37,7 +37,6 @@ describe 'cloud-provider-ini' do
 
     it 'quotes the value and escapes quotation marks and backslashes in the string' do
       expect(rendered_template).to include('foo="bar#123\\\\\""')
-      puts rendered_template
     end
   end
 
