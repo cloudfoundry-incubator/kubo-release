@@ -33,7 +33,14 @@ DATA_DIR=/var/vcap/store/kubernetes
   if iaas=="vsphere"
     labels << "failure-domain.beta.kubernetes.io/zone=#{spec.az}"
   end
-  labels = labels.join(',')
+
+  if_p('k8s-args') do |args|
+    custom_labels = args.fetch('node-labels', "").split(",")
+    labels = custom_labels + labels
+    args.delete('node-labels')
+  end
+
+  labels = labels.join(",")
 %>
 
 # shellcheck disable=SC1091
@@ -101,19 +108,11 @@ start_kubelet() {
   kubelet \
   <%-
     if_p('k8s-args') do |args|
-      node_labels = args.select { |f,_| f == 'node-labels' }
-      if node_labels.empty?
-        args['node-labels'] = labels
-      else
-        node_labels = "#{node_labels['node-labels']},#{labels}"
-      end
       args.each do |flag, value|
         valueString = ""
 
         if value.nil?
           # Do nothing to supports args-less flags (--example)
-        elsif flag == 'node-labels'
-          valueString = "=#{node_labels}" # << labels
         elsif value.is_a? Array
           valueString = "=#{value.join(",")}"
         elsif value.is_a? Hash
@@ -125,15 +124,12 @@ start_kubelet() {
     <%= "--#{flag}#{valueString}" %> \
   <%-
       end
-  end.else do
-  -%>
-    <%= "--node-labels=#{labels}" %> \
-  <%-
-  end
+    end
   -%>
     <% if include_config -%>--cloud-config=${cloud_config}<% end %> \
     <% if !iaas.nil? -%>--cloud-provider=${cloud_provider}<% end %> \
     --hostname-override=$(get_hostname_override) \
+    --node-labels=<%= labels %> \
     --config="/var/vcap/jobs/kubelet/config/kubeletconfig.yml" \
   1>> $LOG_DIR/kubelet.stdout.log \
   2>> $LOG_DIR/kubelet.stderr.log
