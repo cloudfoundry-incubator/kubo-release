@@ -78,30 +78,30 @@ jq-linux64-1.5:
   size: 3027945
   object_id: 41eb1cd1-0377-4e08-5602-51e0af8b9b52
   sha: d8e36831c3c94bb58be34dd544f44a6c6cb88568
-kubernetes-1.11.7/kube-apiserver:
-  size: 185603554
-  object_id: 0891e6d1-9de9-45be-769c-90efdc621f5d
-  sha: f1572e3a51ae86b27cf221ee7d2b72caa90328b7
-kubernetes-1.11.7/kube-controller-manager:
-  size: 154186928
-  object_id: d7d3182f-44c2-4bb6-6cd1-3e5570fee413
-  sha: 6fa21361265d9b7c7b8420f593f615db3b2a320b
-kubernetes-1.11.7/kube-proxy:
+kubernetes-1.11.8/kube-apiserver:
+  size: 185612758
+  object_id: 4346e1e5-c4cd-431c-5c37-657c3e5c528b
+  sha: 6102f17d9393f35e88a014d02cb28307370cb203
+kubernetes-1.11.8/kube-controller-manager:
+  size: 154191182
+  object_id: d6a1a316-9a6d-45db-797b-15e713bd10c2
+  sha: dd969735063d54208a32a225cc0247bf27a00e00
+kubernetes-1.11.8/kube-proxy:
   size: 51994593
-  object_id: 99678b00-5f52-4062-4444-7e856db8fe8e
-  sha: 41b6215cf6e40c6e482272ff29cdceea76a700a0
-kubernetes-1.11.7/kube-scheduler:
-  size: 55686438
-  object_id: 920a5a1c-7faf-49c7-5e73-a7d39b9a6efb
-  sha: 4adf5d29c31feae4818feacb1b964786d58ebceb
-kubernetes-1.11.7/kubectl:
-  size: 55448559
-  object_id: 1d8f1b05-a5d5-42ab-5872-96da8bbc116e
-  sha: 142b72418855b985b8a89e81f17df9d5fb88f1a9
-kubernetes-1.11.7/kubelet:
-  size: 163040216
-  object_id: 48958968-14f1-4514-5241-17c3dec56fce
-  sha: be55c02936004fb54487e65a18650d9ec17585cb
+  object_id: 368fbdad-581b-4d23-4f95-c5d1b4a471e2
+  sha: 8740e0d557df9dd81a33c2b200fd564cb7a29704
+kubernetes-1.11.8/kube-scheduler:
+  size: 55687127
+  object_id: 743139fe-5d00-4cfa-5b9c-937ed377adc5
+  sha: 265a59a6e43df58a0d48c795bb59c25ebb96cc78
+kubernetes-1.11.8/kubectl:
+  size: 55449085
+  object_id: 29c12923-8111-48ff-7ba0-6ee967e86d33
+  sha: 58695010a4af0a59c9bb8124c706e411fa5488b4
+kubernetes-1.11.8/kubelet:
+  size: 163040408
+  object_id: ab839a7b-28bb-416f-638a-08e3d07d5898
+  sha: e0b7ecb1f48d05417559c19182c073a1622252e3
 nfs-debs/keyutils_1.5.9-8ubuntu1_amd64.deb:
   size: 47054
   object_id: 722ce869-6b1c-4cb2-7df1-38c57ed14261
