@@ -11,3 +11,7 @@
 %>
 <% require 'yaml' %><%= p('kube-proxy-configuration').to_yaml %>
 hostnameOverride: <%= hostname %>
+<% if link('flanneld-windows').p('backend-type') == "win-overlay" %>
+featureGates:
+  WinOverlay: true
+<% end %>

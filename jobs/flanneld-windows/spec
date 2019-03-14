@@ -3,6 +3,7 @@ name: flanneld-windows
 
 templates:
   bin/flanneld_ctl.ps1.erb: bin/flanneld_ctl.ps1
+  bin/hns.psm1: bin/hns.psm1
   config/etcd-ca.crt.erb: config/etcd-ca.crt
   config/etcd-client.crt.erb: config/etcd-client.crt
   config/etcd-client.key.erb: config/etcd-client.key

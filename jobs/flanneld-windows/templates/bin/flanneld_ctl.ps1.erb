@@ -10,23 +10,23 @@ trap { $host.SetShouldExit(1) }
     end
   end
 -%>
-<%-
-  def get_network_name
-    if p("backend-type") == "win-overlay"
-      "vxlan0"
-    else
-      "cbr0"
-    end
-  end
--%>
+$networkType = "<%= p("backend-type") %>"
+
+function get_network_name {
+  if ($networkType -eq "win-overlay") {
+    return "flannel.4096"
+  } else {
+    return "cbr0"
+  }
+}
 
 function start_flanneld {
   <% etcd_endpoints = link('etcd').instances.map { |server| get_url(server, 2379) }.join(",") %>
 
   mkdir -force /etc/cni/net.d
-  $confFile= '
+  $confFile= @"
 {
-  "name": "<%= get_network_name %>",
+  "name": "$(get_network_name)",
   "plugins": [
     {
       "type": "flannel",
@@ -71,9 +71,17 @@ function start_flanneld {
     }
   ]
 }
-'
+"@
   Set-Content -Path /etc/cni/net.d/50-flannel.conflist -Value $confFile
 
+  if (!(Get-HnsNetwork | ? Name -Eq "External")) {
+    ipmo /var/vcap/jobs/flanneld-windows/bin/hns.psm1
+    if ($networkType -eq "win-overlay") {
+      New-HNSNetwork -Type "Overlay" -AddressPrefix "192.168.255.0/30" -Gateway "192.168.255.1" -Name "External" -SubnetPolicies @(@{Type = "VSID"; VSID = 9999; })  -Verbose
+    } else {
+      New-HNSNetwork -Type "L2Bridge" -AddressPrefix "192.168.255.0/30" -Gateway "192.168.255.1" -Name "External" -Verbose
+    }
+  }
 
   /var/vcap/packages/flanneld-windows/flanneld.exe `
     --etcd-endpoints=<%= etcd_endpoints %> `

@@ -20,6 +20,12 @@ properties:
   backend-type:
     description: The network backend to use
     default: "vxlan"
+  vni:
+    description: VXLAN Identifier (VNI) to be used
+    default: 1
+  port:
+    description: UDP port to use for sending encapsulated packets
+    default: 8472
 
 consumes:
 - name: etcd

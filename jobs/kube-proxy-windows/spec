@@ -36,3 +36,7 @@ properties:
           CPUManager: true
           DryRun: false
         cleanup: false
+
+consumes:
+- name: flanneld-windows
+  type: flanneld-windows
