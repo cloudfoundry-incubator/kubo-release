@@ -66,13 +66,17 @@ start_flanneld() {
 }
 EOL
 
-
+  <%
+    network_conf = {'Network' => p('pod-network-cidr'), 'Backend' => {'Type':  p('backend-type')}}
+    if_p('port') { |port| network_conf['Backend']['Port'] = port }
+    if_p('vni') { |vni| network_conf['Backend']['VNI'] = vni }
+  %>
   /var/vcap/packages/etcdctl/etcdctl \
     --endpoints <%= etcd_endpoints %> \
     --cert-file /var/vcap/jobs/flanneld/config/etcd-client.crt \
     --key-file /var/vcap/jobs/flanneld/config/etcd-client.key \
     --ca-file /var/vcap/jobs/flanneld/config/etcd-ca.crt \
-    set /coreos.com/network/config '{"Network":"<%= p('pod-network-cidr') %>","Backend":{"Type": "<%= p('backend-type') %>"}}'
+    set /coreos.com/network/config '<%= JSON.dump(network_conf) %>'
 
   flanneld -etcd-endpoints=<%= etcd_endpoints %> \
     --ip-masq \
