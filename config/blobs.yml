@@ -98,18 +98,18 @@ kubernetes-1.13.3/kubelet:
   size: 113018904
   object_id: 7b17cc29-f681-4b19-5c95-ce6c52dc1608
   sha: 9b5d05229ba35aaed6476e7177e786c9b1fa87c0
-kubernetes-windows-1.12.5/kube-proxy.exe:
-  size: 49589248
-  object_id: 99d889a9-6a41-4bcc-7754-7f805af2f109
-  sha: eee0ff31a6fd908c83f727ad228a50b6ae8fd008
-kubernetes-windows-1.12.5/kubectl.exe:
-  size: 57638400
-  object_id: 4fa776d2-74e0-4110-429a-469d9094bed0
-  sha: c203b7181e3321511af4e378467c69c931d6bd29
-kubernetes-windows-1.12.5/kubelet.exe:
-  size: 160816128
-  object_id: f55f1065-0b8a-4273-48ae-cb58f292edea
-  sha: 6b872771cbfa278d829b178d23c1567820eeaf2b
+kubernetes-windows-1.13.3/kube-proxy.exe:
+  size: 34465792
+  object_id: cbbdeaed-e7f0-4c2a-77f2-3d51e923ae5d
+  sha: a745d26e07ddeaf8d7f39deda2d69a9fb30ea60f
+kubernetes-windows-1.13.3/kubectl.exe:
+  size: 39667712
+  object_id: a569d842-fcf3-4882-5661-e791c6b11189
+  sha: b039a81069305d4a45c41f6e921a054c758a338b
+kubernetes-windows-1.13.3/kubelet.exe:
+  size: 102758912
+  object_id: 4f51220c-30d8-4321-4127-9606f7cf61df
+  sha: 9725f4c0a04785369db063d1f96be0cb227453b5
 libmnl0_1.0.3-3.deb:
   size: 11416
   object_id: 245e085f-1ad2-447d-67bb-1894b960c571
