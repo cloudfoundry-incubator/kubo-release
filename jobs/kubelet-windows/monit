@@ -1,0 +1,11 @@
+{
+  "processes": [
+    {
+      "name": "kubelet",
+      "executable": "powershell",
+      "args": ["C:\\var\\vcap\\jobs\\kubelet-windows\\bin\\kubelet_ctl.ps1"],
+      "env": {}
+    }
+  ]
+}
+

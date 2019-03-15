@@ -1,0 +1,69 @@
+trap { $host.SetShouldExit(1) }
+
+$OutLog = "C:\var\vcap\sys\log\kubelet-windows\drain.stdout.log"
+$ErrLog = "C:\var\vcap\sys\log\kubelet-windows\drain.stderr.log"
+
+
+function main {
+  if (kubelet_is_running) {
+    retry "drain_kubelet" $function:drain_kubelet
+    # watch_disks TODO(BM/LH): implement this?
+    retry "delete_drained_node" $function:delete_drained_node
+  }
+  echo "0"
+}
+
+function drain_kubelet() {
+  $nodes=(/var/vcap/packages/kubernetes-windows/bin/kubectl `
+    --kubeconfig /var/vcap/jobs/kubelet-windows/config/kubeconfig-drain `
+    get nodes -o json | ConvertFrom-Json).Items
+  $node_name=($nodes | ? { $_.metadata.labels."bosh.id" -eq "<%= spec.id %>" }).metadata.name
+
+  if (!$node_name) {
+    return $true
+  }
+  /var/vcap/packages/kubernetes-windows/bin/kubectl `
+    --kubeconfig /var/vcap/jobs/kubelet-windows/config/kubeconfig-drain drain "${node_name}" `
+    --grace-period 10 --force --delete-local-data --ignore-daemonsets
+  return $?
+}
+
+function delete_drained_node() {
+  $nodes=(/var/vcap/packages/kubernetes-windows/bin/kubectl `
+    --kubeconfig /var/vcap/jobs/kubelet-windows/config/kubeconfig-drain `
+    get nodes -o json | ConvertFrom-Json).Items
+  $node_name=($nodes | ? { $_.metadata.labels."bosh.id" -eq "<%= spec.id %>" }).metadata.name
+
+  if (!$node_name) {
+    return $true
+  }
+  /var/vcap/packages/kubernetes-windows/bin/kubectl `
+    --kubeconfig /var/vcap/jobs/kubelet-windows/config/kubeconfig-drain delete node "${node_name}" `
+    --ignore-not-found | Out-Null
+  return $?
+}
+
+function retry($name, $func) {
+  $attempt_number=1
+  $max_attempts=10
+
+  do {
+    $result=$func.Invoke()
+    if ($result) {
+      echo "Successfully $name" | Out-File -FilePath $OutLog -encoding ascii
+      return
+    }
+    echo ("[{0}] Unsuccessful {1}, retrying attempt {2} out of {3}" -f (Get-Date -UFormat %s), $name, $attempt_number, $max_attempts) | Out-File -FilePath $OutLog -encoding ascii
+    $attempt_number=$attempt_number + 1
+    sleep 1
+  } while ($attempt_number -le $max_attempts)
+
+  throw "Failed all retry attempts for $name"
+}
+
+function kubelet_is_running() {
+  curl.exe --silent --fail http://localhost:10248/healthz
+  return $?
+}
+
+main

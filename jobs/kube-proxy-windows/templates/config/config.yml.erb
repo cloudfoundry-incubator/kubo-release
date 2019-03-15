@@ -1,0 +1,13 @@
+<%
+  hostname = ""
+  if_p('cloud-provider') do |cloud_provider|
+    if cloud_provider == "gce" || cloud_provider == "azure" || cloud_provider == "vsphere"
+    else
+      hostname = spec.ip
+    end
+  end.else do
+    hostname = spec.ip
+  end
+%>
+<% require 'yaml' %><%= p('kube-proxy-configuration').to_yaml %>
+hostnameOverride: <%= hostname %>

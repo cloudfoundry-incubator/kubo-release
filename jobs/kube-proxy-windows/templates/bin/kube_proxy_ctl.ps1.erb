@@ -1,0 +1,51 @@
+trap { $host.SetShouldExit(1) }
+
+function ensure_kubelet_is_running {
+  curl.exe --fail http://localhost:10248/healthz
+  if (-not $?) {
+    throw "kubelet is not available"
+  }
+}
+
+function start_kube_proxy {
+  $network = Get-HnsNetwork | ? Type -Eq L2Bridge
+  $env:KUBE_NETWORK = $network.Name
+
+  C:\var\vcap\packages\kubernetes-windows\bin\kube-proxy.exe -v 5 --config /var/vcap/jobs/kube-proxy-windows/config/config.yml
+}
+
+function check_for_networking {
+  $subnetConfig="/run/flannel/subnet.env"
+
+  if (-not ([System.IO.File]::Exists($subnetConfig)))
+  {
+    throw "$subnetConfig does not exist, waiting for flannel initialization"
+  }
+}
+
+function misc_setup {
+  # Prestart doesn't get run again on recreate, so need to do this in ctl
+  Set-NetFirewallProfile -Profile Domain, Public, Private -Enabled False
+
+  <% if_p('cloud-provider') do |cloud_provider| %>
+    <% if cloud_provider == "vsphere" %>
+  # Override the hostname to work around
+  # vSphere cloud provider ignoring hostname override
+  # and kubernetes requiring all-lowercase node names
+  $ComputerName = (cat C:\var\vcap\bosh\settings.json | ConvertFrom-Json).agent_id
+  Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" -name "Hostname" -value $ComputerName
+    <% end %>
+  <% end %>
+
+  # Needed until https://github.com/kubernetes/kubernetes/pull/71147 is merged
+  mkdir -force /sys/class/dmi/id
+  (wmic csproduct get IdentifyingNumber).Split([Environment]::Newline)[2] | Out-File -Encoding ASCII /sys/class/dmi/id/product_serial
+}
+
+function main() {
+  misc_setup
+  check_for_networking
+  start_kube_proxy
+}
+
+main
