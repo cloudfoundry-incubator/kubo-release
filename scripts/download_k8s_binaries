@@ -14,7 +14,7 @@ main() {
 
   trap '{ rm -rf "$staging_dir"; }' EXIT
 
-  binaries=(
+  linux_binaries=(
     "kube-apiserver"
     "kube-controller-manager"
     "kube-proxy"
@@ -22,46 +22,72 @@ main() {
     "kubectl"
     "kubelet"
   )
+  windows_binaries=(
+    "kube-proxy.exe"
+    "kubectl.exe"
+    "kubelet.exe"
+  )
+  platforms=(
+    "windows"
+    "linux"
+  )
 
   pushd "$(dirname "${BASH_SOURCE[0]}")/.."
-    existing_k8s_spec=$(bosh blobs --column path | grep kubelet | grep -o -E 'kubernetes-([0-9]+\.)+[0-9]+')
-    existing_k8s_version=$(echo "$existing_k8s_spec" | grep -o -E '([0-9]+\.)+[0-9]+')
+    for platform in "${platforms[@]}"; do
+      package_name=$(package_name "${platform}")
+      declare -n binaries="${platform}_binaries"
 
-    if [ "$existing_k8s_version" == "$kubernetes_version" ]; then
-        echo "Kubernetes version already up-to-date."
-    else
-      pushd packages/kubernetes
-        sed -E -i -e "s/([0-9]+\.)+[0-9]+/${kubernetes_version}/" packaging
-        sed -E -i -e "s/${existing_k8s_spec}/kubernetes-${kubernetes_version}/" spec
-      popd
+      existing_k8s_spec=$(bosh blobs --column path | grep "${binaries[0]}" | grep -o -E "${package_name}-([0-9]+\.)+[0-9]+")
+      existing_k8s_version=$(echo "$existing_k8s_spec" | grep -o -E '([0-9]+\.)+[0-9]+')
 
-      for binary in "${binaries[@]}"; do
-        download "${binary}" "${staging_dir}" "${kubernetes_version}"
-        add_blob "${binary}" "${staging_dir}" "${kubernetes_version}"
-      done
-    fi
+      if [ "$existing_k8s_version" == "$kubernetes_version" ]; then
+          echo "Kubernetes version already up-to-date."
+      else
+        pushd "packages/${package_name}"
+          sed -E -i -e "s/([0-9]+\.)+[0-9]+/${kubernetes_version}/" packaging
+          sed -E -i -e "s/${existing_k8s_spec}/${package_name}-${kubernetes_version}/" spec
+        popd
+
+        for binary in "${binaries[@]}"; do
+          download "${binary}" "${staging_dir}" "${kubernetes_version}" "${platform}"
+          add_blob "${binary}" "${staging_dir}" "${kubernetes_version}" "${package_name}"
+        done
+      fi
+    done
 
   popd
 }
 
+package_name() {
+  local platform
+  platform="$1"
+  if [ "$platform" == "windows" ]; then
+    echo -n "kubernetes-windows"
+  else
+    echo -n "kubernetes"
+  fi
+}
+
 download() {
-  local binary_name staging_dir kubernetes_version
+  local binary_name staging_dir kubernetes_version platform
   binary_name="$1"
   staging_dir="$2"
   kubernetes_version="$3"
+  platform="$4"
 
-  wget -O "${staging_dir}/${binary_name}" "https://storage.googleapis.com/kubernetes-release/release/v${kubernetes_version}/bin/linux/amd64/${binary_name}"
+  wget -O "${staging_dir}/${binary_name}" "https://storage.googleapis.com/kubernetes-release/release/v${kubernetes_version}/bin/${platform}/amd64/${binary_name}"
 }
 
 add_blob() {
-  local binary_name blob_name staging_dir kubernetes_version
+  local binary_name blob_name staging_dir kubernetes_version package_name
   binary_name="$1"
   staging_dir="$2"
   kubernetes_version="$3"
-  blob_name=$(bosh blobs --column path | grep "$binary_name" | xargs)
+  package_name="$4"
+  blob_name=$(bosh blobs --column path | grep "${binary_name}\s$" | xargs)
 
   bosh remove-blob "$blob_name"
-  bosh add-blob "${staging_dir}/${binary_name}" "kubernetes-${kubernetes_version}/$binary_name"
+  bosh add-blob "${staging_dir}/${binary_name}" "${package_name}-${kubernetes_version}/$binary_name"
 }
 
 main "$@"
