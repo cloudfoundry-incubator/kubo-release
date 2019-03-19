@@ -74,30 +74,30 @@ jq-linux64-1.6:
   size: 3953824
   object_id: efdcc8cd-7155-47d4-65c9-d3d74700633f
   sha: 056ba5d6bbc617c29d37158ce11fd5a443093949
-kubernetes-1.13.3/kube-apiserver:
-  size: 138644736
-  object_id: 8a323b8f-b891-4bba-560f-cf1edf93d3c1
-  sha: be454aa59868f8162275900d6a4d385c4b3b3c7c
-kubernetes-1.13.3/kube-controller-manager:
-  size: 103909280
-  object_id: 0f1782ec-3315-493f-5c5c-8c963170a369
-  sha: 36740512d285b5b1c71942fc6511fee5c45dc4a2
-kubernetes-1.13.3/kube-proxy:
+kubernetes-1.13.4/kube-apiserver:
+  size: 138661120
+  object_id: b839a89f-bba5-492b-7f45-b25e56e3aabb
+  sha: ba7a7ea28448e00f839c2cf4b5eb4ab4dfa6a242
+kubernetes-1.13.4/kube-controller-manager:
+  size: 103921568
+  object_id: 4362b096-a026-4e6c-7347-022cbc4d2149
+  sha: 4de30fa832e79fca239086d94b24bf45aca5bc72
+kubernetes-1.13.4/kube-proxy:
   size: 34832736
-  object_id: 5baa95a8-69ac-4a3e-46c7-6890b771c7bf
-  sha: c0e38d907d23b88a3a334fa2a4c0b436b091ae57
-kubernetes-1.13.3/kube-scheduler:
-  size: 37296384
-  object_id: 498e0fa4-47b4-423e-535e-960f254623e8
-  sha: a34800a439e79b9447ccd4145d2f8a2f1bf2a3f7
-kubernetes-1.13.3/kubectl:
+  object_id: 77fee54f-508c-4e46-6e33-e5c872eab7a7
+  sha: e0d5f80db202cb2dfb9cb7ff4015c83680c07b29
+kubernetes-1.13.4/kube-scheduler:
+  size: 37300480
+  object_id: 5a1df5a9-54ad-47f4-5d55-fd5cea70e17d
+  sha: 79480b51795b668b839a6597a933448f7014a422
+kubernetes-1.13.4/kubectl:
   size: 39251424
-  object_id: 38f0110d-7570-4352-400f-29d03332709c
-  sha: 6e332647317032e5982db98f4abf80c88c8b3de2
-kubernetes-1.13.3/kubelet:
-  size: 113018904
-  object_id: 7b17cc29-f681-4b19-5c95-ce6c52dc1608
-  sha: 9b5d05229ba35aaed6476e7177e786c9b1fa87c0
+  object_id: c27f8269-6355-4099-45e7-394a9e6b819c
+  sha: 7d1c9510e239ce52f5393c52a4688735e3db791e
+kubernetes-1.13.4/kubelet:
+  size: 113031192
+  object_id: 06abacba-e5d1-4412-5cee-49283fbea237
+  sha: 6c43640cd0f4494b4406296fe35579027176b2f7
 kubernetes-windows-1.12.5/kube-proxy.exe:
   size: 49589248
   object_id: 99d889a9-6a41-4bcc-7754-7f805af2f109
