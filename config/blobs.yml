@@ -92,24 +92,24 @@ kubernetes-1.13.4/kube-scheduler:
   sha: 79480b51795b668b839a6597a933448f7014a422
 kubernetes-1.13.4/kubectl:
   size: 39251424
-  object_id: c27f8269-6355-4099-45e7-394a9e6b819c
+  object_id: 822086ae-6f08-424e-427c-cf486901c48f
   sha: 7d1c9510e239ce52f5393c52a4688735e3db791e
 kubernetes-1.13.4/kubelet:
   size: 113031192
-  object_id: 06abacba-e5d1-4412-5cee-49283fbea237
+  object_id: 0d7db619-15e6-4f17-6469-88058024a62b
   sha: 6c43640cd0f4494b4406296fe35579027176b2f7
-kubernetes-windows-1.12.5/kube-proxy.exe:
-  size: 49589248
-  object_id: 99d889a9-6a41-4bcc-7754-7f805af2f109
-  sha: eee0ff31a6fd908c83f727ad228a50b6ae8fd008
-kubernetes-windows-1.12.5/kubectl.exe:
-  size: 57638400
-  object_id: 4fa776d2-74e0-4110-429a-469d9094bed0
-  sha: c203b7181e3321511af4e378467c69c931d6bd29
-kubernetes-windows-1.12.5/kubelet.exe:
-  size: 160816128
-  object_id: f55f1065-0b8a-4273-48ae-cb58f292edea
-  sha: 6b872771cbfa278d829b178d23c1567820eeaf2b
+kubernetes-windows-1.13.4/kube-proxy.exe:
+  size: 34466816
+  object_id: 56e1ecb1-47aa-467c-60a4-4c2557c411c8
+  sha: e08e17e6370a2ef53c3d6a74cc89ea28d083b55d
+kubernetes-windows-1.13.4/kubectl.exe:
+  size: 39670272
+  object_id: 367d644b-470f-425d-6a24-bb8faa905bd3
+  sha: fa5c7a0d3c7ae7edb8d6fb276dcfcf9a232b17ec
+kubernetes-windows-1.13.4/kubelet.exe:
+  size: 102774272
+  object_id: 458f8def-b633-4ead-48b4-8e7720cc609e
+  sha: 30c8cab80e5940503f9cdd36b51c56f47f0411d2
 libmnl0_1.0.3-3.deb:
   size: 11416
   object_id: 245e085f-1ad2-447d-67bb-1894b960c571
