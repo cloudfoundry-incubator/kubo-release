@@ -1,8 +1,0 @@
----
-name: flanneld-windows
-
-dependencies:
-
-files:
-- flannel-v0.11.0-windows-amd64.tar.gz
-- exiter.ps1
