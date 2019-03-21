@@ -70,6 +70,7 @@ function start_kubelet {
       end
     end
   -%>
+  mkdir -force C:\tmp # workaround for conformance tests
 
   /var/vcap/packages/kubernetes-windows/bin/kubelet `
   <%-
@@ -108,53 +109,35 @@ function check_for_networking {
   }
 }
 
-function ensure_kubeproxy_is_running {
-  curl.exe --fail http://localhost:10256/healthz
-  if (-not $?) {
-    throw "kube-proxy is not available"
-  }
-}
-
-function ensure_docker_is_running {
-  curl.exe --fail http://localhost:10256/healthz
-  if (-not $?) {
-    throw "kube-proxy is not available"
-  }
-}
-
 function load_base_images {
   # Temporary workaround until we bring our own images
   docker version
   if (-not $?) {
     throw "docker is not available"
   }
-  docker pull mcr.microsoft.com/windows/nanoserver:1803
-  docker pull mcr.microsoft.com/windows/servercore:1803
 
-  if (!(docker images mcr.microsoft.com/windows/nanoserver:latest -q))
-  {
-    docker tag (docker images mcr.microsoft.com/windows/nanoserver -q) mcr.microsoft.com/windows/nanoserver
-  }
+  docker pull mcr.microsoft.com/windows/nanoserver:1809
+  docker tag (docker images mcr.microsoft.com/windows/nanoserver:1809 -q) mcr.microsoft.com/windows/nanoserver
+  docker build -t kubeletwin/pause /var/vcap/jobs/kubelet-windows/config
 
-  if (!(docker images mcr.microsoft.com/windows/servercore:latest -q))
-  {
-    docker tag (docker images mcr.microsoft.com/windows/servercore -q) mcr.microsoft.com/windows/servercore
+  Start-Job -ScriptBlock {
+    docker pull mcr.microsoft.com/windows/servercore:ltsc2019
+    docker tag (docker images mcr.microsoft.com/windows/servercore:ltsc2019 -q) mcr.microsoft.com/windows/servercore
   }
+}
 
-  $infraPodImage=docker images kubeletwin/pause -q
-  if (!$infraPodImage)
-  {
-    cd /var/vcap/jobs/kubelet-windows/config
-    docker build -t kubeletwin/pause .
-  }
+function set_acls {
+  $ar = New-Object System.Security.AccessControl.FileSystemAccessRule("BUILTIN\Users", "ReadAndExecute,CreateFiles,AppendData", "ContainerInherit, ObjectInherit", "None", "Allow")
+  $acl = Get-Acl C:\var
+  $acl.SetAccessRule($ar)
+  Set-Acl C:\var $acl
 }
 
 function main {
   delete_stale_drained_node
   check_for_networking
-  ensure_docker_is_running
-  ensure_kubeproxy_is_running
   load_base_images
+  set_acls
   start_kubelet
 }
 
