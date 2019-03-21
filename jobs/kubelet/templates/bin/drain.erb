@@ -44,7 +44,10 @@ drain_node() {
 }
 
 get_k8s_disks() {
-  disks=$(lsblk -dnl -o NAME,TYPE,MOUNTPOINT | awk '/var\/lib\/kubelet/ {print $1}')
+<%-
+  root_dir = p('k8s-args', {}).fetch('root-dir', "/var/lib/kubelet").gsub("/", "\\/")
+-%>
+  disks=$(lsblk -dnl -o NAME,TYPE,MOUNTPOINT | awk '/<%= root_dir %>/ {print $1}')
   echo ${disks[@]} | tr " " "|"
 }
 
