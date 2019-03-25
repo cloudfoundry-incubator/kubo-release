@@ -66,30 +66,30 @@ jq-linux64-1.6:
   size: 3953824
   object_id: efdcc8cd-7155-47d4-65c9-d3d74700633f
   sha: 056ba5d6bbc617c29d37158ce11fd5a443093949
-kubernetes-1.13.4/kube-apiserver:
-  size: 138661120
-  object_id: b839a89f-bba5-492b-7f45-b25e56e3aabb
-  sha: ba7a7ea28448e00f839c2cf4b5eb4ab4dfa6a242
-kubernetes-1.13.4/kube-controller-manager:
-  size: 103921568
-  object_id: 4362b096-a026-4e6c-7347-022cbc4d2149
-  sha: 4de30fa832e79fca239086d94b24bf45aca5bc72
-kubernetes-1.13.4/kube-proxy:
-  size: 34832736
-  object_id: 77fee54f-508c-4e46-6e33-e5c872eab7a7
-  sha: e0d5f80db202cb2dfb9cb7ff4015c83680c07b29
-kubernetes-1.13.4/kube-scheduler:
-  size: 37300480
-  object_id: 5a1df5a9-54ad-47f4-5d55-fd5cea70e17d
-  sha: 79480b51795b668b839a6597a933448f7014a422
-kubernetes-1.13.4/kubectl:
-  size: 39251424
-  object_id: 822086ae-6f08-424e-427c-cf486901c48f
-  sha: 7d1c9510e239ce52f5393c52a4688735e3db791e
-kubernetes-1.13.4/kubelet:
-  size: 113031192
-  object_id: 0d7db619-15e6-4f17-6469-88058024a62b
-  sha: 6c43640cd0f4494b4406296fe35579027176b2f7
+kubernetes-1.13.5/kube-apiserver:
+  size: 138710240
+  object_id: c661f831-8bb2-4356-7e27-35f7d1c04c06
+  sha: 40b7bf505a71815ddcd8ca8da5a13aaba942a780
+kubernetes-1.13.5/kube-controller-manager:
+  size: 103982976
+  object_id: f4a67d39-8030-4045-61ad-804f3e12a8c5
+  sha: 2b2be45b4a661b787bac0f8744e3e5da7fad921e
+kubernetes-1.13.5/kube-proxy:
+  size: 34820416
+  object_id: 37f76204-e4aa-428e-7097-d3acbcc00029
+  sha: 554be5dc94c30c4d5582da195f0c99cba86d171e
+kubernetes-1.13.5/kube-scheduler:
+  size: 37279968
+  object_id: 387db672-eb57-4506-59e1-68f89cb63d05
+  sha: 233d0735931e46dd5783bd1bdcbc4c61266a283a
+kubernetes-1.13.5/kubectl:
+  size: 39239104
+  object_id: 8a2460eb-6c87-42f7-6de1-c7d59656dc13
+  sha: 0e994d77be036cf9c7965f81248292dc8a11cd8c
+kubernetes-1.13.5/kubelet:
+  size: 113104888
+  object_id: fea35a5d-01a4-407a-53bd-6d636e8d845b
+  sha: ad77e78d50f90ea08159df5b66b97dd83f9a152b
 libmnl0_1.0.3-3.deb:
   size: 11416
   object_id: 245e085f-1ad2-447d-67bb-1894b960c571
