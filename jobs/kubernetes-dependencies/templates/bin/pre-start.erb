@@ -2,6 +2,9 @@
 
 set -euxo pipefail
 
+# remount root as rshared for issue #309
+mount --make-rshared /
+
 CONNTRACK_PACKAGES=/var/vcap/packages/conntrack
 IPSET_PACKAGES=/var/vcap/packages/ipset
 NFS_PACKAGES=/var/vcap/packages/nfs
