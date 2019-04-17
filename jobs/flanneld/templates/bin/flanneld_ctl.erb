@@ -69,15 +69,15 @@ EOL
 
   /var/vcap/packages/etcdctl/etcdctl \
     --endpoints <%= etcd_endpoints %> \
-    --cert-file /var/vcap/jobs/flanneld/config/etcd-client.crt \
-    --key-file /var/vcap/jobs/flanneld/config/etcd-client.key \
+    --cert-file /var/vcap/jobs/flanneld/config/etcd-flanneld-client.crt \
+    --key-file /var/vcap/jobs/flanneld/config/etcd-flanneld-client.key \
     --ca-file /var/vcap/jobs/flanneld/config/etcd-ca.crt \
     set /coreos.com/network/config '{"Network":"<%= p('pod-network-cidr') %>","Backend":{"Type": "<%= p('backend-type') %>"}}'
 
   flanneld -etcd-endpoints=<%= etcd_endpoints %> \
     --ip-masq \
-    --etcd-certfile=/var/vcap/jobs/flanneld/config/etcd-client.crt \
-    --etcd-keyfile=/var/vcap/jobs/flanneld/config/etcd-client.key \
+    --etcd-certfile=/var/vcap/jobs/flanneld/config/etcd-flanneld-client.crt \
+    --etcd-keyfile=/var/vcap/jobs/flanneld/config/etcd-flanneld-client.key \
     --etcd-cafile=/var/vcap/jobs/flanneld/config/etcd-ca.crt \
     1>> $LOG_DIR/flanneld.stdout.log \
     2>> $LOG_DIR/flanneld.stderr.log
