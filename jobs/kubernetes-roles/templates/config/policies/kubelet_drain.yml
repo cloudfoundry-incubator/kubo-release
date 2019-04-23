@@ -14,7 +14,7 @@ rules:
   resources: ["pods/eviction"]
   verbs: ["create"]
 - apiGroups: ["apps"]
-  resources: ["statefulsets"]
+  resources: ["statefulsets", "daemonsets"]
   verbs: ["get"]
 - apiGroups: ["extensions"]
   resources: ["replicasets", "daemonsets"]
