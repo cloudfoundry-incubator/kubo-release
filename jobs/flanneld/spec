@@ -20,7 +20,9 @@ properties:
   backend-type:
     description: The network backend to use
     default: "vxlan"
-
-consumes:
-- name: etcd
-  type: etcd
+  tls.etcdctl.ca:
+    description: CA for etcdctl client authentication
+  tls.etcdctl.certificate:
+    description: Certificate for etcdctl client authentication
+  tls.etcdctl.private_key:
+    description: Private key for etcdctl client authentication
