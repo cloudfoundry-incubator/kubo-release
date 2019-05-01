@@ -78,30 +78,30 @@ jq-linux64-1.5:
   size: 3027945
   object_id: 41eb1cd1-0377-4e08-5602-51e0af8b9b52
   sha: d8e36831c3c94bb58be34dd544f44a6c6cb88568
-kubernetes-1.11.9/kube-apiserver:
-  size: 185625307
-  object_id: da83db35-b139-4a10-7e55-1c64554dfc62
-  sha: bb59cfb9243f8ebee6c9590766a045cabde19ef2
-kubernetes-1.11.9/kube-controller-manager:
-  size: 154203731
-  object_id: 6c554eb2-a0b5-4ebd-7989-9be419f167e3
-  sha: f72f5dbb2231e99e35b50ea489f68534de875847
-kubernetes-1.11.9/kube-proxy:
+kubernetes-1.11.10/kube-apiserver:
+  size: 185994878
+  object_id: 81ffb51b-a456-41f2-6306-00014ba43087
+  sha: 1f8cfbe2c94f37d8bdfedda8388bd7a5fef0ed87
+kubernetes-1.11.10/kube-controller-manager:
+  size: 154573302
+  object_id: c0d576ce-8b4c-4612-5c25-c5c58de0abf2
+  sha: 31616e3d3dc68d55ebf071a96af1c5b271c1e076
+kubernetes-1.11.10/kube-proxy:
   size: 51994700
-  object_id: 9f7a5529-8a26-4e40-73c4-5c3c28b8ffff
-  sha: d1cde00dadb4c20ebc3b3963b03f01411e4bd9e2
-kubernetes-1.11.9/kube-scheduler:
-  size: 55687127
-  object_id: 5fc41286-3c92-4186-49b0-9bce3e5aef13
-  sha: 1e7fdac955a73c36d26f66fa09a23f8d0755817d
-kubernetes-1.11.9/kubectl:
-  size: 55453196
-  object_id: db9171c1-082b-4b1f-6d7e-1a5b44dd6310
-  sha: ed07ed02f6d6c8ee2a14c7427f4502acfa5d056f
-kubernetes-1.11.9/kubelet:
-  size: 163061576
-  object_id: 74087ece-5976-47b9-5bf8-b63d9b5f0d2a
-  sha: 3ec59a6a27654f4930843ff0c221ebb4d3501fd2
+  object_id: ba3468f6-a393-4c00-6f62-89cfc4e2d0b8
+  sha: e77d34137fc947e95884df2bb1dcc19913c3eaa5
+kubernetes-1.11.10/kube-scheduler:
+  size: 55695319
+  object_id: 44a92a96-7b2b-4fbc-59e5-782692c9bf42
+  sha: be93f9dcb961147288c4ee960166f8d44d7293e2
+kubernetes-1.11.10/kubectl:
+  size: 55461388
+  object_id: d9ef1cea-a754-4e93-521b-bf0acd41ac69
+  sha: c133f55152c76c33d9b41894dcd311064904503e
+kubernetes-1.11.10/kubelet:
+  size: 163437192
+  object_id: 678cd1ad-3180-47a5-75b2-838febcf8975
+  sha: a1e5d2a7da4cabc29af0dda630564511a9b437d8
 nfs-debs/keyutils_1.5.9-8ubuntu1_amd64.deb:
   size: 47054
   object_id: 722ce869-6b1c-4cb2-7df1-38c57ed14261
