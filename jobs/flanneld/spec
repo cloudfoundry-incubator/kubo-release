@@ -26,6 +26,10 @@ properties:
     description: Certificate for etcdctl client authentication
   tls.etcdctl.private_key:
     description: Private key for etcdctl client authentication
+  vni:
+    description: VXLAN Identifier (VNI) to be used
+  port:
+    description: UDP port to use for sending encapsulated packets
 
 consumes:
 - name: etcd
