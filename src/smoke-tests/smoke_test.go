@@ -89,7 +89,7 @@ var _ = Describe("CFCR Smoke Tests", func() {
 			Eventually(session, "15s").Should(gexec.Exit(0))
 			podName := string(session.Out.Contents())
 
-			session = k8sRunner.RunKubectlCommand("get", "nodes", "-o", "jsonpath={.items[0].status.addresses[?(@.type == \"InternalIP\")].address}")
+			session = k8sRunner.RunKubectlCommand("get", "pod", podName, "-o", "jsonpath={.status.hostIP}")
 			Eventually(session).Should(gexec.Exit(0))
 			nodeIP := session.Out.Contents()
 
