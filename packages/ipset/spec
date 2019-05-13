@@ -1,7 +1,0 @@
----
-name: ipset
-
-dependencies:
-
-files:
-- ipset/*

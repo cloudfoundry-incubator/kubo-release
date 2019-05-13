@@ -1,4 +1,0 @@
-set -e
-
-mkdir -p "${BOSH_INSTALL_TARGET:?}/"
-cp -a nfs-debs/* "${BOSH_INSTALL_TARGET:?}"

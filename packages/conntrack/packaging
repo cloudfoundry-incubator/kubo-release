@@ -1,6 +1,0 @@
-set -e
-
-mkdir -p "${BOSH_INSTALL_TARGET:?}/"
-cp -a conntrack/* "${BOSH_INSTALL_TARGET:?}"
-cp libmnl0* "${BOSH_INSTALL_TARGET:?}"
-

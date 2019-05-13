@@ -18,34 +18,6 @@ cni/util-linux_2.27.1-6ubuntu3_amd64.deb:
   size: 847730
   object_id: 27eb3ec3-220f-4a25-6c4f-ec219c37ac8d
   sha: 568f62cb031608ab09ba1e3c2121e9e8b92dcae4
-conntrack/conntrack_1.4.1-1.deb:
-  size: 25112
-  object_id: 9bf859c2-93aa-48b0-69f9-5903f0b4acbe
-  sha: 494df11d77a1dd31fbc1e0e8c7946957ef5a74af
-conntrack/libnetfilter-conntrack3_1.0.4-1.deb:
-  size: 45872
-  object_id: 42a59368-8ae3-4502-480b-56ecd3f40f7a
-  sha: 743b497bd6a6491a8cad11c04103e55c7a9cc93c
-container-images/coredns_coredns:1.4.0.tgz:
-  size: 12997721
-  object_id: 14779ec2-2266-48eb-77d6-a732d3721d1f
-  sha: b5f7af681ba11570d7ffdf77f9f6c03371b45679
-container-images/k8s.gcr.io_kubernetes-dashboard-amd64:v1.10.1.tgz:
-  size: 44852477
-  object_id: 1d8fdcd7-fe1e-431d-5d90-2032b97d8ad0
-  sha: 8a19204a0a3f75c5a4f495b1cd3bb1c7d604fa6c
-container-images/k8s.gcr.io_metrics-server-amd64:v0.3.3.tgz:
-  size: 10376132
-  object_id: e74f3c71-252b-47a0-7357-f54feebaf0dd
-  sha: 3ef24cca1418d8e00104e2f87abefe8f4777db8b
-container-images/k8s.gcr.io_pause:3.1.tgz:
-  size: 315592
-  object_id: f6ba8b90-9a60-454d-73e0-cab4b1c4a554
-  sha: d4095b6513b3d5ef770c44d651ae5601878906d8
-container-images/pcfkubo_nginx-bionic:1.0.0.tgz:
-  size: 77661967
-  object_id: f2575255-59f6-442e-5f69-d10e5a24e178
-  sha: c677df2c93e1a15604285ea0f32b121011dcacdd
 etcdctl-3.0.7:
   size: 18427584
   object_id: 32221476-5c3d-4ec7-5869-44c989cc3077
@@ -54,70 +26,14 @@ flannel-v0.11.0-linux-amd64.tar.gz:
   size: 9565743
   object_id: 83064ebe-b45d-4d41-694a-b1e61a781250
   sha: 3024034b2202d5940acf5353037161ea1770a9c5
-ipset/ipset_6.20.1-1_amd64.deb:
-  size: 34156
-  object_id: 5dfcce8f-366e-49f0-59e6-9e2d48178750
-  sha: 79eb9008d1a57b31bc748b49c18701ab3dd41108
-ipset/libipset3_6.20.1-1_amd64.deb:
-  size: 50812
-  object_id: 67efec49-e111-45fc-701d-7d55dbe66660
-  sha: e4daa1ac22b2775d1c334aa6fe055ca8dcccc185
 jq-linux64-1.6:
   size: 3953824
   object_id: efdcc8cd-7155-47d4-65c9-d3d74700633f
   sha: 056ba5d6bbc617c29d37158ce11fd5a443093949
-kubernetes-1.14.4/kube-apiserver:
-  size: 167628128
-  object_id: 565c4284-e522-4da4-6aa5-4bcafad48990
-  sha: 922c28e877a3b5d3368e91f873837c9e1398dcb3
-kubernetes-1.14.4/kube-controller-manager:
-  size: 115649056
-  object_id: b9e5614f-8b4a-4457-60c7-1f6f29f6b80e
-  sha: c7872505be52c483131f2f5c06b33c8afbb91f8c
-kubernetes-1.14.4/kube-proxy:
-  size: 36685440
-  object_id: 711092c9-8478-4b50-622f-68b1b2e71783
-  sha: f9b1e1339530f6f529450120cf72a08a189f0f25
-kubernetes-1.14.4/kube-scheduler:
-  size: 39258304
-  object_id: 68ae6557-3732-4ded-7b0e-4ca3e9736419
-  sha: ac0ae65fd2391a4b5df6b147a1430de45795d03e
-kubernetes-1.14.4/kubectl:
-  size: 43107136
-  object_id: 741f99f2-7305-40c2-76b9-e58c49d9be36
-  sha: c055ce78bebd3af14050d3e3f6ea4306daa37b5f
-kubernetes-1.14.4/kubelet:
-  size: 128026560
-  object_id: 3bda3a98-572f-4b8f-79b3-23e40ab03dfe
-  sha: e4d3e655890614e8ceaf2dd00a0613e87764cdd3
-libmnl0_1.0.3-3.deb:
-  size: 11416
-  object_id: 245e085f-1ad2-447d-67bb-1894b960c571
-  sha: dcb0b572f1207ad192d8cb1a9010fc6dd22d0000
 libtool-2.4.6.tar.gz:
   size: 1806697
   object_id: 670cc8a2-75d8-4fb5-465f-270395cb9373
   sha: 25b6931265230a06f0fc2146df64c04e5ae6ec33
-nfs-debs/keyutils_1.5.9-8ubuntu1_amd64.deb:
-  size: 47054
-  object_id: e1b42c34-4e88-426b-7268-99d1bdfd40c1
-  sha: ec2e96e73feb5215605c9f0254cad05d9cc5688a
-nfs-debs/libevent-2.0-5_2.0.21-stable-2ubuntu0.16.04.1_amd64.deb:
-  size: 114014
-  object_id: cbdc50ad-e7f5-4a3b-6115-77392061bd76
-  sha: 57d69f44f3e058e48a7b79595d36076eb21f5942
-nfs-debs/libnfsidmap2_0.25-5_amd64.deb:
-  size: 32182
-  object_id: 59ba4d66-fb63-4a62-75da-8502169d85cd
-  sha: f28b7370542daaf81cefb44d9057fa9b3fb43064
-nfs-debs/nfs-common_1:1.2.8-9ubuntu12.1_amd64.deb:
-  size: 184334
-  object_id: 6c99be77-1ba2-4be4-409a-36c090035646
-  sha: 38f7234fade7c15ffecf4c043c877b01ead92d3d
-nfs-debs/rpcbind_0.2.3-0.2_amd64.deb:
-  size: 40252
-  object_id: 56ad455e-38be-40da-7815-a9d4774d55e4
-  sha: 8fa58cfcb1862c6d337d10496fada5f1a6e94a03
 pkg-config-0.29.2.tar.gz:
   size: 2016830
   object_id: 2a0b553f-c65d-42ef-6317-dd0cfcdc7c06

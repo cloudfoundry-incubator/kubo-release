@@ -1,7 +1,0 @@
----
-name: nfs
-
-dependencies: []
-
-files:
-- nfs-debs/*

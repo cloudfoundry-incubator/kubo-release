@@ -1,6 +1,0 @@
----
-name: kubernetes
-
-files:
-- container-images/*
-- kubernetes-1.14.4/*
