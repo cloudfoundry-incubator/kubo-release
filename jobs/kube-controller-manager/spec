@@ -15,9 +15,6 @@ templates:
   config/kube-controller-manager-cert.pem.erb: config/kube-controller-manager-cert.pem
   config/kube-controller-manager-private-key.pem.erb: config/kube-controller-manager-private-key.pem
 
-packages:
-- kubernetes
-
 properties:
   api-token:
     description: "API Token for the system:kube-controller-manager user"

@@ -19,8 +19,7 @@ templates:
   config/service_key.json.erb: config/service_key.json
   config/tokens.csv.erb: config/tokens.csv
   config/encryption-config.yml.erb: config/encryption-config.yml
-packages:
-- kubernetes
+
 properties:
   admin-password:
     description: The password for the admin account

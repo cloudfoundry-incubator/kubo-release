@@ -7,9 +7,6 @@ templates:
   config/kubeconfig.erb: config/kubeconfig
   config/config.yml: config/config.yml
 
-packages:
-- kubernetes
-
 properties:
   api-token:
     description: The token to access kubernetes API

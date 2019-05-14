@@ -9,8 +9,6 @@ templates:
 
 packages:
 - pid_utils
-- kubernetes
-- conntrack
 
 properties:
   api-token:

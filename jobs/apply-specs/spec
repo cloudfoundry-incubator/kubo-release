@@ -19,9 +19,6 @@ templates:
   specs/metrics-server/secrets.yml.erb: specs/metrics-server/secrets.yml
   specs/storage-class-gce.yml: specs/storage-class-gce.yml
 
-packages:
-- kubernetes
-
 properties:
   addons:
     description: A list of default add-ons bootstrapped in the Kubernetes cluster

@@ -14,11 +14,12 @@ templates:
   config/kubeletconfig.yml.erb: config/kubeletconfig.yml
   config/openstack-ca.crt.erb: config/openstack-ca.crt
   config/service_key.json.erb: config/service_key.json
+
 packages:
 - pid_utils
-- kubernetes
 - cni
 - socat
+
 properties:
   api-token:
     description: The token to access Kubernetes API

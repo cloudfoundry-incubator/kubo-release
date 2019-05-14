@@ -15,9 +15,6 @@ templates:
   config/policies/kube-system-podsecuritypolicy.yml: config/policies/kube-system-podsecuritypolicy.yml
   config/policies/post-start-custom-specs.yml.erb: config/policies/post-start-custom-specs.yml
 
-packages:
-- kubernetes
-
 consumes:
 - name: kube-apiserver
   type: kube-apiserver
