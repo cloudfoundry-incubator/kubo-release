@@ -4,6 +4,8 @@ set -eou pipefail
 
 check_file_existence(){
   file=$1
+
+  echo "Checking file existence: $file"
   if [ ! -f "$file" ]; then
       echo "$file not exist"
       exit 1
