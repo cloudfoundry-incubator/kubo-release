@@ -3,6 +3,7 @@ name: kube-controller-manager
 
 templates:
   bin/chmod-product-serial: bin/chmod-product-serial
+  bin/pre-start.erb: bin/pre-start
   config/bpm.yml.erb: config/bpm.yml
   config/ca.pem.erb: config/ca.pem
   config/cloud-provider.ini.erb: config/cloud-provider.ini

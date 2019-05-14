@@ -3,6 +3,7 @@ name: kube-proxy
 
 templates:
   bin/kube_proxy_ctl.erb: bin/kube_proxy_ctl
+  bin/pre-start.erb: bin/pre-start
   config/kubeconfig.erb: config/kubeconfig
   config/config.yml.erb: config/config.yml
   config/ca.pem.erb: config/ca.pem

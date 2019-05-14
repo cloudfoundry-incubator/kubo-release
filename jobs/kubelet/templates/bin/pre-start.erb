@@ -1,0 +1,26 @@
+#!/bin/bash
+
+set -eou pipefail
+
+check_file_existence(){
+  file=$1
+  if [ ! -f "$file" ]; then
+      echo "$file not exist"
+      exit 1
+  fi
+}
+
+check_directory_existence(){
+  directory=$1
+  if [ ! -d "$directory" ]; then
+      echo "$directory not exist"
+      exit 1
+  fi
+}
+
+main() {
+  check_file_existence "/var/vcap/packages/kubernetes/bin/kubelet"
+  check_directory_existence "/var/vcap/packages/kubernetes/container-images"
+}
+
+main $@

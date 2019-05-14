@@ -3,6 +3,7 @@ name: apply-specs
 templates:
   bin/deploy-specs.erb: bin/deploy-specs
   bin/run.erb: bin/run
+  bin/pre-start.erb: bin/pre-start
   config/kubeconfig.erb: config/kubeconfig
   config/ca.pem.erb: config/ca.pem
   config/kubernetes-dashboard/kubernetes-dashboard.crt.erb: config/kubernetes-dashboard/kubernetes-dashboard.crt

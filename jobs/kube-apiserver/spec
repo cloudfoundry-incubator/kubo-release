@@ -1,6 +1,7 @@
 name: kube-apiserver
 templates:
   bin/ensure_apiserver_healthy.erb: bin/ensure_apiserver_healthy
+  bin/pre-start.erb: bin/pre-start
   bin/post-start.erb: bin/post-start
   config/audit_policy.yml.erb: config/audit_policy.yml
   config/bpm.yml.erb: config/bpm.yml

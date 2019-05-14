@@ -3,6 +3,7 @@ name: kubernetes-roles
 
 templates:
   bin/apply_policies.erb: bin/apply_policies
+  bin/pre-start.erb: bin/pre-start
   bin/post-start.erb: bin/post-start
   config/ca.pem.erb: config/ca.pem
   config/kubeconfig.erb: config/kubeconfig
