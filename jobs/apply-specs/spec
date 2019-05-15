@@ -16,20 +16,20 @@ templates:
 properties:
   addons:
     description: A list of default add-ons bootstrapped in the Kubernetes cluster
-  addons-spec:
-    description: Spec of the addons to be deployed into the Kubernetes cluster
-    default: ""
   admin-username:
     description: The admin username for the Kubernetes cluster
   admin-password:
     description: The admin password for the Kubernetes cluster
   api-token:
     description: The token to access Kubernetes API
-  coredns-spec:
+  specs.addons:
+    description: Spec of the addons to be deployed into the Kubernetes cluster
+    default: ""
+  specs.coredns:
     description: Spec of the coredns to be deployed into the Kubernetes cluster
-  kubernetes-dashboard-spec:
+  specs.kubernetes-dashboard:
     description: Spec of the kubernetes dashboard to be deployed into the Kubernetes cluster
-  metrics-server-spec:
+  specs.metrics-server:
     description: Spec of the metrics server to be deployed into the Kubernetes cluster
   timeout-sec:
     description: Timeout for system spec deployment
