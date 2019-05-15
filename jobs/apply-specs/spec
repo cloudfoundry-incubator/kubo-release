@@ -11,14 +11,7 @@ templates:
   specs/addon-spec.yml.erb: specs/addon-spec.yml
   specs/coredns.yml.erb: specs/coredns.yml
   specs/kubernetes-dashboard.yml.erb: specs/kubernetes-dashboard.yml
-  specs/metrics-server/auth-delegator.yml: specs/metrics-server/auth-delegator.yml
-  specs/metrics-server/auth-reader.yml: specs/metrics-server/auth-reader.yml
-  specs/metrics-server/metrics-apiservice.yml: specs/metrics-server/metrics-apiservice.yml
-  specs/metrics-server/metrics-server-deployment.yml: specs/metrics-server/metrics-server-deployment.yml
-  specs/metrics-server/metrics-server-service.yml: specs/metrics-server/metrics-server-service.yml
-  specs/metrics-server/resource-reader.yml: specs/metrics-server/resource-reader.yml
-  specs/metrics-server/secrets.yml.erb: specs/metrics-server/secrets.yml
-  specs/storage-class-gce.yml: specs/storage-class-gce.yml
+  specs/metrics-server.yml.erb: specs/metrics-server.yml
 
 properties:
   addons:
@@ -32,9 +25,12 @@ properties:
     description: The admin password for the Kubernetes cluster
   api-token:
     description: The token to access Kubernetes API
-  kubedns-service-ip:
-    description: The service cluster IP for DNS, must reside within service-cluster-cidr set for kube-apiserver
-    default: "10.100.200.10"
+  coredns-spec:
+    description: Spec of the coredns to be deployed into the Kubernetes cluster
+  kubernetes-dashboard-spec:
+    description: Spec of the kubernetes dashboard to be deployed into the Kubernetes cluster
+  metrics-server-spec:
+    description: Spec of the metrics server to be deployed into the Kubernetes cluster
   timeout-sec:
     description: Timeout for system spec deployment
     default: 1200
@@ -45,9 +41,7 @@ properties:
   tls.metrics-server:
     description: "Certificate authority, certificate, and private key for Metrics Server"
 
+
 consumes:
 - name: kube-apiserver
   type: kube-apiserver
-- name: cloud-provider
-  type: cloud-provider
-  optional: true
