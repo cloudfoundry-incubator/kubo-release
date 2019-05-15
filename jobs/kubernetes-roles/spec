@@ -44,5 +44,7 @@ properties:
     description: kubelet spec to be applied at post start
   specs.kubelet-drain:
     description: kubelet drain spec to be applied at post start
+  specs.kube-proxy:
+    description: kubelet proxy spec to be applied at post start
   specs.kube-system-podsecuritypolicy:
     description: kube-system podsecuritypolicy spec to be applied at post start
