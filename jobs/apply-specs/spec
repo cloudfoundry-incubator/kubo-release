@@ -8,7 +8,7 @@ templates:
   config/ca.pem.erb: config/ca.pem
   config/kubernetes-dashboard/kubernetes-dashboard.crt.erb: config/kubernetes-dashboard/kubernetes-dashboard.crt
   config/kubernetes-dashboard/kubernetes-dashboard.key.erb: config/kubernetes-dashboard/kubernetes-dashboard.key
-  specs/addon-spec.yml.erb: specs/addon-spec.yml
+  specs/addons.yml.erb: specs/addons.yml
   specs/coredns.yml.erb: specs/coredns.yml
   specs/kubernetes-dashboard.yml.erb: specs/kubernetes-dashboard.yml
   specs/metrics-server.yml.erb: specs/metrics-server.yml

@@ -43,38 +43,38 @@ main() {
   end
 %>
 <% if bootstrap_addons.include?('coredns') %>
-  <% if p('coredns-spec') != "nil" %>
+  <% if p('specs.coredns') != "nil" %>
     apply_spec "coredns.yml"
     wait_for coredns
   <% else %>
-    echo "coredns-spec doesn't exist"
+    echo "specs.coredns doesn't exist"
     exit 1
   <% end %>
 <% end %>
 
 <% if bootstrap_addons.include?('metrics-server') %>
-  <% if p('metrics-server-spec') != "nil" %>
+  <% if p('specs.metrics-server') != "nil" %>
     apply_spec "metrics-server.yml"
     wait_for metrics-server
   <% else %>
-    echo "metrics-server-spec doesn't exist"
+    echo "specs.metrics-server doesn't exist"
     exit 1
   <% end %>
 <% end %>
 
 <% if bootstrap_addons.include?('kubernetes-dashboard') %>
-  <% if p('kubernetes-dashboard-spec') != "nil" %>
+  <% if p('specs.kubernetes-dashboard') != "nil" %>
     create_dashboard_secrets
     apply_spec "kubernetes-dashboard.yml"
     wait_for kubernetes-dashboard
   <% else %>
-    echo "kubernetes-dashboard-spec doesn't exist"
+    echo "specs.kubernetes-dashboard doesn't exist"
     exit 1
   <% end %>
 <% end %>
 
-<% if !p('addons-spec').empty? and p('addons-spec') != "nil" %>
-  apply_spec "addon-spec.yml"
+<% if !p('specs.addons').empty? and p('specs.addons') != "nil" %>
+  apply_spec "addons.yml"
   <% else %>
   echo "No addons to apply."
 <% end %>
