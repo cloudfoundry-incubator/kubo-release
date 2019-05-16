@@ -1,6 +1,6 @@
 <%=
   psps = nil
-  if_p('post-start-custom-specs') do |p|
+  if_p('post-start-policies') do |p|
     psps = p.inject("") { |result, spec| result += "\n---\n" + spec['value'] }
   end
   psps

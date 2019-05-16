@@ -7,13 +7,7 @@ templates:
   bin/post-start.erb: bin/post-start
   config/ca.pem.erb: config/ca.pem
   config/kubeconfig.erb: config/kubeconfig
-  config/policies/cluster_admin.yml.erb: config/policies/cluster_admin.yml
-  config/policies/kube_proxy.yml.erb: config/policies/kube_proxy.yml
-  config/policies/kubelet.yml.erb: config/policies/kubelet.yml
-  config/policies/kubelet_drain.yml.erb: config/policies/kubelet_drain.yml
-  config/policies/cloud_provider.yml.erb: config/policies/cloud_provider.yml
-  config/policies/kube-system-podsecuritypolicy.yml.erb: config/policies/kube-system-podsecuritypolicy.yml
-  config/policies/post-start-custom-specs.yml.erb: config/policies/post-start-custom-specs.yml
+  config/post-start-policies.yml.erb: config/post-start-policies.yml
 
 consumes:
 - name: kube-apiserver
@@ -24,9 +18,24 @@ properties:
     description: The admin password for the Kubernetes cluster
   tls.kubernetes:
     description: Certificate and private key for the Kubernetes master
-  post-start-custom-specs:
-    description: Kubernetes specs to be applied at post-start
+  post-start-policies:
+    description: Kubernetes policies to be applied at post-start
     example:
+    - name: cluster-admin
+      value: |
+        ---
+        kind: ClusterRoleBinding
+        apiVersion: rbac.authorization.k8s.io/v1
+        metadata:
+          name: kubo:internal:admin
+        subjects:
+        - kind: User
+          name: admin
+          apiGroup: rbac.authorization.k8s.io
+        roleRef:
+          kind: ClusterRole
+          name: cluster-admin
+          apiGroup: rbac.authorization.k8s.io
     - name: psp1
       value: |
         ---
@@ -35,16 +44,3 @@ properties:
         ---
         apiVersion: rbac.authorization.k8s.io/v1
         kind: Role
-  specs.cloud-provider:
-    description: cloud provider spec to be applied at post start
-    default: ""
-  specs.cluster-admin:
-    description: cloud admin spec to be applied at post start
-  specs.kubelet:
-    description: kubelet spec to be applied at post start
-  specs.kubelet-drain:
-    description: kubelet drain spec to be applied at post start
-  specs.kube-proxy:
-    description: kubelet proxy spec to be applied at post start
-  specs.kube-system-podsecuritypolicy:
-    description: kube-system podsecuritypolicy spec to be applied at post start

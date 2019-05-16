@@ -6,6 +6,6 @@ set -e
 config_dir="/var/vcap/jobs/kubernetes-roles/config/"
 kubectl="/var/vcap/packages/kubernetes/bin/kubectl --kubeconfig=${config_dir}/kubeconfig"
 
-until ${kubectl} apply -f "${config_dir}/policies/"; do
+until ${kubectl} apply -f "${config_dir}/post-start-policies.yml"; do
  sleep 2
 done
