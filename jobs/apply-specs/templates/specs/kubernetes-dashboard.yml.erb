@@ -1,1 +1,13 @@
 <%= p('specs.kubernetes-dashboard')%>
+
+<%- require 'base64' -%>
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: kubernetes-dashboard-certs
+  namespace: kube-system
+type: Opaque
+data:
+  kubernetes-dashboard-cert: <%= Base64.strict_encode64("#{p('tls.kubernetes-dashboard.certificate')}\n#{p('tls.kubernetes-dashboard.ca')}") %>
+  kubernetes-dashboard-key: <%= Base64.strict_encode64(p('tls.kubernetes-dashboard.private_key')) %>
