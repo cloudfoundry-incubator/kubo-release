@@ -6,8 +6,6 @@ templates:
   bin/pre-start.erb: bin/pre-start
   config/kubeconfig.erb: config/kubeconfig
   config/ca.pem.erb: config/ca.pem
-  config/kubernetes-dashboard/kubernetes-dashboard.crt.erb: config/kubernetes-dashboard/kubernetes-dashboard.crt
-  config/kubernetes-dashboard/kubernetes-dashboard.key.erb: config/kubernetes-dashboard/kubernetes-dashboard.key
   specs/addons.yml.erb: specs/addons.yml
   specs/coredns.yml.erb: specs/coredns.yml
   specs/kubernetes-dashboard.yml.erb: specs/kubernetes-dashboard.yml
