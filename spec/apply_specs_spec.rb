@@ -41,7 +41,15 @@ describe 'apply-specs' do
   let(:default_properties) do
     {
       'addons' => ["metrics-server", "kubernetes-dashboard"],
-      'admin-password' => '1234'
+      'admin-password' => '1234',
+      'specs' => {
+        'metrics-server' => {
+          'apiVersion' => 'rbac.authorization.k8s.io/v1'
+        },
+        'kubernetes-dashboard' => {
+          'apiVersion' => 'rbac.authorization.k8s.io/v1'
+        }
+      }
     }
   end
   let(:rendered_deploy_specs) do
@@ -70,30 +78,7 @@ describe 'apply-specs' do
     end
   end
 
-  it 'does not apply the standard storage class by default' do
-    expect(rendered_deploy_specs).to_not include('apply_spec "storage-class-gce.yml"')
-  end
-
-  context 'on GCE' do
-    let(:link_spec) do
-      {
-        'cloud-provider' => {
-          'instances' => [],
-          'properties' => {
-            'cloud-provider' => {
-              'type' => 'gce'
-            }
-          }
-        }
-      }
-    end
-
-    it 'applies the standard storage class' do
-      expect(rendered_deploy_specs).to include('apply_spec "storage-class-gce.yml"')
-    end
-  end
-
-  context 'on non-GCE' do
+  context 'on all iaas' do
     let(:link_spec) do
       {
         'cloud-provider' => {
@@ -112,31 +97,21 @@ describe 'apply-specs' do
     end
   end
 
-  context 'on unspecified cloud-provider' do
-    let(:link_spec) do
-      {
-        'cloud-provider' => {
-          'instances' => [],
-          'properties' => {}
-        }
-      }
-    end
-
-    it 'does not apply the standard storage class' do
-      expect(rendered_deploy_specs).to_not include('apply_spec "storage-class-gce.yml"')
-    end
-  end
-
   context 'when addons are configured' do
     let(:default_properties) do
       {
-        'addons' => ['metrics-server']
+        'addons' => ['metrics-server'],
+        'specs' => {
+          'metrics-server' => {
+            'apiVersion' => 'rbac.authorization.k8s.io/v1'
+          }
+        }
       }
     end
 
     it 'deploys only specified addons' do
       rendered = rendered_deploy_specs
-      expect(rendered).to match(/apply_spec "metrics-server\/"/)
+      expect(rendered).to match(/apply_spec "metrics-server.yml"/)
     end
 
     it 'does not deploy unspecified addons' do
