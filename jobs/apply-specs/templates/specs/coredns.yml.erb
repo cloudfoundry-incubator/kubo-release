@@ -1,7 +1,7 @@
 <%=
   coredns = nil
   if_p('specs.coredns') do |c|
-    coredns = c.inject("") { |result, spec| result += "\n---\n" + spec['value'].to_s }
+    coredns = c.inject("") { |result, spec| result += "\n---\n" + spec['value'].to_yaml }
   end
   coredns
 %>
