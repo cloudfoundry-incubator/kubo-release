@@ -25,6 +25,13 @@ properties:
     default: ""
   specs.coredns:
     description: Spec of the coredns to be deployed into the Kubernetes cluster
+    exmaple:
+    - name: cluster-admin
+      value:
+        kind: ClusterRoleBinding
+    - name: service
+      value:
+        kind: Service
   specs.kubernetes-dashboard:
     description: Spec of the kubernetes dashboard to be deployed into the Kubernetes cluster
   specs.metrics-server:

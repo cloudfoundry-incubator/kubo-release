@@ -28,34 +28,20 @@ main() {
     raise "#{v} is not a supported addon" unless supported_addons.include?(v)
   end
 %>
+
 <% if bootstrap_addons.include?('coredns') %>
-  <% if p('specs.coredns') != "nil" %>
-    apply_spec "coredns.yml"
-    wait_for coredns
-  <% else %>
-    echo "specs.coredns doesn't exist"
-    exit 1
-  <% end %>
+  apply_spec "coredns.yml"
+  wait_for coredns
 <% end %>
 
 <% if bootstrap_addons.include?('metrics-server') %>
-  <% if p('specs.metrics-server') != "nil" %>
-    apply_spec "metrics-server.yml"
-    wait_for metrics-server
-  <% else %>
-    echo "specs.metrics-server doesn't exist"
-    exit 1
-  <% end %>
+  apply_spec "metrics-server.yml"
+  wait_for metrics-server
 <% end %>
 
 <% if bootstrap_addons.include?('kubernetes-dashboard') %>
-  <% if p('specs.kubernetes-dashboard') != "nil" %>
-    apply_spec "kubernetes-dashboard.yml"
-    wait_for kubernetes-dashboard
-  <% else %>
-    echo "specs.kubernetes-dashboard doesn't exist"
-    exit 1
-  <% end %>
+  apply_spec "kubernetes-dashboard.yml"
+  wait_for kubernetes-dashboard
 <% end %>
 
 <% if !p('specs.addons').empty? and p('specs.addons') != "nil" %>

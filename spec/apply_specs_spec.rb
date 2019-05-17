@@ -40,16 +40,8 @@ describe 'apply-specs' do
   let(:link_spec) { {} }
   let(:default_properties) do
     {
-      'addons' => ["metrics-server", "kubernetes-dashboard"],
-      'admin-password' => '1234',
-      'specs' => {
-        'metrics-server' => {
-          'apiVersion' => 'rbac.authorization.k8s.io/v1'
-        },
-        'kubernetes-dashboard' => {
-          'apiVersion' => 'rbac.authorization.k8s.io/v1'
-        }
-      }
+      'addons' => ["metrics-server", "kubernetes-dashboard", "coredns"],
+      'admin-password' => '1234'
     }
   end
   let(:rendered_deploy_specs) do
@@ -100,12 +92,7 @@ describe 'apply-specs' do
   context 'when addons are configured' do
     let(:default_properties) do
       {
-        'addons' => ['metrics-server'],
-        'specs' => {
-          'metrics-server' => {
-            'apiVersion' => 'rbac.authorization.k8s.io/v1'
-          }
-        }
+        'addons' => ['metrics-server']
       }
     end
 
