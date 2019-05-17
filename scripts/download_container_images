@@ -1,0 +1,77 @@
+#!/bin/bash
+set -e
+
+main() {
+    local images staging_dir
+
+    if [[ $# -ne 0 ]] ; then
+        images=$@
+    else
+        images=(
+            "coredns/coredns:1.2.0"
+            "k8s.gcr.io/k8s-dns-dnsmasq-nanny-amd64:1.14.10"
+            "k8s.gcr.io/k8s-dns-sidecar-amd64:1.14.10"
+            "k8s.gcr.io/kubernetes-dashboard-amd64:v1.10.1"
+            "k8s.gcr.io/metrics-server-amd64:v0.3.2"
+            "pcfkubo/nginx-bionic:1.0.0"
+        )
+    fi
+
+    staging_dir=$(mktemp -d)
+
+    trap '{ rm -rf "$staging_dir"; }' EXIT
+
+    pushd "$(dirname "${BASH_SOURCE[0]}")/.."
+        for image in "${images[@]}"; do
+            if blob_missing "$image"; then
+                output_file=${image//\//_}.tgz
+                output_path="${staging_dir}/${output_file}"
+                download "${image}" "${output_path}"
+                remove_blob "${output_file}"
+                add_blob "${output_path}" "${output_file}"
+            else
+                echo "blob for $image already exists"
+            fi
+        done
+    popd
+}
+
+blob_missing() {
+    local image full_image_name
+    image="$1"
+
+    full_image_name="container-images/${image//\//_}"
+
+    if bosh blobs | grep -q "$full_image_name" ; then
+        return 1
+    else
+        return 0
+    fi
+}
+
+download() {
+    local image_name output_path
+    image_name="$1"
+    output_path="$2"
+
+    docker pull "${image_name}"
+    docker save "${image_name}" | gzip > "${output_path}"
+
+    echo "saving to: ${output_path}"
+}
+
+add_blob() {
+    local binary_path="$1"
+    local binary_name="$2"
+
+    bosh add-blob "${binary_path}" "container-images/${binary_name}"
+}
+
+remove_blob() {
+    local image_name="$1"
+    old_image_name=${image_name%:*}
+    old_image_path=$(bosh blobs --column=path | grep "${old_image_name}")
+    bosh remove-blob ${old_image_path}
+}
+
+main "$@"
