@@ -46,7 +46,6 @@ properties:
   tls.metrics-server:
     description: "Certificate authority, certificate, and private key for Metrics Server"
 
-
 consumes:
 - name: kube-apiserver
   type: kube-apiserver

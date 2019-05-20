@@ -1,0 +1,16 @@
+set -e
+
+main() {
+  create_target_dir
+  copy_depedencies_to_bosh
+}
+
+create_target_dir() {
+  mkdir -p "${BOSH_INSTALL_TARGET:?}/container-images"
+}
+
+copy_depedencies_to_bosh() {
+  cp -a container-images/* "${BOSH_INSTALL_TARGET:?}/container-images"
+}
+
+main

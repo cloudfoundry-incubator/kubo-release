@@ -1,0 +1,5 @@
+---
+name: kubernetes-addons
+
+files:
+- container-images/*
