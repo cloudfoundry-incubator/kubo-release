@@ -39,6 +39,21 @@ properties:
   kubectl-drain-timeout:
     description: "The length of time to wait before giving up draining a node, zero means infinite"
     default: "0s"
+  kubectl-pod-shutdown-grace-period:
+    description: "Period of time in seconds given to each pod to terminate gracefully. If negative, the default value specified in the pod will be used."
+    default: "10"
+  kubectl-force-drain:
+    description: "Continue drain even if there are pods not managed by a ReplicationController, ReplicaSet, Job, DaemonSet or StatefulSet."
+    default: true
+  kubectl-force-drain-daemonset:
+    description: "Ignore DaemonSet-managed pods during drain"
+    default: true
+  kubectl-delete-local-data:
+    description: "Continue drain even if there are pods using emptyDir (local data that will be deleted when the node is drained)"
+    default: true
+  force-drain:
+    description: "Forcibly terminate pods if all the pods fail to drain before the timeout."
+    default: false
   k8s-args:
     description: "Pass-through options for Kubernetes runtime arguments. See docs https://kubernetes.io/docs/reference/command-line-tools-reference/kubelet/ for reference."
     example: |

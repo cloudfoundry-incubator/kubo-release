@@ -35,13 +35,31 @@ cordon_node() {
 }
 
 drain_node() {
-  kubectl --kubeconfig /var/vcap/jobs/kubelet/config/kubeconfig-drain drain \
-    -l "bosh.id=<%= spec.id %>" \
-    --grace-period 10 \
-    --force \
-    --delete-local-data \
-    --ignore-daemonsets \
-    --timeout <%= p("kubectl-drain-timeout") %>
+  kubectl_args=()
+  kubectl_args+=(--kubeconfig /var/vcap/jobs/kubelet/config/kubeconfig-drain drain)
+  kubectl_args+=(-l "bosh.id=<%= spec.id %>")
+  kubectl_args+=(--grace-period <%= p("kubectl-pod-shutdown-grace-period") %>)
+  kubectl_args+=(--timeout <%= p("kubectl-drain-timeout") %>)
+
+  <% if_p("kubectl-force-drain") do |prop| %>
+    <% if prop %>
+      kubectl_args+=(--force)
+    <% end %>
+  <% end %>
+
+  <% if_p("kubectl-force-drain-daemonset") do |prop| %>
+    <% if prop %>
+      kubectl_args+=(--ignore-daemonsets)
+    <% end %>
+  <% end %>
+
+  <% if_p("kubectl-delete-local-data") do |prop| %>
+    <% if prop %>
+      kubectl_args+=(--delete-local-data)
+    <% end %>
+  <% end %>
+
+  kubectl "${kubectl_args[@]}"
 }
 
 get_k8s_disks() {
