@@ -1,7 +1,7 @@
 ---
 processes:
 - name: kube-controller-manager
-  executable: /var/vcap/packages/kubernetes/bin/kube-controller-manager
+  executable: /var/vcap/packages/k8s/bin/kube-controller-manager
   args: 
   <% 
     if_p('k8s-args') do |args|

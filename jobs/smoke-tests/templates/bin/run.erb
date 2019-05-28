@@ -1,7 +1,7 @@
 #!/bin/bash
 set -eu
 
-kubectl="/var/vcap/packages/kubernetes/bin/"
+kubectl="/var/vcap/packages/k8s/bin/"
 export PATH=${kubectl}:$PATH
 export KUBECONFIG="/var/vcap/jobs/smoke-tests/config/kubeconfig"
 

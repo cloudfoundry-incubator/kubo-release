@@ -23,8 +23,8 @@ check_directory_existence(){
 }
 
 main() {
-  check_file_existence "/var/vcap/packages/kubernetes/bin/kubelet"
-  check_directory_existence "/var/vcap/packages/kubernetes/container-images"
+  check_file_existence "/var/vcap/packages/k8s/bin/kubelet"
+  check_directory_existence "/var/vcap/packages/k8s/container-images"
   check_directory_existence "/var/vcap/packages/kubernetes-addons/container-images"
 }
 
