@@ -1,7 +1,7 @@
 ---
 processes:
 - name: kube-scheduler
-  executable: /var/vcap/packages/k8s/bin/kube-scheduler
+  executable: /var/vcap/packages/kubernetes/bin/kube-scheduler
   args:
   <%
     if_p('k8s-args') do |args|

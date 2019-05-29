@@ -5,7 +5,7 @@ set -e
 spec_dir="/var/vcap/jobs/apply-specs/specs"
 config_dir="/var/vcap/jobs/apply-specs/config"
 
-kubectl="/var/vcap/packages/k8s/bin/kubectl --kubeconfig=/var/vcap/jobs/apply-specs/config/kubeconfig"
+kubectl="/var/vcap/packages/kubernetes/bin/kubectl --kubeconfig=/var/vcap/jobs/apply-specs/config/kubeconfig"
 
 apply_spec() {
   local spec_file="${spec_dir}/${1}"
