@@ -21,7 +21,27 @@ main() {
   retry cordon_node
   k8s_disks=$(get_k8s_disks)
   echo "Mounted volumes: $k8s_disks"
-  retry drain_node
+  if ! drain_node ; then
+    <% if_p("force-drain") do |prop| %>
+      <% if prop %>
+        echo "Forcefully draining the node"
+        node_name=$(kubectl  get node -l "bosh.id=<%= spec.id %>" -o jsonpath="{.items[:].metadata.name}")
+        namespaces=( $(kubectl get pods --all-namespaces --field-selector spec.nodeName=${node_name} -o jsonpath="{.items[:].metadata.namespace}" | xargs -n1 | sort -u -) )
+        for namespace in "${namespaces[@]}"; do
+           echo $namespace;
+           podnames=( $(kubectl get pods -n=${namespace} --field-selector spec.nodeName=${node_name} -o jsonpath="{.items[:].metadata.name}") )
+           for pod_name in "${podnames[@]}"; do
+            echo "Force Deleting pod ${pod_name}"
+            kubectl delete pods ${pod_name}  --namespace ${namespace} --grace-period=0 --force
+           done
+        done
+      <% else %>
+        echo "Unsuccessful function drain_node"
+        exit 1
+      <% end %>
+    <% end %>
+  fi
+
   if [[ -z "${k8s_disks}" ]]; then
     echo "No attached PVs"
   else

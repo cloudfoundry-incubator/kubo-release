@@ -53,7 +53,7 @@ properties:
     default: true
   force-drain:
     description: "Forcibly terminate pods if all the pods fail to drain before the timeout."
-    default: false
+    default: true
   k8s-args:
     description: "Pass-through options for Kubernetes runtime arguments. See docs https://kubernetes.io/docs/reference/command-line-tools-reference/kubelet/ for reference."
     example: |
