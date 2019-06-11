@@ -24,8 +24,12 @@ processes:
     end
   %>
   <%- if_link('cloud-provider') do |cloud_provider| -%>
-  - --cloud-provider=<%= cloud_provider.p('cloud-provider.type') %>
+  <% if "external".eql? cloud_provider.p('cloud-provider.type') %>
   - --cloud-config=/var/vcap/jobs/kube-controller-manager/config/cloud-provider.ini
+  <% else %>
+  - --cloud-provider=cloud_provider.p('cloud-provider.type') 
+  - --cloud-config=/var/vcap/jobs/kube-controller-manager/config/cloud-provider.ini
+ <% end %>
   <%- end -%>
   hooks:
     pre_start: /var/vcap/jobs/kube-controller-manager/bin/chmod-product-serial
