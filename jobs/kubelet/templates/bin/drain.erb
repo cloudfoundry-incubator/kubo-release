@@ -74,14 +74,14 @@ drain_node() {
 
 force_kill_pods() {
   echo "Forcefully draining the node"
-  node_name=$(kubectl  get node -l "bosh.id=<%= spec.id %>" -o jsonpath="{.items[:].metadata.name}")
-  namespaces=( $(kubectl get pods --all-namespaces --field-selector spec.nodeName=${node_name} -o jsonpath="{.items[:].metadata.namespace}" | xargs -n1 | sort -u -) )
+  node_name=$(kubectl --kubeconfig /var/vcap/jobs/kubelet/config/kubeconfig-drain get node -l "bosh.id=<%= spec.id %>" -o jsonpath="{.items[:].metadata.name}")
+  namespaces=( $(kubectl --kubeconfig /var/vcap/jobs/kubelet/config/kubeconfig-drain get pods --all-namespaces --field-selector spec.nodeName=${node_name} -o jsonpath="{.items[:].metadata.namespace}" | xargs -n1 | sort -u -) )
   for namespace in "${namespaces[@]}"; do
     echo $namespace;
-    podnames=( $(kubectl get pods -n=${namespace} --field-selector spec.nodeName=${node_name} -o jsonpath="{.items[:].metadata.name}") )
+    podnames=( $(kubectl --kubeconfig /var/vcap/jobs/kubelet/config/kubeconfig-drain get pods -n=${namespace} --field-selector spec.nodeName=${node_name} -o jsonpath="{.items[:].metadata.name}") )
     for pod_name in "${podnames[@]}"; do
       echo "Force Deleting pod ${pod_name}"
-      kubectl delete pods ${pod_name}  --namespace ${namespace} --grace-period=0 --force
+      kubectl --kubeconfig /var/vcap/jobs/kubelet/config/kubeconfig-drain delete pods ${pod_name}  --namespace ${namespace} --grace-period=0 --force
     done
   done
 }
