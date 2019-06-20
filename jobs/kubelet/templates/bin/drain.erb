@@ -21,7 +21,17 @@ main() {
   retry cordon_node
   k8s_disks=$(get_k8s_disks)
   echo "Mounted volumes: $k8s_disks"
-  retry drain_node
+  if ! drain_node ; then
+    <% if_p("kubelet-drain-force-node") do |prop| %>
+      <% if prop %>
+        force_kill_pods
+      <% else %>
+        echo "Unsuccessful function drain_node"
+        exit 1
+      <% end %>
+    <% end %>
+  fi
+
   if [[ -z "${k8s_disks}" ]]; then
     echo "No attached PVs"
   else
@@ -35,13 +45,45 @@ cordon_node() {
 }
 
 drain_node() {
-  kubectl --kubeconfig /var/vcap/jobs/kubelet/config/kubeconfig-drain drain \
-    -l "bosh.id=<%= spec.id %>" \
-    --grace-period 10 \
-    --force \
-    --delete-local-data \
-    --ignore-daemonsets \
-    --timeout <%= p("kubectl-drain-timeout") %>
+  kubectl_args=()
+  kubectl_args+=(--kubeconfig /var/vcap/jobs/kubelet/config/kubeconfig-drain drain)
+  kubectl_args+=(-l "bosh.id=<%= spec.id %>")
+  kubectl_args+=(--grace-period <%= p("kubelet-drain-grace-period") %>)
+  kubectl_args+=(--timeout <%= p("kubectl-drain-timeout") %>)
+
+  <% if_p("kubelet-drain-force") do |prop| %>
+    <% if prop %>
+      kubectl_args+=(--force)
+    <% end %>
+  <% end %>
+
+  <% if_p("kubelet-drain-ignore-daemonsets") do |prop| %>
+    <% if prop %>
+      kubectl_args+=(--ignore-daemonsets)
+    <% end %>
+  <% end %>
+
+  <% if_p("kubelet-drain-delete-local-data") do |prop| %>
+    <% if prop %>
+      kubectl_args+=(--delete-local-data)
+    <% end %>
+  <% end %>
+
+  kubectl "${kubectl_args[@]}"
+}
+
+force_kill_pods() {
+  echo "Forcefully draining the node"
+  node_name=$(kubectl --kubeconfig /var/vcap/jobs/kubelet/config/kubeconfig-drain get node -l "bosh.id=<%= spec.id %>" -o jsonpath="{.items[:].metadata.name}")
+  namespaces=( $(kubectl --kubeconfig /var/vcap/jobs/kubelet/config/kubeconfig-drain get pods --all-namespaces --field-selector spec.nodeName=${node_name} -o jsonpath="{.items[:].metadata.namespace}" | xargs -n1 | sort -u -) )
+  for namespace in "${namespaces[@]}"; do
+    echo $namespace;
+    podnames=( $(kubectl --kubeconfig /var/vcap/jobs/kubelet/config/kubeconfig-drain get pods -n=${namespace} --field-selector spec.nodeName=${node_name} -o jsonpath="{.items[:].metadata.name}") )
+    for pod_name in "${podnames[@]}"; do
+      echo "Force Deleting pod ${pod_name}"
+      kubectl --kubeconfig /var/vcap/jobs/kubelet/config/kubeconfig-drain delete pods ${pod_name}  --namespace ${namespace} --grace-period=0 --force
+    done
+  done
 }
 
 get_k8s_disks() {
