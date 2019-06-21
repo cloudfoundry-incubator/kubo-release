@@ -36,6 +36,9 @@ properties:
     description: The Kubelet will load its initial configuration from this.
       Omit this to use the built-in default configuration values.
       Command-line flags override configuration.
+  master:
+    description: The kubelet will label and taint itself as a master node with node-role.kubernetes.io/master=:NoSchedule
+    default: false
   kubectl-drain-timeout:
     description: "The length of time to wait before giving up draining a node, zero means infinite"
     default: "0s"
