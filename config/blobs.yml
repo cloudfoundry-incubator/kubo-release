@@ -26,10 +26,10 @@ conntrack/libnetfilter-conntrack3_1.0.4-1.deb:
   size: 45872
   object_id: 42a59368-8ae3-4502-480b-56ecd3f40f7a
   sha: 743b497bd6a6491a8cad11c04103e55c7a9cc93c
-container-images/coredns_coredns:1.5.2.tgz:
-  size: 13191151
-  object_id: 37096163-1c75-4119-651b-dae0cb1cf2c0
-  sha: 62cfc56d57e6455a2946178228691f16a1eb605b
+container-images/coredns_coredns:1.4.0.tgz:
+  size: 12997721
+  object_id: 14779ec2-2266-48eb-77d6-a732d3721d1f
+  sha: b5f7af681ba11570d7ffdf77f9f6c03371b45679
 container-images/k8s.gcr.io_kubernetes-dashboard-amd64:v1.10.1.tgz:
   size: 44852477
   object_id: 1d8fdcd7-fe1e-431d-5d90-2032b97d8ad0
