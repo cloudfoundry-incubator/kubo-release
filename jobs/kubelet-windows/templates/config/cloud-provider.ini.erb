@@ -1,0 +1,26 @@
+<%
+  def escape(value)
+    if value.kind_of? String
+      return value.gsub("\\", "\\\\\\").gsub("\"", "\\\"")
+    else
+      value
+    end
+  end
+
+  cloud_config=""
+
+  if_link('cloud-provider') do |cloud_provider|
+    if cloud_provider.p('cloud-provider.type').downcase == "azure"
+      cloud_config += cloud_provider.p('cloud-config', {}).to_yaml
+    else
+      cloud_provider.p('cloud-config', {}).each do |header, properties|
+        cloud_config += "[#{header}]\n"
+        properties.each do |property, value|
+          raise TypeError, "Invalid value of type #{value.class} for property \"#{property}\"" if value.is_a? Enumerable
+          cloud_config += "#{property}=\"#{escape(value)}\"\n"
+        end
+      end
+    end
+  end
+%>
+<%= cloud_config %>

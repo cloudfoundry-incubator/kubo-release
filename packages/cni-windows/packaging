@@ -1,0 +1,8 @@
+. ./exiter.ps1
+
+$ErrorActionPreference = "Stop";
+trap { $host.SetShouldExit(1) }
+
+mkdir ${env:BOSH_INSTALL_TARGET}/bin
+$tgz=(get-childitem cni/cni-plugins-windows-amd64*.tgz).Name
+tar -xzf cni/$tgz -C ${env:BOSH_INSTALL_TARGET}/bin/

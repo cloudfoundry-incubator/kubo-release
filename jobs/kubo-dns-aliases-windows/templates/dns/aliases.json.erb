@@ -1,0 +1,24 @@
+<%=
+# This file is required by the bosh-dns job which is applied through the runtime config
+
+def wildcard_name(name)
+  name.split('.').collect!.with_index {|s, i| (i == 0) ? '*' : s}.join('.')
+end
+
+# As defined by cfcr-etcd-release
+def get_etcd_alias(server)
+  node_name = "#{server.name.gsub('_','-')}-#{server.index}"
+  "#{node_name}.#{link('etcd').p('etcd.dns_suffix')}"
+end
+
+master_node_dns = link('kube-apiserver').address
+aliases = { 'master.cfcr.internal' => [ wildcard_name(master_node_dns) ] }
+
+if link('etcd').p('etcd.dns_suffix', false) != false
+  link('etcd').instances.each do |instance|
+    aliases.merge!({ get_etcd_alias(instance) => [instance.address] })
+  end
+end
+
+JSON.dump(aliases)
+%>

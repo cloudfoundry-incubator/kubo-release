@@ -1,0 +1,13 @@
+---
+name: kubo-dns-aliases
+
+templates:
+  dns/aliases.json.erb: dns/aliases.json
+
+consumes:
+- name: etcd
+  type: etcd
+- name: kube-apiserver
+  type: kube-apiserver
+
+properties: {}

@@ -1,0 +1,9 @@
+. ./exiter.ps1
+
+$ErrorActionPreference = "Stop";
+trap { $host.SetShouldExit(1) }
+
+
+$FLANNELD_VERSION="0.11.0"
+tar xvf flannel-v${FLANNELD_VERSION}-windows-amd64.tar.gz
+Copy-Item flanneld.exe "${env:BOSH_INSTALL_TARGET}/flanneld.exe"
