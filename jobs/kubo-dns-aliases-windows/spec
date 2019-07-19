@@ -1,5 +1,5 @@
 ---
-name: kubo-dns-aliases
+name: kubo-dns-aliases-windows
 
 templates:
   dns/aliases.json.erb: dns/aliases.json
