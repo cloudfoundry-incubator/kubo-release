@@ -1,0 +1,86 @@
+trap { $host.SetShouldExit(1) }
+
+<%-
+  def get_url(server, port)
+    if link('etcd').p('etcd.dns_suffix', false) != false
+      node_name = "#{server.name.gsub('_','-')}-#{server.index}"
+      return "https://#{node_name}.#{link('etcd').p('etcd.dns_suffix')}:#{port}"
+    else
+      return "https://#{server.address}:#{port}"
+    end
+  end
+-%>
+<%-
+  def get_network_name
+    if p("backend-type") == "win-overlay"
+      "vxlan0"
+    else
+      "cbr0"
+    end
+  end
+-%>
+
+function start_flanneld {
+  <% etcd_endpoints = link('etcd').instances.map { |server| get_url(server, 2379) }.join(",") %>
+
+  mkdir -force /etc/cni/net.d
+  $confFile= '
+{
+  "name": "<%= get_network_name %>",
+  "plugins": [
+    {
+      "type": "flannel",
+      "delegate": {
+        "hairpinMode": true,
+        "isDefaultGateway": true,
+        "type": "<%= p('backend-type') %>",
+        "dns": {
+          "nameservers": ["10.100.200.10"],
+          "search": ["svc.cluster.local"]
+        },
+        "policies": [
+          {
+            "Name": "EndpointPolicy",
+            "Value": {
+              "Type": "OutBoundNAT",
+              "ExceptionList": [
+                "<%= p('pod-network-cidr') %>",
+                "10.100.200.0/12",
+                "<%= spec.ip.split(".")[0...-1].append(0).join(".") %>/24"
+              ]
+            }
+          },
+          {
+            "Name": "EndpointPolicy",
+            "Value": {
+              "Type": "ROUTE",
+              "DestinationPrefix": "10.100.200.0/24",
+              "NeedEncap": true
+            }
+          },
+          {
+            "Name": "EndpointPolicy",
+            "Value": {
+              "Type": "ROUTE",
+              "DestinationPrefix": "<%= spec.ip %>/32",
+              "NeedEncap": true
+            }
+          }
+        ]
+      }
+    }
+  ]
+}
+'
+  Set-Content -Path /etc/cni/net.d/50-flannel.conflist -Value $confFile
+
+
+  /var/vcap/packages/flanneld-windows/flanneld.exe `
+    --etcd-endpoints=<%= etcd_endpoints %> `
+    --ip-masq `
+    --etcd-certfile=/var/vcap/jobs/flanneld-windows/config/etcd-client.crt `
+    --etcd-keyfile=/var/vcap/jobs/flanneld-windows/config/etcd-client.key `
+    --etcd-cafile=/var/vcap/jobs/flanneld-windows/config/etcd-ca.crt
+}
+
+start_flanneld

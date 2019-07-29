@@ -130,3 +130,24 @@ talloc-2.1.9.tar.gz:
   size: 440335
   object_id: f2d8d5e1-1cb6-450c-480f-015534a76b17
   sha: e1e79fec4c0b6bd92be904a9c03b0a168478711a
+
+cni/cni-plugins-windows-amd64-c74e0e996.tgz:
+  size: 9678154
+  object_id: da0e8048-675b-4701-68e9-7db89e88723b
+  sha: 02c4d67a17a28c26cc471e56bf01dcacd104b346
+flannel-v0.11.0-windows-amd64.tar.gz:
+  size: 9488010
+  object_id: 968eac5f-3008-4bcf-5481-f3f4179162d4
+  sha: 71cb61a487c40df8eeb4d2bd68d7e891b51b44bb
+kubernetes-windows-1.14.4/kube-proxy.exe:
+  size: 39763456
+  object_id: 5f8542b1-f37b-44b7-760a-dc743f74cbb6
+  sha: 202b0e02ce4bade293f774561e12beec35f382f4
+kubernetes-windows-1.14.4/kubectl.exe:
+  size: 43554816
+  object_id: dbba0d4e-8424-48d5-7be0-a1a81f12d712
+  sha: 1c75cba2a91bdbbfb99eb76b6875d8afd6c6e6fd
+kubernetes-windows-1.14.4/kubelet.exe:
+  size: 116712448
+  object_id: a626b53f-363c-433c-5707-e9e29f0a40fc
+  sha: 2276450df26a2749e2ff39c60079723edb3b1eb2

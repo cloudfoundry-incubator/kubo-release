@@ -1,0 +1,5 @@
+<% if_link('cloud-provider') do |cloud_provider| -%>
+<% cloud_provider.if_p('cloud-provider.gce.service_key') do |service_key| -%>
+<%= service_key %>
+<% end -%>
+<% end -%>

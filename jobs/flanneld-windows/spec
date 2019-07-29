@@ -1,0 +1,36 @@
+---
+name: flanneld-windows
+
+templates:
+  bin/flanneld_ctl.ps1.erb: bin/flanneld_ctl.ps1
+  config/etcd-ca.crt.erb: config/etcd-ca.crt
+  config/etcd-client.crt.erb: config/etcd-client.crt
+  config/etcd-client.key.erb: config/etcd-client.key
+
+packages:
+- flanneld-windows
+- cni-windows
+
+properties:
+  pod-network-cidr:
+    description: The pod networking cidr for pod network overlay
+    default: "10.200.0.0/16"
+  backend-type:
+    description: The network backend to use
+    default: "win-overlay"
+  tls.etcdctl.ca:
+    description: CA for etcdctl client authentication
+  tls.etcdctl.certificate:
+    description: Certificate for etcdctl client authentication
+  tls.etcdctl.private_key:
+    description: Private key for etcdctl client authentication
+
+consumes:
+- name: etcd
+  type: etcd
+
+provides:
+- name: flanneld-windows
+  type: flanneld-windows
+  properties:
+  - backend-type
