@@ -1,3 +1,5 @@
+. ./exiter.ps1
+
 $ErrorActionPreference = "Stop";
 trap { $host.SetShouldExit(1) }
 
