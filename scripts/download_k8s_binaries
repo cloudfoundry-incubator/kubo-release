@@ -28,7 +28,7 @@ main() {
     "kubelet.exe"
   )
 
-  platform=(
+  platforms=(
     "linux"
     "windows"
   )
