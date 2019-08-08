@@ -14,6 +14,10 @@ cni/cni-plugins-amd64-v0.7.1.tgz:
   size: 17108856
   object_id: 50dc58eb-107d-483a-4e37-5a243ffed520
   sha: fb29e20401d3e9598a1d8e8d7992970a36de5e05
+cni/cni-plugins-windows-amd64-c74e0e996.tgz:
+  size: 9678154
+  object_id: da0e8048-675b-4701-68e9-7db89e88723b
+  sha: 02c4d67a17a28c26cc471e56bf01dcacd104b346
 cni/util-linux_2.27.1-6ubuntu3_amd64.deb:
   size: 847730
   object_id: 27eb3ec3-220f-4a25-6c4f-ec219c37ac8d
@@ -54,6 +58,10 @@ flannel-v0.11.0-linux-amd64.tar.gz:
   size: 9565743
   object_id: 83064ebe-b45d-4d41-694a-b1e61a781250
   sha: 3024034b2202d5940acf5353037161ea1770a9c5
+flannel-v0.11.0-windows-amd64.tar.gz:
+  size: 9488010
+  object_id: 968eac5f-3008-4bcf-5481-f3f4179162d4
+  sha: 71cb61a487c40df8eeb4d2bd68d7e891b51b44bb
 ipset/ipset_6.20.1-1_amd64.deb:
   size: 34156
   object_id: 5dfcce8f-366e-49f0-59e6-9e2d48178750
@@ -66,30 +74,42 @@ jq-linux64-1.6:
   size: 3953824
   object_id: efdcc8cd-7155-47d4-65c9-d3d74700633f
   sha: 056ba5d6bbc617c29d37158ce11fd5a443093949
-kubernetes-1.14.4/kube-apiserver:
-  size: 167628128
-  object_id: 565c4284-e522-4da4-6aa5-4bcafad48990
-  sha: 922c28e877a3b5d3368e91f873837c9e1398dcb3
-kubernetes-1.14.4/kube-controller-manager:
-  size: 115649056
-  object_id: b9e5614f-8b4a-4457-60c7-1f6f29f6b80e
-  sha: c7872505be52c483131f2f5c06b33c8afbb91f8c
-kubernetes-1.14.4/kube-proxy:
+kubernetes-1.14.5/kube-apiserver:
+  size: 167624032
+  object_id: cda57957-d41d-4538-4d97-5046d2b58f8d
+  sha: fa4379ee28e67d2cb4dba88cb2627b87e26609aa
+kubernetes-1.14.5/kube-controller-manager:
+  size: 115644960
+  object_id: d59c5846-b2d0-447e-4452-488e8c79178d
+  sha: a029c93aa5617fb3a88f1b1bd01a316090f10d4e
+kubernetes-1.14.5/kube-proxy:
   size: 36685440
-  object_id: 711092c9-8478-4b50-622f-68b1b2e71783
-  sha: f9b1e1339530f6f529450120cf72a08a189f0f25
-kubernetes-1.14.4/kube-scheduler:
+  object_id: fe98b448-16b9-4141-4234-e48f588503db
+  sha: 14f2cc598ec316d578be73c40404a320254aade0
+kubernetes-1.14.5/kube-scheduler:
   size: 39258304
-  object_id: 68ae6557-3732-4ded-7b0e-4ca3e9736419
-  sha: ac0ae65fd2391a4b5df6b147a1430de45795d03e
-kubernetes-1.14.4/kubectl:
+  object_id: 6ef99be0-72b0-46ff-6b3f-d5d8c1fff3e2
+  sha: adfcbe149918c762713af531ea6a18aad1fa6058
+kubernetes-1.14.5/kubectl:
   size: 43107136
-  object_id: 741f99f2-7305-40c2-76b9-e58c49d9be36
-  sha: c055ce78bebd3af14050d3e3f6ea4306daa37b5f
-kubernetes-1.14.4/kubelet:
+  object_id: ba88b1a7-76fe-45a4-6986-aad0e9ae236a
+  sha: f9a872d38d1a63d120fe4711fc5782155c73fe2e
+kubernetes-1.14.5/kubelet:
   size: 128026560
-  object_id: 3bda3a98-572f-4b8f-79b3-23e40ab03dfe
-  sha: e4d3e655890614e8ceaf2dd00a0613e87764cdd3
+  object_id: 97234c6a-39b1-483e-55df-95ffd3c2f888
+  sha: ce8a010c362f298f62ce94d7a6f7b3d949635633
+kubernetes-windows-1.14.5/kube-proxy.exe:
+  size: 39761920
+  object_id: db44678c-3c4a-4972-4ea0-6d539198749c
+  sha: bd72bd0f8edceb4fbe88a9b01750c1fa0fd6adec
+kubernetes-windows-1.14.5/kubectl.exe:
+  size: 43552256
+  object_id: 2762a5d2-bd13-4dca-5097-a361386d6cb4
+  sha: 6df9b51b593ede01511de044ddd72356df6f090f
+kubernetes-windows-1.14.5/kubelet.exe:
+  size: 116709376
+  object_id: 9bf4d99a-d1af-4681-58d5-0bc30b6d1ebc
+  sha: 788cdd100e7eb98194c4d2ae83427b726daa7e3c
 libmnl0_1.0.3-3.deb:
   size: 11416
   object_id: 245e085f-1ad2-447d-67bb-1894b960c571
@@ -130,24 +150,3 @@ talloc-2.1.9.tar.gz:
   size: 440335
   object_id: f2d8d5e1-1cb6-450c-480f-015534a76b17
   sha: e1e79fec4c0b6bd92be904a9c03b0a168478711a
-
-cni/cni-plugins-windows-amd64-c74e0e996.tgz:
-  size: 9678154
-  object_id: da0e8048-675b-4701-68e9-7db89e88723b
-  sha: 02c4d67a17a28c26cc471e56bf01dcacd104b346
-flannel-v0.11.0-windows-amd64.tar.gz:
-  size: 9488010
-  object_id: 968eac5f-3008-4bcf-5481-f3f4179162d4
-  sha: 71cb61a487c40df8eeb4d2bd68d7e891b51b44bb
-kubernetes-windows-1.14.4/kube-proxy.exe:
-  size: 39763456
-  object_id: 5f8542b1-f37b-44b7-760a-dc743f74cbb6
-  sha: 202b0e02ce4bade293f774561e12beec35f382f4
-kubernetes-windows-1.14.4/kubectl.exe:
-  size: 43554816
-  object_id: dbba0d4e-8424-48d5-7be0-a1a81f12d712
-  sha: 1c75cba2a91bdbbfb99eb76b6875d8afd6c6e6fd
-kubernetes-windows-1.14.4/kubelet.exe:
-  size: 116712448
-  object_id: a626b53f-363c-433c-5707-e9e29f0a40fc
-  sha: 2276450df26a2749e2ff39c60079723edb3b1eb2
