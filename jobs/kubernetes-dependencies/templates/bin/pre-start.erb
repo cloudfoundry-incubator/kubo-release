@@ -9,24 +9,32 @@ NFS_PACKAGES=/var/vcap/packages/nfs
 install_package() {
   local package=$1
 
+  count_failure=0
   until dpkg -i "$package"; do
+    if [[ $count_failure -ge 100 ]]; then
+      echo "Failed installing package $package after 100 attempts."
+      exit 1
+    fi
     echo "Retrying '$package'"
+    count_failure=$(($count_failure+1))
     sleep 2
   done
 }
 
-install_package "${CONNTRACK_PACKAGES:?}/libmnl0_1.0.3-3.deb"
+install_package "${CONNTRACK_PACKAGES:?}/libmnl0_1.0.3-5_amd64.deb"
 
-install_package "${CONNTRACK_PACKAGES:?}/libnetfilter-conntrack3_1.0.4-1.deb"
-install_package "${CONNTRACK_PACKAGES:?}/conntrack_1.4.1-1.deb"
+install_package "${CONNTRACK_PACKAGES:?}/libnetfilter-conntrack3_1.0.5-1_amd64.deb"
+install_package "${CONNTRACK_PACKAGES:?}/conntrack_1.4.3-3_amd64.deb"
 
 install_package "${IPSET_PACKAGES:?}/libipset3_6.20.1-1_amd64.deb"
 install_package "${IPSET_PACKAGES:?}/ipset_6.20.1-1_amd64.deb"
 
 <% if_p("nfs") do |nfs|
   if nfs %>
+  ## libevent has a known CVE. We need ubuntu disco to get a fixed version
   install_package "${NFS_PACKAGES:?}/libevent-2.0-5_2.0.21-stable-2ubuntu0.16.04.1_amd64.deb"
   install_package "${NFS_PACKAGES:?}/keyutils_1.5.9-8ubuntu1_amd64.deb"
+  ## rpcbind has a known CVE. We need ubuntu disco to get a fixed version
   install_package "${NFS_PACKAGES:?}/rpcbind_0.2.3-0.2_amd64.deb"
   install_package "${NFS_PACKAGES:?}/libnfsidmap2_0.25-5_amd64.deb"
   install_package "${NFS_PACKAGES:?}/nfs-common_1:1.2.8-9ubuntu12.1_amd64.deb"
