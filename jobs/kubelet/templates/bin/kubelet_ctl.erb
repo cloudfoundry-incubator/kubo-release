@@ -29,7 +29,12 @@ DATA_DIR=/var/vcap/store/kubernetes
 <% end %>
 
 <%
-  labels = ["spec.ip=#{spec.ip}","bosh.id=#{spec.id}","bosh.zone=#{spec.az}"]
+  labels = ["spec.ip=#{spec.ip}","bosh.id=#{spec.id}"]
+  # special case for Azure, when Availability Sets are configured, OpsMan indicates their usage by setting zone="Availability Sets"
+  unless iaas == "azure" && "#{spec.az}" == "Availability Sets"
+    labels << "bosh.zone=#{spec.az}"
+  end
+
   if iaas=="vsphere"
     labels << "failure-domain.beta.kubernetes.io/zone=#{spec.az}"
   end
