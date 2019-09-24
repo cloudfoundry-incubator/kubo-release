@@ -100,6 +100,18 @@ describe 'kubelet_ctl' do
     expect(rendered_kubelet_ctl).to include('export no_proxy=noproxy.example.com,noproxy.example.net')
     expect(rendered_kubelet_ctl).to include('export NO_PROXY=noproxy.example.com,noproxy.example.net')
   end
+
+  context 'when cloud provider is azure' do
+    it 'avoids setting bosh.zone to an (illegal) value "Availability Sets" that is set by OpsMan 2.5+' do
+      manifest_properties = {
+          'cloud-provider' => 'azure'
+      }
+
+      rendered_kubelet_ctl = compiled_template('kubelet', 'bin/kubelet_ctl', manifest_properties, {}, {}, az="Availability Sets")
+      expect(rendered_kubelet_ctl).to include('cloud_provider="azure"')
+      expect(rendered_kubelet_ctl).not_to include('bosh.zone=Availability Sets')
+    end
+  end
 end
 
 def call_get_hostname_override(rendered_kubelet_ctl, executable_path)
