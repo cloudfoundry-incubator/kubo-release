@@ -74,42 +74,42 @@ jq-linux64-1.6:
   size: 3953824
   object_id: efdcc8cd-7155-47d4-65c9-d3d74700633f
   sha: 056ba5d6bbc617c29d37158ce11fd5a443093949
-kubernetes-1.14.6/kube-apiserver:
-  size: 167111968
-  object_id: 8b5d619d-bccd-4d67-6302-b7a6c2e84e3a
-  sha: ba3bc2bd7672ec12efa64bcbab85376a8efc1216
-kubernetes-1.14.6/kube-controller-manager:
-  size: 115137024
-  object_id: c34aaba0-6142-418e-43bf-9f35ab11f82d
-  sha: 72d0c9122a073c6535ccca584c23d5a318c54fd3
-kubernetes-1.14.6/kube-proxy:
-  size: 36685440
-  object_id: 81764ea2-33ff-4dd7-7ba8-3bfc9ea360e7
-  sha: 9816def0299863a80c028a53fe36714af3351ba1
-kubernetes-1.14.6/kube-scheduler:
-  size: 39258304
-  object_id: 41ce4bad-f9e2-491d-731f-c98c1142c717
-  sha: dbee59051dbadecdb078943bd992947e38510d08
-kubernetes-1.14.6/kubectl:
-  size: 43107136
-  object_id: b47c9000-e703-4760-5a0f-c27eab974eda
-  sha: 8a46184b3dd30bcc617da7787bc5971dc6a8233c
-kubernetes-1.14.6/kubelet:
-  size: 128063344
-  object_id: 8912fcda-70aa-4849-5d59-246c57ac84e9
-  sha: b5022066bdb4833407bcab2e636bb165a9ee7a95
-kubernetes-windows-1.14.6/kube-proxy.exe:
-  size: 39767040
-  object_id: fe3a1657-c4c3-402c-467c-7d0d6d155e05
-  sha: 06190952347402d94752969214be23896ace203d
-kubernetes-windows-1.14.6/kubectl.exe:
-  size: 43557376
-  object_id: bfb416f8-d389-416a-77ca-af06c19e46a5
-  sha: 837d12ab22750c0f8e9bba68adb1a54490afcb6d
-kubernetes-windows-1.14.6/kubelet.exe:
-  size: 116739072
-  object_id: 24e46a2a-b1ed-48d8-716b-fd9c957b2e7d
-  sha: a0a455d8646cb7325ddc7743324efc53ac90ba18
+kubernetes-1.15.4/kube-apiserver:
+  size: 164563360
+  object_id: 39d896c7-fe8b-4b15-7fbf-8c9633d8baa6
+  sha: 54365feeaa15a4ad794fff3fb2b8db4a49e93a67
+kubernetes-1.15.4/kube-controller-manager:
+  size: 116462624
+  object_id: 487f790b-5137-4f96-7884-26b3fd3d169e
+  sha: 72f45ad5ed7bb3b658e03a35a454f09c0e7b3ca8
+kubernetes-1.15.4/kube-proxy:
+  size: 36987488
+  object_id: 5c912ecc-2a83-4b73-592e-b5166c6e5498
+  sha: eca7dda455466f592c7daa63e319399f598296f1
+kubernetes-1.15.4/kube-scheduler:
+  size: 38786144
+  object_id: 8a0badda-23cc-4d88-623a-b7d17b53f195
+  sha: 48d7f8a4808abb6465081fd990338333238eeb6f
+kubernetes-1.15.4/kubectl:
+  size: 42985504
+  object_id: ee6234f8-303c-4fb2-480e-816a30888c7d
+  sha: 58d162471317e9e41f819a98766dfa91048fb597
+kubernetes-1.15.4/kubelet:
+  size: 119690288
+  object_id: cfc5e092-5aa6-4e43-6e1f-7ea8ee9af480
+  sha: 686966abd52bd7947bdf74ec18efa0cdd9934796
+kubernetes-windows-1.15.4/kube-proxy.exe:
+  size: 40074752
+  object_id: f1e62e64-e8de-4f1d-7666-8963a893b19a
+  sha: 2d8dcecda91a853c8bba489913ac706799116ad0
+kubernetes-windows-1.15.4/kubectl.exe:
+  size: 43472896
+  object_id: 6c964985-58f2-437a-6daa-18622b27c1d6
+  sha: 829d565cbf2bd7ac18d590b707f9aa8d681689df
+kubernetes-windows-1.15.4/kubelet.exe:
+  size: 116260864
+  object_id: e905cee6-e8eb-4ddd-4be9-6b39929df861
+  sha: 67506fa9278f41cc02711ab02507a9baa0aebb4b
 libmnl0_1.0.3-5_amd64.deb:
   size: 11970
   object_id: 30b1e2c0-4194-47f2-544f-f55eb76b9101
