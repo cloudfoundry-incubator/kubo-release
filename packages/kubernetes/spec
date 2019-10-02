@@ -3,4 +3,4 @@ name: kubernetes
 
 files:
 - container-images/*
-- kubernetes-1.14.6/*
+- kubernetes-1.15.4/*
