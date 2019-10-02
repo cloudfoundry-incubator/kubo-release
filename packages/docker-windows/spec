@@ -1,0 +1,7 @@
+---
+name: docker-windows
+
+dependencies: []
+
+files:
+- docker-windows/docker-*.zip

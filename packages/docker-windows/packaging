@@ -1,0 +1,13 @@
+$ErrorActionPreference = "Stop";
+trap { $host.SetShouldExit(1) }
+
+$BOSH_INSTALL_TARGET = Resolve-Path $env:BOSH_INSTALL_TARGET
+$path=(Get-ChildItem "docker-windows/docker*.zip").FullName
+
+if (Get-Command Expand-Archive -ErrorAction SilentlyContinue) {
+  Expand-Archive -Path $path -DestinationPath ${BOSH_INSTALL_TARGET}
+} else {
+  Add-Type -AssemblyName System.IO.Compression.FileSystem
+  [System.IO.Compression.ZipFile]::ExtractToDirectory($path, ${BOSH_INSTALL_TARGET})
+}
+

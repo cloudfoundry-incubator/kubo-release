@@ -50,6 +50,10 @@ container-images/pcfkubo_nginx-bionic:1.0.0.tgz:
   size: 77661967
   object_id: f2575255-59f6-442e-5f69-d10e5a24e178
   sha: c677df2c93e1a15604285ea0f32b121011dcacdd
+docker-windows/docker-18-09-9.zip:
+  size: 49417290
+  object_id: a4d105e0-c646-4d1b-5aaa-c8d6467e1b5a
+  sha: 269a6baacd95e7b59f2e4695cca0b662359e497e
 etcdctl-3.0.7:
   size: 18427584
   object_id: 32221476-5c3d-4ec7-5869-44c989cc3077
