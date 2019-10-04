@@ -14,10 +14,6 @@ cni/cni-plugins-amd64-v0.7.1.tgz:
   size: 17108856
   object_id: 50dc58eb-107d-483a-4e37-5a243ffed520
   sha: fb29e20401d3e9598a1d8e8d7992970a36de5e05
-cni/cni-plugins-windows-amd64-c74e0e996.tgz:
-  size: 9678154
-  object_id: da0e8048-675b-4701-68e9-7db89e88723b
-  sha: 02c4d67a17a28c26cc471e56bf01dcacd104b346
 cni/util-linux_2.27.1-6ubuntu3_amd64.deb:
   size: 847730
   object_id: 27eb3ec3-220f-4a25-6c4f-ec219c37ac8d
@@ -58,10 +54,6 @@ flannel-v0.11.0-linux-amd64.tar.gz:
   size: 9565743
   object_id: 83064ebe-b45d-4d41-694a-b1e61a781250
   sha: 3024034b2202d5940acf5353037161ea1770a9c5
-flannel-v0.11.0-windows-amd64.tar.gz:
-  size: 9488010
-  object_id: 968eac5f-3008-4bcf-5481-f3f4179162d4
-  sha: 71cb61a487c40df8eeb4d2bd68d7e891b51b44bb
 ipset/ipset_6.20.1-1_amd64.deb:
   size: 34156
   object_id: 5dfcce8f-366e-49f0-59e6-9e2d48178750
@@ -98,18 +90,6 @@ kubernetes-1.15.4/kubelet:
   size: 119690288
   object_id: cfc5e092-5aa6-4e43-6e1f-7ea8ee9af480
   sha: 686966abd52bd7947bdf74ec18efa0cdd9934796
-kubernetes-windows-1.15.4/kube-proxy.exe:
-  size: 40074752
-  object_id: f1e62e64-e8de-4f1d-7666-8963a893b19a
-  sha: 2d8dcecda91a853c8bba489913ac706799116ad0
-kubernetes-windows-1.15.4/kubectl.exe:
-  size: 43472896
-  object_id: 6c964985-58f2-437a-6daa-18622b27c1d6
-  sha: 829d565cbf2bd7ac18d590b707f9aa8d681689df
-kubernetes-windows-1.15.4/kubelet.exe:
-  size: 116260864
-  object_id: e905cee6-e8eb-4ddd-4be9-6b39929df861
-  sha: 67506fa9278f41cc02711ab02507a9baa0aebb4b
 libmnl0_1.0.3-5_amd64.deb:
   size: 11970
   object_id: 30b1e2c0-4194-47f2-544f-f55eb76b9101

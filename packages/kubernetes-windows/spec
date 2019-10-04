@@ -1,5 +1,0 @@
----
-name: kubernetes-windows
-
-files:
-- kubernetes-windows-1.15.4/*
