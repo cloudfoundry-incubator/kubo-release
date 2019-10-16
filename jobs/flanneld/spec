@@ -34,3 +34,9 @@ properties:
 consumes:
 - name: etcd
   type: etcd
+
+provides:
+- name: flanneld
+  type: flanneld
+  properties:
+  - pod-network-cidr

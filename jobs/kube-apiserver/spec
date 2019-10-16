@@ -81,4 +81,5 @@ provides:
   - admin-username
   - admin-password
   - tls.kubernetes.ca
+  - k8s-args
   type: kube-apiserver
