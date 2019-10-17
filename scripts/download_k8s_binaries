@@ -22,15 +22,9 @@ main() {
     "kubectl"
     "kubelet"
   )
-  windows_binaries=(
-    "kube-proxy.exe"
-    "kubectl.exe"
-    "kubelet.exe"
-  )
 
   platforms=(
     "linux"
-    "windows"
   )
 
   pushd "$(dirname "${BASH_SOURCE[0]}")/.."
