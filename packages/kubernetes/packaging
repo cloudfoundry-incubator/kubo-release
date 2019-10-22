@@ -1,6 +1,6 @@
 set -e
 
-KUBERNETES_VERSION="1.15.4"
+KUBERNETES_VERSION="1.15.5"
 
 main() {
   create_target_dir

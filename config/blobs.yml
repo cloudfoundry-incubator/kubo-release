@@ -66,30 +66,30 @@ jq-linux64-1.6:
   size: 3953824
   object_id: efdcc8cd-7155-47d4-65c9-d3d74700633f
   sha: 056ba5d6bbc617c29d37158ce11fd5a443093949
-kubernetes-1.15.4/kube-apiserver:
-  size: 164563360
-  object_id: 39d896c7-fe8b-4b15-7fbf-8c9633d8baa6
-  sha: 54365feeaa15a4ad794fff3fb2b8db4a49e93a67
-kubernetes-1.15.4/kube-controller-manager:
-  size: 116462624
-  object_id: 487f790b-5137-4f96-7884-26b3fd3d169e
-  sha: 72f45ad5ed7bb3b658e03a35a454f09c0e7b3ca8
-kubernetes-1.15.4/kube-proxy:
-  size: 36987488
-  object_id: 5c912ecc-2a83-4b73-592e-b5166c6e5498
-  sha: eca7dda455466f592c7daa63e319399f598296f1
-kubernetes-1.15.4/kube-scheduler:
-  size: 38786144
-  object_id: 8a0badda-23cc-4d88-623a-b7d17b53f195
-  sha: 48d7f8a4808abb6465081fd990338333238eeb6f
-kubernetes-1.15.4/kubectl:
-  size: 42985504
-  object_id: ee6234f8-303c-4fb2-480e-816a30888c7d
-  sha: 58d162471317e9e41f819a98766dfa91048fb597
-kubernetes-1.15.4/kubelet:
-  size: 119690288
-  object_id: cfc5e092-5aa6-4e43-6e1f-7ea8ee9af480
-  sha: 686966abd52bd7947bdf74ec18efa0cdd9934796
+kubernetes-1.15.5/kube-apiserver:
+  size: 164571520
+  object_id: 2e679cc2-005a-4024-541f-a0371f806457
+  sha: f7b470dd6a78bf09a73671e83afbe2ea084b9a12
+kubernetes-1.15.5/kube-controller-manager:
+  size: 116462560
+  object_id: c65d6a16-0306-42c7-483a-86754f8ef6a8
+  sha: a36384acfc89dacd5b43888f9dc41abba1a209dc
+kubernetes-1.15.5/kube-proxy:
+  size: 36991584
+  object_id: 09fd3e67-2e61-49c3-4944-46f2fa2d103e
+  sha: 4c5987ce25debea16cbf2e6343f586b784d9a9c3
+kubernetes-1.15.5/kube-scheduler:
+  size: 38790240
+  object_id: 86e8425d-ed3c-4e47-67f4-ef25b8bebb5f
+  sha: 6c60e3354958e3a2a3724ac0f8fe81e8bf300a52
+kubernetes-1.15.5/kubectl:
+  size: 42993696
+  object_id: a9af62e6-29ba-4fba-7ade-8d3f9fae0ce6
+  sha: ed25c54577b90d5753d6a86a8543d28d1e55e164
+kubernetes-1.15.5/kubelet:
+  size: 119686160
+  object_id: 257f1595-5990-4aba-4b1d-1e7ed75fcf2b
+  sha: bfb8bde9b529dc93679ec1f4548e2833a47a87c3
 libmnl0_1.0.3-5_amd64.deb:
   size: 11970
   object_id: 30b1e2c0-4194-47f2-544f-f55eb76b9101
