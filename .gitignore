@@ -12,3 +12,4 @@
 /.final_builds/packages/**/*.tgz
 /.cache
 /kubo-release.iml
+/.idea
