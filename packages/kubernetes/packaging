@@ -1,5 +1,6 @@
 set -e
 
+KUBERNETES_PACKAGE=kubernetes
 KUBERNETES_VERSION="1.15.5"
 
 main() {
@@ -15,7 +16,7 @@ create_target_dir() {
 
 copy_depedencies_to_bosh() {
   cp -a container-images/* "${BOSH_INSTALL_TARGET:?}/container-images"
-  cp -a kubernetes-${KUBERNETES_VERSION}/* "${BOSH_INSTALL_TARGET:?}/bin"
+  cp -a ${KUBERNETES_PACKAGE}-${KUBERNETES_VERSION}/* "${BOSH_INSTALL_TARGET:?}/bin"
 }
 
 make_binaries_executable() {

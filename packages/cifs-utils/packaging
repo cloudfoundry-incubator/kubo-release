@@ -3,52 +3,58 @@ set -e
 temp_path=${PWD}/temp
 mkdir $temp_path
 
-tar xf autoconf-2.69.tar.gz
-
-pushd autoconf-2.69
+AUTOCONF_PACKAGE=autoconf
+AUTOCONF_VERSION=2.69
+tar xf $AUTOCONF_PACKAGE-$AUTOCONF_VERSION.tar.gz
+pushd $AUTOCONF_PACKAGE-$AUTOCONF_VERSION
   ./configure --prefix=${temp_path}
   make
   make install
   export PATH=${PATH}:${temp_path}/bin
 popd
 
-tar xf automake-1.15.tar.gz
-
-pushd automake-1.15
+AUTOMAKE_PACKAGE=automake
+AUTOMAKE_VERSION=1.15
+tar xf $AUTOMAKE_PACKAGE-$AUTOMAKE_VERSION.tar.gz
+pushd $AUTOMAKE_PACKAGE-$AUTOMAKE_VERSION
   ./configure --prefix=${temp_path}
   make
   make install
 popd
 
-tar xf libtool-2.4.6.tar.gz
-
-pushd libtool-2.4.6
+LIBTOOL_PACKAGE=libtool
+LIBTOOL_VERSION=2.4.6
+tar xf $LIBTOOL_PACKAGE-$LIBTOOL_VERSION.tar.gz
+pushd $LIBTOOL_PACKAGE-$LIBTOOL_VERSION
   ./configure --prefix=${temp_path}
   make
   make install
 popd
 
-tar xf talloc-2.1.9.tar.gz
-
-pushd talloc-2.1.9
+TALLOC_PACKAGE=talloc
+TALLOC_VERSION=2.1.9
+tar xf $TALLOC_PACKAGE-$TALLOC_VERSION.tar.gz
+pushd $TALLOC_PACKAGE-$TALLOC_VERSION
   ./configure --prefix=${temp_path}
   make
   make install
 popd
 
-tar xf pkg-config-0.29.2.tar.gz
-
-pushd pkg-config-0.29.2
+PKG_CONFIG_PACKAGE=pkg-config
+PKG_CONFIG_VERSION=0.29.2
+tar xf $PKG_CONFIG_PACKAGE-$PKG_CONFIG_VERSION.tar.gz
+pushd $PKG_CONFIG_PACKAGE-$PKG_CONFIG_VERSION
   ./configure --prefix=${temp_path} --with-internal-glib
   make
   make install
 popd
 
-tar jxf cifs-utils-6.7.tar.bz2
-
-pushd cifs-utils-6.7
+CIFS_PACKAGE=cifs-utils
+CIFS_VERSION=6.7
+tar jxf $CIFS_PACKAGE-$CIFS_VERSION.tar.bz2
+pushd $CIFS_PACKAGE-$CIFS_VERSION
   autoreconf -i
   ./configure --prefix=${temp_path}
   make CPPFLAGS="-I${temp_path}/include"
-  cp mount.cifs ${BOSH_INSTALL_TARGET}
+  cp -a mount.cifs ${BOSH_INSTALL_TARGET}
 popd
