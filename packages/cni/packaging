@@ -1,11 +1,15 @@
 set -exu
 
 mkdir -p ${BOSH_INSTALL_TARGET}/bin
-tar -xzf cni/cni-plugins-amd64*.tgz -C ${BOSH_INSTALL_TARGET}/bin/
+
+CNI_PACKAGE="cni-plugins"
+CNI_VERSION="0.7.1"
+
+tar -xzf cni/${CNI_PACKAGE}-amd64-${CNI_VERSION}.tgz -C ${BOSH_INSTALL_TARGET}/bin/
 
 mkdir -p utillocal
 dpkg -x cni/util-linux*.deb utillocal/
 
-cp utillocal/usr/bin/nsenter ${BOSH_INSTALL_TARGET}/bin
+cp -a utillocal/usr/bin/nsenter ${BOSH_INSTALL_TARGET}/bin
 
 chmod +x ${BOSH_INSTALL_TARGET}/bin/*

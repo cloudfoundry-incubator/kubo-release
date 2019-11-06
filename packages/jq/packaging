@@ -1,6 +1,9 @@
-set -e # exit immediately if a simple command exits with a non-zero status
-set -u # report the usage of uninitialized variables
+set -eu
 
 mkdir -p $BOSH_INSTALL_TARGET/bin
-cp -a jq-linux64-1.6 $BOSH_INSTALL_TARGET/bin/jq
+
+JQ_PACKAGE=jq
+JQ_VERSION="1.6"
+
+cp -a ${JQ_PACKAGE}-linux64-${JQ_VERSION} $BOSH_INSTALL_TARGET/bin/jq/
 chmod +x $BOSH_INSTALL_TARGET/bin/jq

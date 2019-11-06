@@ -1,5 +1,6 @@
 set -e
 
+ETCDCTL_PACKAGE=etcdctl
 ETCDCTL_VERSION="3.0.7"
 
 main() {
@@ -8,7 +9,7 @@ main() {
 }
 
 copy_binary() {
-  cp -a etcdctl-${ETCDCTL_VERSION} "${BOSH_INSTALL_TARGET:?}/etcdctl"
+  cp -a ${ETCDCTL_PACKAGE}-${ETCDCTL_VERSION} "${BOSH_INSTALL_TARGET:?}/etcdctl"
 }
 
 make_executable() {
