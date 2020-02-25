@@ -24,7 +24,7 @@ func randSeq(n int) string {
 
 func curlLater(endpoint string) func() (string, error) {
 	return func() (string, error) {
-		cmd := exec.Command("curl", "--head", endpoint)
+		cmd := exec.Command("curl", "--head", "--max-time", "120", endpoint)
 		out, err := cmd.CombinedOutput()
 		return string(out), err
 	}
