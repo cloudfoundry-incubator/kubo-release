@@ -5,14 +5,24 @@
 
 kubectl="/var/vcap/packages/kubernetes/bin/kubectl --kubeconfig=/var/vcap/jobs/kubelet/config/kubeconfig"
 
-DOCKER_SOCKET=unix:///var/vcap/sys/run/docker/docker.sock
+
+if p('container-runtime').downcase == "docker"
+   DOCKER_SOCKET=unix:///var/vcap/sys/run/docker/docker.sock
+else if p('container-runtime').downcase == "containerd"
+   DOCKER_SOCKET=unix:///var/vcap/sys/run/containerd/containerd.sock
+end
+
 CONTAINER_IMAGE_DIR=/var/vcap/packages/kubernetes/container-images
 
 load_container() {
     path=$1
 
     echo "loading cached container: ${path}"
-    if sudo /var/vcap/jobs/kubelet/packages/docker/bin/docker -H ${DOCKER_SOCKET} load < "${path}"; then
+    if p('container-runtime').downcase == "containerd"
+    result = sudo ctr -n=k8s.io --address=/var/vcap/sys/run/containerd/containerd.sock images import "${path};
+    if p('container-runtime').downcase == "docker"
+    result = sudo /var/vcap/jobs/kubelet/packages/docker/bin/docker -H ${DOCKER_SOCKET} load < "${path}";
+    if $result then
       echo "successfully loaded container: ${path}"
     else
       echo "failed to load container: ${path}"

@@ -1,0 +1,12 @@
+check process kubelet
+  with pidfile /var/vcap/sys/run/kubernetes/kubelet.pid
+  start program "/var/vcap/jobs/kubelet/bin/kubelet_ctl start"
+  stop program "/var/vcap/jobs/kubelet/bin/kubelet_ctl stop"
+  group vcap
+  <%= if p("container-runtime").eq? "docker"
+  depends on docker
+  %>
+  <%= if p("container-runtime").eq? "containerd"
+  depends on containerd
+  %>
+
