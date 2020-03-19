@@ -4,13 +4,12 @@
 [ -z "$DEBUG" ] || set -x
 
 kubectl="/var/vcap/packages/kubernetes/bin/kubectl --kubeconfig=/var/vcap/jobs/kubelet/config/kubeconfig"
-
-
-if p('container-runtime').downcase == "docker"
-   DOCKER_SOCKET=unix:///var/vcap/sys/run/docker/docker.sock
-else if p('container-runtime').downcase == "containerd"
-   DOCKER_SOCKET=unix:///var/vcap/sys/run/containerd/containerd.sock
-end
+<% if p("container-runtime").eql?  "docker" %>
+DOCKER_SOCKET=unix:///var/vcap/sys/run/docker/docker.sock
+<% else if p("container-runtime").eql? "containerd" %>
+DOCKER_SOCKET=unix:///var/vcap/sys/run/containerd/containerd.sock
+<% end %>
+<% end %>
 
 CONTAINER_IMAGE_DIR=/var/vcap/packages/kubernetes/container-images
 
@@ -18,11 +17,14 @@ load_container() {
     path=$1
 
     echo "loading cached container: ${path}"
-    if p('container-runtime').downcase == "containerd"
-    result = sudo ctr -n=k8s.io --address=/var/vcap/sys/run/containerd/containerd.sock images import "${path};
-    if p('container-runtime').downcase == "docker"
-    result = sudo /var/vcap/jobs/kubelet/packages/docker/bin/docker -H ${DOCKER_SOCKET} load < "${path}";
-    if $result then
+    <% if p("container-runtime").eql?  "containerd" %>
+    sudo /var/vcap/packages/containerd/bin/ctr -n=k8s.io --address=/var/vcap/sys/run/containerd/containerd.sock images import "${path}";
+    <% else if p("container-runtime").eql? "docker" %>
+    sudo /var/vcap/jobs/kubelet/packages/docker/bin/docker -H ${DOCKER_SOCKET} load < "${path}";
+    <% end %>
+    <% end %>
+    result=$?
+    if [ ${result} ]; then
       echo "successfully loaded container: ${path}"
     else
       echo "failed to load container: ${path}"
@@ -32,6 +34,11 @@ load_container() {
 
 load_cached_containers() {
     for img in ${CONTAINER_IMAGE_DIR}/*.tgz; do
+    <% if p("container-runtime").eql?  "containerd" %>
+	gunzip -k -f ${img}
+    done
+    for img in ${CONTAINER_IMAGE_DIR}/*.tar; do
+    <% end %>
         load_container ${img}
     done
 }

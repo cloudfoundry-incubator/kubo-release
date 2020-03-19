@@ -3,10 +3,11 @@ check process kubelet
   start program "/var/vcap/jobs/kubelet/bin/kubelet_ctl start"
   stop program "/var/vcap/jobs/kubelet/bin/kubelet_ctl stop"
   group vcap
-  <%= if p("container-runtime").eq? "docker"
+  <% if p("container-runtime").eql? "docker" %>
   depends on docker
-  %>
-  <%= if p("container-runtime").eq? "containerd"
+  <% else %>
+  <% if p("container-runtime").eql? "containerd" %>
   depends on containerd
-  %>
+  <% end %>
+  <% end %>
 
