@@ -17,24 +17,10 @@ wait_for() {
     ${kubectl} rollout status "deployments/${1}" -w --namespace=kube-system
 }
 
-create_dashboard_secrets() {
-  local secret_name=kubernetes-dashboard-certs
-  local namespace=kube-system
-
-  if ${kubectl} get secret ${secret_name} -n ${namespace} > /dev/null 2>&1; then
-    ${kubectl} delete secret ${secret_name} -n ${namespace}
-  fi
-
-  ${kubectl} create secret generic ${secret_name} \
-  --from-file=kubernetes-dashboard-cert=${config_dir}/kubernetes-dashboard/kubernetes-dashboard.crt \
-  --from-file=kubernetes-dashboard-key=${config_dir}/kubernetes-dashboard/kubernetes-dashboard.key \
-  -n ${namespace}
-}
-
 main() {
 
 <%
-  supported_addons = ['coredns', 'metrics-server', 'kubernetes-dashboard']
+  supported_addons = ['coredns', 'metrics-server']
 
   bootstrap_addons = p('addons')
 
@@ -50,12 +36,6 @@ main() {
   <% if bootstrap_addons.include?('metrics-server') %>
     apply_spec "metrics-server/"
     wait_for metrics-server
-  <% end %>
-
-  <% if bootstrap_addons.include?('kubernetes-dashboard') %>
-    create_dashboard_secrets
-    apply_spec "kubernetes-dashboard.yml"
-    wait_for kubernetes-dashboard
   <% end %>
 
   <% if_link('cloud-provider') do |cloud_provider| %>

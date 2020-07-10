@@ -72,5 +72,3 @@ subjects:
   name: coredns
 - kind: ServiceAccount
   name: metrics-server
-- kind: ServiceAccount
-  name: kubernetes-dashboard

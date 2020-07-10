@@ -30,10 +30,6 @@ container-images/coredns_coredns:1.4.0.tgz:
   size: 12997721
   object_id: 14779ec2-2266-48eb-77d6-a732d3721d1f
   sha: b5f7af681ba11570d7ffdf77f9f6c03371b45679
-container-images/k8s.gcr.io_kubernetes-dashboard-amd64:v1.10.1.tgz:
-  size: 44852477
-  object_id: 1d8fdcd7-fe1e-431d-5d90-2032b97d8ad0
-  sha: 8a19204a0a3f75c5a4f495b1cd3bb1c7d604fa6c
 container-images/k8s.gcr.io_metrics-server-amd64:v0.3.6.tgz:
   size: 10382760
   object_id: ce583d21-d693-492d-71f8-8f40bdf54d43

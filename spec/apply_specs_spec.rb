@@ -40,7 +40,7 @@ describe 'apply-specs' do
   let(:link_spec) { {} }
   let(:default_properties) do
     {
-      'addons' => ["metrics-server", "kubernetes-dashboard"],
+      'addons' => ["metrics-server"],
       'admin-password' => '1234'
     }
   end
@@ -59,7 +59,7 @@ describe 'apply-specs' do
   context 'when errand run timeout is re-configured' do
     let(:default_properties) do
       {
-        'addons' => ["metrics-server", "kubernetes-dashboard"],
+        'addons' => ["metrics-server"],
         'admin-password' => '1234',
         'timeout-sec' => '1122'
       }
@@ -142,7 +142,6 @@ describe 'apply-specs' do
     it 'does not deploy unspecified addons' do
       rendered = rendered_deploy_specs
       expect(rendered).to_not match(/apply_spec "coredns.yml"/)
-      expect(rendered).to_not match(/apply_spec "kubernetes-dashboard.yml"/)
       expect(rendered).to_not match(/apply_spec "i-should-not-be-here.yml"/)
     end
   end
