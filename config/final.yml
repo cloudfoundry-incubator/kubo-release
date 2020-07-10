@@ -1,8 +1,6 @@
 ---
 final_name: kubo
 blobstore:
-  provider: s3
+  provider: gcs
   options:
     bucket_name: kubo-release-blobs
-    region: us-east1
-    host: storage.googleapis.com
