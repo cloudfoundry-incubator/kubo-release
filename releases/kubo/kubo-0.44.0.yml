@@ -1,0 +1,168 @@
+name: kubo
+version: 0.44.0
+commit_hash: a7d99b1
+uncommitted_changes: false
+jobs:
+- name: apply-specs
+  version: f7e32463fb00a8531dc026bd4543ae08be22a102760c25aa04dc55d475a4951c
+  fingerprint: f7e32463fb00a8531dc026bd4543ae08be22a102760c25aa04dc55d475a4951c
+  sha1: sha256:f91cd7b742ce150745893eec218f808189cfff70fe8d0cea51fd0c542fbdf879
+  packages:
+  - kubernetes
+- name: bbr-kube-apiserver
+  version: 56cbb995f6cdac6d27577f4ffd166b148aad57ff44ecf9b2c687bdbdf403e9a1
+  fingerprint: 56cbb995f6cdac6d27577f4ffd166b148aad57ff44ecf9b2c687bdbdf403e9a1
+  sha1: sha256:71f373c27e08048006dd59029852b5b3744e572396d98c9f04cefbc28041e808
+  packages: []
+- name: cifs-utils
+  version: 41efca0df09260293d95b618d4858e6f18aab226d64a7e6f80951134ea82bcdd
+  fingerprint: 41efca0df09260293d95b618d4858e6f18aab226d64a7e6f80951134ea82bcdd
+  sha1: sha256:c26fd56dd4347729a06572c0f1e07d0fdf846b1252d14a7fa3b961b26f9a0c4b
+  packages:
+  - cifs-utils
+- name: cloud-provider
+  version: ce4e4103d4560fa3ddbd267e7456f4883ebe3340cd97cc1fe0c827d01d4b095d
+  fingerprint: ce4e4103d4560fa3ddbd267e7456f4883ebe3340cd97cc1fe0c827d01d4b095d
+  sha1: sha256:f9da1c2380d5207204b259554d155f3467a1c515178a3adc79098fb271b65d89
+  packages: []
+- name: flanneld
+  version: 9f32728c1b38c53473786f271ece74d1af7981b9e4c8c79e584afcc16a6c2aa1
+  fingerprint: 9f32728c1b38c53473786f271ece74d1af7981b9e4c8c79e584afcc16a6c2aa1
+  sha1: sha256:5f577cad340582b378fcb2d1a4be884bdb7d1f8f2bc6eaa7ec411ff52fe47bcc
+  packages:
+  - pid_utils
+  - etcdctl
+  - flanneld
+  - cni
+- name: kube-apiserver
+  version: 2c7a70ed7e05cfaa2b2b1de0f300c12cb230e6801f6c0ca13164117ace7482fc
+  fingerprint: 2c7a70ed7e05cfaa2b2b1de0f300c12cb230e6801f6c0ca13164117ace7482fc
+  sha1: sha256:320bf06f0a72e4c54bc71e01451160bd9bc215cb33161fc149183d253b65a324
+  packages:
+  - kubernetes
+- name: kube-controller-manager
+  version: be16fdce83f4254644069e36ea719a012cb74268531412fc68797a5a77ad7239
+  fingerprint: be16fdce83f4254644069e36ea719a012cb74268531412fc68797a5a77ad7239
+  sha1: sha256:031e1405975e57e1d792cab1614ff577e7687b4b8350b82c349fb274b6216482
+  packages:
+  - kubernetes
+- name: kube-proxy
+  version: 71aa6f145d37d9cfe09e281892b986a373d03d82287800e76b03831fb02c4e24
+  fingerprint: 71aa6f145d37d9cfe09e281892b986a373d03d82287800e76b03831fb02c4e24
+  sha1: sha256:543b020e4ddad22a3c7b8d4668ea11063fd1f0031c2f36f38d0d7c864a5e998a
+  packages:
+  - pid_utils
+  - kubernetes
+  - conntrack
+- name: kube-scheduler
+  version: 575969aff53426e9fa25041f0e599ec9b1e9758c28d94ab8795e2b6af6226b38
+  fingerprint: 575969aff53426e9fa25041f0e599ec9b1e9758c28d94ab8795e2b6af6226b38
+  sha1: sha256:6bb79b4e47490e593173b4b39cc175a565cfe50db38ca58f22668e33bdcce9ea
+  packages:
+  - kubernetes
+- name: kubelet
+  version: 6ca78529ca88f89121b4dd61840651fd265fa278395a4420f9a73fb78a05cd7f
+  fingerprint: 6ca78529ca88f89121b4dd61840651fd265fa278395a4420f9a73fb78a05cd7f
+  sha1: sha256:aa9d0dc6bea771e6ba92a33c3afb347207e72e1ee296d35085494f0ba21fecbb
+  packages:
+  - pid_utils
+  - kubernetes
+  - cni
+  - socat
+- name: kubernetes-dependencies
+  version: 7bc6a35a7bcfd5032a3c7c95096df166acf8bd944f8e1375b2c5bfcfe10840c0
+  fingerprint: 7bc6a35a7bcfd5032a3c7c95096df166acf8bd944f8e1375b2c5bfcfe10840c0
+  sha1: sha256:3a622eed5fdf6ac74e2afec1f026719e6cb06cbba4f317e9da62b53fe08cc6c0
+  packages:
+  - conntrack
+  - ipset
+  - nfs
+- name: kubernetes-roles
+  version: 76512ddb190caf9aeebed07482e9d702a0d025769b325134c04ab9bc4948a399
+  fingerprint: 76512ddb190caf9aeebed07482e9d702a0d025769b325134c04ab9bc4948a399
+  sha1: sha256:eaeada1598c5746004d8efe018942c53905acaf453808484f2a0d8e70a0eff0d
+  packages:
+  - kubernetes
+- name: kubo-dns-aliases
+  version: 0b18a6e6006651877e1df15d8c8f3b2e1e5a8ebf33f24622d5bad47bf2d91979
+  fingerprint: 0b18a6e6006651877e1df15d8c8f3b2e1e5a8ebf33f24622d5bad47bf2d91979
+  sha1: sha256:73a21441c2d109bd21d5bfd5dcbb9d304226371e450ae54e2fe469368c3185aa
+  packages: []
+- name: smoke-tests
+  version: 5a5589f37d6cf6cadb66192a5993d0890c8fd6b8546bd4e61d3cc2fdc2720395
+  fingerprint: 5a5589f37d6cf6cadb66192a5993d0890c8fd6b8546bd4e61d3cc2fdc2720395
+  sha1: sha256:f7afadce40586ffc057fb05c4154ffa27423037217a97c007cd6fce06ec8fe31
+  packages:
+  - smoke-tests
+  - golang-1.12-linux
+packages:
+- name: cifs-utils
+  version: f24f079388f53aac6da4c29de7f5eacd38e4e9f72d6d4607a98b5b14d639db57
+  fingerprint: f24f079388f53aac6da4c29de7f5eacd38e4e9f72d6d4607a98b5b14d639db57
+  sha1: sha256:4ec9b021855f8fbc1b534a386d058b08c2f24eecb08dee09ac6eb5107f43f3d0
+  dependencies: []
+- name: cni
+  version: 0c3f455751bc076c2a102b021b6b10fa070808cb6782fceebc6aff9478e35785
+  fingerprint: 0c3f455751bc076c2a102b021b6b10fa070808cb6782fceebc6aff9478e35785
+  sha1: sha256:e9df30a9e8773d718ee8b048fc42666d1c04933411e5576227be20cd96a8b09f
+  dependencies: []
+- name: conntrack
+  version: 91ca0626caded885c5e8c043fcddf31fe65ecbf0ba3659930cebf55116efab82
+  fingerprint: 91ca0626caded885c5e8c043fcddf31fe65ecbf0ba3659930cebf55116efab82
+  sha1: sha256:ebfe22445f6ad293a79375ebe53a5c8e46030972cc55d98d3f9db5a70c5b2d9f
+  dependencies: []
+- name: etcdctl
+  version: 65f3d4be1f67053dc1fe12682dc411f19bb727d5c720a8b03429d3943d0e4f03
+  fingerprint: 65f3d4be1f67053dc1fe12682dc411f19bb727d5c720a8b03429d3943d0e4f03
+  sha1: sha256:dfe75449f891be2684aa20e94bb7a56f73dfc224f5de270b9ee6960acae560ee
+  dependencies: []
+- name: flanneld
+  version: 89c8a7dae7feb07fa93b46eb82f7360c022fe0f204637e056e91f410a784e339
+  fingerprint: 89c8a7dae7feb07fa93b46eb82f7360c022fe0f204637e056e91f410a784e339
+  sha1: sha256:5305e4515d7c563682899e8434a7a79a1580149addd49862f457e5f3c9f818be
+  dependencies: []
+- name: golang-1.12-linux
+  version: 29fdb6b4cd6c0fe9fb2d8a2a53e89a040ffa33c33f4b9bfae04f5e16060f1f58
+  fingerprint: 29fdb6b4cd6c0fe9fb2d8a2a53e89a040ffa33c33f4b9bfae04f5e16060f1f58
+  sha1: sha256:2776fe5cdc0068e503e68a977df38f93cf631c8f0125140e4788092cd1f2f663
+  dependencies: []
+- name: ipset
+  version: f5ff8f4c49e7f382280909e1f3cc9932cf284b349e4c1960d41c90308b60f06d
+  fingerprint: f5ff8f4c49e7f382280909e1f3cc9932cf284b349e4c1960d41c90308b60f06d
+  sha1: sha256:a173610be2f920e4279acba256d4b51ebb67bb1d46217b5a4b7b9d026a95c54a
+  dependencies: []
+- name: jq
+  version: 6cfc7ee74f5d82f4048aa29f600ccf46404475d5f944f586fd0b16e70fafe9ef
+  fingerprint: 6cfc7ee74f5d82f4048aa29f600ccf46404475d5f944f586fd0b16e70fafe9ef
+  sha1: sha256:609bfb0d0d310f9903ff9aa69c77bc009fa8e90cbad5faa53a62784c5da3e036
+  dependencies: []
+- name: kubernetes
+  version: f1f072d69b422461b31bd376c314315278730180b3d326ab9b3f97601b0ca344
+  fingerprint: f1f072d69b422461b31bd376c314315278730180b3d326ab9b3f97601b0ca344
+  sha1: sha256:6b8b72bb53080f8f2ac7498f2da3070b30ccdfe266f15b9e4541bd93919e83a1
+  dependencies: []
+- name: nfs
+  version: f3f82967e7de1db46b046e0e3d4fcf3b58fb035e311368088521b1da4d49edc6
+  fingerprint: f3f82967e7de1db46b046e0e3d4fcf3b58fb035e311368088521b1da4d49edc6
+  sha1: sha256:a6a4f4abe8fa5a532f82c14f054d54bcfa6fdfa5ed15b23f0f90d64d996eeed5
+  dependencies: []
+- name: pid_utils
+  version: a2a905d267548c461ccf91937963ff7d26356f8f2edd928490ba529d0cc94aa4
+  fingerprint: a2a905d267548c461ccf91937963ff7d26356f8f2edd928490ba529d0cc94aa4
+  sha1: sha256:78794df9306982251c03b3029c5b0db9c42239f48dc68abb9ddaa5604610dbf4
+  dependencies: []
+- name: smoke-tests
+  version: b5fab46e03291d650c6967d7b09467937a2ed1774cccd42f7021681519dd225b
+  fingerprint: b5fab46e03291d650c6967d7b09467937a2ed1774cccd42f7021681519dd225b
+  sha1: sha256:44bc8c2c78a301b2621f6908d136126f6d20b964cb02c79215edb8957905e0c1
+  dependencies:
+  - golang-1.12-linux
+- name: socat
+  version: 25963a48706ffb4a1cd32121998e3699843ad4176a3b68328237c4b098d1c75a
+  fingerprint: 25963a48706ffb4a1cd32121998e3699843ad4176a3b68328237c4b098d1c75a
+  sha1: sha256:bc25b947cdb4b4857cfa54dda043a8d4046ee82946a231242b14bc61d637458a
+  dependencies: []
+license:
+  version: e11f9acd34abf885ffdd631f86b8d72b6cde9f489348ffb70d78a1356ee3cc06
+  fingerprint: e11f9acd34abf885ffdd631f86b8d72b6cde9f489348ffb70d78a1356ee3cc06
+  sha1: sha256:6179e73662e184e34ba7ef7f407e2bd0f076d5dc7fd13a9f95cc6c769ef7ffac
