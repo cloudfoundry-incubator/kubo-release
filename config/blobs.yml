@@ -62,30 +62,30 @@ jq-linux64-1.6:
   size: 3953824
   object_id: efdcc8cd-7155-47d4-65c9-d3d74700633f
   sha: 056ba5d6bbc617c29d37158ce11fd5a443093949
-kubernetes-1.17.9/kube-apiserver:
-  size: 118763520
-  object_id: 76f35f73-c131-4213-4851-aaa0afcf1aa4
-  sha: sha256:9150e452e2462bda958985b9571a0961fd21caa53ee2aad9d75c4a3e78087e19
-kubernetes-1.17.9/kube-controller-manager:
-  size: 108650496
-  object_id: ffdd4149-97ea-4793-4c6f-01fe20f7fe99
-  sha: sha256:936cb7aaf00453a11793772c2fad6b4ee56da4470afc8f1263516f3744fe2262
-kubernetes-1.17.9/kube-proxy:
+kubernetes-1.17.11/kube-apiserver:
+  size: 118804480
+  object_id: d1f27181-1b66-45e5-4185-499f58f8b0d3
+  sha: sha256:e634fab286b9e7074201fdd54234e62e0f191ffc8416421591e2598e1cd4bc25
+kubernetes-1.17.11/kube-controller-manager:
+  size: 108679168
+  object_id: 012ce78d-d7e4-4161-4fec-f0f841192faf
+  sha: sha256:f79503a264fbde027d0c3b9079ba2919cac08b8b3dd865b477a448a434dacc7c
+kubernetes-1.17.11/kube-proxy:
   size: 37810176
-  object_id: dcb3c8cf-931d-4bb4-684c-3e47d4f08d50
-  sha: sha256:a122808cff4f87301c1f7ddc096a3bb2a7bee7480f0192c4ca2a9cd5e72dfee5
-kubernetes-1.17.9/kube-scheduler:
-  size: 42106880
-  object_id: 4d5867d7-b7e6-4c7c-6724-e426fb19cb95
-  sha: sha256:560ec67a343fc126fb5f68a16084743f6ec7e14cfa842fa6d603df6a7f8fc2e1
-kubernetes-1.17.9/kubectl:
-  size: 43503616
-  object_id: a01bf5ad-0e61-42c1-727a-ab7f1591547d
-  sha: sha256:2ca83eecd221bedf3eceb0ccfcf45bb2e27950c382c2326211303adb0a9c4232
-kubernetes-1.17.9/kubelet:
-  size: 111679384
-  object_id: 9df8ca68-ddf3-4357-4203-109d4a0a64aa
-  sha: sha256:3b6cdfcd38a646c7b553821ef9bb67e93541da658305c00705e6ab2ba15e73af
+  object_id: be2b35d8-9bbe-45b3-6dd9-937519e72964
+  sha: sha256:a688bef59b7079dbfd7085804f705855a1bead73e7afe7c13f3f182d17d2ef19
+kubernetes-1.17.11/kube-scheduler:
+  size: 42119168
+  object_id: 7dec586a-1792-4275-54d2-33bbf2c713f4
+  sha: sha256:5f1a336e258482345a50fac70ea011f5f5fd4048236c95ac0cf41925fd9738a1
+kubernetes-1.17.11/kubectl:
+  size: 43515904
+  object_id: c3543f1f-f3ed-4358-6f3f-8e20eda7be2a
+  sha: sha256:002d640a12d6fad48f7d8a5c56cb4ff656397caf3511f50426d9c69c94b2d137
+kubernetes-1.17.11/kubelet:
+  size: 111691736
+  object_id: 460739cd-4604-4afc-5978-f97cb9a225bf
+  sha: sha256:71bcc8443a6e6f226727ea007fdc4b96327e302d1724a15ce2bffc2d94a3dac6
 libmnl0_1.0.3-5_amd64.deb:
   size: 11970
   object_id: 30b1e2c0-4194-47f2-544f-f55eb76b9101
