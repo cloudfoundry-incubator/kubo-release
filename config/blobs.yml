@@ -122,7 +122,7 @@ socat-1.7.3.2.tar.gz:
   size: 615818
   object_id: a6f3dcb3-54a0-44a3-4100-f408932aaf8f
   sha: a2446f65fb9fe9703b85ac5664c8920089fe32d8
-talloc-2.1.9.tar.gz:
-  size: 440335
-  object_id: f2d8d5e1-1cb6-450c-480f-015534a76b17
-  sha: e1e79fec4c0b6bd92be904a9c03b0a168478711a
+talloc-2.1.16.tar.gz:
+  size: 634906
+  object_id: 6334e9f6-7049-4e04-7f49-a204655d0f71
+  sha: sha256:195bf6830a070deb11c492b8cd575a59cd4d3b634164f3f693f6388f806a52a9
