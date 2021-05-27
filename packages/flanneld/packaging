@@ -1,7 +1,7 @@
 set -e
 
 FLANNELD_PACKAGE=flannel
-FLANNELD_VERSION="0.12.0"
+FLANNELD_VERSION="0.14.0"
 tar xvf ${FLANNELD_PACKAGE}-v${FLANNELD_VERSION}-linux-amd64.tar.gz
 cp -a flanneld "${BOSH_INSTALL_TARGET:?}/flanneld"
 chmod +x "${BOSH_INSTALL_TARGET:?}/flanneld"
