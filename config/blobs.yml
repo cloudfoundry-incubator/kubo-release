@@ -4,6 +4,7 @@ autoconf-2.69.tar.gz:
   sha: 562471cbcb0dd0fa42a76665acf0dbb68479b78a
 automake-1.15.1.tar.gz:
   size: 2265200
+  object_id: b68daa39-59bf-47d8-69b8-0c97da74fd77
   sha: sha256:988e32527abe052307d21c8ca000aa238b914df363a617e38f4fb89f5abf6260
 cifs-utils-6.7.tar.bz2:
   size: 363647
