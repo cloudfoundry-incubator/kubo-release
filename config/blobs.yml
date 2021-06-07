@@ -46,10 +46,10 @@ etcdctl-3.0.7:
   size: 18427584
   object_id: 32221476-5c3d-4ec7-5869-44c989cc3077
   sha: 11f0462cc86bf85332399a2fa584d5bb46d0cb2a
-flannel-v0.14.0-linux-amd64.tar.gz:
-  size: 13083392
-  object_id: baed2ee2-ca6e-4c57-5c96-58dc979c3aad
-  sha: sha256:7466e59321ad376ec6ccef729e6d84c213fa6e570b0cf80697a162186c587fa2
+flannel-v0.12.0-linux-amd64.tar.gz:
+  size: 9565406
+  object_id: 71fed4a3-0db3-4f50-4064-c7e93b4e5ae9
+  sha: 745cf6eb3897ab97ee1362cd401262a0e0038524
 ipset/ipset_6.20.1-1_amd64.deb:
   size: 34156
   object_id: 5dfcce8f-366e-49f0-59e6-9e2d48178750
@@ -122,7 +122,7 @@ socat-1.7.3.2.tar.gz:
   size: 615818
   object_id: a6f3dcb3-54a0-44a3-4100-f408932aaf8f
   sha: a2446f65fb9fe9703b85ac5664c8920089fe32d8
-talloc-2.1.16.tar.gz:
-  size: 634906
-  object_id: 6334e9f6-7049-4e04-7f49-a204655d0f71
-  sha: sha256:195bf6830a070deb11c492b8cd575a59cd4d3b634164f3f693f6388f806a52a9
+talloc-2.1.9.tar.gz:
+  size: 440335
+  object_id: f2d8d5e1-1cb6-450c-480f-015534a76b17
+  sha: e1e79fec4c0b6bd92be904a9c03b0a168478711a
