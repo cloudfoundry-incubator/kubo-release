@@ -31,12 +31,10 @@ install_package "${IPSET_PACKAGES:?}/ipset_6.20.1-1_amd64.deb"
 
 <% if_p("nfs") do |nfs|
   if nfs %>
-  ## libevent has a known CVE. We need ubuntu disco to get a fixed version
-  install_package "${NFS_PACKAGES:?}/libevent-2.0-5_2.0.21-stable-2ubuntu0.16.04.1_amd64.deb"
-  install_package "${NFS_PACKAGES:?}/keyutils_1.5.9-8ubuntu1_amd64.deb"
-  ## rpcbind has a known CVE. We need ubuntu disco to get a fixed version
-  install_package "${NFS_PACKAGES:?}/rpcbind_0.2.3-0.2_amd64.deb"
-  install_package "${NFS_PACKAGES:?}/libnfsidmap2_0.25-5_amd64.deb"
-  install_package "${NFS_PACKAGES:?}/nfs-common_1:1.2.8-9ubuntu12.1_amd64.deb"
+  install_package "${NFS_PACKAGES:?}/libevent-2.1-6_2.1.8-stable-4build1_amd64.deb"
+  install_package "${NFS_PACKAGES:?}/keyutils_1.5.9-9.2ubuntu2_amd64.deb"
+  install_package "${NFS_PACKAGES:?}/rpcbind_0.2.3-0.6_amd64.deb"
+  install_package "${NFS_PACKAGES:?}/libnfsidmap2_0.25-5.1_amd64.deb"
+  install_package "${NFS_PACKAGES:?}/nfs-common_1.3.4-2.1ubuntu5.3_amd64.deb"
   <% end
 end %>

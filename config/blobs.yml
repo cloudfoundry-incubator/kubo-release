@@ -94,26 +94,25 @@ libtool-2.4.6.tar.gz:
   size: 1806697
   object_id: 670cc8a2-75d8-4fb5-465f-270395cb9373
   sha: 25b6931265230a06f0fc2146df64c04e5ae6ec33
-nfs-debs/keyutils_1.5.9-8ubuntu1_amd64.deb:
-  size: 47054
-  object_id: e1b42c34-4e88-426b-7268-99d1bdfd40c1
-  sha: ec2e96e73feb5215605c9f0254cad05d9cc5688a
-nfs-debs/libevent-2.0-5_2.0.21-stable-2ubuntu0.16.04.1_amd64.deb:
-  size: 114014
-  object_id: 0fa38188-cd2c-417f-7407-02367bc99c7d
-  sha: sha256:e1acdffde386a4da7de46166ffd199771a13498f5d4fc38d61b3fa0eba305572
-nfs-debs/libnfsidmap2_0.25-5_amd64.deb:
-  size: 32182
-  object_id: 59ba4d66-fb63-4a62-75da-8502169d85cd
-  sha: f28b7370542daaf81cefb44d9057fa9b3fb43064
-nfs-debs/nfs-common_1:1.2.8-9ubuntu12.1_amd64.deb:
-  size: 184334
-  object_id: 6c99be77-1ba2-4be4-409a-36c090035646
-  sha: 38f7234fade7c15ffecf4c043c877b01ead92d3d
-nfs-debs/rpcbind_0.2.3-0.2_amd64.deb:
-  size: 40252
-  object_id: 56ad455e-38be-40da-7815-a9d4774d55e4
-  sha: 8fa58cfcb1862c6d337d10496fada5f1a6e94a03
+nfs-debs/keyutils_1.5.9-9.2ubuntu2_amd64.deb:
+  size: 47896
+  object_id: b1a8cd11-d63d-413f-70a6-f09ba783ca09
+  sha: sha256:223a7160b6e2680d2b1f43abb067e0ccc08906bb2c5448ad4b3065f38309bbb5
+nfs-debs/libevent-2.1-6_2.1.8-stable-4build1_amd64.deb:
+  size: 133328
+  object_id: c1543b82-4797-497e-6c74-78ee3e48dd18
+  sha: sha256:76bc94b3bb4356673c61dd2a4a7b06f40de21dab051aa4b31282aa9d7798b383
+nfs-debs/libnfsidmap2_0.25-5.1_amd64.deb:
+  size: 27180
+  sha: sha256:ae6eaf479efa010b313b4e0cf18812e3ca6eb50b6392b7b52e854d6acafe866b
+nfs-debs/nfs-common_1.3.4-2.1ubuntu5.3_amd64.deb:
+  size: 205520
+  object_id: 79de2ad4-de2e-4b8a-784f-d65d5909b35c
+  sha: sha256:ecf4d9601d210d86d423457dd18a7d3af406ed34a273fb22ade431764fc66d67
+nfs-debs/rpcbind_0.2.3-0.6_amd64.deb:
+  size: 40644
+  object_id: 9ee0c957-8711-4950-76e8-8740d5c7d1bb
+  sha: sha256:ca91f3d0affb350aaff984105ab12ebe4ecf7b7ff13351b95c79ddc114e86c2d
 pkg-config-0.29.2.tar.gz:
   size: 2016830
   object_id: 2a0b553f-c65d-42ef-6317-dd0cfcdc7c06
