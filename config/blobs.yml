@@ -104,6 +104,7 @@ nfs-debs/libevent-2.1-6_2.1.8-stable-4build1_amd64.deb:
   sha: sha256:76bc94b3bb4356673c61dd2a4a7b06f40de21dab051aa4b31282aa9d7798b383
 nfs-debs/libnfsidmap2_0.25-5.1_amd64.deb:
   size: 27180
+  object_id: 33f49480-2078-4562-5ea6-269200892b3b
   sha: sha256:ae6eaf479efa010b313b4e0cf18812e3ca6eb50b6392b7b52e854d6acafe866b
 nfs-debs/nfs-common_1.3.4-2.1ubuntu5.3_amd64.deb:
   size: 205520
