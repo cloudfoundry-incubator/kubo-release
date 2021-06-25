@@ -1,7 +1,7 @@
 set -e
 
 KUBERNETES_PACKAGE=kubernetes
-KUBERNETES_VERSION="1.17.9"
+KUBERNETES_VERSION="1.18.20"
 
 main() {
   create_target_dir
