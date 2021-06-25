@@ -1,0 +1,146 @@
+---
+resource_types:
+- name: github-release-with-version-filtering
+  type: docker-image
+  source:
+    repository: pcfkubo/github-release-resource
+    tag: filter-version
+
+resources:
+- name: k8s-release
+  type: github-release-with-version-filtering
+  source:
+    owner: kubernetes
+    repository: kubernetes
+    # only patches get updated
+    version_filter: "< 1.19.0"
+    access_token: ((github-token-key))
+
+- name: metrics-server-release
+  type: github-release
+  source:
+    owner: kubernetes-incubator
+    repository: metrics-server
+    access_token: ((github-token-key))
+
+- name: coredns-release
+  type: github-release-with-version-filtering
+  source:
+    owner: coredns
+    repository: coredns
+    access_token: ((github-token-key))
+
+- name: git-kubernetes
+  type: git
+  source:
+    uri: https://github.com/kubernetes/kubernetes.git
+    branch: master
+
+- name: git-kubo-ci
+  type: git
+  source:
+    uri: git@github.com:cloudfoundry-incubator/kubo-ci.git
+    branch: master
+    private_key: ((git-ssh-key.private_key))
+
+- name: git-kubo-release
+  type: git
+  source:
+    uri: git@github.com:cloudfoundry-incubator/kubo-release.git
+    branch: develop
+    private_key: ((git-ssh-key.private_key))
+
+- name: git-kubo-release-windows
+  type: git
+  source:
+    uri: git@github.com:cloudfoundry-incubator/kubo-release-windows.git
+    branch: develop
+    private_key: ((git-ssh-key.private_key))
+
+groups:
+- name: bump-k8s
+  jobs:
+  - bump-k8s
+- name: bump-images-dependencies
+  jobs:
+  - bump-images-dependencies
+
+jobs:
+- name: bump-k8s
+  plan:
+  - in_parallel:
+    - get: git-kubo-ci
+    - get: git-kubo-release
+    - get: git-kubo-release-windows
+    - get: git-kubernetes
+    - get: k8s-release
+      trigger: true
+  - in_parallel:
+    - task: bump-k8s
+      config: &config
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: gcr.io/cf-pks-golf/pcfkubo/kubo-ci
+            tag: stable
+        run:
+          path: git-kubo-ci/scripts/bump-k8s.sh
+        inputs:
+          - name: git-kubo-ci
+          - name: git-kubo-release
+          - name: k8s-release
+          - name: git-kubernetes
+        params:
+          GCS_JSON_KEY: ((gcs-json-key))
+          CFCR_USER_TOKEN: ((cfcr-git-user-token))
+          GIT_SSH_KEY: |
+            ((git-ssh-key.private_key))
+    - task: bump-k8s-windows
+      config:
+        <<: *config
+        run:
+          path: git-kubo-ci/scripts/bump-k8s.sh
+        inputs:
+          - name: git-kubo-ci
+          - name: git-kubo-release-windows
+          - name: k8s-release
+          - name: git-kubernetes
+        params:
+          REPO: windows
+          GCS_JSON_KEY: ((gcs-json-key))
+          CFCR_USER_TOKEN: ((cfcr-git-user-token))
+          GIT_SSH_KEY: |
+            ((git-ssh-key.private_key))
+    - task: bump-k8s-ci
+      config:
+        <<: *config
+        run:
+          path: git-kubo-ci/scripts/bump-k8s.sh
+        inputs:
+          - name: git-kubo-ci
+          - name: k8s-release
+          - name: git-kubernetes
+        params:
+          REPO: ci
+          GCS_JSON_KEY: ((gcs-json-key))
+          CFCR_USER_TOKEN: ((cfcr-git-user-token))
+          GIT_SSH_KEY: |
+            ((git-ssh-key.private_key))
+- name: bump-images-dependencies
+  plan:
+  - in_parallel:
+    - get: metrics-server-release
+      trigger: true
+    - get: coredns-release
+      trigger: true
+    - get: git-kubo-ci
+    - get: git-kubo-release
+  - task: bump-spec
+    privileged: true
+    file: git-kubo-ci/tasks/bump/bump-k8s-spec.yml
+    params:
+      GCS_JSON_KEY: ((gcs-json-key))
+  - put: git-kubo-release
+    params:
+      repository: git-kubo-release-output

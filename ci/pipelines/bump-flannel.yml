@@ -1,0 +1,42 @@
+---
+resources:
+- name: flannel-release
+  type: github-release
+  source:
+    owner: coreos
+    repository: flannel
+    access_token: ((github-token-key))
+
+- name: git-kubo-ci
+  type: git
+  source:
+    uri: https://github.com/cloudfoundry-incubator/kubo-ci
+    branch: master
+
+- name: git-kubo-release
+  type: git
+  source:
+    uri: git@github.com:cloudfoundry-incubator/kubo-release.git
+    branch: develop
+    private_key: ((git-ssh-key.private_key))
+
+jobs:
+- name: check-and-upgrade-flannel
+  plan:
+  - in_parallel:
+    - get: git-kubo-ci
+    - get: git-kubo-release
+    - get: flannel-release
+      trigger: true
+      params: { globs: ["flannel-v*-linux-amd64.tar.gz"] }
+  - task: update-flannel-blob
+    file: git-kubo-ci/tasks/bump-flannel.yml
+    params:
+      GCS_JSON_KEY: ((gcs-json-key))
+  - task: generate-flannel-pr
+    file: git-kubo-ci/tasks/create-flannel-pr.yml
+    params:
+      CFCR_USER_TOKEN: ((cfcr-git-user-token))
+      GIT_SSH_KEY: |
+        ((git-ssh-key.private_key))
+

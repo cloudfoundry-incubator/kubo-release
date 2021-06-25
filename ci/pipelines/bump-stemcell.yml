@@ -1,0 +1,118 @@
+resource_types:
+- name: gcs
+  type: docker-image
+  source:
+    repository: frodenas/gcs-resource
+
+- name: bosh-deployment
+  type: docker-image
+  source:
+    repository: cloudfoundry/bosh-deployment-resource
+
+resources:
+- name: stemcell
+  type: bosh-io-stemcell
+  source:
+    name: bosh-google-kvm-ubuntu-xenial-go_agent
+
+- name: git-kubo-ci
+  type: git
+  source:
+    uri: git@github.com:cloudfoundry-incubator/kubo-ci
+    branch: master
+    private_key: ((git-ssh-key.private_key))
+
+- name: git-kubo-deployment
+  type: git
+  source:
+    uri: git@github.com:cloudfoundry-incubator/kubo-deployment.git
+    branch: develop
+    private_key: ((git-ssh-key.private_key))
+    ignore_paths:
+    - 'LICENSE'
+    - 'NOTICE'
+
+- name: gcs-precompiled-cfcr-etcd-untested
+  type: gcs
+  source:
+    json_key: ((gcs-json-key))
+    bucket: kubo-precompiled-releases
+    regexp: cfcr-etcd-(.*).tgz
+
+- name: gcs-precompiled-docker-untested
+  type: gcs
+  source:
+    json_key: ((gcs-json-key))
+    bucket: kubo-precompiled-releases
+    regexp: docker-(.*).tgz
+
+- name: gcs-precompiled-bpm-untested
+  type: gcs
+  source:
+    json_key: ((gcs-json-key))
+    bucket: kubo-precompiled-releases
+    regexp: bpm-(.*).tgz
+
+- name: compilation-deployment
+  type: bosh-deployment
+  source:
+    deployment: compilation-default
+    skip_check: true
+
+- name: gcs-source-json
+  type: gcs
+  source:
+    json_key: ((gcs-json-key))
+    bucket: kubo-pipeline-store
+    versioned_file: source.json
+
+jobs:
+- name: bump-stemcell
+  plan:
+  - in_parallel:
+    - get: git-kubo-ci
+    - get: git-kubo-deployment
+    - get: gcs-source-json
+    - get: stemcell
+      resource: stemcell
+      trigger: true
+  - task: bump-stemcell
+    file: git-kubo-ci/tasks/bump-stemcell.yml
+  - task: generate-compilation-manifest
+    file: git-kubo-ci/tasks/generate-compilation-manifest.yml
+    input_mapping:
+      git-kubo-deployment: git-kubo-deployment-output
+    params:
+      RELEASE_LIST: "docker cfcr-etcd bpm"
+  - put: compilation-deployment
+    params:
+      stemcells:
+      - stemcell/stemcell.tgz
+      manifest: compilation-manifest/manifest.yml
+      source_file: gcs-source-json/source.json
+  - task: export
+    file: git-kubo-ci/tasks/export-release.yml
+    input_mapping:
+      git-kubo-deployment: git-kubo-deployment-output
+    params:
+      RELEASE_LIST: "docker cfcr-etcd bpm"
+  - in_parallel:
+    - put: gcs-precompiled-cfcr-etcd-untested
+      params:
+        file: compiled-releases/cfcr-etcd-*.tgz
+    - put: gcs-precompiled-docker-untested
+      params:
+        file: compiled-releases/docker-*.tgz
+    - put: gcs-precompiled-bpm-untested
+      params:
+        file: compiled-releases/bpm-*.tgz
+  - task: bump-precompiled-releases-in-manifest
+    file: git-kubo-ci/tasks/bump-precompiled-releases-in-manifest.yml
+    input_mapping:
+      git-kubo-deployment: git-kubo-deployment-output
+    params:
+      RELEASE_LIST: "docker cfcr-etcd bpm"
+  - put: git-kubo-deployment
+    params:
+      merge: true
+      repository: git-kubo-deployment-output

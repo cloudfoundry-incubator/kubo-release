@@ -1,0 +1,183 @@
+---
+resource_types:
+- name: gcs
+  type: docker-image
+  source:
+    repository: frodenas/gcs-resource
+
+resources:
+- name: git-kubo-ci
+  type: git
+  source:
+    uri: git@github.com:cloudfoundry-incubator/kubo-ci
+    branch: master
+    private_key: ((git-ssh-key.private_key))
+
+- name: git-kubo-release
+  type: git
+  source:
+    uri: git@github.com:cloudfoundry-incubator/kubo-release.git
+    branch: develop
+    private_key: ((git-ssh-key.private_key))
+    ignore_paths:
+    - '*.md'
+    - 'LICENSE'
+    - 'NOTICE'
+
+- name: git-docker-boshrelease
+  type: git
+  source:
+    uri: git@github.com:cloudfoundry-incubator/docker-boshrelease.git
+    branch: master
+    private_key: ((git-ssh-key.private_key))
+    ignore_paths:
+    - '*.md'
+    - 'LICENSE'
+    - 'NOTICE'
+
+- name: git-cfcr-etcd-release
+  type: git
+  source:
+    uri: git@github.com:cloudfoundry-incubator/cfcr-etcd-release.git
+    branch: master
+    private_key: ((git-ssh-key.private_key))
+    ignore_paths:
+    - '*.md'
+    - 'LICENSE'
+    - 'NOTICE'
+
+
+- name: golang-release
+  type: git
+  source:
+    uri: https://github.com/bosh-packages/golang-release
+    branch: master
+
+- name: golang-version
+  type: gcs
+  source:
+    json_key: ((gcs-json-key))
+    bucket: kubo-pipeline-store
+    versioned_file: component-golang-version
+
+############################################
+# Jobs
+############################################
+jobs:
+- name: update-component-golang-version
+  #disable_manual_trigger: true
+  plan:
+  - in_parallel:
+    - get: git-kubo-ci
+    - get: golang-release
+      trigger: true
+    - get: golang-version
+  - task: get-latest-version
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: gcr.io/cf-pks-golf/pcfkubo/kubo-ci
+          tag: stable
+      run:
+        path: git-kubo-ci/scripts/bump-golang-component-version.sh
+      inputs:
+        - name: git-kubo-ci
+        - name: golang-release
+        - name: golang-version
+      outputs:
+        - name: modified-golang-version
+  - put: golang-version
+    params:
+      file: modified-golang-version/component-golang-version
+
+- name: bump-docker-boshrelease-golang
+  plan:
+  - in_parallel:
+    - get: git-kubo-ci
+    - get: git-docker-boshrelease
+    - get: golang-release
+    - get: golang-version
+      trigger: true
+      passed: [ 'update-component-golang-version' ]
+  - task: bump-release-golang
+    file: git-kubo-ci/tasks/bump-release-golang.yml
+    input_mapping: { release: git-docker-boshrelease }
+    params:
+      GCS_JSON_KEY: ((gcs-json-key))
+  - task: check-create-release
+    file: git-kubo-ci/tasks/bump/check-create-release.yml
+  - put: git-docker-boshrelease
+    params:
+      repository: modified-release
+      rebase: true
+
+- name: bump-kubo-release-golang
+  plan:
+  - in_parallel:
+    - get: git-kubo-ci
+    - get: git-kubo-release
+    - get: golang-release
+    - get: golang-version
+      trigger: true
+      passed: [ 'update-component-golang-version' ]
+  - task: bump-release-golang
+    file: git-kubo-ci/tasks/bump-release-golang.yml
+    input_mapping: { release: git-kubo-release }
+    params:
+      GCS_JSON_KEY: ((gcs-json-key))
+  - task: check-create-release
+    file: git-kubo-ci/tasks/bump/check-create-release.yml
+  - put: git-kubo-release
+    params:
+      repository: modified-release
+      rebase: true
+
+- name: bump-cfcr-etcd-release-golang
+  plan:
+  - in_parallel:
+    - get: git-kubo-ci
+    - get: git-cfcr-etcd-release
+    - get: golang-release
+    - get: golang-version
+      trigger: true
+      passed: [ 'update-component-golang-version' ]
+  - task: bump-release-golang
+    file: git-kubo-ci/tasks/bump-release-golang.yml
+    input_mapping: { release: git-cfcr-etcd-release }
+    params:
+      GCS_JSON_KEY: ((gcs-json-key))
+  - task: check-create-release
+    file: git-kubo-ci/tasks/bump/check-create-release.yml
+  - put: git-cfcr-etcd-release
+    params:
+      repository: modified-release
+      rebase: true
+
+- name: bump-docker-image-golang
+  plan:
+  - in_parallel:
+    - get: git-kubo-ci
+    - get: golang-version
+      trigger: true
+      passed: [ 'update-component-golang-version' ]
+  - task: bump-golang
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: gcr.io/cf-pks-golf/pcfkubo/kubo-ci
+          tag: stable
+      run:
+        path: git-kubo-ci/scripts/bump-docker-image-golang.sh
+      inputs:
+        - name: git-kubo-ci
+        - name: golang-version
+      outputs:
+        - name: git-kubo-ci-output
+  - put: git-kubo-ci
+    params:
+      repository: git-kubo-ci-output
+      rebase: true
