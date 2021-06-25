@@ -22,20 +22,20 @@ resources:
     driver: gcs
     key: versions/kubo-version
     json_key: ((gcs-json-key))
-    bucket: ((kubo-version-bucket))
+    bucket: kubo-pipeline-store
 
 - name: git-kubo-ci
   type: git
   source:
     uri: git@github.com:cloudfoundry-incubator/kubo-ci
-    branch: ((kubo-ci-branch))
+    branch: master
     private_key: ((git-ssh-key.private_key))
 
 - name: git-kubo-deployment
   type: git
   source:
     uri: git@github.com:cloudfoundry-incubator/kubo-deployment.git
-    branch: ((kubo-deployment.branch))
+    branch: develop
     private_key: ((git-ssh-key.private_key))
     ignore_paths:
     - 'LICENSE'
@@ -45,7 +45,7 @@ resources:
   type: git
   source:
     uri: git@github.com:cloudfoundry-incubator/kubo-release.git
-    branch: ((kubo-release.branch))
+    branch: develop
     private_key: ((git-ssh-key.private_key))
     ignore_paths:
     - 'ci'
@@ -57,7 +57,7 @@ resources:
   type: git
   source:
     uri: git@github.com:cloudfoundry-incubator/kubo-release-windows.git
-    branch: ((kubo-release.branch))
+    branch: develop
     private_key: ((git-ssh-key.private_key))
     ignore_paths:
     - '*.md'
@@ -87,21 +87,21 @@ resources:
   type: gcs
   source:
     json_key: ((gcs-json-key))
-    bucket: ((kubo-deployment.build-bucket))
+    bucket: kubo-pipeline-store
     regexp: dev-builds/kubo-deployment-(.*).tgz
 
 - name: gcs-kubo-release-tarball-untested
   type: gcs
   source:
     json_key: ((gcs-json-key))
-    bucket: ((kubo-release.ubuntu-build-bucket))
+    bucket: kubo-pipeline-store
     regexp: dev-builds/kubo-.*-ubuntu-xenial-.*-(.*).tgz
 
 - name: gcs-kubo-windows-release-tarball-untested
   type: gcs
   source:
     json_key: ((gcs-json-key))
-    bucket: ((kubo-release.windows-build-bucket))
+    bucket: kubo-pipeline-store
     regexp: dev-windows-builds/kubo-.*-windows2019-.*-(.*).tgz
 
 - name: slack-alert
