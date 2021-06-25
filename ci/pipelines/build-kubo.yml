@@ -1,0 +1,233 @@
+resource_types:
+- name: gcs
+  type: docker-image
+  source:
+    repository: frodenas/gcs-resource
+
+- name: bosh-deployment
+  type: docker-image
+  source:
+    repository: cloudfoundry/bosh-deployment-resource
+
+- name: slack-notification
+  type: docker-image
+  source:
+    repository: cfcommunity/slack-notification-resource
+    tag: latest
+
+resources:
+- name: kubo-version
+  type: semver
+  source:
+    driver: gcs
+    key: versions/kubo-version
+    json_key: ((gcs-json-key))
+    bucket: ((kubo-version-bucket))
+
+- name: git-kubo-ci
+  type: git
+  source:
+    uri: git@github.com:cloudfoundry-incubator/kubo-ci
+    branch: ((kubo-ci-branch))
+    private_key: ((git-ssh-key.private_key))
+
+- name: git-kubo-deployment
+  type: git
+  source:
+    uri: git@github.com:cloudfoundry-incubator/kubo-deployment.git
+    branch: ((kubo-deployment.branch))
+    private_key: ((git-ssh-key.private_key))
+    ignore_paths:
+    - 'LICENSE'
+    - 'NOTICE'
+
+- name: git-kubo-release
+  type: git
+  source:
+    uri: git@github.com:cloudfoundry-incubator/kubo-release.git
+    branch: ((kubo-release.branch))
+    private_key: ((git-ssh-key.private_key))
+    ignore_paths:
+    - 'ci'
+    - '*.md'
+    - 'LICENSE'
+    - 'NOTICE'
+
+- name: git-kubo-windows-release
+  type: git
+  source:
+    uri: git@github.com:cloudfoundry-incubator/kubo-release-windows.git
+    branch: ((kubo-release.branch))
+    private_key: ((git-ssh-key.private_key))
+    ignore_paths:
+    - '*.md'
+    - 'LICENSE'
+    - 'NOTICE'
+
+- name: director-source-json
+  type: gcs
+  source:
+    json_key: ((gcs-json-key))
+    bucket: kubo-pipeline-store
+    versioned_file: source.json
+
+- name: compilation-deployment-default
+  type: bosh-deployment
+  source:
+    deployment: compilation-default
+    skip_check: true
+
+- name: compilation-deployment-windows
+  type: bosh-deployment
+  source:
+    deployment: compilation-windows
+    skip_check: true
+
+- name: gcs-kubo-deployment-tarball-untested
+  type: gcs
+  source:
+    json_key: ((gcs-json-key))
+    bucket: ((kubo-deployment.build-bucket))
+    regexp: dev-builds/kubo-deployment-(.*).tgz
+
+- name: gcs-kubo-release-tarball-untested
+  type: gcs
+  source:
+    json_key: ((gcs-json-key))
+    bucket: ((kubo-release.ubuntu-build-bucket))
+    regexp: dev-builds/kubo-.*-ubuntu-xenial-.*-(.*).tgz
+
+- name: gcs-kubo-windows-release-tarball-untested
+  type: gcs
+  source:
+    json_key: ((gcs-json-key))
+    bucket: ((kubo-release.windows-build-bucket))
+    regexp: dev-windows-builds/kubo-.*-windows2019-.*-(.*).tgz
+
+- name: slack-alert
+  type: slack-notification
+  source:
+    url: ((build-alert-slack-url))
+
+jobs:
+- name: run-unit-tests-release
+  plan:
+  - get: git-kubo-ci
+  - get: git-kubo-release
+    trigger: true
+  - task: run-release-unit-tests
+    file: git-kubo-ci/tasks/run-release-unit-tests.yml
+    on_failure: &on_failure_alert
+      do:
+      - task: configure-slack-notification
+        file: git-kubo-ci/tasks/configure-slack-notification.yml
+      - put: slack-alert
+        params:
+          attachments_file: slack-notification/attachments
+          text: |
+            Build Failed. https://ci.kubo.sh/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+
+- name: run-unit-tests-deployment
+  plan:
+  - get: git-kubo-ci
+  - get: git-kubo-deployment
+    trigger: true
+  - task: run-deployment-unit-tests
+    file: git-kubo-ci/tasks/run-deployment-unit-tests.yml
+    on_failure: *on_failure_alert
+
+- name: build
+  plan:
+  - in_parallel:
+    - get: git-kubo-ci
+    - get: director-source-json
+    - get: kubo-version
+      params:
+        pre: dev
+    - get: git-kubo-windows-release
+      trigger: true
+    - get: git-kubo-release
+      passed: [ 'run-unit-tests-release' ]
+      trigger: true
+    - get: git-kubo-deployment
+      passed: [ 'run-unit-tests-deployment' ]
+      trigger: true
+  - in_parallel:
+    - do:
+      - task: build-kubo-release
+        file: git-kubo-ci/tasks/build-kubo-release.yml
+        on_failure: *on_failure_alert
+        params:
+          release: kubo
+      - task: generate-compilation-manifest
+        file: git-kubo-ci/tasks/generate-compilation-manifest.yml
+        params:
+          RELEASE_LIST: "kubo"
+          stemcell_alias: default
+      - put: compilation-deployment-default
+        params:
+          manifest: compilation-manifest/manifest.yml
+          source_file: director-source-json/source.json
+          releases:
+          - kubo-release/kubo-release-*.tgz
+      - task: export
+        file: git-kubo-ci/tasks/export-release.yml
+        params:
+          RELEASE_LIST: kubo
+          stemcell_alias: default
+        input_mapping:
+          gcs-source-json: director-source-json
+          compilation-deployment: compilation-deployment-default
+    - do:
+      - task: build-kubo-windows-release
+        file: git-kubo-ci/tasks/build-kubo-release.yml
+        on_failure: *on_failure_alert
+        input_mapping: {git-kubo-release: git-kubo-windows-release}
+        output_mapping: {kubo-release: kubo-windows-release}
+        params:
+          release: kubo-windows
+      - task: generate-compilation-manifest-windows
+        file: git-kubo-ci/tasks/generate-compilation-manifest.yml
+        output_mapping: {compilation-manifest: compilation-manifest-windows}
+        params:
+          RELEASE_LIST: kubo-windows
+          stemcell_alias: windows
+      - put: compilation-deployment-windows
+        params:
+          manifest: compilation-manifest-windows/manifest.yml
+          source_file: director-source-json/source.json
+          releases:
+          - kubo-windows-release/*.tgz
+      - task: export
+        file: git-kubo-ci/tasks/export-release.yml
+        params:
+          RELEASE_LIST: kubo-windows
+          stemcell_alias: windows
+        input_mapping:
+          gcs-source-json: director-source-json
+          compilation-deployment: compilation-deployment-windows
+        output_mapping: {compiled-releases: compiled-releases-windows}
+    - task: build-kubo-deployment-tarball
+      file: git-kubo-ci/tasks/build-kubo-deployment-tarball.yml
+      on_failure: *on_failure_alert
+  - put: gcs-kubo-release-tarball-untested
+    attempts: 10
+    params:
+      file: compiled-releases/kubo-*.tgz
+  - put: gcs-kubo-windows-release-tarball-untested
+    attempts: 10
+    params:
+      file: compiled-releases-windows/kubo-*.tgz
+  - put: gcs-kubo-deployment-tarball-untested
+    params:
+      file: kubo-deployment-tarball/kubo-deployment*.tgz
+
+- name: bump-version
+  plan:
+  - get: kubo-version
+    passed: ['build']
+    trigger: true
+  - put: kubo-version
+    attempts: 10
+    params:
+      pre: dev
