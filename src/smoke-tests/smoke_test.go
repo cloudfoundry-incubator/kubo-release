@@ -2,8 +2,11 @@ package smoke_tests_test
 
 import (
 	"fmt"
+	"io/ioutil"
 	"math/rand"
 	"os/exec"
+	"path/filepath"
+	"text/template"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
@@ -47,7 +50,19 @@ var _ = Describe("CFCR Smoke Tests", func() {
 
 		BeforeEach(func() {
 			deploymentName = randSeq(10)
-			args := []string{"run", deploymentName, "--image=pcfkubo/nginx-bionic:1.0.0", "--image-pull-policy=Never", "-l", "app=" + deploymentName, "--serviceaccount=default"}
+			path := getFixturePath("smoke-test-deployment.yml")
+
+			t, err := template.ParseFiles(path)
+			Expect(err).NotTo(HaveOccurred())
+
+			f, err := ioutil.TempFile(tmpDir, filepath.Base(path))
+			Expect(err).NotTo(HaveOccurred())
+			defer f.Close()
+
+			type templateInfo struct{ Deployment string }
+			Expect(t.Execute(f, templateInfo{Deployment: deploymentName})).To(Succeed())
+
+			args := []string{"apply", "-f", f.Name()}
 			session := k8sRunner.RunKubectlCommand(args...)
 			Eventually(session, "60s").Should(gexec.Exit(0))
 

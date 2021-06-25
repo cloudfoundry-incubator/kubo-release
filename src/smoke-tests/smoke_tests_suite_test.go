@@ -39,22 +39,26 @@ var _ = BeforeSuite(func() {
 	k8sRunner.RunKubectlCommand("apply", "-f", pspSpec)
 })
 
-func getFixturePath(filename string) string {
-	srcDir, err := filepath.Abs(filepath.Dir(filename))
+func getFixtureFromExecutable(path2executable, yaml string) string {
+	srcDir, err := filepath.Abs(filepath.Dir(path2executable))
 	Expect(err).NotTo(HaveOccurred())
+	return filepath.Join(srcDir, "fixtures", yaml)
+}
 
-	return filepath.Join(srcDir, "fixtures", "smoke-test-psp.yml")
-
+func getFixturePath(yamlFile string) string {
+	_, caller, _, _ := runtime.Caller(0)
+	file := getFixtureFromExecutable(caller, yamlFile)
+	// not clear why caller would fail to find current executable, or why os.Executable() would be better
+	if _, err := os.Stat(file); os.IsNotExist(err) {
+		caller, err = os.Executable()
+		Expect(err).NotTo(HaveOccurred())
+		file = getFixtureFromExecutable(caller, yamlFile)
+	}
+	return file
 }
 
 func templatePSPWithNamespace(tmpDir, namespace string) string {
-	_, filename, _, _ := runtime.Caller(0)
-	file := getFixturePath(filename)
-	if _, err := os.Stat(file); os.IsNotExist(err) {
-		filename, err = os.Executable()
-		Expect(err).NotTo(HaveOccurred())
-		file = getFixturePath(filename)
-	}
+	file := getFixturePath("smoke-test-psp.yml")
 
 	pspName := "smoke-test-" + namespace
 	t, err := template.ParseFiles(file)

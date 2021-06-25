@@ -1,0 +1,25 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{.Deployment}}
+  labels:
+    app: nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{.Deployment}}
+  template:
+    metadata:
+      labels:
+        app: {{.Deployment}}
+    spec:
+      serviceAccount: default
+      containers:
+        - name: nginx
+          image: pcfkubo/nginx-bionic:1.0.0
+          imagePullPolicy: Never
+          ports:
+          - containerPort: 80
+
