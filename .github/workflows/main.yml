@@ -1,0 +1,37 @@
+name: unit-test
+
+on:
+  push:
+    branches: [ develop ]
+  pull_request:
+    branches: [ develop ]
+
+  workflow_dispatch:
+
+jobs:
+#   go-tests-kubo-release:
+#     runs-on: ubuntu-latest
+#     strategy:
+#       matrix:
+#         version: [ '1.15', '1.16' ]
+#     name: Go ${{ matrix.version }}
+#     steps:
+#     - uses: actions/setup-go@v2
+#       with:
+#         go-version: ${{ matrix.version }}
+#     - name: Checkout kubo-release
+#       uses: actions/checkout@v2
+#     - run: go vet ./...
+#     - run: go run ./ginkgo -r --randomizeAllSpecs --randomizeSuites --race --trace
+  ruby-tests-kubo-release:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout kubo-release
+      uses: actions/checkout@v2
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: 2.6
+        bundler-cache: true # runs 'bundle install' and caches installed gems automatically
+    - name: Run tests
+      run: bundle exec rspec spec/*_spec.rb
