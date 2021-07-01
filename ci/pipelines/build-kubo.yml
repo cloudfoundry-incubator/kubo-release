@@ -31,21 +31,11 @@ resources:
     branch: master
     private_key: ((git-ssh-key.private_key))
 
-- name: git-kubo-deployment
-  type: git
-  source:
-    uri: git@github.com:cloudfoundry-incubator/kubo-deployment.git
-    branch: develop
-    private_key: ((git-ssh-key.private_key))
-    ignore_paths:
-    - 'LICENSE'
-    - 'NOTICE'
-
 - name: git-kubo-release
   type: git
   source:
     uri: git@github.com:cloudfoundry-incubator/kubo-release.git
-    branch: develop
+    branch: merge-kubo-deployment
     private_key: ((git-ssh-key.private_key))
     ignore_paths:
     - 'ci'
@@ -83,13 +73,6 @@ resources:
     deployment: compilation-windows
     skip_check: true
 
-- name: gcs-kubo-deployment-tarball-untested
-  type: gcs
-  source:
-    json_key: ((gcs-json-key))
-    bucket: kubo-pipeline-store
-    regexp: dev-builds/kubo-deployment-(.*).tgz
-
 - name: gcs-kubo-release-tarball-untested
   type: gcs
   source:
@@ -104,38 +87,7 @@ resources:
     bucket: kubo-pipeline-store
     regexp: dev-windows-builds/kubo-.*-windows2019-.*-(.*).tgz
 
-- name: slack-alert
-  type: slack-notification
-  source:
-    url: ((build-alert-slack-url))
-
 jobs:
-- name: run-unit-tests-release
-  plan:
-  - get: git-kubo-ci
-  - get: git-kubo-release
-    trigger: true
-  - task: run-release-unit-tests
-    file: git-kubo-ci/tasks/run-release-unit-tests.yml
-    on_failure: &on_failure_alert
-      do:
-      - task: configure-slack-notification
-        file: git-kubo-ci/tasks/configure-slack-notification.yml
-      - put: slack-alert
-        params:
-          attachments_file: slack-notification/attachments
-          text: |
-            Build Failed. https://ci.kubo.sh/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
-
-- name: run-unit-tests-deployment
-  plan:
-  - get: git-kubo-ci
-  - get: git-kubo-deployment
-    trigger: true
-  - task: run-deployment-unit-tests
-    file: git-kubo-ci/tasks/run-deployment-unit-tests.yml
-    on_failure: *on_failure_alert
-
 - name: build
   plan:
   - in_parallel:
@@ -147,18 +99,11 @@ jobs:
     - get: git-kubo-windows-release
       trigger: true
     - get: git-kubo-release
-      passed: [ 'run-unit-tests-release' ]
-      trigger: true
-    - get: git-kubo-deployment
-      passed: [ 'run-unit-tests-deployment' ]
       trigger: true
   - in_parallel:
     - do:
       - task: build-kubo-release
         file: git-kubo-ci/tasks/build-kubo-release.yml
-        on_failure: *on_failure_alert
-        params:
-          release: kubo
       - task: generate-compilation-manifest
         file: git-kubo-ci/tasks/generate-compilation-manifest.yml
         params:
@@ -181,7 +126,6 @@ jobs:
     - do:
       - task: build-kubo-windows-release
         file: git-kubo-ci/tasks/build-kubo-release.yml
-        on_failure: *on_failure_alert
         input_mapping: {git-kubo-release: git-kubo-windows-release}
         output_mapping: {kubo-release: kubo-windows-release}
         params:
@@ -207,9 +151,6 @@ jobs:
           gcs-source-json: director-source-json
           compilation-deployment: compilation-deployment-windows
         output_mapping: {compiled-releases: compiled-releases-windows}
-    - task: build-kubo-deployment-tarball
-      file: git-kubo-ci/tasks/build-kubo-deployment-tarball.yml
-      on_failure: *on_failure_alert
   - put: gcs-kubo-release-tarball-untested
     attempts: 10
     params:
@@ -218,9 +159,6 @@ jobs:
     attempts: 10
     params:
       file: compiled-releases-windows/kubo-*.tgz
-  - put: gcs-kubo-deployment-tarball-untested
-    params:
-      file: kubo-deployment-tarball/kubo-deployment*.tgz
 
 - name: bump-version
   plan:
