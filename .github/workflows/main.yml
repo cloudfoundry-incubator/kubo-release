@@ -9,20 +9,21 @@ on:
   workflow_dispatch:
 
 jobs:
-#   go-tests-kubo-release:
-#     runs-on: ubuntu-latest
-#     strategy:
-#       matrix:
-#         version: [ '1.15', '1.16' ]
-#     name: Go ${{ matrix.version }}
-#     steps:
-#     - uses: actions/setup-go@v2
-#       with:
-#         go-version: ${{ matrix.version }}
-#     - name: Checkout kubo-release
-#       uses: actions/checkout@v2
-#     - run: go vet ./...
-#     - run: go run ./ginkgo -r --randomizeAllSpecs --randomizeSuites --race --trace
+  go-tests-kubo-release:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        version: [ '1.15', '1.16' ]
+    name: Go ${{ matrix.version }}
+    steps:
+    - uses: actions/setup-go@v2
+      with:
+        go-version: ${{ matrix.version }}
+    - name: Checkout kubo-release
+      uses: actions/checkout@v2
+    - run: go vet ./...
+    - run: go get -u github.com/onsi/ginkgo/ginkgo
+    - run: ginkgo -r --randomizeAllSpecs --randomizeSuites --race --trace
   ruby-tests-kubo-release:
     runs-on: ubuntu-latest
     steps:
