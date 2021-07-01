@@ -1,4 +1,4 @@
-name: unit-test
+name: unit-tests
 
 on:
   push:
@@ -9,22 +9,16 @@ on:
   workflow_dispatch:
 
 jobs:
-  go-tests-kubo-release:
+  kubo-deployment:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        version: [ '1.15', '1.16' ]
-    name: Go ${{ matrix.version }}
     steps:
-    - uses: actions/setup-go@v2
-      with:
-        go-version: ${{ matrix.version }}
-    - name: Checkout kubo-release
+    - name: Checkout kubo-deployment
       uses: actions/checkout@v2
-    - run: go vet ./...
-    - run: go get -u github.com/onsi/ginkgo/ginkgo
-    - run: ginkgo -r --randomizeAllSpecs --randomizeSuites --race --trace
-  ruby-tests-kubo-release:
+      with:
+        repository: cloudfoundry-incubator/kubo-deployment
+        ref: develop
+    - run: ./bin/run_tests
+  kubo-release:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout kubo-release
