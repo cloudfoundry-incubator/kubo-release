@@ -19,9 +19,9 @@ jobs:
       with:
         ruby-version: 2.6
         bundler-cache: true # runs 'bundle install' and caches installed gems automatically
-    - name: Run tests
-      run: bundle exec rspec spec/*_spec.rb
     - name: Install bosh-cli
       run: brew install cloudfoundry/tap/bosh-cli
-    - name: Run tests
+    - name: Run bosh-release tests
+      run: bundle exec rspec spec/*_spec.rb
+    - name: Run manifest tests
       run: ./bin/run_tests
