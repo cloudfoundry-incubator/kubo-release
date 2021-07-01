@@ -1,0 +1,27 @@
+name: unit-tests
+
+on:
+  push:
+    branches: [ merge-kubo-deployment ]
+  pull_request:
+    branches: [ merge-kubo-deployment ]
+
+  workflow_dispatch:
+
+jobs:
+  kubo-release:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout kubo-release
+      uses: actions/checkout@v2
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: 2.6
+        bundler-cache: true # runs 'bundle install' and caches installed gems automatically
+    - name: Run tests
+      run: bundle exec rspec spec/*_spec.rb
+    - name: Install bosh-cli
+      run: brew install cloudfoundry/tap/bosh-cli
+    - name: Run tests
+      run: ./bin/run_tests
