@@ -1,0 +1,64 @@
+- type: replace
+  path: /instance_groups/name=master/jobs/-
+  value:
+    name: cloud-provider
+    release: kubo
+    properties:
+      cloud-provider:
+        type: vsphere
+      cloud-config:
+        Global:
+          datacenter: ((vcenter_dc))
+          datastore: ((vcenter_ds))
+          password: ((vcenter_master_password))
+          server: ((vcenter_ip))
+          user: ((vcenter_master_user))
+          working-dir: /((vcenter_dc))/vm/((vcenter_vms))
+        Disk:
+          scsicontrollertype: pvscsi
+    provides:
+      cloud-provider: {as: master-cloud-provider}
+
+- type: replace
+  path: /instance_groups/name=master/jobs/name=kube-apiserver/consumes?
+  value:
+    cloud-provider: {from: master-cloud-provider}
+
+- type: replace
+  path: /instance_groups/name=master/jobs/name=kube-controller-manager/consumes?
+  value:
+    cloud-provider: {from: master-cloud-provider}
+
+- type: replace
+  path: /instance_groups/name=master/jobs/name=kubernetes-roles/consumes?
+  value:
+    cloud-provider: {from: master-cloud-provider}
+
+- type: replace
+  path: /instance_groups/name=worker/jobs/name=kubelet/properties/cloud-provider?
+  value: vsphere
+
+- type: replace
+  path: /instance_groups/name=worker/jobs/-
+  value:
+    name: cloud-provider
+    release: kubo
+    properties:
+      cloud-provider:
+        type: vsphere
+    provides:
+      cloud-provider: {as: worker-cloud-provider}
+
+- type: replace
+  path: /instance_groups/name=worker/jobs/name=kubelet/consumes?
+  value:
+    cloud-provider: {from: worker-cloud-provider}
+
+- type: replace
+  path: /instance_groups/name=worker/jobs/name=kube-proxy/properties/cloud-provider?
+  value: vsphere
+
+- type: replace
+  path: /instance_groups/name=apply-addons/jobs/name=apply-specs/consumes?
+  value:
+    cloud-provider: {from: master-cloud-provider}
