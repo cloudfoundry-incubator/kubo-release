@@ -12,6 +12,7 @@ templates:
   config/policies/kubelet_drain.yml: config/policies/kubelet_drain.yml
   config/policies/vsphere_cloud_provider.yml.erb: config/policies/vsphere_cloud_provider.yml
   config/policies/azure_cloud_provider.yml.erb: config/policies/azure_cloud_provider.yml
+  config/policies/gce_cloud_provider.yml.erb: config/policies/gce_cloud_provider.yml
   config/policies/kube-system-podsecuritypolicy.yml: config/policies/kube-system-podsecuritypolicy.yml
   config/policies/post-start-custom-specs.yml.erb: config/policies/post-start-custom-specs.yml
 
