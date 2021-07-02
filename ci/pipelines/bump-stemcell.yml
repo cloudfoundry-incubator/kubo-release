@@ -13,7 +13,7 @@ resources:
 - name: stemcell
   type: bosh-io-stemcell
   source:
-    name: bosh-google-kvm-ubuntu-xenial-go_agent
+    name: bosh-google-kvm-ubuntu-bionic-go_agent
 
 - name: git-kubo-ci
   type: git
@@ -22,15 +22,12 @@ resources:
     branch: master
     private_key: ((git-ssh-key.private_key))
 
-- name: git-kubo-deployment
+- name: git-kubo-release
   type: git
   source:
-    uri: git@github.com:cloudfoundry-incubator/kubo-deployment.git
-    branch: develop
+    uri: git@github.com:cloudfoundry-incubator/kubo-release
+    branch: merge-kubo-deployment
     private_key: ((git-ssh-key.private_key))
-    ignore_paths:
-    - 'LICENSE'
-    - 'NOTICE'
 
 - name: gcs-precompiled-cfcr-etcd-untested
   type: gcs
@@ -71,7 +68,7 @@ jobs:
   plan:
   - in_parallel:
     - get: git-kubo-ci
-    - get: git-kubo-deployment
+    - get: git-kubo-release
     - get: gcs-source-json
     - get: stemcell
       resource: stemcell
@@ -81,7 +78,7 @@ jobs:
   - task: generate-compilation-manifest
     file: git-kubo-ci/tasks/generate-compilation-manifest.yml
     input_mapping:
-      git-kubo-deployment: git-kubo-deployment-output
+      git-kubo-release: git-kubo-release-output
     params:
       RELEASE_LIST: "docker cfcr-etcd bpm"
   - put: compilation-deployment
@@ -93,7 +90,7 @@ jobs:
   - task: export
     file: git-kubo-ci/tasks/export-release.yml
     input_mapping:
-      git-kubo-deployment: git-kubo-deployment-output
+      git-kubo-release: git-kubo-release-output
     params:
       RELEASE_LIST: "docker cfcr-etcd bpm"
   - in_parallel:
@@ -109,10 +106,10 @@ jobs:
   - task: bump-precompiled-releases-in-manifest
     file: git-kubo-ci/tasks/bump-precompiled-releases-in-manifest.yml
     input_mapping:
-      git-kubo-deployment: git-kubo-deployment-output
+      git-kubo-release: git-kubo-release-output
     params:
       RELEASE_LIST: "docker cfcr-etcd bpm"
-  - put: git-kubo-deployment
+  - put: git-kubo-release
     params:
       merge: true
-      repository: git-kubo-deployment-output
+      repository: git-kubo-release-output
