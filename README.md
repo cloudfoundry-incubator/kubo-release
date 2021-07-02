@@ -1,8 +1,15 @@
-# Cloud Foundry Container Runtime
+<img src="/images/cfcr_white.png?raw=true" width="600" height="200">
+
 A [BOSH](http://bosh.io/) release for [Kubernetes](http://kubernetes.io).  Formerly named **kubo**.
 
 - **Slack**: #cfcr on https://slack.cloudfoundry.org
-- **Pivotal Tracker**: https://www.pivotaltracker.com/n/projects/2093412
+- **2021 Roadmap**: https://github.com/cloudfoundry-incubator/kubo-release/projects/3
+
+## Build Status
+
+| Iaas | Upgrades | Conformance | Integration | Turbulence | Istio |  PSPs |
+| --- | --- | -- | -- | -- | -- | -- |
+|GCP | [![GCP Upgrades](https://ci.kubo.sh/api/v1/teams/main/pipelines/gcp_old-release_upgrade/jobs/run-tests/badge)](https://ci.kubo.sh/teams/main/pipelines/gcp_old-release_upgrade) | [![GCP Conformance](https://ci.kubo.sh/api/v1/teams/main/pipelines/gcp_vanilla_conformance/jobs/run-tests/badge)](https://ci.kubo.sh/teams/main/pipelines/gcp_vanilla_conformance) | [![GCP Integration](https://ci.kubo.sh/api/v1/teams/main/pipelines/gcp_vanilla_integration/jobs/run-tests/badge)](https://ci.kubo.sh/teams/main/pipelines/gcp_vanilla_integration) | [![GCP Turbulence](https://ci.kubo.sh/api/v1/teams/main/pipelines/gcp_vanilla_turbulence/jobs/run-tests/badge)](https://ci.kubo.sh/teams/main/pipelines/gcp_vanilla_turbulence) | [![GCP Istio](https://ci.kubo.sh/api/v1/teams/main/pipelines/gcp_vanilla_istio/jobs/run-tests/badge)](https://ci.kubo.sh/teams/main/pipelines/gcp_vanilla_istio) | [![GCP PSPs](https://ci.kubo.sh/api/v1/teams/main/pipelines/gcp_pod-security-policy_integration/jobs/run-tests/badge)](https://ci.kubo.sh/teams/main/pipelines/gcp_pod-security-policy_integration) |
 
 # Table of Contents
 <!-- vscode-markdown-toc -->
@@ -49,16 +56,16 @@ Kubernetes uses etcd as its datastore. The official infrastructure requirements 
 
 ##  <a name='DeployingCFCR'></a>Deploying CFCR
 
-1. Upload the [latest Xenial stemcell](https://bosh.io/stemcells/#ubuntu-xenial) to the director.
+1. Upload the [latest Bionic stemcell](https://bosh.io/stemcells/#ubuntu-bionic) to the director.
 
-1. Untar the kubo-deployment tarball and rename it `kubo-deployment`
+1. Untar the kubo-release tarball and rename it `kubo-release`
 
 1. Deploy
 
     ##### Option 1. Single Master
 
 	```bash
-	cd kubo-deployment
+	cd kubo-release
 
 	bosh deploy -d cfcr manifests/cfcr.yml \
 	  -o manifests/ops-files/misc/single-master.yml \
@@ -69,7 +76,7 @@ Kubernetes uses etcd as its datastore. The official infrastructure requirements 
     ##### Option 2. Three Masters
 
 	```bash
-	cd kubo-deployment
+	cd kubo-release
 
 	bosh deploy -d cfcr manifests/cfcr.yml \
 	  -o manifests/ops-files/add-vm-extensions-to-master.yml \
@@ -103,13 +110,6 @@ doc](docs/pod-security-policy-walkthrough.md)
 CFCR allows you to configure proxy for all components. Check [recommendations
 for no proxy settings](docs/using-proxy.md) first.
 
-###  <a name='BOSHLite'></a>BOSH Lite
-CFCR clusters on BOSH Lite are intended for development. We run the [deploy_cfcr_lite](https://github.com/cloudfoundry-incubator/kubo-deployment/blob/master/bin/deploy_cfcr_lite) script to provision a cluster with the latest stemcell and master of kubo-release.  This requires that the cloned kubo-release repository can be found from `cd ../kubo-release` from within the kubo-deployment directory.
-
-```
-cd kubo-deployment
-./bin/deploy_cfcr_lite
-```
 ##  <a name='AccessingtheCFCRClusterwithkubectl'></a>Accessing the CFCR Cluster with kubectl
 
 1. Login to the Credhub Server that stores the cluster's credentials:
@@ -137,27 +137,3 @@ To run the `bbr` cli against a CFCR cluster, follow the steps under "BOSH Deploy
 
 Follow the recommendations in [etcd's documentation](https://github.com/etcd-io/etcd/blob/master/Documentation/metrics.md) for monitoring etcd
 metrics.
-
-##  <a name='DNS'></a>DNS
-
-By default CFCR runs with CoreDNS in preference of Kube-DNS.
-
-If you are migrating from an earlier version of CFCR, Kube-DNS can be removed by running: 
-
-`kubectl delete deployment -n kube-system kube-dns`
-
-You may notice that a `kube-dns` service remains, this is also required by the CoreDNS spec.
-
-##  <a name='Deprecations'></a>Deprecations
-
-###  <a name='Deploymentscriptsanddocs'></a>Deployment scripts and docs
-CFCR had a set of scripts, including `deploy_bosh` and `deploy_k8s`, that were the primary mechanism we supported to deploy BOSH and Kubernetes clusters. We no longer support these and have removed the corresponding documentation from https://docs-cfcr.cfapps.io
-
-The BOSH oriented method documented in this README.md is the supported method to deploy Kubernetes clusters with CFCR.
-
-###  <a name='Heapster'></a>Heapster
-K8s 1.11 release kicked off the deprecation timeline for the Heapster component, see [here](https://github.com/kubernetes/heapster/blob/master/docs/deprecation.md) for more info. As a result, we're in the process of replacing Heapster with [Metrics Server](https://github.com/kubernetes-incubator/metrics-server) in the upcoming releases of kubo-release.
-
-Heapster can be removed by running: 
-
-`kubectl delete deployment -n kube-system heapster`
