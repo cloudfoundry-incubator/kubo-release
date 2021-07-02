@@ -18,14 +18,9 @@ A [BOSH](http://bosh.io/) release for [Kubernetes](http://kubernetes.io).  Forme
 * [Deploying CFCR](#DeployingCFCR)
   * [Configuring CFCR](#ConfiguringCFCR)
   * [Using Proxy with CFCR](#ProxyWithCFCR)
-  * [BOSH Lite](#BOSHLite)
 * [Accessing the CFCR Cluster with kubectl](#AccessingtheCFCRClusterwithkubectl)
 * [Backup & Restore](#BackupRestore)
 * [Monitoring](#Monitoring)
-* [DNS](#DNS)
-* [Deprecations](#Deprecations)
-  * [Deployment scripts and docs](#Deploymentscriptsanddocs)
-  * [Heapster](#Heapster)
 
 <!-- vscode-markdown-toc-config
 	numbering=true
