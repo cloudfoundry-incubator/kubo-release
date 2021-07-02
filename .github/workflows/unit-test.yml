@@ -2,9 +2,9 @@ name: unit-tests
 
 on:
   push:
-    branches: [ merge-kubo-deployment ]
+    branches: [ develop ]
   pull_request:
-    branches: [ merge-kubo-deployment ]
+    branches: [ develop ]
 
   workflow_dispatch:
 
