@@ -42,6 +42,7 @@ resources:
     - '*.md'
     - 'LICENSE'
     - 'NOTICE'
+    - 'images'
 
 - name: git-kubo-windows-release
   type: git
@@ -159,12 +160,6 @@ jobs:
     attempts: 10
     params:
       file: compiled-releases-windows/kubo-*.tgz
-
-- name: bump-version
-  plan:
-  - get: kubo-version
-    passed: ['build']
-    trigger: true
   - put: kubo-version
     attempts: 10
     params:
