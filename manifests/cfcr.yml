@@ -1,0 +1,585 @@
+addons:
+- include:
+    stemcell:
+    - os: ubuntu-bionic
+  jobs:
+  - name: kubo-dns-aliases
+    release: kubo
+  name: bosh-dns-aliases
+features:
+  use_dns_addresses: true
+instance_groups:
+- azs:
+  - z1
+  instances: 1
+  jobs:
+  - name: apply-specs
+    properties:
+      addons:
+      - coredns
+      - metrics-server
+      admin-password: ((kubo-admin-password))
+      admin-username: admin
+      api-token: ((kubelet-password))
+      tls:
+        kubernetes: ((tls-kubernetes))
+        metrics-server: ((tls-metrics-server))
+    release: kubo
+  lifecycle: errand
+  name: apply-addons
+  networks:
+  - name: default
+  stemcell: default
+  vm_type: minimal
+- azs:
+  - z1
+  - z2
+  - z3
+  instances: 3
+  jobs:
+  - name: bpm
+    release: bpm
+  - name: flanneld
+    properties:
+      tls:
+        etcdctl:
+          ca: ((tls-etcdctl-flanneld.ca))
+          certificate: ((tls-etcdctl-flanneld.certificate))
+          private_key: ((tls-etcdctl-flanneld.private_key))
+    provides:
+      flanneld:
+        as: worker-flanneld
+    release: kubo
+  - name: kube-apiserver
+    properties:
+      admin-password: ((kubo-admin-password))
+      admin-username: admin
+      audit-policy:
+        apiVersion: audit.k8s.io/v1beta1
+        kind: Policy
+        rules:
+        - level: None
+          resources:
+          - group: ""
+            resources:
+            - endpoints
+            - services
+            - services/status
+          users:
+          - system:kube-proxy
+          verbs:
+          - watch
+        - level: None
+          resources:
+          - group: ""
+            resources:
+            - nodes
+            - nodes/status
+          users:
+          - kubelet
+          verbs:
+          - get
+        - level: None
+          resources:
+          - group: ""
+            resources:
+            - nodes
+            - nodes/status
+          userGroups:
+          - system:nodes
+          verbs:
+          - get
+        - level: None
+          namespaces:
+          - kube-system
+          resources:
+          - group: ""
+            resources:
+            - endpoints
+          users:
+          - system:kube-controller-manager
+          - system:kube-scheduler
+          - system:serviceaccount:kube-system:endpoint-controller
+          verbs:
+          - get
+          - update
+        - level: None
+          resources:
+          - group: ""
+            resources:
+            - namespaces
+            - namespaces/status
+            - namespaces/finalize
+          users:
+          - system:apiserver
+          verbs:
+          - get
+        - level: None
+          resources:
+          - group: metrics.k8s.io
+          users:
+          - system:kube-controller-manager
+          verbs:
+          - get
+          - list
+        - level: None
+          nonResourceURLs:
+          - /healthz*
+          - /version
+          - /swagger*
+        - level: None
+          resources:
+          - group: ""
+            resources:
+            - events
+        - level: Request
+          omitStages:
+          - RequestReceived
+          resources:
+          - group: ""
+            resources:
+            - nodes/status
+            - pods/status
+          userGroups:
+          - system:nodes
+          verbs:
+          - update
+          - patch
+        - level: Request
+          omitStages:
+          - RequestReceived
+          users:
+          - system:serviceaccount:kube-system:namespace-controller
+          verbs:
+          - deletecollection
+        - level: Metadata
+          omitStages:
+          - RequestReceived
+          resources:
+          - group: ""
+            resources:
+            - secrets
+            - configmaps
+          - group: authentication.k8s.io
+            resources:
+            - tokenreviews
+        - level: Request
+          omitStages:
+          - RequestReceived
+          resources:
+          - group: ""
+          - group: admissionregistration.k8s.io
+          - group: apiextensions.k8s.io
+          - group: apiregistration.k8s.io
+          - group: apps
+          - group: authentication.k8s.io
+          - group: authorization.k8s.io
+          - group: autoscaling
+          - group: batch
+          - group: certificates.k8s.io
+          - group: extensions
+          - group: metrics.k8s.io
+          - group: networking.k8s.io
+          - group: policy
+          - group: rbac.authorization.k8s.io
+          - group: settings.k8s.io
+          - group: storage.k8s.io
+          verbs:
+          - get
+          - list
+          - watch
+        - level: RequestResponse
+          omitStages:
+          - RequestReceived
+          resources:
+          - group: ""
+          - group: admissionregistration.k8s.io
+          - group: apiextensions.k8s.io
+          - group: apiregistration.k8s.io
+          - group: apps
+          - group: authentication.k8s.io
+          - group: authorization.k8s.io
+          - group: autoscaling
+          - group: batch
+          - group: certificates.k8s.io
+          - group: extensions
+          - group: metrics.k8s.io
+          - group: networking.k8s.io
+          - group: policy
+          - group: rbac.authorization.k8s.io
+          - group: settings.k8s.io
+          - group: storage.k8s.io
+        - level: Metadata
+          omitStages:
+          - RequestReceived
+      k8s-args:
+        audit-log-maxage: 0
+        audit-log-maxbackup: 7
+        audit-log-maxsize: 49
+        audit-log-path: /var/vcap/sys/log/kube-apiserver/audit.log
+        audit-policy-file: /var/vcap/jobs/kube-apiserver/config/audit_policy.yml
+        authorization-mode: RBAC
+        client-ca-file: /var/vcap/jobs/kube-apiserver/config/kubernetes-ca.pem
+        disable-admission-plugins: []
+        enable-admission-plugins: []
+        enable-aggregator-routing: true
+        enable-bootstrap-token-auth: true
+        enable-swagger-ui: true
+        etcd-cafile: /var/vcap/jobs/kube-apiserver/config/etcd-ca.crt
+        etcd-certfile: /var/vcap/jobs/kube-apiserver/config/etcd-client.crt
+        etcd-keyfile: /var/vcap/jobs/kube-apiserver/config/etcd-client.key
+        kubelet-client-certificate: /var/vcap/jobs/kube-apiserver/config/kubelet-client-cert.pem
+        kubelet-client-key: /var/vcap/jobs/kube-apiserver/config/kubelet-client-key.pem
+        proxy-client-cert-file: /var/vcap/jobs/kube-apiserver/config/kubernetes.pem
+        proxy-client-key-file: /var/vcap/jobs/kube-apiserver/config/kubernetes-key.pem
+        requestheader-allowed-names: aggregator
+        requestheader-client-ca-file: /var/vcap/jobs/kube-apiserver/config/kubernetes-ca.pem
+        requestheader-extra-headers-prefix: X-Remote-Extra-
+        requestheader-group-headers: X-Remote-Group
+        requestheader-username-headers: X-Remote-User
+        runtime-config: api/v1
+        secure-port: 8443
+        service-account-key-file: /var/vcap/jobs/kube-apiserver/config/service-account-public-key.pem
+        service-cluster-ip-range: 10.100.200.0/24
+        storage-media-type: application/json
+        tls-cert-file: /var/vcap/jobs/kube-apiserver/config/kubernetes.pem
+        tls-private-key-file: /var/vcap/jobs/kube-apiserver/config/kubernetes-key.pem
+        token-auth-file: /var/vcap/jobs/kube-apiserver/config/tokens.csv
+        v: 2
+      kube-controller-manager-password: ((kube-controller-manager-password))
+      kube-proxy-password: ((kube-proxy-password))
+      kube-scheduler-password: ((kube-scheduler-password))
+      kubelet-drain-password: ((kubelet-drain-password))
+      kubelet-password: ((kubelet-password))
+      service-account-public-key: ((service-account-key.public_key))
+      tls:
+        kubelet-client: ((tls-kubelet-client))
+        kubernetes:
+          ca: ((tls-kubernetes.ca))
+          certificate: ((tls-kubernetes.certificate))((tls-kubernetes.ca))
+          private_key: ((tls-kubernetes.private_key))
+    release: kubo
+  - name: kube-controller-manager
+    properties:
+      api-token: ((kube-controller-manager-password))
+      cluster-signing: ((kubo_ca))
+      k8s-args:
+        cluster-signing-cert-file: /var/vcap/jobs/kube-controller-manager/config/cluster-signing-ca.pem
+        cluster-signing-key-file: /var/vcap/jobs/kube-controller-manager/config/cluster-signing-key.pem
+        kubeconfig: /var/vcap/jobs/kube-controller-manager/config/kubeconfig
+        root-ca-file: /var/vcap/jobs/kube-controller-manager/config/ca.pem
+        service-account-private-key-file: /var/vcap/jobs/kube-controller-manager/config/service-account-private-key.pem
+        terminated-pod-gc-threshold: 100
+        tls-cert-file: /var/vcap/jobs/kube-controller-manager/config/kube-controller-manager-cert.pem
+        tls-private-key-file: /var/vcap/jobs/kube-controller-manager/config/kube-controller-manager-private-key.pem
+        use-service-account-credentials: true
+        v: 2
+      service-account-private-key: ((service-account-key.private_key))
+      tls:
+        kube-controller-manager: ((tls-kube-controller-manager))
+        kubernetes: ((tls-kubernetes))
+    release: kubo
+  - name: kube-scheduler
+    properties:
+      api-token: ((kube-scheduler-password))
+      k8s-args: null
+      kube-scheduler-configuration:
+        apiVersion: kubescheduler.config.k8s.io/v1alpha1
+        clientConnection:
+          kubeconfig: /var/vcap/jobs/kube-scheduler/config/kubeconfig
+        disablePreemption: false
+        kind: KubeSchedulerConfiguration
+      tls:
+        kubernetes: ((tls-kubernetes))
+    release: kubo
+  - name: kubernetes-roles
+    properties:
+      admin-password: ((kubo-admin-password))
+      admin-username: admin
+      tls:
+        kubernetes: ((tls-kubernetes))
+    release: kubo
+  - name: etcd
+    properties:
+      etcd:
+        dns_suffix: etcd.cfcr.internal
+      tls:
+        etcd:
+          ca: ((etcd_ca.certificate))
+          certificate: ((tls-etcd-v0-29-0.certificate))
+          private_key: ((tls-etcd-v0-29-0.private_key))
+        etcdctl:
+          ca: ((tls-etcdctl-v0-29-0.ca))
+          certificate: ((tls-etcdctl-v0-29-0.certificate))
+          private_key: ((tls-etcdctl-v0-29-0.private_key))
+        etcdctl-root:
+          ca: ((tls-etcdctl-v0-29-0.ca))
+          certificate: ((tls-etcdctl-root.certificate))
+          private_key: ((tls-etcdctl-root.private_key))
+        peer:
+          ca: ((tls-etcd-v0-29-0.ca))
+          certificate: ((tls-etcd-v0-29-0.certificate))
+          private_key: ((tls-etcd-v0-29-0.private_key))
+      users:
+      - name: root
+        password: ((etcd_user_root_password))
+        versions:
+        - v2
+      - name: flanneld
+        password: ((etcd_user_flanneld_password))
+        permissions:
+          read:
+          - /coreos.com/network/*
+          write:
+          - /coreos.com/network/*
+        versions:
+        - v2
+    release: cfcr-etcd
+  - name: smoke-tests
+    release: kubo
+  name: master
+  networks:
+  - name: default
+  persistent_disk: 5120
+  stemcell: default
+  vm_type: small
+- azs:
+  - z1
+  - z2
+  - z3
+  instances: 3
+  jobs:
+  - name: flanneld
+    properties:
+      tls:
+        etcdctl:
+          ca: ((tls-etcdctl-flanneld.ca))
+          certificate: ((tls-etcdctl-flanneld.certificate))
+          private_key: ((tls-etcdctl-flanneld.private_key))
+    release: kubo
+  - name: docker
+    properties:
+      bridge: cni0
+      default_ulimits:
+      - nofile=1048576
+      env: {}
+      flannel: true
+      ip_masq: false
+      iptables: false
+      live_restore: true
+      log_level: error
+      log_options:
+      - max-size=128m
+      - max-file=2
+      storage_driver: overlay2
+      store_dir: /var/vcap/data
+    release: docker
+  - name: kubernetes-dependencies
+    release: kubo
+  - name: kubelet
+    properties:
+      api-token: ((kubelet-password))
+      drain-api-token: ((kubelet-drain-password))
+      k8s-args:
+        cni-bin-dir: /var/vcap/jobs/kubelet/packages/cni/bin
+        container-runtime: docker
+        docker: unix:///var/vcap/sys/run/docker/docker.sock
+        docker-endpoint: unix:///var/vcap/sys/run/docker/docker.sock
+        kubeconfig: /var/vcap/jobs/kubelet/config/kubeconfig
+        network-plugin: cni
+        root-dir: /var/vcap/data/kubelet
+      kubelet-configuration:
+        apiVersion: kubelet.config.k8s.io/v1beta1
+        authentication:
+          anonymous:
+            enabled: false
+          x509:
+            clientCAFile: /var/vcap/jobs/kubelet/config/kubelet-client-ca.pem
+        authorization:
+          mode: Webhook
+        clusterDNS:
+        - 10.100.200.10
+        clusterDomain: cluster.local
+        failSwapOn: false
+        kind: KubeletConfiguration
+        serializeImagePulls: false
+        tlsCertFile: /var/vcap/jobs/kubelet/config/kubelet.pem
+        tlsPrivateKeyFile: /var/vcap/jobs/kubelet/config/kubelet-key.pem
+      tls:
+        kubelet:
+          ca: ((tls-kubelet.ca))
+          certificate: ((tls-kubelet.certificate))((tls-kubelet.ca))
+          private_key: ((tls-kubelet.private_key))
+        kubelet-client-ca:
+          certificate: ((tls-kubelet-client.ca))
+        kubernetes: ((tls-kubernetes))
+    release: kubo
+  - name: kube-proxy
+    properties:
+      api-token: ((kube-proxy-password))
+      kube-proxy-configuration:
+        apiVersion: kubeproxy.config.k8s.io/v1alpha1
+        clientConnection:
+          kubeconfig: /var/vcap/jobs/kube-proxy/config/kubeconfig
+        clusterCIDR: 10.200.0.0/16
+        iptables:
+          masqueradeAll: false
+          masqueradeBit: 14
+          minSyncPeriod: 0s
+          syncPeriod: 30s
+        kind: KubeProxyConfiguration
+        mode: iptables
+        portRange: ""
+      tls:
+        kubernetes: ((tls-kubernetes))
+    release: kubo
+  name: worker
+  networks:
+  - name: default
+  stemcell: default
+  vm_type: small-highmem
+name: cfcr
+releases:
+- name: kubo
+  sha1: 8f7da8665f44e4f7d0ca686fc3c71f4f75e1339c
+  stemcell:
+    os: ubuntu-xenial
+    version: 621.76
+  url: https://storage.googleapis.com/kubo-precompiled-releases/kubo-0.44.0-ubuntu-xenial-621.76-20200716-220634-5482734.tgz
+  version: 0.44.0
+- name: cfcr-etcd
+  sha1: 8b84ed14df94263940e99d849d842545aad3bc0e
+  stemcell:
+    os: ubuntu-bionic
+    version: 1.13
+  url: https://storage.googleapis.com/kubo-precompiled-releases/cfcr-etcd-1.13.0-ubuntu-bionic-1.13-20210629-101434-126328236.tgz
+  version: 1.13.0
+- name: docker
+  sha1: cbc590e3458cb753b936997056eb737eaa26a2ea
+  stemcell:
+    os: ubuntu-bionic
+    version: 1.13
+  url: https://storage.googleapis.com/kubo-precompiled-releases/docker-36.0.2-ubuntu-bionic-1.13-20210629-101148-392442543.tgz
+  version: 36.0.2
+- name: bpm
+  sha1: 0f47cd98a00e65917091f4e0df3d97b45870c404
+  stemcell:
+    os: ubuntu-bionic
+    version: 1.13
+  url: https://storage.googleapis.com/kubo-precompiled-releases/bpm-1.1.12-ubuntu-bionic-1.13-20210629-101856-050958343.tgz
+  version: 1.1.12
+stemcells:
+- alias: default
+  os: ubuntu-bionic
+  version: "1.13"
+update:
+  canaries: 1
+  canary_watch_time: 10000-300000
+  max_in_flight: 1
+  update_watch_time: 10000-300000
+variables:
+- name: kubo-admin-password
+  type: password
+- name: kubelet-password
+  type: password
+- name: kubelet-drain-password
+  type: password
+- name: kube-proxy-password
+  type: password
+- name: kube-controller-manager-password
+  type: password
+- name: kube-scheduler-password
+  type: password
+- name: etcd_user_root_password
+  type: password
+- name: etcd_user_flanneld_password
+  type: password
+- name: kubo_ca
+  options:
+    common_name: ca
+    is_ca: true
+  type: certificate
+- name: tls-kubelet
+  options:
+    alternative_names: []
+    ca: kubo_ca
+    common_name: kubelet.cfcr.internal
+    organization: system:nodes
+  type: certificate
+- name: tls-kubelet-client
+  options:
+    ca: kubo_ca
+    common_name: kube-apiserver.cfcr.internal
+    extended_key_usage:
+    - client_auth
+    organization: system:masters
+  type: certificate
+- name: tls-kubernetes
+  options:
+    alternative_names:
+    - 10.100.200.1
+    - kubernetes
+    - kubernetes.default
+    - kubernetes.default.svc
+    - kubernetes.default.svc.cluster.local
+    - master.cfcr.internal
+    ca: kubo_ca
+    common_name: master.cfcr.internal
+    organization: system:masters
+  type: certificate
+- name: service-account-key
+  type: rsa
+- name: tls-kube-controller-manager
+  options:
+    alternative_names:
+    - localhost
+    - 127.0.0.1
+    ca: kubo_ca
+    common_name: kube-controller-manager
+    extended_key_usage:
+    - server_auth
+    key_usage:
+    - digital_signature
+    - key_encipherment
+  type: certificate
+- name: etcd_ca
+  options:
+    common_name: etcd.ca
+    is_ca: true
+  type: certificate
+- name: tls-etcd-v0-29-0
+  options:
+    ca: etcd_ca
+    common_name: '*.etcd.cfcr.internal'
+    extended_key_usage:
+    - client_auth
+    - server_auth
+  type: certificate
+- name: tls-etcdctl-v0-29-0
+  options:
+    ca: etcd_ca
+    common_name: etcdClient
+    extended_key_usage:
+    - client_auth
+  type: certificate
+- name: tls-etcdctl-root
+  options:
+    ca: etcd_ca
+    common_name: root
+    extended_key_usage:
+    - client_auth
+  type: certificate
+- name: tls-etcdctl-flanneld
+  options:
+    ca: etcd_ca
+    common_name: flanneld
+    extended_key_usage:
+    - client_auth
+  type: certificate
+- name: tls-metrics-server
+  options:
+    alternative_names:
+    - metrics-server.kube-system.svc
+    ca: kubo_ca
+    common_name: metrics-server
+  type: certificate

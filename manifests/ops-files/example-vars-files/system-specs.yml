@@ -1,0 +1,6 @@
+kubelet-password: password
+kubo-admin-password: admin-password
+tls-kubernetes:
+  ca: ca
+  certificate: cert
+  private_key: key

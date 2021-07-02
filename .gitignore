@@ -3,7 +3,6 @@
 /.blobs
 /staging
 /blobs
-/bin
 /pkg
 /releases/*.tgz
 /dev_releases

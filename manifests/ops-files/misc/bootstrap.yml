@@ -1,0 +1,23 @@
+- type: replace
+  path: /name
+  value: ((deployment_name))
+
+- type: replace
+  path: /instance_groups/name=master/vm_type
+  value: master
+
+- type: replace
+  path: /instance_groups/name=worker/vm_type
+  value: worker
+
+- type: replace
+  path: /instance_groups/name=worker/instances
+  value: ((worker_count))
+
+- type: replace
+  path: /variables/name=tls-kubernetes/options/common_name
+  value: ((kubernetes_master_host))
+
+- type: replace
+  path: /variables/name=tls-kubernetes/options/alternative_names/-
+  value: ((kubernetes_master_host))

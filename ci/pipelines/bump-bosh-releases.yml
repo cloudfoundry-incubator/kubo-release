@@ -15,13 +15,13 @@ resources:
   type: git
   source:
     uri: https://github.com/cloudfoundry-incubator/kubo-ci
-    branch: ((kubo-ci-branch))
+    branch: master
 
-- name: git-kubo-deployment
+- name: git-kubo-release
   type: git
   source:
-    uri: git@github.com:cloudfoundry-incubator/kubo-deployment.git
-    branch: ((kubo-deployment.branch))
+    uri: git@github.com:cloudfoundry-incubator/kubo-release.git
+    branch: develop
     private_key: ((git-ssh-key.private_key))
 
 - name: cfcr-etcd-release
@@ -71,21 +71,14 @@ resources:
   source:
     json_key: ((gcs-json-key))
     bucket: kubo-pipeline-store
-    versioned_file: gaffer-env/source.json
-
-- name: gcs-compilation-source-json
-  type: gcs
-  source:
-    json_key: ((gcs-json-key))
-    bucket: kubo-pipeline-store
-    versioned_file: gcp-compilation-env/source.json
+    versioned_file: source.json
 
 jobs:
 - name: bump-bpm-release
   plan:
   - in_parallel:
     - get: git-kubo-ci
-    - get: git-kubo-deployment
+    - get: git-kubo-release
     - get: gcs-source-json
     - get: bpm-release
       trigger: true
@@ -98,17 +91,17 @@ jobs:
   - task: generate-compilation-manifest
     file: git-kubo-ci/tasks/generate-compilation-manifest.yml
     input_mapping:
-      git-kubo-deployment: git-kubo-deployment-output
+      git-kubo-release: git-kubo-release-output
     params:
       RELEASE_LIST: "bpm"
   - put: compilation-deployment
     params:
       manifest: compilation-manifest/manifest.yml
-      source_file: gcs-compilation-source-json/source.json
+      source_file: gcs-source-json/source.json
   - task: export
     file: git-kubo-ci/tasks/export-release.yml
     input_mapping:
-      git-kubo-deployment: git-kubo-deployment-output
+      git-kubo-release: git-kubo-release-output
     params:
       RELEASE_LIST: "bpm"
   - put: gcs-precompiled-bpm-untested
@@ -117,18 +110,18 @@ jobs:
   - task: bump-precompiled-releases-in-manifest
     file: git-kubo-ci/tasks/bump-precompiled-releases-in-manifest.yml
     input_mapping:
-      git-kubo-deployment: git-kubo-deployment-output
+      git-kubo-release: git-kubo-release-output
     params:
       RELEASE_LIST: "bpm"
-  - put: git-kubo-deployment
+  - put: git-kubo-release
     params:
-      repository: git-kubo-deployment-output
+      repository: git-kubo-release-output
 
 - name: bump-etcd-release
   plan:
   - in_parallel:
     - get: git-kubo-ci
-    - get: git-kubo-deployment
+    - get: git-kubo-release
     - get: gcs-source-json
     - get: cfcr-etcd-release
       trigger: true
@@ -141,17 +134,17 @@ jobs:
   - task: generate-compilation-manifest
     file: git-kubo-ci/tasks/generate-compilation-manifest.yml
     input_mapping:
-      git-kubo-deployment: git-kubo-deployment-output
+      git-kubo-release: git-kubo-release-output
     params:
       RELEASE_LIST: "cfcr-etcd"
   - put: compilation-deployment
     params:
       manifest: compilation-manifest/manifest.yml
-      source_file: gcs-compilation-source-json/source.json
+      source_file: gcs-source-json/source.json
   - task: export
     file: git-kubo-ci/tasks/export-release.yml
     input_mapping:
-      git-kubo-deployment: git-kubo-deployment-output
+      git-kubo-release: git-kubo-release-output
     params:
       RELEASE_LIST: "cfcr-etcd"
   - put: gcs-precompiled-cfcr-etcd-untested
@@ -160,20 +153,19 @@ jobs:
   - task: bump-precompiled-releases-in-manifest
     file: git-kubo-ci/tasks/bump-precompiled-releases-in-manifest.yml
     input_mapping:
-      git-kubo-deployment: git-kubo-deployment-output
+      git-kubo-release: git-kubo-release-output
     params:
       RELEASE_LIST: "cfcr-etcd"
-  - put: git-kubo-deployment
+  - put: git-kubo-release
     params:
-      repository: git-kubo-deployment-output
+      repository: git-kubo-release-output
 
 - name: bump-docker-boshrelease
   plan:
   - in_parallel:
     - get: git-kubo-ci
-    - get: git-kubo-deployment
+    - get: git-kubo-release
     - get: gcs-source-json
-    - get: gcs-compilation-source-json
     - get: docker-boshrelease
       trigger: true
   - task: bump-kubo-docker
@@ -185,18 +177,17 @@ jobs:
   - task: generate-compilation-manifest
     file: git-kubo-ci/tasks/generate-compilation-manifest.yml
     input_mapping:
-      git-kubo-deployment: git-kubo-deployment-output
+      git-kubo-release: git-kubo-release-output
     params:
       RELEASE_LIST: "docker"
   - put: compilation-deployment
     params:
       manifest: compilation-manifest/manifest.yml
-      source_file: gcs-compilation-source-json/source.json
+      source_file: gcs-source-json/source.json
   - task: export
     file: git-kubo-ci/tasks/export-release.yml
     input_mapping:
-      git-kubo-deployment: git-kubo-deployment-output
-      gcs-source-json: gcs-compilation-source-json
+      git-kubo-release: git-kubo-release-output
     params:
       RELEASE_LIST: "docker"
       JOBS_LIST: containers docker flannel sanity-tests swarm-agent swarm-manager
@@ -206,9 +197,9 @@ jobs:
   - task: bump-precompiled-releases-in-manifest
     file: git-kubo-ci/tasks/bump-precompiled-releases-in-manifest.yml
     input_mapping:
-      git-kubo-deployment: git-kubo-deployment-output
+      git-kubo-release: git-kubo-release-output
     params:
       RELEASE_LIST: "docker"
-  - put: git-kubo-deployment
+  - put: git-kubo-release
     params:
-      repository: git-kubo-deployment-output
+      repository: git-kubo-release-output
