@@ -26,7 +26,7 @@ resources:
   type: git
   source:
     uri: git@github.com:cloudfoundry-incubator/kubo-release
-    branch: merge-kubo-deployment
+    branch: develop
     private_key: ((git-ssh-key.private_key))
 
 - name: gcs-precompiled-cfcr-etcd-untested

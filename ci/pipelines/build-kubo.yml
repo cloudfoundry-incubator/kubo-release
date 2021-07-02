@@ -35,7 +35,7 @@ resources:
   type: git
   source:
     uri: git@github.com:cloudfoundry-incubator/kubo-release.git
-    branch: merge-kubo-deployment
+    branch: develop
     private_key: ((git-ssh-key.private_key))
     ignore_paths:
     - 'ci'
