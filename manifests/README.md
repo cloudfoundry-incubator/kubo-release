@@ -3,7 +3,7 @@
 The base manifest "just works" and will deploy a running cluster of Kubernetes:
 
 ```
-bosh -d cfcr deploy kubo-deployment/manifests/cfcr.yml
+bosh -d cfcr deploy kubo-release/manifests/cfcr.yml
 ```
 
 For deeper documentation to deploy CFCR go [here](https://github.com/cloudfoundry-incubator/kubo-release/#deploying-cfcr).
