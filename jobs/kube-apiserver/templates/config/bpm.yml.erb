@@ -45,10 +45,14 @@ processes:
     end
   %>
   - --apiserver-count=<%= link('kube-apiserver').instances.size %>
-  <% if_link('cloud-provider') do |cloud_provider| %>
-  - --cloud-provider=<%= cloud_provider.p('cloud-provider.type') %>
+  <%- if_link('cloud-provider') do |cloud_provider| -%>
+  <% if "external".eql? cloud_provider.p('cloud-provider.type') %>
   - --cloud-config=/var/vcap/jobs/kube-apiserver/config/cloud-provider.ini
-  <% end %>
+  <% else %>
+  - --cloud-provider=cloud_provider.p('cloud-provider.type')
+  - --cloud-config=/var/vcap/jobs/kube-apiserver/config/cloud-provider.ini
+  <% end  %>
+  <%- end -%>
   <% if !etcd_servers_property_set %>
   - --etcd-servers=<%= etcd_endpoints %>
   <% end %>
