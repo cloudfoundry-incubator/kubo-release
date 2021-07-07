@@ -29,7 +29,7 @@ jobs:
     strategy:
       matrix:
         iaas: [gcp]
-        testcase: [integration, istio]
+        testcase: [integration]
     env:
       TESTCASE: ${{ matrix.testcase }}
       IAAS: ${{ matrix.iaas }}
@@ -37,8 +37,10 @@ jobs:
       - name: Checkout kubo-release
         uses: actions/checkout@v2
       - name: setup-bosh-variables
+        env: 
+          SOURCE: ${{ secrets.GCS_SA_CI }}
         run: |
-          echo "${{ secrets.SOURCE }}" > source
+          echo "${SOURCE}" > source
       - name: upload-stemcell
         run: .github/tasks/upload-stemcell.sh
         env:
