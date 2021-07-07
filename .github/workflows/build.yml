@@ -21,3 +21,13 @@ jobs:
         path: .
         destination: github-dev-releases
         glob: 'kubo-release-*.tgz'
+    - name: generate-compilation-manifest
+      run: .github/tasks/generate-compilation-manifest.sh
+      env:
+          RELEASE_LIST: kubo
+    - name: output-manifest
+      run: cat manifest.yml
+    # - name: compile-releases
+    #   run: ./github/tasks/compile-releases.sh
+    #   env:
+    #       file: ${{steps.upload-file.outputs.uploaded}}
