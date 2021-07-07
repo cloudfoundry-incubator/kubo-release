@@ -8,7 +8,8 @@ fi
 
 BOSH_CLIENT="$(bosh int "$1" --path=/client)"
 BOSH_CLIENT_SECRET="$(bosh int "$1" --path=/client_secret)"
-BOSH_CA_CERT="$(bosh int "$1" --path=/ca_cert)"
+CERT="$(bosh int "$1" --path=/ca_cert)"
+BOSH_CA_CERT=$(echo -e "$CERT")
 BOSH_ENVIRONMENT="$(bosh int "$1" --path=/target)"
 if bosh int --path=/jumpbox_ssh_key  "$1" &>/dev/null ; then
     jumpbox_ssh_key="$(mktemp)"

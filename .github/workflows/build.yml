@@ -36,9 +36,9 @@ jobs:
     steps:
       - name: Checkout kubo-release
         uses: actions/checkout@v2
-      - run: 'echo "$SOURCE" > source_file'
+      - run: printf "$SOURCE" > source_file
         env:
-          SOURCE: ${{secrets.SOURCE}}
+          SOURCE: ${{ secrets.GCP_ENV_KILLBILL }}
       - name: upload-stemcell
         run: .github/tasks/upload-stemcell.sh
       - name: download-dep-releases
