@@ -21,14 +21,18 @@ jobs:
         path: .
         destination: github-dev-releases
         glob: 'kubo-release-*.tgz'
-    - name: generate-compilation-manifest
-      run: .github/tasks/generate-compilation-manifest.sh
-      env:
-          RELEASE_LIST: kubo
-          STEMCELL_ALIAS: default
-    - name: output-manifest
-      run: cat manifest.yml
-    # - name: compile-releases
-    #   run: ./github/tasks/compile-releases.sh
-    #   env:
-    #       file: ${{steps.upload-file.outputs.uploaded}}
+  test:
+    needs: [build]
+    container: 
+      image: gcr.io/cf-pks-golf/pcfkubo/kubo-ci
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        iaas: [gcp]
+        testcase: [integration, istio]
+    env:
+      TESTCASE: ${{ matrix.testcase }}
+      IAAS: ${{ matrix.iaas }}
+    steps:
+      - name: foo
+        run: echo $TESTCASE $IAAS
