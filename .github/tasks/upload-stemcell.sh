@@ -4,11 +4,7 @@ set -eu
 
 : "${IAAS:-?}"
 
-echo "$SOURCE" > source_file
-
-echo "$SOURCE"
-
-source .github/tasks/set-bosh-env source_file
+source .github/tasks/set-bosh-env
 
 VM=""
 if [ ${IAAS} == "gcp" ]; then
