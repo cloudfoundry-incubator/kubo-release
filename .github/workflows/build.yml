@@ -6,11 +6,11 @@ on:
 
 jobs:
   build:
+    container: 
+      image: gcr.io/cf-pks-golf/pcfkubo/kubo-ci
     runs-on: ubuntu-latest
     steps:
     - name: Checkout kubo-release
       uses: actions/checkout@v2
-    - name: Install bosh-cli
-      run: brew install cloudfoundry/tap/bosh-cli
     - name: Build release
       run: .github/tasks/build.sh
