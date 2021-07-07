@@ -12,3 +12,4 @@
 /.cache
 /kubo-release.iml
 /.idea
+.DS_Store
