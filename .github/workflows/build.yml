@@ -13,4 +13,4 @@ jobs:
     - name: Install bosh-cli
       run: brew install cloudfoundry/tap/bosh-cli
     - name: Build release
-      run: ./github/tasks/build.sh
+      run: .github/tasks/build.sh
