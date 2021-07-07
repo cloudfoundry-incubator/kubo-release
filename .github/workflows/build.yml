@@ -17,5 +17,7 @@ jobs:
     - id: upload-file
       uses: google-github-actions/upload-cloud-storage@main
       with:
-        path: kubo-release-*.tgz
+        credentials: ${{ secrets.GCS_SA_CI }}
+        path: .
         destination: github-dev-releases
+        glob: 'kubo-release-*.tgz'
