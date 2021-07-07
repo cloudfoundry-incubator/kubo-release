@@ -36,10 +36,11 @@ jobs:
     steps:
       - name: Checkout kubo-release
         uses: actions/checkout@v2
+      - run: 'echo "$SOURCE" > source_file'
+        env:
+          SOURCE: ${{secrets.SOURCE}}
       - name: upload-stemcell
         run: .github/tasks/upload-stemcell.sh
-        env: 
-          SOURCE: ${{ secrets.GCS_SA_CI }}
       - name: download-dep-releases
         run: |
           yq read manifests/cfcr.yml releases.*.url | grep -v null | grep -v kubo-[0-9] | sed 's|^-\ ||g' | xargs -n 1 curl -SLJO
