@@ -34,5 +34,14 @@ jobs:
       TESTCASE: ${{ matrix.testcase }}
       IAAS: ${{ matrix.iaas }}
     steps:
-      - name: foo
-        run: echo $TESTCASE $IAAS
+      - name: Checkout kubo-release
+        uses: actions/checkout@v2
+      - name: setup-bosh-variables
+        run: |
+          echo "${{ secrets.SOURCE }}" > source
+      - name: upload-stemcell
+        run: .github/tasks/upload-stemcell.sh
+        env:
+          SOURCE_FILE: source
+      - name: download-dep-releases
+        run: yq read manifests/cfcr.yml releases.*.url | grep -v null | grep -v kubo-[0-9] | sed 's|^-\ ||g' | xargs -n 1 curl -SLJO
