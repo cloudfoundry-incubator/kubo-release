@@ -3,7 +3,7 @@
 set -eu
 
 : "${RELEASE_LIST:?}"
-: "${STEMCELL_ALIAS:-default}"
+: "${STEMCELL_ALIAS:-?}"
 
 pushd manifests
     STEMCELL_OS=$(bosh int cfcr.yml -o ops-files/windows/add-worker.yml --path /stemcells/alias=${STEMCELL_ALIAS}/os)
@@ -17,7 +17,7 @@ pushd manifests
     done
 popd
 
-cat > compilation-manifest/manifest.yml <<EOF
+cat > manifest.yml <<EOF
 ---
 name: compilation-${STEMCELL_ALIAS}
 releases:

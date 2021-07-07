@@ -25,6 +25,7 @@ jobs:
       run: .github/tasks/generate-compilation-manifest.sh
       env:
           RELEASE_LIST: kubo
+          STEMCELL_ALIAS: default
     - name: output-manifest
       run: cat manifest.yml
     # - name: compile-releases
