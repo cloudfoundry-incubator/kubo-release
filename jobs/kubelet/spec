@@ -14,6 +14,8 @@ templates:
   config/kubeletconfig.yml.erb: config/kubeletconfig.yml
   config/openstack-ca.crt.erb: config/openstack-ca.crt
   config/service_key.json.erb: config/service_key.json
+  monit.erb: monit
+
 packages:
 - pid_utils
 - kubernetes
@@ -24,6 +26,10 @@ properties:
     description: The token to access Kubernetes API
   cloud-provider:
     description: "The type of cloud-provider that is being deployed"
+  container-runtime:
+    description: "The container runtime job can be containerd or docker"
+    default: docker
+
   drain-api-token:
     description: The token to access Kubernetes API used to drain the kubelet.
   http_proxy:
@@ -54,6 +60,7 @@ properties:
   kubelet-drain-force-node:
     description: "Forcibly terminate pods if all the pods fail to drain before the timeout."
     default: false
+
   k8s-args:
     description: "Pass-through options for Kubernetes runtime arguments. See docs https://kubernetes.io/docs/reference/command-line-tools-reference/kubelet/ for reference."
     example: |
