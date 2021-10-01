@@ -448,25 +448,25 @@ releases:
   url: https://storage.googleapis.com/kubo-precompiled-releases/kubo-0.44.0-ubuntu-xenial-621.76-20200716-220634-5482734.tgz
   version: 0.44.0
 - name: cfcr-etcd
-  sha1: 0bb1a7d3f28031b823acbbf09c3cd12dbcc531fc
+  sha1: cf6de4522f507cddc2440d46ea5b7f89a5e315c7
   stemcell:
     os: ubuntu-bionic
-    version: 1.31
-  url: https://storage.googleapis.com/kubo-precompiled-releases/cfcr-etcd-1.13.0-ubuntu-bionic-1.31-20210927-083054-666274848.tgz
+    version: 1.33
+  url: https://storage.googleapis.com/kubo-precompiled-releases/cfcr-etcd-1.13.0-ubuntu-bionic-1.33-20211001-133014-420524281.tgz
   version: 1.13.0
 - name: docker
-  sha1: e39c751344c71aff290043daa8f272a277b22f5e
+  sha1: ea945639d62b0e0723c108fa594a3f82cb108ea3
   stemcell:
     os: ubuntu-bionic
-    version: 1.31
-  url: https://storage.googleapis.com/kubo-precompiled-releases/docker-36.0.2-ubuntu-bionic-1.31-20210927-082808-067024457.tgz
+    version: 1.33
+  url: https://storage.googleapis.com/kubo-precompiled-releases/docker-36.0.2-ubuntu-bionic-1.33-20211001-132720-976985732.tgz
   version: 36.0.2
 - name: bpm
-  sha1: 9388a8f581ad7ab098cd345f7957e56ea2804766
+  sha1: d60a341aa5e7d374638c0d68d6caea080a569a34
   stemcell:
     os: ubuntu-bionic
-    version: 1.31
-  url: https://storage.googleapis.com/kubo-precompiled-releases/bpm-1.1.13-ubuntu-bionic-1.31-20210927-083526-59034489.tgz
+    version: 1.33
+  url: https://storage.googleapis.com/kubo-precompiled-releases/bpm-1.1.13-ubuntu-bionic-1.33-20211001-133758-064081214.tgz
   version: 1.1.13
 stemcells:
 - alias: default
