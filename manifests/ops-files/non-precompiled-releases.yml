@@ -14,6 +14,6 @@
     url: https://bosh.io/d/github.com/cloudfoundry-incubator/docker-boshrelease?v=36.0.2
     version: 36.0.2
   - name: bpm
-    sha1: 82322898b2393951108617caac43752e498632a2
-    url: https://bosh.io/d/github.com/cloudfoundry/bpm-release?v=1.1.13
-    version: 1.1.13
+    sha1: 6e1187b180c3d8e6d3dafa2861147a59d4ede27e
+    url: https://bosh.io/d/github.com/cloudfoundry/bpm-release?v=1.1.14
+    version: 1.1.14
