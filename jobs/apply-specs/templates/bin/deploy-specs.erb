@@ -44,6 +44,21 @@ main() {
         apply_spec "storage-class-gce.yml"
       <% end %>
     <% end %>
+    <% cloud_provider.if_p('cloud-provider.type') do |p| %>
+      <% if p == 'aws' %>
+        apply_spec "storage-class-aws.yml"
+      <% end %>
+    <% end %>
+    <% cloud_provider.if_p('cloud-provider.type') do |p| %>
+      <% if p == 'azure' %>
+        apply_spec "storage-class-azure.yml"
+      <% end %>
+    <% end %>
+    <% cloud_provider.if_p('cloud-provider.type') do |p| %>
+      <% if p == 'vsphere' %>
+        apply_spec "storage-class-vsphere.yml"
+      <% end %>
+    <% end %>
   <% end %>
   echo "System specs added successfully."
 

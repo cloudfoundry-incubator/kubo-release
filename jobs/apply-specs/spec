@@ -15,6 +15,9 @@ templates:
   specs/metrics-server/resource-reader.yml: specs/metrics-server/resource-reader.yml
   specs/metrics-server/secrets.yml.erb: specs/metrics-server/secrets.yml
   specs/storage-class-gce.yml: specs/storage-class-gce.yml
+  specs/storage-class-aws.yml: specs/storage-class-aws.yml
+  specs/storage-class-azure.yml: specs/storage-class-azure.yml
+  specs/storage-class-vsphere.yml: specs/storage-class-vsphere.yml
 
 packages:
 - kubernetes

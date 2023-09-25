@@ -72,6 +72,9 @@ describe 'apply-specs' do
 
   it 'does not apply the standard storage class by default' do
     expect(rendered_deploy_specs).to_not include('apply_spec "storage-class-gce.yml"')
+    expect(rendered_deploy_specs).to_not include('apply_spec "storage-class-aws.yml"')
+    expect(rendered_deploy_specs).to_not include('apply_spec "storage-class-azure.yml"')
+    expect(rendered_deploy_specs).to_not include('apply_spec "storage-class-vsphere.yml"')
   end
 
   context 'on GCE' do
@@ -90,6 +93,63 @@ describe 'apply-specs' do
 
     it 'applies the standard storage class' do
       expect(rendered_deploy_specs).to include('apply_spec "storage-class-gce.yml"')
+    end
+  end
+
+  context 'on AWS' do
+    let(:link_spec) do
+      {
+        'cloud-provider' => {
+          'instances' => [],
+          'properties' => {
+            'cloud-provider' => {
+              'type' => 'aws'
+            }
+          }
+        }
+      }
+    end
+
+    it 'applies the standard storage class' do
+      expect(rendered_deploy_specs).to include('apply_spec "storage-class-aws.yml"')
+    end
+  end
+
+  context 'on Azure' do
+    let(:link_spec) do
+      {
+        'cloud-provider' => {
+          'instances' => [],
+          'properties' => {
+            'cloud-provider' => {
+              'type' => 'azure'
+            }
+          }
+        }
+      }
+    end
+
+    it 'applies the standard storage class' do
+      expect(rendered_deploy_specs).to include('apply_spec "storage-class-azure.yml"')
+    end
+  end
+
+  context 'on vSphere' do
+    let(:link_spec) do
+      {
+        'cloud-provider' => {
+          'instances' => [],
+          'properties' => {
+            'cloud-provider' => {
+              'type' => 'vsphere'
+            }
+          }
+        }
+      }
+    end
+
+    it 'applies the standard storage class' do
+      expect(rendered_deploy_specs).to include('apply_spec "storage-class-vsphere.yml"')
     end
   end
 
@@ -124,6 +184,9 @@ describe 'apply-specs' do
 
     it 'does not apply the standard storage class' do
       expect(rendered_deploy_specs).to_not include('apply_spec "storage-class-gce.yml"')
+      expect(rendered_deploy_specs).to_not include('apply_spec "storage-class-aws.yml"')
+      expect(rendered_deploy_specs).to_not include('apply_spec "storage-class-azure.yml"')
+      expect(rendered_deploy_specs).to_not include('apply_spec "storage-class-vsphere.yml"')
     end
   end
 
